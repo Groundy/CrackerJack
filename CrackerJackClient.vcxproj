@@ -92,14 +92,17 @@
     <ResourceCompile Include="CrackerJackClient.rc" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="sources\CrackerJackClient.cpp" />
+    <ClCompile Include="sources\LoginWindow.cpp" />
     <ClCompile Include="sources\main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <QtMoc Include="sources\CrackerJackClient.h" />
+    <QtMoc Include="sources\LoginWindow.h" />
   </ItemGroup>
   <ItemGroup>
-    <QtUic Include="sources\CrackerJackClient.ui" />
+    <QtUic Include="sources\LoginWindow.ui" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="resource.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">
