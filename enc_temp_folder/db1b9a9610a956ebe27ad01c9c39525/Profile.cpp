@@ -16,7 +16,7 @@ QString Profile::VectorToString(QList<int> vect) {
 	//ERR //DIAG
 	int size = vect.size();
 	if (size == 0)
-		return QString("#");
+		return "0";
 	
 	QString toRet = "" + QString::number(size) + QString("#");
 	for (int i = 0; i < size; i++)
@@ -27,7 +27,7 @@ QString Profile::VectorToString(QList<int> vect) {
 
 QList<int> Profile::StringToVector(QString str) {
 	QList<int> vectWithThreshold;
-	if (str == "#");
+	if (str == "0");
 		return vectWithThreshold;
 	QStringList list = str.split("#");
 	if (list.size() != 2) {

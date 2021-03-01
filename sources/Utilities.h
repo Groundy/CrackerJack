@@ -3,6 +3,7 @@
 #include "qmessagebox.h"
 class Utilities {
 public:
-	static void showMessageBox(QString title, QString text);
+	static int showMessageBox(QString title, QString text, QFlags<QMessageBox::StandardButton> buttons);
+	static bool showMessageBox_NO_YES(QString title, QString text);
 };
 

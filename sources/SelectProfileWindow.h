@@ -10,9 +10,14 @@ class SelectProfileWindow : public QDialog
 public:
 	SelectProfileWindow(QWidget *parent = Q_NULLPTR);
 	~SelectProfileWindow();
-	void test();
-
+	ProfileDataBaseManager dbManager;
+public slots:
+	void addNewProfileButtonAction();
+	void editProfileButtonAction();
+	void deleteProfileButtonAction();
+	void selectListAction();
 private:
 	Ui::SelectProfileWindow *ui;
 	void prepareProfiles();
+
 };

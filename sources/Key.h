@@ -2,16 +2,16 @@
 #include <cstddef>
 #include <qstring.h>
 #include "qsplitter.h"
-class Key {
-private:
-	int number;
-	bool control;
-	bool fkey;
-	char letter;
 
+enum TYPE_OF_KEY { NORMAL, SHIFT, FKEY, CONTROL, ALT };
+
+class Key {
 public:
-	enum type { FKEY, CONTROL, LETTER };
-	Key::Key(type type, int numberArg, bool controlArg, bool fkeyArg, char letterArg);
+	QChar letter;
+	TYPE_OF_KEY keyType;
+	
+	Key::Key(TYPE_OF_KEY type, QChar charr);
+	Key::Key(QString str);
 	QString toString();
 };
 

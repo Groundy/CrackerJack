@@ -5,6 +5,9 @@
 #include "qstring.h"
 #include "qvector.h"
 //#include <qsplitter.h>
+#include "qkeysequence.h"
+
+enum PROFESSION { RP, EK, ED, MS};
 
 class Profile : public QObject 
 {
@@ -12,13 +15,22 @@ class Profile : public QObject
 
 public:
 	Profile(QObject *parent);
+	Profile();
 	~Profile();
-private:
-	QVector<int> healthRestorePercentages;//0-5;
-	QVector<int> ManaRestoreMethodesPercentage;
-	int profileNumber;//1-9
+
+	QList<int> healthRestorePercentages;//0-5;
+	QList<int> ManaRestoreMethodesPercentage;
+	QList<QKeySequence> healthKeys;
+	QList<QKeySequence> ManaKeys;
+
 	QString profileName;
-	
-	QString VectorToString(QVector<int> vect);
-	QVector<int> StringToVector(QString str);
+	PROFESSION profession;
+	QString lastLoginDate;
+	QString creationDate;
+
+
+	static QString VectorToString(QList<int> vect);
+	static QList<int> StringToVector(QString str);
+	static QString KeyListToString(QList<QKeySequence> keylist);
+	static QList<QKeySequence> StringToKeyList(QString str);
 };

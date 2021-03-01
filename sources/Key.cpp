@@ -1,57 +1,68 @@
 #include "Key.h"
 
-static Key toKey(QString keyNumber) {
-	QStringList listKey = keyNumber.split('-', Qt::SkipEmptyParts);
-	//there will be 4 parts numer,ctrl-key, f-key, char
-	if (listKey.size() != 4);
-	//[DIAG] [ERROR]
-	int number = static_cast<int>(listKey[0].toInt());
-	bool ckey = static_cast<bool>(listKey[1].toInt());
-	bool fkey = static_cast<bool>(listKey[2].toInt());
-	char keyChar = static_cast<char>(listKey[3].toInt());
+Key::Key(QString keyNumber){
+	TYPE_OF_KEY keyType;
+	QChar letter;
+	QStringList parts = keyNumber.split("+");
+	if (parts.size() < 1 || parts.size() > 2)
+		;//diag err
+	else if(parts.size() == 1){//it's simple letter or f-key
+		QString onlyOne = parts[0];
+		QChar firstLetter = onlyOne[0];
+		if (firstLetter == QChar('F'))
+			keyType = FKEY;
+		else
+			keyType = NORMAL;
+		if (onlyOne.size() == 2)
+			letter = onlyOne[1];
+		else
+			;//diag //err
+	}
+	else if (parts.size() == 2) {
+		QString first = parts[0];
+		QString second = parts[1];
+		if (first == "Ctrl")
+			keyType = CONTROL;
+		else if (first == "Alt")
+			keyType = ALT;
+		else if (first == "Shift")
+			keyType = SHIFT;
+		else
+			;//diag //err
+		letter = second[0];
+	}
 }	
 
 QString Key::toString() {
-		QString strToConvert = "";
-		if (this->number < 0 || this->number >9);
-		//[DIAG] //[ERR]
-		strToConvert.append(this->number + "-");
-
-		int toAdd = this->control ? 1 : 0;
-		strToConvert.append(toAdd + "-");
-		toAdd = this->fkey ? 1 : 0;
-		strToConvert.append(toAdd + "-");
-		if (this->letter == NULL)
-			strToConvert.append(" ");
-		else
-			strToConvert.append(this->letter);
-
-		int toRet = strToConvert.toInt();
-		return toRet;
-	}
-
-Key::Key(type type, int numberArg, bool controlArg, bool fkeyArg, char letterArg) {
-	switch (type)
+	QString toRet = "";
+	switch (keyType)
 	{
-	case Key::FKEY:
-		fkey = true;
-		control = false;
-		letter = NULL;
-		number = numberArg;
-		break;
-	case Key::CONTROL:
-		fkey = false;
-		control = true;
-		letter = NULL;
-		number = numberArg;
-		break;
-	case Key::LETTER:
-		fkey = false;
-		control = false;
-		letter = letterArg;
-		number = numberArg;
-		break;
-	default:
-		break;
+	case TYPE_OF_KEY::CONTROL: {
+		toRet.append("Ctrl+");
+		break; }
+	case TYPE_OF_KEY::SHIFT: {
+		toRet.append("Shift+");
+		break; }
+	case TYPE_OF_KEY::ALT: {
+		toRet.append("Alt+");
+		break; }
+	case TYPE_OF_KEY::FKEY: {
+		toRet.append("F");
+		//diag err(if Qletter is number)
+		break; }
+	case TYPE_OF_KEY::NORMAL: {
+		toRet.append("");
+		break; }
+	default: {
+		toRet.append("");
+		//diag err
+		break; }
 	}
+	toRet.append(QString(letter));
+	return toRet;
+}
+
+Key::Key(TYPE_OF_KEY typeOfKey, QChar charr) {
+	this->keyType = typeOfKey;
+	this->letter = charr;
 }

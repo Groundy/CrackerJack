@@ -48,12 +48,12 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <AdditionalIncludeDirectories>.\sources;.\Resources;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\sources;.\Resources;.\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
-      <AdditionalIncludeDirectories>.\sources;.\Resources;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\sources;.\Resources;.\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
   </ItemDefinitionGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|Win32'" Label="QtSettings">
@@ -102,30 +102,41 @@
     <ResourceCompile Include="CrackerJackClient.rc" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="sources\NewProfileConfiguartor.cpp" />
     <ClCompile Include="sources\Key.cpp" />
-    <ClCompile Include="Resources\ProfileDataBaseManager.cpp" />
+    <ClCompile Include="sources\ProfileDataBaseManager.cpp" />
     <ClCompile Include="sources\ErrorManager.cpp" />
     <ClCompile Include="sources\LoginWindow.cpp" />
     <ClCompile Include="sources\main.cpp" />
     <ClCompile Include="sources\Profile.cpp" />
     <ClCompile Include="sources\SelectProfileWindow.cpp" />
     <ClCompile Include="sources\Utilities.cpp" />
+    <ClCompile Include="sources\StringResource.cpp" />
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="sources\LoginWindow.h" />
   </ItemGroup>
   <ItemGroup>
+    <QtUic Include="sources\NewProfileConfiguartor.ui" />
     <QtUic Include="sources\LoginWindow.ui" />
     <QtUic Include="sources\SelectProfileWindow.ui" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="sources\StringResource.h" />
+    <QtMoc Include="sources\NewProfileConfiguartor.h" />
     <ClInclude Include="sources\Key.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="sources\Utilities.h" />
     <QtMoc Include="sources\ErrorManager.h" />
-    <QtMoc Include="Resources\ProfileDataBaseManager.h" />
+    <QtMoc Include="sources\ProfileDataBaseManager.h" />
     <QtMoc Include="sources\Profile.h" />
     <QtMoc Include="sources\SelectProfileWindow.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="cpp.hint" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="sources\ZZ___TO____DO.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

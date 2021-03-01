@@ -46,9 +46,6 @@
     <ClCompile Include="sources\Profile.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Resources\ProfileDataBaseManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="sources\ErrorManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -56,6 +53,15 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="sources\Key.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\NewProfileConfiguartor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\ProfileDataBaseManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\StringResource.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -69,10 +75,13 @@
     <QtMoc Include="sources\Profile.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="Resources\ProfileDataBaseManager.h">
+    <QtMoc Include="sources\ErrorManager.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="sources\ErrorManager.h">
+    <QtMoc Include="sources\NewProfileConfiguartor.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="sources\ProfileDataBaseManager.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>
@@ -81,6 +90,9 @@
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="sources\SelectProfileWindow.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="sources\NewProfileConfiguartor.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>
@@ -94,5 +106,14 @@
     <ClInclude Include="sources\Key.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="sources\StringResource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="cpp.hint" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="sources\ZZ___TO____DO.txt" />
   </ItemGroup>
 </Project>

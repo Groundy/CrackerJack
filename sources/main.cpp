@@ -33,7 +33,7 @@ int main(int argc, char *argv[])
    // w.show();
     //[TMP]
     //w.goToSelectProfileWindow();
-    SelectProfileWindow tt = new SelectProfileWindow();
+    SelectProfileWindow tt;
     tt.show();
     return a.exec();
 }
