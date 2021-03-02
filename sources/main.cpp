@@ -1,7 +1,7 @@
 #include "LoginWindow.h"
 #include <QtWidgets/QApplication>
 
-/*This function is designed to make ranom name of Process to avoid giving the same name the name that could be easily detected it*/
+/*This function is designed to make ranom name of Process to avoid giving the same name the name that could be easily detected*/
 QString makeRandomProccessName() {
     const QString possibleCharacters("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789 ");
     const int charactersAmount = possibleCharacters.length();

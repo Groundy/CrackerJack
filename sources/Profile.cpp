@@ -52,7 +52,6 @@ QString Profile::KeyListToString(QList<QKeySequence> keylist){
 
 	return toRet;
 }
-
 QList<QKeySequence> Profile::StringToKeyList(QString str){
 	QList<QKeySequence> keyList;
 	if(str == QString("#"));
@@ -64,4 +63,18 @@ QList<QKeySequence> Profile::StringToKeyList(QString str){
 	
 
 	return keyList;
+}
+
+int Profile::ProfToInt(PROFESSION prof) {
+	switch (prof)
+	{
+	case RP: { return 1; break; }
+	case EK: { return 2; break; }
+	case ED: { return 3; break; }
+	case MS: { return 4; break; }
+	default: { return 0; break; }
+	}
+}
+PROFESSION Profile::ProfToInt(int profInt){
+	return PROFESSION(profInt);
 }

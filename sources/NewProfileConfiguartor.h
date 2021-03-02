@@ -16,7 +16,7 @@ class NewProfileConfiguartor : public QDialog
 public:
 	NewProfileConfiguartor( Profile* prof, QWidget *parent = Q_NULLPTR);
 	~NewProfileConfiguartor();
-
+	void fillWidgetsWithDataFromProf(Profile* prof);
 public slots:
 	void cancelButtonAction();
 	void nextPageButtonAction();
@@ -39,6 +39,7 @@ private:
 	int MAX_PAGE;
 	void finishAddingNewProfile();
 	void additionalGuiSettings();
+	
 	bool pageIsCorrectlyFilled();
 	void saveDataToProfile(Profile* prof);
 	

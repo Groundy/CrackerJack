@@ -354,6 +354,12 @@ void NewProfileConfiguartor::saveDataToProfile(Profile* prof) {
 	//5
 }
 
+void NewProfileConfiguartor::fillWidgetsWithDataFromProf(Profile* prof) {
+	//1
+	ui->_1_nameEdit->setText(prof->profileName);
+	//2
+	//todo
+}
 //SLOTS
 void NewProfileConfiguartor::nextPageButtonAction(){
 	if (!pageIsCorrectlyFilled())

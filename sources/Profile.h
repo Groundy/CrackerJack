@@ -31,6 +31,10 @@ public:
 
 	static QString VectorToString(QList<int> vect);
 	static QList<int> StringToVector(QString str);
+
 	static QString KeyListToString(QList<QKeySequence> keylist);
 	static QList<QKeySequence> StringToKeyList(QString str);
+
+	static int ProfToInt(PROFESSION prof);
+	static PROFESSION ProfToInt(int profInt);
 };
