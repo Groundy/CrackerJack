@@ -50,238 +50,66 @@ void NewProfileConfiguartor::finishAddingNewProfile(){
 void NewProfileConfiguartor::additionalGuiSettings(){
 	ui->_3_spinGetNumberOfMethodes->setMinimum(0);
 	ui->_3_spinGetNumberOfMethodes->setMaximum(5);
+	QStringList optionsHealth = { "POTION", "SPELL","CUPCAKE","OTHER" };
+	ui->_3_comboBox->addItems(optionsHealth);
+	ui->_3_comboBox_2->addItems(optionsHealth);
+	ui->_3_comboBox_3->addItems(optionsHealth);
+	ui->_3_comboBox_4->addItems(optionsHealth);
+	ui->_3_comboBox_5->addItems(optionsHealth);
+	//
 	ui->_4_spinGetNumberOfMethodes->setMinimum(0);
 	ui->_4_spinGetNumberOfMethodes->setMaximum(5);
+	QStringList optionsMana =  { "POTION","CUPCAKE","OTHER" };
+	ui->_4_comboBox->addItems(optionsMana);
+	ui->_4_comboBox_2->addItems(optionsMana);
+	ui->_4_comboBox_3->addItems(optionsMana);
+	ui->_4_comboBox_4->addItems(optionsMana);
+	ui->_4_comboBox_5->addItems(optionsMana);
+	//
+	ui->_5_LeftAddedBarsSpin->setMaximum(3);
+	ui->_5_RightAddedBarsSpin->setMaximum(3);
+	ui->_5_LeftAddedBarsSpin->setMinimum(0);
+	ui->_5_RightAddedBarsSpin->setMinimum(0);
+	
+	ui->_5_ControlBox->addItem("Classic controls");
+	ui->_5_ControlBox->addItem("Regular controls");
+	ui->_5_ControlBox->addItem("Left smart click");
+	ui->_5_AutoLootBox->addItem("Right");
+	ui->_5_AutoLootBox->addItem("Shift+right");
+	ui->_5_AutoLootBox->addItem("Left");
+
+	ui->_5_ControlBox->setCurrentIndex(0);
+	ui->_5_AutoLootBox->setCurrentIndex(0);
+
 }
 
 bool NewProfileConfiguartor::pageIsCorrectlyFilled() {
-	bool toRet = false;
+	bool toRet;
+	//todo
+	return true;
 	switch (pageNumber) {
 	case 1: {
-		QString nameOfProf = ui->_1_nameEdit->toPlainText();
-
-		if (nameOfProf.size() > 50) {
-			Utilities::showMessageBox(StringResource::WindowTitle_CrackerJackProblem(), StringResource::NewProfileConfig_1_TooLongName(), QMessageBox::Ok);
-			break;
-		}
-
-		if (nameOfProf.size() < 3) {
-			Utilities::showMessageBox(StringResource::WindowTitle_CrackerJackProblem(), StringResource::NewProfileConfig_1_EmptyName(), QMessageBox::Ok);
-			break;
-		}
-
-		bool allCharsAreAllowed = true;
-		//checking for new lines chars
-		if (nameOfProf.contains(QChar::LineFeed) || nameOfProf.contains(QChar::CarriageReturn))
-			allCharsAreAllowed=false;
-		
-		for each (auto character in nameOfProf){
-			if (!character.isLetterOrNumber() && !character.isSpace())
-				allCharsAreAllowed = false;
-		}
-
-		if (!allCharsAreAllowed) {
-			Utilities::showMessageBox(StringResource::WindowTitle_CrackerJackProblem(), StringResource::NewProfileConfig_1_ForbiddenChars(), QMessageBox::Ok);
-			break;
-		}
-
-		toRet = true;
-		break;
+		 toRet = checkCorrectnessOfPage_1();
+		 break;
 	}
 	case 2: {
-		QList<QRadioButton*> buttons;
-		buttons.push_back(ui->_2_RadButt_ED);
-		buttons.push_back(ui->_2_RadButt_EK);
-		buttons.push_back(ui->_2_RadButt_RP);
-		buttons.push_back(ui->_2_RadButt_MS);
-		bool oneOfButtonsIsChecked = false;
-		for each (QRadioButton * var in buttons) {
-			if (var->isChecked()) {
-				oneOfButtonsIsChecked = true;
-				break;
-			}
-		}
-		if (oneOfButtonsIsChecked) 
-			toRet = true;
-		else{
-			Utilities::showMessageBox("CracerJack problem", StringResource::NewProfileConfig_2_anyProfIsChecked(), QMessageBox::Ok);
-			break;
-		}
+		toRet = checkCorrectnessOfPage_2();
 		break;
 	}
 	case 3: {
-		int numberOfSliders = ui->_3_spinGetNumberOfMethodes->value();
-
-		QList<QAbstractSlider*> sliders;
-		sliders.push_back(ui->_3_horizontalSlider_1);
-		sliders.push_back(ui->_3_horizontalSlider_2);
-		sliders.push_back(ui->_3_horizontalSlider_3);
-		sliders.push_back(ui->_3_horizontalSlider_4);
-		sliders.push_back(ui->_3_horizontalSlider_5);
-
-		QList<QAbstractSlider*> activeSliders;
-		for (size_t i = 0; i < numberOfSliders; i++)
-			activeSliders.push_back(sliders[i]);
-		
-		bool slidersAreInCorrectOrder = true;
-		bool everySliderHasDiffrentValue = true;
-		int biggestValue = 101;
-		toRet = true;
-		for each (QAbstractSlider* slider in activeSliders){
-			if (slider->value() < biggestValue) 
-				biggestValue = slider->value();
-			else if (slider->value() == biggestValue) {
-				everySliderHasDiffrentValue = false;
-				toRet = false;
-				break;
-			}
-			else {
-				slidersAreInCorrectOrder = false;
-				toRet = false;
-				break;
-			}
-		}
-		if (!everySliderHasDiffrentValue) {
-			Utilities::showMessageBox(StringResource::WindowTitle_CrackerJackProblem(), StringResource::NewProfileConfig_3_SlidersAreInTheSamePosition(), QMessageBox::Ok);
-			break;
-		}
-		if (!slidersAreInCorrectOrder) {
-			Utilities::showMessageBox(StringResource::WindowTitle_CrackerJackProblem(), StringResource::NewProfileConfig_3_SlidersAreInWrongOrder(), QMessageBox::Ok);
-			break;
-		}
-
-		QList<QKeySequence> keys;
-		keys.push_back(ui->_3_shortKey_1->keySequence());
-		keys.push_back(ui->_3_shortKey_2->keySequence());
-		keys.push_back(ui->_3_shortKey_3->keySequence());
-		keys.push_back(ui->_3_shortKey_4->keySequence());
-		keys.push_back(ui->_3_shortKey_5->keySequence());
-		
-		bool oneOfKeyFieldsHasManyValues = false;
-		bool oneOfKeyFieldsHasNoValue = false;
-		bool oneOfKeyFieldsHasForbiddenChars = false;
-
-		int size = ui->_3_spinGetNumberOfMethodes->value();
-		for (int i = 0; i < size; i++){
-			if (keys[i].count() == 0) {
-				oneOfKeyFieldsHasNoValue = true;
-				toRet = false;
-			}
-			else if (keys[i].count() > 1) {
-				oneOfKeyFieldsHasManyValues = true;
-				toRet = false;
-			}
-		}
-
-		for each (QKeySequence var in keys) {
-			if (var.toString() == "+" || var.toString() == "#")
-				oneOfKeyFieldsHasForbiddenChars = true;
-		}
-
-
-
-		if (oneOfKeyFieldsHasManyValues) {
-			Utilities::showMessageBox(StringResource::WindowTitle_CrackerJackProblem(), StringResource::NewProfileConfig_3_ShortcutManyValue(), QMessageBox::Ok);
-			break;
-		}
-		if (oneOfKeyFieldsHasNoValue) {
-			Utilities::showMessageBox(StringResource::WindowTitle_CrackerJackProblem(), StringResource::NewProfileConfig_3_ShortcutNoValue(), QMessageBox::Ok);
-			break;
-		}
-		if (oneOfKeyFieldsHasForbiddenChars) {
-			Utilities::showMessageBox(StringResource::WindowTitle_CrackerJackProblem(), StringResource::NewProfileConfig_3_ShortCutHasForbiddenChars(), QMessageBox::Ok);
-			break;
-		}
-
+		toRet = checkCorrectnessOfPage_3();
 		break;
 	}
 	case 4: {
-		int numberOfSliders = ui->_4_spinGetNumberOfMethodes->value();
-
-		QList<QAbstractSlider*> sliders;
-		sliders.push_back(ui->_4_horizontalSlider_1);
-		sliders.push_back(ui->_4_horizontalSlider_2);
-		sliders.push_back(ui->_4_horizontalSlider_3);
-		sliders.push_back(ui->_4_horizontalSlider_4);
-		sliders.push_back(ui->_4_horizontalSlider_5);
-
-		QList<QAbstractSlider*> activeSliders;
-		for (size_t i = 0; i < numberOfSliders; i++)
-			activeSliders.push_back(sliders[i]);
-
-		bool slidersAreInCorrectOrder = true;
-		bool everySliderHasDiffrentValue = true;
-		int biggestValue = 101;
-		toRet = true;
-		for each (QAbstractSlider * slider in activeSliders) {
-			if (slider->value() < biggestValue)
-				biggestValue = slider->value();
-			else if (slider->value() == biggestValue) {
-				everySliderHasDiffrentValue = false;
-				toRet = false;
-				break;
-			}
-			else {
-				slidersAreInCorrectOrder = false;
-				toRet = false;
-				break;
-			}
-		}
-		if (!everySliderHasDiffrentValue) {
-			Utilities::showMessageBox(StringResource::WindowTitle_CrackerJackProblem(), StringResource::NewProfileConfig_3_SlidersAreInTheSamePosition(), QMessageBox::Ok);
-			break;
-		}
-		if (!slidersAreInCorrectOrder) {
-			Utilities::showMessageBox(StringResource::WindowTitle_CrackerJackProblem(), StringResource::NewProfileConfig_3_SlidersAreInWrongOrder(), QMessageBox::Ok);
-			break;
-		}
-
-		QList<QKeySequence> keys;
-		keys.push_back(ui->_4_shortKey_1->keySequence());
-		keys.push_back(ui->_4_shortKey_2->keySequence());
-		keys.push_back(ui->_4_shortKey_3->keySequence());
-		keys.push_back(ui->_4_shortKey_4->keySequence());
-		keys.push_back(ui->_4_shortKey_5->keySequence());
-
-		bool oneOfKeyFieldHasManyValues = false;
-		bool oneOfKeyFieldHasNoValue = false;
-		bool oneOfKeyFieldsHasForbiddenChars = false;
-
-		int size = ui->_4_spinGetNumberOfMethodes->value();
-		for (int i = 0; i < size; i++) {
-			if (keys[i].count() == 0) {
-				oneOfKeyFieldHasNoValue = true;
-				toRet = false;
-			}
-			else if (keys[i].count() > 1) {
-				oneOfKeyFieldHasManyValues = true;
-				toRet = false;
-			}
-		}
-
-		for each (QKeySequence var in keys){
-			if (var.toString() == "+" || var.toString() == "#")
-				oneOfKeyFieldsHasForbiddenChars = true;
-		}
-
-
-		if (oneOfKeyFieldHasManyValues) {
-			Utilities::showMessageBox(StringResource::WindowTitle_CrackerJackProblem(), StringResource::NewProfileConfig_3_ShortcutManyValue(), QMessageBox::Ok);
-			break;
-		}
-		if (oneOfKeyFieldHasNoValue) {
-			Utilities::showMessageBox(StringResource::WindowTitle_CrackerJackProblem(), StringResource::NewProfileConfig_3_ShortcutNoValue(), QMessageBox::Ok);
-			break;
-		}
-		if (oneOfKeyFieldsHasForbiddenChars) {
-			Utilities::showMessageBox(StringResource::WindowTitle_CrackerJackProblem(), StringResource::NewProfileConfig_3_ShortCutHasForbiddenChars(), QMessageBox::Ok);
-			break;
-		}
-
+		toRet = checkCorrectnessOfPage_4();
+		break;
+	}
+	case 5: {
+		toRet = checkCorrectnessOfPage_5();
 		break;
 	}
 	default: {
-
+		toRet = true;
 		break;
 	}  
 	} 
@@ -323,6 +151,16 @@ void NewProfileConfiguartor::saveDataToProfile(Profile* prof) {
 
 		for (size_t i = 0; i < size; i++)
 			prof->healthKeys.push_back(keys[i]);
+
+		QList<int> key_Items;
+		key_Items.push_back(ui->_3_comboBox->currentIndex());
+		key_Items.push_back(ui->_3_comboBox_2->currentIndex());
+		key_Items.push_back(ui->_3_comboBox_3->currentIndex());
+		key_Items.push_back(ui->_3_comboBox_4->currentIndex());
+		key_Items.push_back(ui->_3_comboBox_5->currentIndex());
+
+		for (size_t i = 0; i < size; i++)
+			prof->healthItems.push_back(KEY_ITEM(key_Items[i]));
 	}
 	//4
 	if (ui->_4_enableManaRestore->isChecked()) {
@@ -349,9 +187,243 @@ void NewProfileConfiguartor::saveDataToProfile(Profile* prof) {
 
 		for (size_t i = 0; i < size; i++)
 			prof->ManaKeys.push_back(keys[i]);
-		
+
+		QList<int> key_Items;
+		key_Items.push_back(ui->_4_comboBox->currentIndex());
+		key_Items.push_back(ui->_4_comboBox_2->currentIndex());
+		key_Items.push_back(ui->_4_comboBox_3->currentIndex());
+		key_Items.push_back(ui->_4_comboBox_4->currentIndex());
+		key_Items.push_back(ui->_4_comboBox_5->currentIndex());
+
+		for (size_t i = 0; i < size; i++)
+			prof->ManaKeys.push_back(KEY_ITEM(key_Items[i]));
 	}
 	//5
+}
+
+bool NewProfileConfiguartor::checkCorrectnessOfPage_1(){
+	QString nameOfProf = ui->_1_nameEdit->toPlainText();
+
+	bool nameisTooLong = nameOfProf.size() > 50;
+	bool nameIsTooShort = nameOfProf.size() < 3;
+	bool nameConsistForbiddenChars = false;
+	if (nameOfProf.contains(QChar::LineFeed) || nameOfProf.contains(QChar::CarriageReturn))
+		nameConsistForbiddenChars = true;
+	for each (auto character in nameOfProf) {
+		if (!character.isLetterOrNumber() && !character.isSpace())
+			nameConsistForbiddenChars = true;
+	}
+
+	if (nameisTooLong) {
+		Utilities::showMessageBox(StringResource::WindowTitle_CrackerJackProblem(), StringResource::NewProfileConfig_1_TooLongName(), QMessageBox::Ok);
+		return false;
+	}
+
+	if (nameIsTooShort) {
+		Utilities::showMessageBox(StringResource::WindowTitle_CrackerJackProblem(), StringResource::NewProfileConfig_1_EmptyName(), QMessageBox::Ok);
+		return false;
+	}
+
+	if (nameConsistForbiddenChars) {
+		Utilities::showMessageBox(StringResource::WindowTitle_CrackerJackProblem(), StringResource::NewProfileConfig_1_ForbiddenChars(), QMessageBox::Ok);
+		return false;
+	}
+
+	return true;
+}
+
+bool NewProfileConfiguartor::checkCorrectnessOfPage_2(){
+	bool oneOfButtonsIsChecked = false;
+	QList<QRadioButton*> buttons;
+	buttons.push_back(ui->_2_RadButt_ED);
+	buttons.push_back(ui->_2_RadButt_EK);
+	buttons.push_back(ui->_2_RadButt_RP);
+	buttons.push_back(ui->_2_RadButt_MS);
+	
+	for each (QRadioButton * var in buttons) {
+		if (var->isChecked()) {
+			oneOfButtonsIsChecked = true;
+			break;
+		}
+	}
+
+	if (oneOfButtonsIsChecked)
+		return true;
+	else {
+		Utilities::showMessageBox("CracerJack problem", StringResource::NewProfileConfig_2_anyProfIsChecked(), QMessageBox::Ok);
+		return false;
+	}
+
+}
+
+bool NewProfileConfiguartor::checkCorrectnessOfPage_3(){
+	int numberOfSliders = ui->_3_spinGetNumberOfMethodes->value();
+
+	QList<QAbstractSlider*> sliders;
+	sliders.push_back(ui->_3_horizontalSlider_1);
+	sliders.push_back(ui->_3_horizontalSlider_2);
+	sliders.push_back(ui->_3_horizontalSlider_3);
+	sliders.push_back(ui->_3_horizontalSlider_4);
+	sliders.push_back(ui->_3_horizontalSlider_5);
+
+	QList<QAbstractSlider*> activeSliders;
+	for (size_t i = 0; i < numberOfSliders; i++)
+		activeSliders.push_back(sliders[i]);
+
+	bool slidersAreInCorrectOrder = true;
+	bool everySliderHasDiffrentValue = true;
+	int biggestValue = 101;
+
+	for each (QAbstractSlider* slider in activeSliders) {
+		if (slider->value() < biggestValue)
+			biggestValue = slider->value();
+		else if (slider->value() == biggestValue) 
+			everySliderHasDiffrentValue = false;
+		else 
+			slidersAreInCorrectOrder = false;
+	}
+
+
+	QList<QKeySequence> keys;
+	keys.push_back(ui->_3_shortKey_1->keySequence());
+	keys.push_back(ui->_3_shortKey_2->keySequence());
+	keys.push_back(ui->_3_shortKey_3->keySequence());
+	keys.push_back(ui->_3_shortKey_4->keySequence());
+	keys.push_back(ui->_3_shortKey_5->keySequence());
+
+	bool oneOfKeyFieldsHasManyValues = false;
+	bool oneOfKeyFieldsHasNoValue = false;
+	bool oneOfKeyFieldsHasForbiddenChars = false;
+
+	int size = ui->_3_spinGetNumberOfMethodes->value();
+	for (int i = 0; i < size; i++) {
+		if (keys[i].count() == 0) {
+			oneOfKeyFieldsHasNoValue = true;
+		}
+		else if (keys[i].count() > 1) {
+			oneOfKeyFieldsHasManyValues = true;
+		}
+	}
+
+	for each (QKeySequence var in keys) {
+		if (var.toString() == "+" || var.toString() == "#")
+			oneOfKeyFieldsHasForbiddenChars = true;
+	}
+
+
+
+	if (!everySliderHasDiffrentValue) {
+		Utilities::showMessageBox(StringResource::WindowTitle_CrackerJackProblem(), StringResource::NewProfileConfig_3_SlidersAreInTheSamePosition(), QMessageBox::Ok);
+		return false;
+	}
+	if (!slidersAreInCorrectOrder) {
+		Utilities::showMessageBox(StringResource::WindowTitle_CrackerJackProblem(), StringResource::NewProfileConfig_3_SlidersAreInWrongOrder(), QMessageBox::Ok);
+		return false;
+	}
+	if (oneOfKeyFieldsHasManyValues) {
+		Utilities::showMessageBox(StringResource::WindowTitle_CrackerJackProblem(), StringResource::NewProfileConfig_3_ShortcutManyValue(), QMessageBox::Ok);
+		return false;
+	}
+	if (oneOfKeyFieldsHasNoValue) {
+		Utilities::showMessageBox(StringResource::WindowTitle_CrackerJackProblem(), StringResource::NewProfileConfig_3_ShortcutNoValue(), QMessageBox::Ok);
+		return false;
+	}
+	if (oneOfKeyFieldsHasForbiddenChars) {
+		Utilities::showMessageBox(StringResource::WindowTitle_CrackerJackProblem(), StringResource::NewProfileConfig_3_ShortCutHasForbiddenChars(), QMessageBox::Ok);
+		return false;
+	}
+
+	return true;
+}
+
+bool NewProfileConfiguartor::checkCorrectnessOfPage_4(){
+	int numberOfSliders = ui->_4_spinGetNumberOfMethodes->value();
+
+	QList<QAbstractSlider*> sliders;
+	sliders.push_back(ui->_4_horizontalSlider_1);
+	sliders.push_back(ui->_4_horizontalSlider_2);
+	sliders.push_back(ui->_4_horizontalSlider_3);
+	sliders.push_back(ui->_4_horizontalSlider_4);
+	sliders.push_back(ui->_4_horizontalSlider_5);
+
+	QList<QAbstractSlider*> activeSliders;
+	for (size_t i = 0; i < numberOfSliders; i++)
+		activeSliders.push_back(sliders[i]);
+
+	bool slidersAreInCorrectOrder = true;
+	bool everySliderHasDiffrentValue = true;
+	int biggestValue = 101;
+	for each (QAbstractSlider * slider in activeSliders) {
+		if (slider->value() < biggestValue)
+			biggestValue = slider->value();
+		else if (slider->value() == biggestValue) {
+			everySliderHasDiffrentValue = false;
+		}
+		else {
+			slidersAreInCorrectOrder = false;
+		}
+	}
+
+	QList<QKeySequence> keys;
+	keys.push_back(ui->_4_shortKey_1->keySequence());
+	keys.push_back(ui->_4_shortKey_2->keySequence());
+	keys.push_back(ui->_4_shortKey_3->keySequence());
+	keys.push_back(ui->_4_shortKey_4->keySequence());
+	keys.push_back(ui->_4_shortKey_5->keySequence());
+
+	bool oneOfKeyFieldHasManyValues = false;
+	bool oneOfKeyFieldHasNoValue = false;
+	bool oneOfKeyFieldsHasForbiddenChars = false;
+
+	int size = ui->_4_spinGetNumberOfMethodes->value();
+	for (int i = 0; i < size; i++) {
+		if (keys[i].count() == 0) {
+			oneOfKeyFieldHasNoValue = true;
+		}
+		else if (keys[i].count() > 1) {
+			oneOfKeyFieldHasManyValues = true;
+		}
+	}
+
+	for each (QKeySequence var in keys) {
+		if (var.toString() == "+" || var.toString() == "#")
+			oneOfKeyFieldsHasForbiddenChars = true;
+	}
+
+
+	if (!everySliderHasDiffrentValue) {
+		Utilities::showMessageBox(StringResource::WindowTitle_CrackerJackProblem(), StringResource::NewProfileConfig_3_SlidersAreInTheSamePosition(), QMessageBox::Ok);
+		return false;
+	}
+	if (!slidersAreInCorrectOrder) {
+		Utilities::showMessageBox(StringResource::WindowTitle_CrackerJackProblem(), StringResource::NewProfileConfig_3_SlidersAreInWrongOrder(), QMessageBox::Ok);
+		return false;
+	}
+	if (oneOfKeyFieldHasManyValues) {
+		Utilities::showMessageBox(StringResource::WindowTitle_CrackerJackProblem(), StringResource::NewProfileConfig_3_ShortcutManyValue(), QMessageBox::Ok);
+		return false;
+	}
+	if (oneOfKeyFieldHasNoValue) {
+		Utilities::showMessageBox(StringResource::WindowTitle_CrackerJackProblem(), StringResource::NewProfileConfig_3_ShortcutNoValue(), QMessageBox::Ok);
+		return false;
+	}
+	if (oneOfKeyFieldsHasForbiddenChars) {
+		Utilities::showMessageBox(StringResource::WindowTitle_CrackerJackProblem(), StringResource::NewProfileConfig_3_ShortCutHasForbiddenChars(), QMessageBox::Ok);
+		return false;
+	}
+
+	return true;
+}
+
+bool NewProfileConfiguartor::checkCorrectnessOfPage_5(){
+	int indexOfAutoBox = ui->_5_AutoLootBox->currentIndex();
+	int indexOfLootBox = ui->_5_AutoLootBox->currentIndex();
+	bool indexAreInRage = true;
+	if (indexOfAutoBox < 0 || indexOfAutoBox > 2)
+		indexAreInRage = false;
+	if (indexOfLootBox < 0 || indexOfLootBox > 2)
+		indexAreInRage = false;
+	return indexAreInRage;
 }
 
 void NewProfileConfiguartor::fillWidgetsWithDataFromProf(Profile* prof) {
@@ -516,4 +588,16 @@ void NewProfileConfiguartor::_4_slidersChanged() {
 		labels[i]->setText(txt);
 	}
 
+}
+
+void NewProfileConfiguartor::_5_listAction(){
+	if (ui->_5_ControlBox->currentIndex() == CONTROLS::CLSSIC_CONTROLS) {
+		ui->_5_AutoLootBox->setEnabled(true);
+		ui->_5_AutoLootBox->setCurrentIndex(0);
+	}
+	else {
+		ui->_5_AutoLootBox->setEnabled(false);
+		ui->_5_AutoLootBox->setCurrentIndex(0);
+	}
+	ui->_5_AutoLootBox->repaint();
 }

@@ -103,6 +103,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="sources\MainMenu.cpp" />
+    <ClCompile Include="sources\miniMapAnalyser.cpp" />
     <ClCompile Include="sources\NewProfileConfiguartor.cpp" />
     <ClCompile Include="sources\Key.cpp" />
     <ClCompile Include="sources\ProfileDataBaseManager.cpp" />
@@ -110,6 +111,7 @@
     <ClCompile Include="sources\LoginWindow.cpp" />
     <ClCompile Include="sources\main.cpp" />
     <ClCompile Include="sources\Profile.cpp" />
+    <ClCompile Include="sources\ScreenSaver.cpp" />
     <ClCompile Include="sources\ScreenSettings.cpp" />
     <ClCompile Include="sources\SelectProfileWindow.cpp" />
     <ClCompile Include="sources\Utilities.cpp" />
@@ -127,6 +129,8 @@
   <ItemGroup>
     <QtMoc Include="sources\MainMenu.h" />
     <QtMoc Include="sources\ScreenSettings.h" />
+    <QtMoc Include="sources\miniMapAnalyser.h" />
+    <QtMoc Include="sources\ScreenSaver.h" />
     <ClInclude Include="sources\StringResource.h" />
     <QtMoc Include="sources\NewProfileConfiguartor.h" />
     <ClInclude Include="sources\Key.h" />

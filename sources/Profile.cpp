@@ -2,6 +2,7 @@
 
 Profile::Profile(QObject *parent) : QObject(parent)
 {
+	
 }
 
 Profile::Profile()
@@ -65,16 +66,29 @@ QList<QKeySequence> Profile::StringToKeyList(QString str){
 	return keyList;
 }
 
-int Profile::ProfToInt(PROFESSION prof) {
-	switch (prof)
-	{
-	case RP: { return 1; break; }
-	case EK: { return 2; break; }
-	case ED: { return 3; break; }
-	case MS: { return 4; break; }
-	default: { return 0; break; }
+QString Profile::KeyItemListToString(QList<KEY_ITEM> keylist) {
+	if (keylist.size() == 0)
+		return QString("#");
+
+	QString toRet = "";
+	for each (KEY_ITEM var in keylist)
+		toRet.append("#" + QString::number((int)var));
+
+	return toRet;
+}
+
+QList<KEY_ITEM> Profile::ProfToInt(QString str){
+	QList<KEY_ITEM> keyItemList;
+	if (str == QString("#"));
+		return keyItemList;
+
+	QStringList list = str.split("#");
+	for (int i = 0; i < list.size(); i++) {
+		KEY_ITEM keyItem = KEY_ITEM(list[i].toInt());
+		keyItemList.push_back(keyItem);
 	}
+
+
+	return keyItemList;
 }
-PROFESSION Profile::ProfToInt(int profInt){
-	return PROFESSION(profInt);
-}
+

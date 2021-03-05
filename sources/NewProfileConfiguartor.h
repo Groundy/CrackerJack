@@ -30,6 +30,9 @@ public slots:
 	void _4_ManaEnabledChanged();
 	void _4_spinChanged();
 	void _4_slidersChanged();
+	
+	void _5_listAction();
+
 
 private:
 	Ui::NewProfileConfiguartor *ui;
@@ -39,8 +42,13 @@ private:
 	int MAX_PAGE;
 	void finishAddingNewProfile();
 	void additionalGuiSettings();
-	
 	bool pageIsCorrectlyFilled();
 	void saveDataToProfile(Profile* prof);
+
+	bool checkCorrectnessOfPage_1();
+	bool checkCorrectnessOfPage_2();
+	bool checkCorrectnessOfPage_3();
+	bool checkCorrectnessOfPage_4();
+	bool checkCorrectnessOfPage_5();
 	
 };

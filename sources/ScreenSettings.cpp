@@ -4,6 +4,9 @@ ScreenSettings::ScreenSettings(QObject *parent)
 	: QObject(parent)
 {
 }
+ScreenSettings::ScreenSettings()
+{
+}
 
 ScreenSettings::~ScreenSettings()
 {

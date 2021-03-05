@@ -3,10 +3,10 @@
 #include <qstring.h>
 #include "qsplitter.h"
 
-enum TYPE_OF_KEY { NORMAL, SHIFT, FKEY, CONTROL, ALT };
 
 class Key {
 public:
+	enum TYPE_OF_KEY { NORMAL, SHIFT, FKEY, CONTROL, ALT };
 	QChar letter;
 	TYPE_OF_KEY keyType;
 	

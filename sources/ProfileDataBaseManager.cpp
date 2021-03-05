@@ -39,11 +39,15 @@ void ProfileDataBaseManager::makeDataBase(){
     createCommand.append("healthKeys TEXT, ");
     createCommand.append("manaKeys TEXT, ");
     createCommand.append("healthString TEXT, ");
+    createCommand.append("ManaItems TEXT, ");
+    createCommand.append("HealthItems TEXT, ");
+    createCommand.append("JustCreated TEXT, ");
     createCommand.append("lastLogin TEXT, ");
     createCommand.append("creationTime TEXT ");
 
     createCommand.append(")");
     query.exec(createCommand);
+
 }
 
 void ProfileDataBaseManager::modifyAtribute(QString profileName,FieldsOfDB atr, QString newValue) {
@@ -84,6 +88,9 @@ QString ProfileDataBaseManager::translateDBFields(FieldsOfDB atr){
     case ProfileDataBaseManager::HEALTH_RESTORE_STRING:    return "healthString";
     case ProfileDataBaseManager::MANA_RESTORE_KEY:   return "manaKeys";
     case ProfileDataBaseManager::HEALTH_RESTORE_KEY:    return "healthKeys";
+    case ProfileDataBaseManager::MANA_RESTORE_ITEM:    return "ManaItems";
+    case ProfileDataBaseManager::HEALTH_RESTORE_ITEM:    return "HealthItems";
+    case ProfileDataBaseManager::JUST_CREATED:    return "JustCreated";
     case ProfileDataBaseManager::LAST_LOGIN: return "lastLogin";
     case ProfileDataBaseManager::CREATION_TIME: return "creationTime";
     default: return "";
@@ -143,4 +150,7 @@ void ProfileDataBaseManager::saveProfileToDatabase(Profile* prof){
     modifyAtribute(name, ProfileDataBaseManager::HEALTH_RESTORE_STRING, Profile::VectorToString(prof->healthRestorePercentages));
     modifyAtribute(name, ProfileDataBaseManager::MANA_RESTORE_KEY, Profile::KeyListToString(prof->ManaKeys));
     modifyAtribute(name, ProfileDataBaseManager::HEALTH_RESTORE_KEY, Profile::KeyListToString(prof->healthKeys));
+    modifyAtribute(name, ProfileDataBaseManager::HEALTH_RESTORE_ITEM, Profile::KeyItemListToString(prof->healthItems));
+    modifyAtribute(name, ProfileDataBaseManager::MANA_RESTORE_ITEM, Profile::KeyItemListToString(prof->manaItemsItems));
+
 }

@@ -1,6 +1,6 @@
 #include "LoginWindow.h"
 #include <QtWidgets/QApplication>
-
+#include "ScreenSaver.h"
 /*This function is designed to make ranom name of Process to avoid giving the same name the name that could be easily detected*/
 QString makeRandomProccessName() {
     const QString possibleCharacters("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789 ");
@@ -33,8 +33,10 @@ int main(int argc, char *argv[])
    // w.show();
     //[TMP]
     //w.goToSelectProfileWindow();
-    SelectProfileWindow tt;
-    tt.show();
+    //SelectProfileWindow tt;
+    //tt.show();
+    ScreenSaver* tt = new ScreenSaver();
+    tt->run();
     return a.exec();
 }
 

@@ -29,8 +29,11 @@ public:
 		HEALTH_RESTORE_STRING,
 		MANA_RESTORE_KEY,
 		HEALTH_RESTORE_KEY,
+		MANA_RESTORE_ITEM,
+		HEALTH_RESTORE_ITEM,
+		JUST_CREATED,
 		LAST_LOGIN,
-		CREATION_TIME,
+		CREATION_TIME
 	};
 	static QString translateDBFields(FieldsOfDB atr);
 	static QString getValueOfCell(FieldsOfDB atr, QString profileName);

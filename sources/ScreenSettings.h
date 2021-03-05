@@ -2,8 +2,7 @@
 
 #include <QObject>
 
-enum AUTO_LOOT_KEY { RIGHT, SHIFT_RIGHT, LEFT };
-enum CONTROLS { CLSSIC_CONTROLS, REGULARCONTROLS, LEFT_SMART_CLICK };
+
 enum ARCS_STYLE { DEFAULT, COMPACT, PARALLER, LARGE };
 enum POSITION { LEFT, RIGHT, BOTTOM, TOP };
 
@@ -14,5 +13,9 @@ enum POSITION { LEFT, RIGHT, BOTTOM, TOP };
 
 public:
 	ScreenSettings(QObject *parent);
+	ScreenSettings();
 	~ScreenSettings();
+	int numberOfAddedBarsLeft;
+	int numberOfAddedBarsRight;
+
 };
