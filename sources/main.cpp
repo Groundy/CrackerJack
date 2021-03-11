@@ -37,7 +37,6 @@ int main(int argc, char *argv[])
     //win.exec();
     MainMenu* mainMenu = new MainMenu(tt,NULL);
     mainMenu->exec();
-    int tmp = 3;
     return a.exec();
 }
 

@@ -9,7 +9,6 @@ MainMenu::MainMenu(Profile* selectedProf,QWidget *parent)
 	prof = selectedProf;
 	ui->profileNameLabel->setText(prof->profileName);
 	activityThread = new activeGameThread(this);
-	//bool good = connect(activityThread, SIGNAL(GameStateChanged()), this, SLOT(onGameStateChanged()));
 }
 
 MainMenu::~MainMenu()
@@ -36,7 +35,6 @@ void MainMenu::autoHuntAction()
 }
 
 void MainMenu::tradingAction(){
-	qDebug() << "cht";
 	startThreads();
 }
 
@@ -44,11 +42,40 @@ void MainMenu::skillingAction()
 {
 }
 
-void MainMenu::onGameStateChanged(activeGameThread::gameActivityStates state){
-	QDateTime tt;
-	QString ff = tt.currentDateTime().toString("mm:ss");
-	ui->profileNameLabel->setText(ff);
-	ui->profileNameLabel->repaint();
+void MainMenu::onGameStateChanged(int state){
+	qDebug() << "MainMenu::onGameStateChanged";
+	QString toWrite;
+	QLabel* label = ui->gameActiveLabel;
+	switch (state)
+	{
+	case activeGameThread::gameActivityStates::ACTIVE: {
+		toWrite = "game active, Logged";
+		break; 
+	}
+	case activeGameThread::gameActivityStates::NO_ACTIVE: {
+		toWrite = "game not found";
+		break;
+	}
+	case activeGameThread::gameActivityStates::NO_HANDLER: {
+		toWrite = "game found but no access";
+		break;
+	}
+	case activeGameThread::gameActivityStates::NO_LOGGED: {
+		toWrite = "game active but no char logged";
+		break;
+	}
+	case activeGameThread::gameActivityStates::NO_WINDOW: {
+		toWrite = "game is loading";
+		break;
+	}
+	default: {
+		toWrite = "Error";
+		break;
+	}
+	}
+	gameActivitystate = activeGameThread::gameActivityStates(state);
+	label->setText(toWrite);
+	label->repaint();
 }
 
 void MainMenu::setProblemsWindow(QStringList problemsToShow){
@@ -59,7 +86,5 @@ void MainMenu::setProblemsWindow(QStringList problemsToShow){
 }
 
 void MainMenu::startThreads(){
-	activityThread = new activeGameThread(this);
 	activityThread->start();
-	int g = 4;
 }
