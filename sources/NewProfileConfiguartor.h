@@ -14,9 +14,9 @@ class NewProfileConfiguartor : public QDialog
 	Q_OBJECT
 
 public:
-	NewProfileConfiguartor( Profile* prof, QWidget *parent = Q_NULLPTR);
+	NewProfileConfiguartor(Profile* prof, QWidget *parent = Q_NULLPTR);
 	~NewProfileConfiguartor();
-	void fillWidgetsWithDataFromProf(Profile* prof);
+	void fillWidgetsWithDataFromProf();
 public slots:
 	void cancelButtonAction();
 	void nextPageButtonAction();
@@ -32,7 +32,6 @@ public slots:
 	void _4_slidersChanged();
 	
 	void _5_listAction();
-
 
 private:
 	Ui::NewProfileConfiguartor *ui;

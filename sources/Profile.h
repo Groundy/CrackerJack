@@ -7,6 +7,7 @@
 //#include <qsplitter.h>
 #include "qkeysequence.h"
 #include "ScreenSettings.h"
+#include "Key.h"
 
 enum PROFESSION { RP, EK, ED, MS};
 enum AUTO_LOOT_KEY { RIGHT_MOUSE_BUTTON, SHIFT_RIGHT, LEFT_MOUSE_BUTTON };//enable only if controls
@@ -23,30 +24,17 @@ public:
 
 	QList<int> healthRestorePercentages;//done
 	QList<int> ManaRestoreMethodesPercentage;//done
-	QList<QKeySequence> healthKeys;//done
-	QList<QKeySequence> ManaKeys;//done
-	QList<KEY_ITEM> healthItems;
-	QList<KEY_ITEM> manaItemsItems;
+	QList<Key> healthKeys;//done
+	QList<Key> ManaKeys;//done
+	QList<KEY_ITEM> healthItems;//done
+	QList<KEY_ITEM> manaItems;//done
 
 	PROFESSION profession;//done
-	//AUTO_LOOT_KEY lootKey;
-	//CONTROLS controls;
-	bool justCreated;//only to creation date
+	AUTO_LOOT_KEY lootKey;
+	CONTROLS controls;
 	QString profileName;//done
 	QString lastLoginDate;
 	QString creationDate;
 	QString secondsSpent;
 	ScreenSettings screenSettings;
-
-
-	static QString VectorToString(QList<int> vect);
-	static QList<int> StringToVector(QString str);
-
-	static QString KeyListToString(QList<QKeySequence> keylist);
-	static QList<QKeySequence> StringToKeyList(QString str);
-	//are they even usefull?
-	static QString KeyItemListToString(QList<KEY_ITEM> keylist);
-	static QList<KEY_ITEM> ProfToInt(QString str);
-
-
 };

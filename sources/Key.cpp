@@ -1,68 +1,96 @@
 #include "Key.h"
 
-Key::Key(QString keyNumber){
-	TYPE_OF_KEY keyType;
-	QChar letter;
-	QStringList parts = keyNumber.split("+");
-	if (parts.size() < 1 || parts.size() > 2)
-		;//diag err
-	else if(parts.size() == 1){//it's simple letter or f-key
-		QString onlyOne = parts[0];
-		QChar firstLetter = onlyOne[0];
-		if (firstLetter == QChar('F'))
-			keyType = FKEY;
-		else
-			keyType = NORMAL;
-		if (onlyOne.size() == 2)
-			letter = onlyOne[1];
-		else
-			;//diag //err
+bool Key::checkIfnumberIsAloowed(int keyNumber){
+	for (size_t i = 0; i < 256; i++) {
+		if (KEYS(i) == KEYS(keyNumber))
+			return true;
 	}
-	else if (parts.size() == 2) {
-		QString first = parts[0];
-		QString second = parts[1];
-		if (first == "Ctrl")
-			keyType = CONTROL;
-		else if (first == "Alt")
-			keyType = ALT;
-		else if (first == "Shift")
-			keyType = SHIFT;
-		else
-			;//diag //err
-		letter = second[0];
-	}
-}	
-
-QString Key::toString() {
-	QString toRet = "";
-	switch (keyType)
-	{
-	case TYPE_OF_KEY::CONTROL: {
-		toRet.append("Ctrl+");
-		break; }
-	case TYPE_OF_KEY::SHIFT: {
-		toRet.append("Shift+");
-		break; }
-	case TYPE_OF_KEY::ALT: {
-		toRet.append("Alt+");
-		break; }
-	case TYPE_OF_KEY::FKEY: {
-		toRet.append("F");
-		//diag err(if Qletter is number)
-		break; }
-	case TYPE_OF_KEY::NORMAL: {
-		toRet.append("");
-		break; }
-	default: {
-		toRet.append("");
-		//diag err
-		break; }
-	}
-	toRet.append(QString(letter));
-	return toRet;
+	return false;
 }
 
-Key::Key(TYPE_OF_KEY typeOfKey, QChar charr) {
-	this->keyType = typeOfKey;
-	this->letter = charr;
+Key::Key(){
+	number =endOfEnum;
+}
+
+Key::Key(unsigned int numberToSet){
+	bool isAllowed = checkIfnumberIsAloowed(numberToSet);
+	if (isAllowed) {
+		this->number = numberToSet;
+	}
+	else{
+		this->number = -1;
+		//diag err
+	}
+}
+
+Key::Key(QKeySequence qsec){
+	QString str = qsec.toString();
+	int keyValue;
+	if (str == "F1") keyValue = KEYS(F1);
+	else if (str == "F2") keyValue = KEYS(F2);
+	else if (str == "F3") keyValue = KEYS(F3);
+	else if (str == "F4") keyValue = KEYS(F4);
+	else if (str == "F5") keyValue = KEYS(F5);
+	else if (str == "F6") keyValue = KEYS(F6);
+	else if (str == "F7") keyValue = KEYS(F7);
+	else if (str == "F8") keyValue = KEYS(F8);
+	else if (str == "F9") keyValue = KEYS(F9);
+	else if (str == "F10") keyValue = KEYS(F10);
+	else if (str == "F11") keyValue = KEYS(F11);
+	else if (str == "F12") keyValue = KEYS(F12);
+	else if (str == "0") keyValue = KEYS(n0);
+	else if (str == "1") keyValue = KEYS(n1);
+	else if (str == "2") keyValue = KEYS(n2);
+	else if (str == "3") keyValue = KEYS(n3);
+	else if (str == "4") keyValue = KEYS(n4);
+	else if (str == "5") keyValue = KEYS(n5);
+	else if (str == "6") keyValue = KEYS(n6);
+	else if (str == "7") keyValue = KEYS(n7);
+	else if (str == "8") keyValue = KEYS(n8);
+	else if (str == "9") keyValue = KEYS(n9);
+	else if (str == "Esc") keyValue = KEYS(ESC);
+	else if (str == "Ins") keyValue = KEYS(INSERT);
+	else if (str == "Del") keyValue = KEYS(DELETE_);
+	else if (str == "Home") keyValue = KEYS(HOME);
+	else if (str == "End") keyValue = KEYS(END);
+	else if (str == "PgUp") keyValue = KEYS(PAGEUP);
+	else if (str == "PgDown") keyValue = KEYS(PAGEDOWN);
+	else if (str == "ScrollLock") keyValue = KEYS(ScrollLock);
+	else if (str == "Pause") keyValue = KEYS(PauseBreak);
+	else if (str == "/") keyValue = KEYS(SLASH);
+	else if (str == "*") keyValue = KEYS(ASTERIX);
+	else if (str == "-") keyValue = KEYS(MINUS);
+	else if (str == "+") keyValue = KEYS(PLUS);
+	else  keyValue = KEYS(endOfEnum);
+	number = keyValue;
+}
+
+QKeySequence Key::toQKeySequence(Key key){
+	int keyValue = key.number;
+	QString toRetStr;
+	if (keyValue >= F1 && keyValue <= F12) {
+		toRetStr = "F";
+		int fkey = keyValue - F1 + 1;
+		toRetStr.append(QString::number(fkey));
+	}
+	else if (keyValue >= n0 && keyValue <= n9) {
+		int key = keyValue - n0 + 1;
+		toRetStr.append(QString::number(key));
+	}
+	else if (keyValue == ESC) toRetStr = "Esc";
+	else if (keyValue == INSERT) toRetStr = "Ins";
+	else if (keyValue == DELETE_) toRetStr = "Del";
+	else if (keyValue == HOME) toRetStr = "Home";
+	else if (keyValue == END) toRetStr = "End";
+	else if (keyValue == PAGEUP) toRetStr = "PgUp";
+	else if (keyValue == PAGEDOWN) toRetStr = "PgDown";
+	else if (keyValue == ScrollLock) toRetStr = "ScrollLock";
+	else if (keyValue == PauseBreak) toRetStr = "Pause";
+	else if (keyValue == SLASH) toRetStr = "/";
+	else if (keyValue == ASTERIX) toRetStr = "*";
+	else if (keyValue == MINUS) toRetStr = "-";
+	else if (keyValue == PLUS) toRetStr =  "+";
+	else toRetStr = "";
+	QKeySequence seq(toRetStr);
+	return seq;
 }

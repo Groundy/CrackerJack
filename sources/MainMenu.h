@@ -1,16 +1,32 @@
 #pragma once
+#include <QDialog>
+#include "Profile.h"
+#include "activeGameThread.h"
+#include "qdatetime.h"
+namespace Ui { class MainMenu; };
 
-#include <QWidget>
-#include "ui_MainMenu.h"
-
-class MainMenu : public QWidget
+class MainMenu : public QDialog
 {
 	Q_OBJECT
 
 public:
-	MainMenu(QWidget *parent = Q_NULLPTR);
+	MainMenu(Profile* prof, QWidget *parent = Q_NULLPTR);
 	~MainMenu();
+public slots:
+	void helpButtonAction();
+	void changeProfileButtonAction();
+	void editProfileButtonAction();
+	void manualHuntAction();
+	void autoHuntAction();
+	void tradingAction();
+	void skillingAction();
+	void onGameStateChanged(activeGameThread::gameActivityStates state);
 
 private:
-	Ui::MainMenu ui;
+	Ui::MainMenu *ui;
+	Profile* prof;
+	activeGameThread::gameActivityStates state;
+	activeGameThread* activityThread;
+	void setProblemsWindow(QStringList problemsToShow);
+	void startThreads();
 };

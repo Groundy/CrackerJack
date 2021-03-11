@@ -8,7 +8,7 @@ class SelectProfileWindow : public QDialog
 	Q_OBJECT
 
 public:
-	SelectProfileWindow(QWidget *parent = Q_NULLPTR);
+	SelectProfileWindow(QWidget *parent = Q_NULLPTR, Profile* selectedProf = NULL);
 	~SelectProfileWindow();
 	ProfileDataBaseManager dbManager;
 public slots:
@@ -16,8 +16,10 @@ public slots:
 	void editProfileButtonAction();
 	void deleteProfileButtonAction();
 	void selectListAction();
+	void profSelected();
 private:
 	Ui::SelectProfileWindow *ui;
 	void prepareProfiles();
+	Profile* profToSelect;
 
 };

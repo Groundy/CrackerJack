@@ -32,7 +32,7 @@ void ProfileDataBaseManager::openDB() {
 
 void ProfileDataBaseManager::makeDataBase(){
     QSqlQuery query;
-    QString createCommand = "CREATE TABLE profiles (id INTEGER NOT NULL, ";
+    QString createCommand = "CREATE TABLE profiles ( ";
     createCommand.append("profileName TEXT, ");
     createCommand.append("profession INTEGER, ");
     createCommand.append("manaString TEXT, ");
@@ -41,7 +41,6 @@ void ProfileDataBaseManager::makeDataBase(){
     createCommand.append("healthString TEXT, ");
     createCommand.append("ManaItems TEXT, ");
     createCommand.append("HealthItems TEXT, ");
-    createCommand.append("JustCreated TEXT, ");
     createCommand.append("lastLogin TEXT, ");
     createCommand.append("creationTime TEXT ");
 
@@ -58,8 +57,9 @@ void ProfileDataBaseManager::modifyAtribute(QString profileName,FieldsOfDB atr, 
 }
 
 void ProfileDataBaseManager::addRecord(QString profileName) {
+    //diag /err
     QSqlQuery query;
-    QString createCommand = "INSERT INTO profiles (" + translateDBFields(PROFILE_NAME) + ",ID) VALUES('"+profileName+"',0)";
+    QString createCommand = "INSERT INTO profiles (" + translateDBFields(PROFILE_NAME) + ") VALUES('"+profileName+"')";
     query.exec(createCommand);
 }
 
@@ -81,7 +81,6 @@ QString ProfileDataBaseManager::translateDBFields(FieldsOfDB atr){
     //works as resources of strings with db Fields
     switch (atr)
     {
-    case ProfileDataBaseManager::ID:    return "ID";
     case ProfileDataBaseManager::PROFILE_NAME:  return "profileName";
     case ProfileDataBaseManager::PROFESION: return "profession";
     case ProfileDataBaseManager::MANA_RESTORE_STRING:   return "manaString";
@@ -90,7 +89,6 @@ QString ProfileDataBaseManager::translateDBFields(FieldsOfDB atr){
     case ProfileDataBaseManager::HEALTH_RESTORE_KEY:    return "healthKeys";
     case ProfileDataBaseManager::MANA_RESTORE_ITEM:    return "ManaItems";
     case ProfileDataBaseManager::HEALTH_RESTORE_ITEM:    return "HealthItems";
-    case ProfileDataBaseManager::JUST_CREATED:    return "JustCreated";
     case ProfileDataBaseManager::LAST_LOGIN: return "lastLogin";
     case ProfileDataBaseManager::CREATION_TIME: return "creationTime";
     default: return "";
@@ -98,6 +96,7 @@ QString ProfileDataBaseManager::translateDBFields(FieldsOfDB atr){
 }
 
 int ProfileDataBaseManager::getNumberOfRecords(){
+    //diag //err
     int toRet = 0;
     QSqlQuery query;
     query.exec("SELECT COUNT(*) FROM profiles");
@@ -107,18 +106,20 @@ int ProfileDataBaseManager::getNumberOfRecords(){
 }
 
 QString ProfileDataBaseManager::getValueOfCell(FieldsOfDB atr, QString profileName) {
-   QString dataBaseColumn = translateDBFields(atr);
-   QString createCommand = "SELECT " + dataBaseColumn + " FROM profiles WHERE profileName = " + "'" + profileName + "'";
+     
+    QString dataBaseColumn = translateDBFields(atr);
+    QString createCommand = "SELECT " + dataBaseColumn + " FROM profiles WHERE profileName = " + "'" + profileName + "'";
    
-   QSqlQuery query(createCommand);
-   int fieldNo = query.record().indexOf(dataBaseColumn);
+    QSqlQuery query(createCommand);
+    int fieldNo = query.record().indexOf(dataBaseColumn);
    
-   QString toRet = "";
-   while (query.next())
-       toRet = query.value(fieldNo).toString();
+    QString toRet = "";
+    while (query.next())
+    toRet = query.value(fieldNo).toString();
    
    return toRet;
-}
+   
+  }
 
 void ProfileDataBaseManager::deleteRecord(QString name) {
     QSqlQuery query;
@@ -146,11 +147,109 @@ void ProfileDataBaseManager::saveProfileToDatabase(Profile* prof){
     QString name = prof->profileName;
     addRecord(name);
     modifyAtribute(name, ProfileDataBaseManager::PROFESION, QString::number(prof->profession));
-    modifyAtribute(name, ProfileDataBaseManager::MANA_RESTORE_STRING, Profile::VectorToString(prof->ManaRestoreMethodesPercentage));
-    modifyAtribute(name, ProfileDataBaseManager::HEALTH_RESTORE_STRING, Profile::VectorToString(prof->healthRestorePercentages));
-    modifyAtribute(name, ProfileDataBaseManager::MANA_RESTORE_KEY, Profile::KeyListToString(prof->ManaKeys));
-    modifyAtribute(name, ProfileDataBaseManager::HEALTH_RESTORE_KEY, Profile::KeyListToString(prof->healthKeys));
-    modifyAtribute(name, ProfileDataBaseManager::HEALTH_RESTORE_ITEM, Profile::KeyItemListToString(prof->healthItems));
-    modifyAtribute(name, ProfileDataBaseManager::MANA_RESTORE_ITEM, Profile::KeyItemListToString(prof->manaItemsItems));
+    modifyAtribute(name, ProfileDataBaseManager::MANA_RESTORE_STRING, DB_writer_ManaAndHealthRestorePercentages(prof->ManaRestoreMethodesPercentage));
+    modifyAtribute(name, ProfileDataBaseManager::HEALTH_RESTORE_STRING, DB_writer_ManaAndHealthRestorePercentages(prof->healthRestorePercentages));
+    modifyAtribute(name, ProfileDataBaseManager::MANA_RESTORE_KEY, DB_writer_ManaAndHealthKeys(prof->ManaKeys));
+    modifyAtribute(name, ProfileDataBaseManager::HEALTH_RESTORE_KEY, DB_writer_ManaAndHealthKeys(prof->healthKeys));
+    modifyAtribute(name, ProfileDataBaseManager::HEALTH_RESTORE_ITEM, DB_writer_ManaAndHealthItems(prof->healthItems));
+    modifyAtribute(name, ProfileDataBaseManager::MANA_RESTORE_ITEM, DB_writer_ManaAndHealthItems(prof->manaItems));
+    if (prof->creationDate.isEmpty()) {
+        QString creation = QDateTime::currentDateTime().toString("dd-MM-yyyy hh:mm");
+        modifyAtribute(name, ProfileDataBaseManager::CREATION_TIME, creation);
+    }
+}
 
+void ProfileDataBaseManager::readProfileFroDataBase(Profile* prof, QString name) {
+    prof->profileName = getValueOfCell(FieldsOfDB::PROFILE_NAME, name);
+    QString profession = getValueOfCell(FieldsOfDB::PROFESION, name);
+    prof->profession = PROFESSION(profession.toInt());
+    QString healthPercentages = getValueOfCell(FieldsOfDB::HEALTH_RESTORE_STRING, name);
+    prof->healthRestorePercentages = DB_reader_ManaAndHealthRestorePercentages(healthPercentages);
+    QString manaPercentage = getValueOfCell(FieldsOfDB::MANA_RESTORE_STRING, name);
+    prof->ManaRestoreMethodesPercentage = DB_reader_ManaAndHealthRestorePercentages(manaPercentage);
+    QString healthKeys = getValueOfCell(FieldsOfDB::HEALTH_RESTORE_KEY, name);
+    prof->healthKeys = DB_reader_ManaAndHealthKeys(healthKeys);
+    QString manaKeys = getValueOfCell(FieldsOfDB::MANA_RESTORE_KEY, name);
+    prof->ManaKeys = DB_reader_ManaAndHealthKeys(manaKeys);
+    QString healthItems = getValueOfCell(FieldsOfDB::HEALTH_RESTORE_ITEM, name);
+    prof->healthItems = DB_reader_ManaAndHealthItems(healthItems);
+    QString manaItems = getValueOfCell(FieldsOfDB::MANA_RESTORE_ITEM, name);
+    prof->manaItems = DB_reader_ManaAndHealthItems(manaItems);
+    prof->creationDate = getValueOfCell(FieldsOfDB::CREATION_TIME, name);
+}
+
+QString ProfileDataBaseManager::DB_writer_ManaAndHealthRestorePercentages(QList<int> vect) {
+    //ERR //DIAG
+    int size = vect.size();
+    if (size == 0)
+        return QString("#");
+
+    QString toRet = "" + QString::number(size) + QString("#");
+    for (int i = 0; i < size; i++)
+        toRet.append(QString::number(vect[i]) + "-");
+
+    return toRet;
+}
+
+QList<int> ProfileDataBaseManager::DB_reader_ManaAndHealthRestorePercentages(QString str) {
+    QList<int> vectWithThreshold;
+    if (str == "#");
+    return vectWithThreshold;
+    QStringList list = str.split("#");
+    if (list.size() != 2) {
+        //DIAG //ERROR
+        return vectWithThreshold;
+    }
+    int size = list.first().toInt();
+    QStringList thresholds = list[1].split("-");
+    for (int i = 0; i < size; i++)
+        vectWithThreshold.push_back(list[i].toInt());
+
+    return vectWithThreshold;
+}
+
+QString ProfileDataBaseManager::DB_writer_ManaAndHealthKeys(QList<Key> keylist) {
+    if (keylist.size() == 0)
+        return QString("#");
+
+    QString toRet = "#";
+    for each (Key key in keylist)
+        toRet.append(QString::number(key.number)+"#");
+
+    return toRet;
+}
+
+QList<Key> ProfileDataBaseManager::DB_reader_ManaAndHealthKeys(QString str) {
+    QList<Key> keyList;
+    if (str == QString("#"));
+     return keyList;
+
+    QStringList list = str.split("#");
+    for (int i = 0; i < list.size(); i++)
+        keyList.push_back(Key(list[i].toInt()));
+
+    return keyList;
+}
+
+QString ProfileDataBaseManager::DB_writer_ManaAndHealthItems(QList<KEY_ITEM> keylist) {
+    if (keylist.size() == 0)
+        return QString("#");
+
+    QString toRet = "";
+    for each (KEY_ITEM var in keylist)
+        toRet.append(QString::number((int)var)+"#");
+
+    return toRet;
+}
+
+QList<KEY_ITEM> ProfileDataBaseManager::DB_reader_ManaAndHealthItems(QString str){
+    QList<KEY_ITEM> listOfItems;
+    if (str == QString("#"));
+        return listOfItems;
+
+    QStringList list = str.split("#");
+    for (int i = 0; i < list.size(); i++)
+        listOfItems.push_back(KEY_ITEM(list[i].toInt()));
+
+    return listOfItems;
 }

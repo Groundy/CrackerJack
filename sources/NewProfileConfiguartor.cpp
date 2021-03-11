@@ -38,13 +38,11 @@ void NewProfileConfiguartor::refreshGUI(){
 }
 
 void NewProfileConfiguartor::finishAddingNewProfile(){
-	bool accepted = Utilities::showMessageBox_NO_YES("finish creating new profile","Are you sure that you want finish creating new profile?\nYou will be able to edit it later.");
+	bool accepted = Utilities::showMessageBox_NO_YES("finish creating new profile","Are you sure that you want finish creating new profile?");
 	if (accepted) {
 		saveDataToProfile(profToEdit);
 		this->accept();
 	}
-	else
-		this->accept();
 }
 
 void NewProfileConfiguartor::additionalGuiSettings(){
@@ -86,7 +84,7 @@ void NewProfileConfiguartor::additionalGuiSettings(){
 bool NewProfileConfiguartor::pageIsCorrectlyFilled() {
 	bool toRet;
 	//todo
-	return true;
+	//return true;
 	switch (pageNumber) {
 	case 1: {
 		 toRet = checkCorrectnessOfPage_1();
@@ -121,11 +119,11 @@ void NewProfileConfiguartor::saveDataToProfile(Profile* prof) {
 	//2
 	if (ui->_2_RadButt_ED->isChecked())
 		prof->profession = PROFESSION::ED;
-	if (ui->_2_RadButt_EK->isChecked())
+	else if (ui->_2_RadButt_EK->isChecked())
 		prof->profession = PROFESSION::EK;
-	if (ui->_2_RadButt_MS->isChecked())
+	else if (ui->_2_RadButt_MS->isChecked())
 		prof->profession = PROFESSION::MS;
-	if (ui->_2_RadButt_RP->isChecked())
+	else if (ui->_2_RadButt_RP->isChecked())
 		prof->profession = PROFESSION::RP;
 	//3
 	if (ui->_3_enableAutoHealing->isChecked()) {
@@ -203,7 +201,16 @@ void NewProfileConfiguartor::saveDataToProfile(Profile* prof) {
 
 bool NewProfileConfiguartor::checkCorrectnessOfPage_1(){
 	QString nameOfProf = ui->_1_nameEdit->toPlainText();
+	//QString nameOfCharacter = ui->_1_exactNameTextEdit->toPlainText();
 
+	/*bool exactNameIsTooLong = nameOfCharacter.size() < 100 ? true : false;
+	bool exactNameIsTooShort = nameOfCharacter.size() < 2  ? true : false;
+	bool exactNameHasNewLineChars;
+	if (nameOfProf.contains(QChar::LineFeed) || nameOfProf.contains(QChar::CarriageReturn))
+		exactNameHasNewLineChars = true;
+	else
+		exactNameHasNewLineChars = false;
+	*/
 	bool nameisTooLong = nameOfProf.size() > 50;
 	bool nameIsTooShort = nameOfProf.size() < 3;
 	bool nameConsistForbiddenChars = false;
@@ -220,7 +227,7 @@ bool NewProfileConfiguartor::checkCorrectnessOfPage_1(){
 	}
 
 	if (nameIsTooShort) {
-		Utilities::showMessageBox(StringResource::WindowTitle_CrackerJackProblem(), StringResource::NewProfileConfig_1_EmptyName(), QMessageBox::Ok);
+		Utilities::showMessageBox(StringResource::WindowTitle_CrackerJackProblem(), StringResource::NewProfileConfig_1_TooShortName(), QMessageBox::Ok);
 		return false;
 	}
 
@@ -228,7 +235,22 @@ bool NewProfileConfiguartor::checkCorrectnessOfPage_1(){
 		Utilities::showMessageBox(StringResource::WindowTitle_CrackerJackProblem(), StringResource::NewProfileConfig_1_ForbiddenChars(), QMessageBox::Ok);
 		return false;
 	}
+	/*
+	if (exactNameIsTooShort) {
+		Utilities::showMessageBox(StringResource::WindowTitle_CrackerJackProblem(), StringResource::NewProfileConfig_1_TooShortExactName(), QMessageBox::Ok);
+		return false;
+	}
 
+	if (exactNameIsTooLong) {
+		Utilities::showMessageBox(StringResource::WindowTitle_CrackerJackProblem(), StringResource::NewProfileConfig_1_TooLongExactName(), QMessageBox::Ok);
+		return false;
+	}
+
+	if (exactNameHasNewLineChars) {
+		Utilities::showMessageBox(StringResource::WindowTitle_CrackerJackProblem(), StringResource::NewProfileConfig_1_ExactNameHasNewLineChars(), QMessageBox::Ok);
+		return false;
+	}
+	*/
 	return true;
 }
 
@@ -305,12 +327,12 @@ bool NewProfileConfiguartor::checkCorrectnessOfPage_3(){
 		}
 	}
 
-	for each (QKeySequence var in keys) {
-		if (var.toString() == "+" || var.toString() == "#")
+	for (int i = 0; i < size; i++) {
+		int keyValurToCheck = Key(keys[i]).number;
+		bool isProperKey = Key::checkIfnumberIsAloowed(keyValurToCheck);
+		if (!isProperKey)
 			oneOfKeyFieldsHasForbiddenChars = true;
 	}
-
-
 
 	if (!everySliderHasDiffrentValue) {
 		Utilities::showMessageBox(StringResource::WindowTitle_CrackerJackProblem(), StringResource::NewProfileConfig_3_SlidersAreInTheSamePosition(), QMessageBox::Ok);
@@ -332,7 +354,6 @@ bool NewProfileConfiguartor::checkCorrectnessOfPage_3(){
 		Utilities::showMessageBox(StringResource::WindowTitle_CrackerJackProblem(), StringResource::NewProfileConfig_3_ShortCutHasForbiddenChars(), QMessageBox::Ok);
 		return false;
 	}
-
 	return true;
 }
 
@@ -385,8 +406,10 @@ bool NewProfileConfiguartor::checkCorrectnessOfPage_4(){
 		}
 	}
 
-	for each (QKeySequence var in keys) {
-		if (var.toString() == "+" || var.toString() == "#")
+	for (int i = 0; i < size; i++) {
+		int keyValurToCheck = Key(keys[i]).number;
+		bool isProperKey = Key::checkIfnumberIsAloowed(keyValurToCheck);
+		if (!isProperKey)
 			oneOfKeyFieldsHasForbiddenChars = true;
 	}
 
@@ -426,11 +449,59 @@ bool NewProfileConfiguartor::checkCorrectnessOfPage_5(){
 	return indexAreInRage;
 }
 
-void NewProfileConfiguartor::fillWidgetsWithDataFromProf(Profile* prof) {
+void NewProfileConfiguartor::fillWidgetsWithDataFromProf() {
 	//1
-	ui->_1_nameEdit->setText(prof->profileName);
+	ui->_1_nameEdit->setText(profToEdit->profileName);
 	//2
-	//todo
+	PROFESSION prof = PROFESSION(profToEdit->profession);
+	switch (prof){
+	case RP:	ui->_2_RadButt_RP->setChecked(true);	break;
+	case EK:	ui->_2_RadButt_EK->setChecked(true);	break;
+	case ED:	ui->_2_RadButt_ED->setChecked(true);	break;
+	case MS:	ui->_2_RadButt_MS->setChecked(true);	break;
+	default:	ui->_2_RadButt_RP->setChecked(true);	break;
+	}
+	//
+	int numberOfHealthSliders = profToEdit->healthRestorePercentages.size();
+	QList<QAbstractSlider*> sliders;
+	QList<QComboBox*> boxes;
+	QList<QKeySequenceEdit*> keyEdit;
+	QList<QLabel*> labels;
+	sliders.push_back(ui->_3_horizontalSlider_1);
+	sliders.push_back(ui->_3_horizontalSlider_2);
+	sliders.push_back(ui->_3_horizontalSlider_3);
+	sliders.push_back(ui->_3_horizontalSlider_4);
+	sliders.push_back(ui->_3_horizontalSlider_5);
+	boxes.push_back(ui->_3_comboBox);
+	boxes.push_back(ui->_3_comboBox_2);
+	boxes.push_back(ui->_3_comboBox_3);
+	boxes.push_back(ui->_3_comboBox_4);
+	boxes.push_back(ui->_3_comboBox_5);
+	keyEdit.push_back(ui->_3_shortKey_1);
+	keyEdit.push_back(ui->_3_shortKey_2);
+	keyEdit.push_back(ui->_3_shortKey_3);
+	keyEdit.push_back(ui->_3_shortKey_4);
+	keyEdit.push_back(ui->_3_shortKey_5);
+	labels.push_back(ui->_3_label_1);
+	labels.push_back(ui->_3_label_2);
+	labels.push_back(ui->_3_label_3);
+	labels.push_back(ui->_3_label_4);
+	labels.push_back(ui->_3_label_5);
+	if (numberOfHealthSliders > 1) 
+		ui->_3_enableAutoHealing->setEnabled(true);
+	for (size_t i = 0; i < numberOfHealthSliders; i++){
+		sliders[i]->setEnabled(true);
+		labels[i]->setEnabled(true);
+		keyEdit[i]->setEnabled(true);
+		boxes[i]->setEnabled(true);
+
+		sliders[i]->setValue(profToEdit->healthRestorePercentages[i]);
+		labels[i]->setText(profToEdit->healthRestorePercentages[i] + "%");
+		boxes[i]->setCurrentIndex(profToEdit->healthItems[i]);
+	//	keyEdit[i]->setKeySequence(QKeySequence(profToEdit->));
+	}
+	
+	//
 }
 //SLOTS
 void NewProfileConfiguartor::nextPageButtonAction(){

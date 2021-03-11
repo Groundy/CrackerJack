@@ -12,6 +12,7 @@
 #include "qlistwidget.h"
 #include "qsqlfield.h"
 #include "NewProfileConfiguartor.h"
+#include "qdatetime.h"
 
 class ProfileDataBaseManager : public QObject
 {
@@ -22,7 +23,6 @@ public:
 	~ProfileDataBaseManager();
 	int getNumberOfRecords();
 	enum FieldsOfDB {
-		ID,
 		PROFILE_NAME,
 		PROFESION,
 		MANA_RESTORE_STRING,
@@ -31,7 +31,6 @@ public:
 		HEALTH_RESTORE_KEY,
 		MANA_RESTORE_ITEM,
 		HEALTH_RESTORE_ITEM,
-		JUST_CREATED,
 		LAST_LOGIN,
 		CREATION_TIME
 	};
@@ -49,4 +48,13 @@ public:
 	void modifyAtribute(QString profileName ,FieldsOfDB atr, QString newValue);
 	QStringList getListOfAllRecords();
 	void saveProfileToDatabase(Profile* prof);
+	void readProfileFroDataBase(Profile* prof, QString profileName);
+	QString DB_writer_ManaAndHealthRestorePercentages(QList<int> vect);
+	QList<int> DB_reader_ManaAndHealthRestorePercentages(QString str);
+
+	QString DB_writer_ManaAndHealthKeys(QList<Key> keylist);
+	QList<Key> DB_reader_ManaAndHealthKeys(QString str);
+	//are they even usefull?
+	QString DB_writer_ManaAndHealthItems(QList<KEY_ITEM> keylist);
+	QList<KEY_ITEM> DB_reader_ManaAndHealthItems(QString str);
 };

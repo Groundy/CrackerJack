@@ -39,9 +39,24 @@ QString StringResource::NewProfileConfig_1_TooLongName(){
 	return "Profile name can't be longer than 50 characters";
 }
 
-QString StringResource::NewProfileConfig_1_EmptyName()
+QString StringResource::NewProfileConfig_1_TooShortName()
 {
 	return "Profile name can't be shorter than 3 characters";
+}
+
+QString StringResource::NewProfileConfig_1_TooShortExactName()
+{
+	return "Exact name of character has to be at least 2 characters long";
+}
+
+QString StringResource::NewProfileConfig_1_TooLongExactName()
+{
+	return "Exact name of character has to be shorter than 100 characters";
+}
+
+QString StringResource::NewProfileConfig_1_ExactNameHasNewLineChars()
+{
+	return "Exact name of character can't contain new line character";
 }
 
 QString StringResource::NewProfileConfig_1_ForbiddenChars()
@@ -75,8 +90,16 @@ QString StringResource::NewProfileConfig_3_ShortcutManyValue()
 }
 
 QString StringResource::NewProfileConfig_3_ShortCutHasForbiddenChars()
-{
-	return "Shortcut can't accept \"+\" and \"+\" characters";
+{	
+	QString toRet = "Shortcut can accept only keys";
+	toRet.append("\n");
+	toRet.append("F1 - F12");
+	toRet.append("\n");
+	toRet.append("0 - 9");
+	toRet.append("\n");
+	toRet.append("Insert, Delete, Home, End, Page Up, Page Down, ScrollLock, PauseBreak");
+	toRet.append("\n");
+	toRet.append("/, *, -, +");
+	return toRet;
 }
-
 

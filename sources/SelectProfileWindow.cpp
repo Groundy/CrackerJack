@@ -1,13 +1,14 @@
 #include "SelectProfileWindow.h"
 #include "ui_SelectProfileWindow.h"
 
-SelectProfileWindow::SelectProfileWindow(QWidget *parent) : QDialog(parent){
+SelectProfileWindow::SelectProfileWindow(QWidget *parent, Profile* prof) : QDialog(parent){
 	ui = new Ui::SelectProfileWindow();
 	ui->setupUi(this);
 	setFixedSize(this->size());
 	prepareProfiles();
 	ui->listOfProfs->setItemSelected(NULL, true);
-	ui->deleteProfileButton->setEnabled(false);
+	selectListAction();
+	profToSelect = prof;
 }
 
 SelectProfileWindow::~SelectProfileWindow()
@@ -29,11 +30,21 @@ void SelectProfileWindow::addNewProfileButtonAction(){
 	newProfWind.exec();
 	dbManager.saveProfileToDatabase(prof);
 	delete prof;
+	Sleep(20);
 	prepareProfiles();
 }
 
 void SelectProfileWindow::editProfileButtonAction(){
-	prepareProfiles();
+	int row = ui->listOfProfs->currentRow();
+	QString nameOfProfToSplit = ui->listOfProfs->item(row)->text();
+	QStringList nameParts = nameOfProfToSplit.split("] ");
+	QString profileName = nameParts[1];
+	Profile* prof = new Profile();
+	dbManager.readProfileFroDataBase(prof, profileName);
+	NewProfileConfiguartor* NewProfDial = new NewProfileConfiguartor(prof, this);
+	NewProfDial->fillWidgetsWithDataFromProf();
+	NewProfDial->exec();
+	delete prof;
 }
 
 void SelectProfileWindow::deleteProfileButtonAction(){
@@ -57,6 +68,15 @@ void SelectProfileWindow::deleteProfileButtonAction(){
 void SelectProfileWindow::selectListAction(){
 	bool oneItemIsSelected = ui->listOfProfs->selectedItems().size() == 1 ? true : false;
 	ui->deleteProfileButton->setEnabled(oneItemIsSelected);
+	ui->editProfileButton->setEnabled(oneItemIsSelected);
+}
 
+void SelectProfileWindow::profSelected(){
+	int row = ui->listOfProfs->currentRow();
+	QString nameOfProfToSplit = ui->listOfProfs->item(row)->text();
+	QStringList nameParts = nameOfProfToSplit.split("] ");
+	QString profileName = nameParts[1];
+	dbManager.readProfileFroDataBase(profToSelect, profileName);
+	this->accept();
 }
 
