@@ -1,22 +1,37 @@
 #include "activeGameThread.h"
 
-
-activeGameThread::activeGameThread(QObject *parent)
+activeGameThread::activeGameThread(QObject *parent, VariablesClass* varClass)
 	: QThread(parent){
-    
     const char* signal = SIGNAL(GameStateChanged(int));
     const char* slot = SLOT(onGameStateChanged(int));
     bool good = connect(this, signal, parent, slot);
+    var = varClass;
 }
 
 activeGameThread::~activeGameThread(){
+    delete historyOfGameActivity;
 	qDebug() << "end";
 }
 
 void activeGameThread::run(){
     while (true) {
         int stateCode = (int)checkState();
-        emit GameStateChanged(stateCode);
+        //That loops stores history of gamestates, signal is emited only if gameStateWasChanged
+        if (historyOfGameActivity->size() < 10) {
+            historyOfGameActivity->push_back(stateCode);
+            emit GameStateChanged(stateCode);
+            continue;
+        }
+        else if (historyOfGameActivity->size() == 10){
+            historyOfGameActivity->removeFirst();
+            historyOfGameActivity->push_back(stateCode);
+        }
+        for each (int var in *historyOfGameActivity){
+            if (var != historyOfGameActivity->first()){
+                emit GameStateChanged(stateCode);
+                break;
+            }
+        }
         msleep(1234);
     }
 }
@@ -84,13 +99,14 @@ unsigned int activeGameThread::getPIDofProcess(QString nameOfProcess, QList<QStr
     return 0;
 }
 
-activeGameThread::gameActivityStates activeGameThread::windowIsAccessible(unsigned int PID, QList<QString> names){
-    QString winName = getGameWindowTitile();
-    if (winName.isEmpty())
+activeGameThread::gameActivityStates activeGameThread::windowIsAccessible(const unsigned int PID, QString windowTitle){
+    if (PID == 0)
+        return NO_ACTIVE;
+    if (windowTitle.isEmpty())
         return NO_WINDOW;
-    else if (winName == "Tibia")
+    else if (windowTitle == "Tibia")
         return NO_LOGGED;
-    LPCWSTR nameOfWindowLPCWSTR = (const wchar_t*)winName.utf16();
+    LPCWSTR nameOfWindowLPCWSTR = (const wchar_t*)windowTitle.utf16();
     HWND handler = FindWindow(NULL, nameOfWindowLPCWSTR);
     if (handler == NULL)
         return NO_HANDLER;
@@ -106,9 +122,20 @@ activeGameThread::gameActivityStates activeGameThread::checkState(){
     QList<unsigned int> pids;
     getListOfProcess(names, pids);
     unsigned int PID = getPIDofProcess("client.exe", names, pids);
-    if (PID == 0)
-        return NO_ACTIVE;
-    gameActivityStates gameWinState = windowIsAccessible(PID, names);
+    QString windowTitle = getGameWindowTitile();
+    gameActivityStates gameWinState = windowIsAccessible(PID, windowTitle);
+    if (gameWinState == ACTIVE) {
+        if (var->var_winTitleOfGame != windowTitle)
+            var->var_winTitleOfGame = windowTitle;
+        if (var->var_pidOfGame != PID)
+            var->var_pidOfGame = PID;
+    }
+    else{
+        if (!gameWindowTitle.isEmpty())
+            gameWindowTitle = QString();
+        if (PidOfGame != 0)
+            PidOfGame = 0;
+    }
         return gameWinState;
 }
 

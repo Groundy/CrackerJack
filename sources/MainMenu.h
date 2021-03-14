@@ -1,9 +1,15 @@
 #pragma once
 #include <QDialog>
 #include "Profile.h"
+#include "ScreenSaver.h"
 #include "activeGameThread.h"
 #include "qdatetime.h"
+#include "VariablesClass.h"
+#include "Utilities.h"
+#include "Key.h"
+#include "ScreenAnalyzer.h"
 namespace Ui { class MainMenu; };
+
 class MainMenu : public QDialog
 {
 	Q_OBJECT
@@ -11,6 +17,7 @@ class MainMenu : public QDialog
 public:
 	MainMenu(Profile* prof, QWidget *parent = Q_NULLPTR);
 	~MainMenu();
+	activeGameThread::gameActivityStates gameActivitystate;
 public slots:
 	void helpButtonAction();
 	void changeProfileButtonAction();
@@ -20,12 +27,14 @@ public slots:
 	void tradingAction();
 	void skillingAction();
 	void onGameStateChanged(int state);
-
 private:
+	unsigned int pidOfGame;
+	QString gameWindowTitle;
 	Ui::MainMenu *ui;
 	Profile* prof;
-	activeGameThread::gameActivityStates gameActivitystate;
+	ScreenSaver* screenSaverThread;
 	activeGameThread* activityThread;
+	ScreenAnalyzer* screenAnalyzer;
+	VariablesClass var;
 	void setProblemsWindow(QStringList problemsToShow);
-	void startThreads();
 };

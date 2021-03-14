@@ -1,15 +1,19 @@
 #pragma once
 #include <QThread>
-#include "Utilities.h"
+#include "activeGameThread.h"
+#include "VariablesClass.h"
 class ScreenSaver : public QThread
 {
 	Q_OBJECT
 
 public:
-	QString pathToScreenFolder;
-	void ScreenLoop();
-	void run() override;
-	ScreenSaver(QObject *parent);
-	ScreenSaver();
+	bool enableScreenCapture = true;
+	void run();
+	int timeBetweenScreens = 550;
+	ScreenSaver(QObject *parent, VariablesClass *varClass);
 	~ScreenSaver();
+private:
+	void sendScreenRequestToGame(Key keyCodeForScreen);
+	void screenLoop();
+	VariablesClass* var;
 };

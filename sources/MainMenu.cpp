@@ -1,18 +1,26 @@
 #include "MainMenu.h"
 #include "ui_MainMenu.h"
 
-MainMenu::MainMenu(Profile* selectedProf,QWidget *parent)
+MainMenu::MainMenu(Profile* selectedProf, QWidget* parent)
 	: QDialog(parent)
 {
 	ui = new Ui::MainMenu();
 	ui->setupUi(this);
 	prof = selectedProf;
 	ui->profileNameLabel->setText(prof->profileName);
-	activityThread = new activeGameThread(this);
+	activityThread = new activeGameThread(this,&var);
+	activityThread->start();
+	screenSaverThread = new ScreenSaver(this, &var);
+	screenSaverThread->start();
+	screenAnalyzer = new ScreenAnalyzer(this, &var);
+	screenAnalyzer->start();
+
 }
 
 MainMenu::~MainMenu()
 {
+	delete activityThread;
+	delete screenSaverThread;
 	delete ui;
 }
 
@@ -35,7 +43,6 @@ void MainMenu::autoHuntAction()
 }
 
 void MainMenu::tradingAction(){
-	startThreads();
 }
 
 void MainMenu::skillingAction()
@@ -43,7 +50,7 @@ void MainMenu::skillingAction()
 }
 
 void MainMenu::onGameStateChanged(int state){
-	qDebug() << "MainMenu::onGameStateChanged";
+	qDebug() << "MainMenu::onGameStateChanged, signal recived: " + QString::number(state);
 	QString toWrite;
 	QLabel* label = ui->gameActiveLabel;
 	switch (state)
@@ -73,7 +80,6 @@ void MainMenu::onGameStateChanged(int state){
 		break;
 	}
 	}
-	gameActivitystate = activeGameThread::gameActivityStates(state);
 	label->setText(toWrite);
 	label->repaint();
 }
@@ -85,6 +91,3 @@ void MainMenu::setProblemsWindow(QStringList problemsToShow){
 	}
 }
 
-void MainMenu::startThreads(){
-	activityThread->start();
-}

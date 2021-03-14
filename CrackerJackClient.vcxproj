@@ -112,11 +112,14 @@
     <ClCompile Include="sources\LoginWindow.cpp" />
     <ClCompile Include="sources\main.cpp" />
     <ClCompile Include="sources\Profile.cpp" />
+    <ClCompile Include="sources\RGBstruct.cpp" />
+    <ClCompile Include="sources\ScreenAnalyzer.cpp" />
     <ClCompile Include="sources\ScreenSaver.cpp" />
     <ClCompile Include="sources\ScreenSettings.cpp" />
     <ClCompile Include="sources\SelectProfileWindow.cpp" />
     <ClCompile Include="sources\Utilities.cpp" />
     <ClCompile Include="sources\StringResource.cpp" />
+    <ClCompile Include="sources\VariablesClass.cpp" />
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="sources\LoginWindow.h" />
@@ -128,11 +131,14 @@
     <QtUic Include="sources\SelectProfileWindow.ui" />
   </ItemGroup>
   <ItemGroup>
+    <QtMoc Include="sources\VariablesClass.h" />
     <QtMoc Include="sources\ScreenSettings.h" />
     <QtMoc Include="sources\miniMapAnalyser.h" />
     <QtMoc Include="sources\ScreenSaver.h" />
     <QtMoc Include="sources\MainMenu.h" />
     <QtMoc Include="sources\activeGameThread.h" />
+    <ClInclude Include="sources\ScreenAnalyzer.h" />
+    <QtMoc Include="sources\RGBstruct.h" />
     <ClInclude Include="sources\StringResource.h" />
     <QtMoc Include="sources\NewProfileConfiguartor.h" />
     <ClInclude Include="sources\Key.h" />

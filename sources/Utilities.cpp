@@ -28,7 +28,9 @@
     DWORD tmp = PID;
     DWORD hThread = GetWindowThreadProcessId(handler, &tmp);
     if (hThread != NULL) {
-        PostMessage(handler, WM_KEYDOWN, key.number, 0);
+        int g =0x1470001;
+        PostMessage(handler, WM_KEYDOWN, key.number, g);
+        PostMessage(handler, WM_KEYUP, key.number, g);
     }
     else
         ;//errToDo

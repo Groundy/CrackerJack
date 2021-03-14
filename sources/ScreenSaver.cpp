@@ -1,24 +1,31 @@
 #include "ScreenSaver.h"
 
-void ScreenSaver::ScreenLoop(){
-	while (true){
-		QThread::sleep(500);
+ScreenSaver::ScreenSaver(QObject* parent, VariablesClass* varClass)
+	: QThread(parent){
+	setPriority(QThread::Priority::HighestPriority);
+	var = varClass;
+}
 
+ScreenSaver::~ScreenSaver(){
+}
+
+void ScreenSaver::sendScreenRequestToGame(Key keyCodeForScreen){
+	uint pid = var->var_pidOfGame;
+	QString winTitle = var->var_winTitleOfGame;
+	if (pid == 0 || winTitle.isEmpty())
+		return;//diag err
+	Key key(keyCodeForScreen);
+	Utilities::sendKeyStrokeToProcess(key, pid, winTitle);
+}
+
+void ScreenSaver::screenLoop(){
+	while (true){
+		if (!enableScreenCapture);
+			sendScreenRequestToGame(Key::HOME);
+		msleep(timeBetweenScreens);
 	}
 }
 
 void ScreenSaver::run(){
-	//Utilities::sendKeyStroke(Key(Key::NORMAL,QChar('q')), 0);
-	Utilities::test();
-	//ScreenLoop();
-}
-
-ScreenSaver::ScreenSaver(QObject *parent)
-	: QThread(parent)
-{
-}
-ScreenSaver::ScreenSaver(){
-}
-
-ScreenSaver::~ScreenSaver(){
+	screenLoop();
 }
