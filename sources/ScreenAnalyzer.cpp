@@ -12,7 +12,10 @@ ScreenAnalyzer::~ScreenAnalyzer()
 }
 
 void ScreenAnalyzer::run() {
-	TMP();
+	//tmp
+	QImage fullScreenImg = QImage("C:\\Users\\ADMIN\\Desktop\\ttt.png");
+	calibrate(fullScreenImg);
+	sleep(1);
 	//mainLoop();
 }
 
@@ -42,105 +45,12 @@ QString ScreenAnalyzer::getNameOfLastTakenScreenShot(){
 	return litOfFIles[index];
 }
 
-void ScreenAnalyzer::TMP_save(QImage* img){
-	QString toSave = "C:\\Users\\ADMIN\\Desktop\\tested\\";
-	QString timeString = QDateTime::currentDateTime().toString("hh-mm-ss-mmm");
-	toSave.append(timeString);
-	toSave.append("kurwa.png");
-	bool kurwa = img->save(toSave);
-
-}
-
-void ScreenAnalyzer::TMP(){
-	const QString path = "C:\\Users\\ADMIN\\Desktop\\LETTERS";
-	QDir directory(path);
-	QStringList litOfFIles = directory.entryList(QStringList() << "*.png", QDir::Files);
-	const QString path2 = "C:\\Users\\ADMIN\\Desktop\\blackLetters";
-	QList<QString> list;
-	for (size_t i = 0; i < litOfFIles.size(); i++){
-		QString pathToFile = path + "\\" + litOfFIles[i];
-		QImage* img = new QImage(pathToFile);
-		imgToBlackAndWhite(img, 200);
-		QString name = path2 + "\\" + litOfFIles[i];
-		img->save(name);
-		QString code = TMP_letterImgToString(img);
-		list.push_back(litOfFIles[i].left(1) + QString("___") + code);
-	}
-	for each (QString var in list){
-		qDebug() << var;
-	}
-}
-
-void ScreenAnalyzer::changeGreyPixelsToBlack(QImage* img, int minVal, int maxVal){
-	int width = img->size().width();
-	int height = img->size().height();
-	QPoint point;
-	for (size_t x = 0; x < width; x++)	{
-		for (size_t y = 0; y < height; y++)		{
-			point.setX(x);
-			point.setY(y);
-			uint pixVal = img->pixel(point);
-			bool shouldBeBlacked = RGBstruct::isPixelInRangeOfGrey(pixVal, minVal, maxVal);
-			if(shouldBeBlacked)
-				img->setPixel(point, 0);
-		}
-	}
-}
-
 void ScreenAnalyzer::deleteScreenShotFolder(){
 	QDir dir(pathToScreenFolder);
 	dir.setNameFilters(QStringList() << "*.*");
 	dir.setFilter(QDir::Files);
 	foreach(QString dirFile, dir.entryList())
 		dir.remove(dirFile);
-}
-
-QChar ScreenAnalyzer::getCharFromStrMadeFromImg(QString imgEncoded){
-	return '4';
-}
-
-void ScreenAnalyzer::imgToBlackAndWhite(QImage* img, int threshold){
-	int width = img->width();
-	int height = img->height();
-	uint pixelColor;
-	bool toWhite ;
-	for (size_t x = 0; x < width; x++){
-		for (size_t y = 0; y < height; y++){
-			toWhite = false;
-			pixelColor = img->pixel(QPoint(x, y));
-			RGBstruct rgb(pixelColor);
-			if (rgb.b >= threshold)
-				toWhite = true;
-			else if (rgb.r >= threshold)
-				toWhite = true;
-			else if (rgb.b >= threshold)
-				toWhite = true;
-			if(toWhite)
-				img->setPixel(x, y, 0xffffff);
-			else
-				img->setPixel(x, y, 0);
-		}
-	}
-}
-
-QString ScreenAnalyzer::TMP_letterImgToString(QImage* img){
-	int width = img->width();
-	int height = img->height();
-	uint pixelColor;
-	QString toRet = QString::number(width) + QString("_") + QString::number(height) + QString("_");
-	int sum;
-	for (size_t x = 0; x < width; x++) {
-		for (size_t y = 0; y < height; y++) {
-			pixelColor = img->pixel(QPoint(x, y));
-			RGBstruct rgb(pixelColor);
-			sum = rgb.b + rgb.r + rgb.g;
-			if (sum == 0)
-				toRet.append(QString("0"));
-			else
-				toRet.append(QString("1"));
-		}
-	}
-	return toRet;
 }
 
 void ScreenAnalyzer::mainLoop(){
@@ -158,9 +68,150 @@ void ScreenAnalyzer::mainLoop(){
 			continue;
 		}
 
-		changeGreyPixelsToBlack(var->var_img, 40, 120);
 
-		TMP_save(var->var_img);
 		delete img;
+	}
+}
+
+void ScreenAnalyzer::calibrate(QImage fullScreenImg){
+	//this fun looking for certain pixel sequences and save their locations for
+	//further img splitting
+	Utilities::imgToBlackAndWhiteAllColors(&fullScreenImg, 240);
+	bool interfaceIsVert = setManaHealthManaShieldPosVer(&fullScreenImg);
+	bool interfaceIsHor = setManaHealthManaShieldPosHor(&fullScreenImg);
+	if (!(interfaceIsVert || interfaceIsHor)) {
+		;//diag err
+	}
+
+	/*
+	for (size_t i = 0; i < imgsOfValue.size(); i++){
+		QString name = QString::number(i) + ".png";
+		imgsOfValue[i].save(name);
+		qDebug() << Utilities::imgWithStrToStr(&imgsOfValue[i]);
+	}
+	int zero = 0;
+	*/
+}
+
+void sortByXAndY(QList<QPoint>* points, QList<QPoint>* pointsSortedByX, QList<QPoint>* pointsSortedByY) {
+	QMap<int, int> sortedByX; //x is key
+	QMap<int, int> sortedByY; //y is key
+	QList<QPoint> copyOfInput = *points;
+	for each (QPoint var in copyOfInput) {
+		sortedByX.insert(var.x(), var.y());
+		sortedByY.insert(var.y(), var.x());//inverted order of XY
+	}
+	QList<QPoint>sortedByXToRet;
+	QList<QPoint>sortedByYToRet;
+	for (auto mapEle : sortedByX.keys()){
+		int x = mapEle;
+		int y = sortedByX.value(mapEle);
+		sortedByXToRet.push_back(QPoint(x, y));
+	}
+	for (auto mapEle : sortedByY.keys()) {
+		int y = mapEle;
+		int x = sortedByY.value(mapEle);
+		sortedByYToRet.push_back(QPoint(x, y));
+	}
+	*pointsSortedByX = sortedByXToRet;
+	*pointsSortedByY = sortedByYToRet;
+}
+
+bool ScreenAnalyzer::setManaHealthManaShieldPosVer(QImage* imgFull) {
+	QImage slash = Utilities::fromCharToImg(47);
+	QList<QPoint> slashesPos = Utilities::findStartPositionInImg(&slash, imgFull);
+	if (slashesPos.size() == 0)
+		return false;
+
+	QSet<int> uncialXPosVer;
+	QSet<int> uncialYPosVer;
+	for each (QPoint var in slashesPos) {
+		uncialXPosVer.insert(var.x());
+		uncialYPosVer.insert(var.y());
+	}
+	int numberOfXPosVer = uncialXPosVer.size();
+	int numberOfPosVer = uncialYPosVer.size();
+
+	QList<QPoint>* sortedByX = new QList<QPoint>;
+	QList<QPoint>* sortedByY = new QList<QPoint>;
+	sortByXAndY(&slashesPos, sortedByX, sortedByY);
+
+	const int halfWidthOfScreen = imgFull->width() / 2;	
+	const bool isManaShield = slashesPos.size() == 3 ? true : false;
+	const int sizeX = sortedByX->size();
+	const int sizeY = sortedByY->size();
+	if (slashesPos.first().x() < halfWidthOfScreen) {
+		//Position LEFT
+		if (sizeX == 1 && sizeY == 3) {//compact or default style
+			healthSlash = sortedByY->at(2);
+			manaSlash = sortedByY->at(0);
+			manaShieldSlash = sortedByY->at(1);
+		}
+		else if (sizeX == 3 && sizeY == 2) {//large style
+			healthSlash = sortedByY->at(0);
+			manaSlash = sortedByX->at(0);
+			manaShieldSlash = sortedByX->at(2);
+		}
+		else if (sizeX == 2 && sizeY == 3) {//parallel style
+			healthSlash = sortedByX->at(0);
+			manaSlash = sortedByY->at(2);
+			manaShieldSlash = sortedByY->at(0);
+		}
+	}
+	else {
+		//Position RIGHT
+		if (sizeX == 1 && sizeY == 3) {//compact or default style
+			healthSlash = sortedByY->at(0);
+			manaSlash = sortedByY->at(1);
+			manaShieldSlash = sortedByY->at(2);
+		}
+		else if (sizeX == 3 && sizeY == 2) {//large style
+			healthSlash = sortedByY->at(0);
+			manaSlash = sortedByX->at(0);
+			manaShieldSlash = sortedByX->at(2);
+		}
+		else if (sizeX == 2 && sizeY == 3) {//parallel style
+			healthSlash = sortedByX->at(0);
+			manaSlash = sortedByY->at(0);
+			manaShieldSlash = sortedByY->at(2);
+		}
+	}
+
+
+
+	delete sortedByX;
+	delete sortedByY;
+	return true;
+}
+
+bool ScreenAnalyzer::setManaHealthManaShieldPosHor(QImage *imgFull) {
+	QImage slashes = Utilities::fromCharToImg(92);
+	QList<QPoint> slashesPos = Utilities::findStartPositionInImg(&slashes, imgFull);
+	if (slashesPos.size() == 0)
+		return false;
+
+	QSet<int> uncialXPosHor;
+	QSet<int> uncialYPosHor;
+	for each (QPoint var in slashesPos) {
+		uncialXPosHor.insert(var.x());
+		uncialYPosHor.insert(var.y());
+	}
+	int numberOfXPosHor = uncialXPosHor.size();
+	int numberOfYPosHor = uncialYPosHor.size();
+
+	const int halfHeighOfScreen = imgFull->height() / 2;
+	QList<QPoint> *sortedByX, *sortedByY;
+	sortByXAndY(&slashesPos, sortedByX, sortedByY);
+
+	if (slashesPos.first().y() < halfHeighOfScreen) {
+
+	//Position TOP
+		if (numberOfXPosHor == 3) {
+			//Large or Compact Style
+			
+		}
+	}
+	else {
+		//Position DOWN
 	}
 }

@@ -7,6 +7,7 @@
 #include "VariablesClass.h"
 #include "Utilities.h"
 #include "Key.h"
+#include "ManaHealthStateAnalyzer.h"
 #include "ScreenAnalyzer.h"
 namespace Ui { class MainMenu; };
 
@@ -35,6 +36,7 @@ private:
 	ScreenSaver* screenSaverThread;
 	activeGameThread* activityThread;
 	ScreenAnalyzer* screenAnalyzer;
+	ManaHealthStateAnalyzer* healthManaStateAnalyzer;
 	VariablesClass var;
 	void setProblemsWindow(QStringList problemsToShow);
 };

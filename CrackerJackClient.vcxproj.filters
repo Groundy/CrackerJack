@@ -64,9 +64,6 @@
     <ClCompile Include="sources\StringResource.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="sources\ScreenSettings.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="sources\miniMapAnalyser.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -86,6 +83,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="sources\RGBstruct.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\ManaHealthStateAnalyzer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -108,9 +108,6 @@
     <QtMoc Include="sources\ProfileDataBaseManager.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="sources\ScreenSettings.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
     <QtMoc Include="sources\miniMapAnalyser.h">
       <Filter>Header Files</Filter>
     </QtMoc>
@@ -127,6 +124,9 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="sources\RGBstruct.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="sources\ManaHealthStateAnalyzer.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>

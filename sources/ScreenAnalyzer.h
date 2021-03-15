@@ -8,26 +8,27 @@
 #include "qdatetime.h"
 #include "qmap.h"
 #include "qdebug.h"
+#include "Utilities.h"
 class ScreenAnalyzer : public QThread
 {
+	//enum style {DEFAULT, PARALLEL, LARGE, COMPACT};
 public:
-	QMap<QString, QChar> charCodesMap;
 	ScreenAnalyzer( QObject *parent, VariablesClass* var);
 	~ScreenAnalyzer();
 	void run();
 	bool enableScreenAnalyzer = true;
-	QString getNameOfLastTakenScreenShot();
-
-	//analyze
-	void TMP_save(QImage* img);//////////////kurwa skasuj to Opie
-	void TMP();
-	void changeGreyPixelsToBlack(QImage* img, int min, int max);
-	void deleteScreenShotFolder();
-	QChar getCharFromStrMadeFromImg(QString imgEncoded);//todo
-	void imgToBlackAndWhite(QImage* img, int threshold);
-	QString TMP_letterImgToString(QImage* tt);
 private:
+	void deleteScreenShotFolder();
+	QString getNameOfLastTakenScreenShot();
 	VariablesClass* var;
 	void mainLoop();
-	QString pathToScreenFolder = "C:\\Users\\ADMIN\\AppData\\Local\\Tibia\\packages\\Tibia\\screenshots";
+	void calibrate(QImage fullScreenImg);
+	const int heightOfHealthImgStr = 11;
+	const int widthFromSlashChar = 75;
+	QPoint healthSlash;
+	QPoint manaSlash;
+	QPoint manaShieldSlash;
+	bool setManaHealthManaShieldPosHor(QImage* fullImg);
+	bool setManaHealthManaShieldPosVer(QImage* fullImg);
+	QString pathToScreenFolder = "C:\\Users\\ADMIN\\AppData\\Local\\Tibia\\packages\\Tibia\\screenshots";//TODO
 };

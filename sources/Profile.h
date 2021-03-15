@@ -4,9 +4,7 @@
 #include <string>
 #include "qstring.h"
 #include "qvector.h"
-//#include <qsplitter.h>
 #include "qkeysequence.h"
-#include "ScreenSettings.h"
 #include "Key.h"
 
 enum PROFESSION { RP, EK, ED, MS};
@@ -36,5 +34,4 @@ public:
 	QString lastLoginDate;
 	QString creationDate;
 	QString secondsSpent;
-	ScreenSettings screenSettings;
 };

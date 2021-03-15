@@ -14,6 +14,8 @@ MainMenu::MainMenu(Profile* selectedProf, QWidget* parent)
 	screenSaverThread->start();
 	screenAnalyzer = new ScreenAnalyzer(this, &var);
 	screenAnalyzer->start();
+	healthManaStateAnalyzer = new ManaHealthStateAnalyzer(this, &var);
+	//healthManaStateAnalyzer->start();
 
 }
 
