@@ -145,7 +145,7 @@ bool ScreenAnalyzer::setManaHealthManaShieldPosVer(QImage* imgFull) {
 		if (sizeX == 1 && sizeY == 3) {//compact or default style
 			healthSlash = sortedByY->at(2);
 			manaSlash = sortedByY->at(0);
-			manaShieldSlash = sortedByY->at(1);
+			manaShieldSlash = sortedByY->at(1);;
 		}
 		else if (sizeX == 3 && sizeY == 2) {//large style
 			healthSlash = sortedByY->at(0);
