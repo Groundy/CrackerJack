@@ -27,16 +27,22 @@ public slots:
 	void autoHuntAction();
 	void tradingAction();
 	void skillingAction();
+	//from threads
 	void onGameStateChanged(int state);
+	void changedValueOfCharHealthOrMana(QString healthPercentage, QString manaPercentage, QString manaShieldPercentage0);
 private:
 	unsigned int pidOfGame;
 	QString gameWindowTitle;
 	Ui::MainMenu *ui;
 	Profile* prof;
+
 	ScreenSaver* screenSaverThread;
 	activeGameThread* activityThread;
 	ScreenAnalyzer* screenAnalyzer;
 	ManaHealthStateAnalyzer* healthManaStateAnalyzer;
 	VariablesClass var;
+
 	void setProblemsWindow(QStringList problemsToShow);
+	void threadStarter();
+	void signalSlotConnector();
 };

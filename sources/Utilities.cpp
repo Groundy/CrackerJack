@@ -50,9 +50,9 @@
 			 greenIsEnough = rgb.g >= threshold ? true : false;
 			 blueIsEnough = rgb.b >= threshold ? true : false;
 			 if (redIsEnough || greenIsEnough || blueIsEnough)
-				 img->setPixel(x, y, 0xffffff);
+				 img->setPixel(x, y, qRgb(255, 255, 255));
 			 else
-				 img->setPixel(x, y, 0);
+				 img->setPixel(x, y, qRgb(0, 0, 0));
 		 }
 	 }
  }
@@ -73,6 +73,39 @@
 				 img->setPixel(x, y, qRgb(255, 255, 255));
 			 else
 				 img->setPixel(x, y, qRgb(0, 0, 0));
+		 }
+	 }
+ }
+
+ void Utilities::imgToOneColor(QImage* img, QRgb minimalColorValues, QRgb maxColorValues, QRgb colorToSet, bool allOfThem){
+	 int width = img->width();
+	 int height = img->height();
+	 auto black = qRgb(0, 0, 0);
+	 uint minValue = (uint)minimalColorValues;
+	 uint maxValue = (uint)maxColorValues;
+	 RGBstruct minV(minValue);
+	 RGBstruct maxV(maxValue);
+	 bool redIsEnough, greenIsEnough, blueIsEnough;
+	 bool setGiveColor;
+
+	 for (size_t x = 0; x < width; x++) {
+		 for (size_t y = 0; y < height; y++) {
+			 QRgb colorOfPixel = img->pixel(x, y);
+			 RGBstruct current(colorOfPixel);
+
+			 redIsEnough = (current.r >= minV.r) && (current.r <= maxV.r) ? true : false;
+			 greenIsEnough = (current.g >= minV.g) && (current.g <= maxV.g) ? true : false;
+			 blueIsEnough = (current.b >= minV.b) && (current.b <= maxV.b) ? true : false;
+			 
+			 if (allOfThem)
+				 setGiveColor = (redIsEnough && greenIsEnough && blueIsEnough);
+			 else
+				 setGiveColor = (redIsEnough || greenIsEnough || blueIsEnough);
+		 
+			 if (setGiveColor)
+				 img->setPixel(x, y, colorToSet);
+			 else
+				 img->setPixel(x, y, black);
 		 }
 	 }
  }
@@ -203,6 +236,13 @@
 			 }
 		 }
 	 }
+	 if (colThatAreNotBlack.size() == 0) {
+		 QList<QImage> toRet;
+		 toRet.push_back(*img);
+		 *letterImages = toRet;
+		 return;
+	 }
+
 	 QList<int> indexesOfStartOfLetter, indexesOfEndsOfLetters;
 	 indexesOfStartOfLetter.push_back(0);
 	 for (int i = 0; i < colThatAreNotBlack.size() - 1; i++) {
@@ -241,6 +281,7 @@
 		 QChar letter = StrCodeToQChar(letterCode);
 		 toRet.append(letter);
 	 }
+	 delete imgs;
 	 return toRet;
  }
 
@@ -272,6 +313,10 @@
 
  QMap<QString, QChar>  Utilities::getQmapWithCodes() {
 	 QMap<QString, QChar> letters;
+	 //char 200 it's some weird char but here it's symbol of healthIcon
+	 letters.insert("9_9_101110000011111000111111100111111110011111111111111110111111100111111000011110000",QChar(200));
+	 //char 201 it's some weird char but here it's symbol of manaIcon
+	 letters.insert("10_9_000100001001100111001111111111111110111111100111111100111110000111110000100100000100000000", QChar(201));
 	 letters.insert("6_8_011111101111111110000001100000011111111101111110", '0');
 	 letters.insert("4_8_01000001111111111111111100000001", '1');
 	 letters.insert("6_8_010000111100011110001101100110011111000101100001", '2');
@@ -421,8 +466,8 @@ QImage Utilities::fromCharToImg(QChar CharToImg){
 
 void Utilities::rotateImgToRight(QImage* imgToRotate, int timesToRotateRight){
 	QTransform rotating;
-	rotating.rotate(90 * timesToRotateRight);
-	QImage tmp = imgToRotate->transformed(rotating); // Works
+	rotating.rotate(timesToRotateRight *90,Qt::Axis::ZAxis);
+	QImage tmp = imgToRotate->transformed(rotating);
 	*imgToRotate = tmp;
 }
 
@@ -444,7 +489,13 @@ void Utilities::rotateImgToRight(QImage* imgToRotate, int timesToRotateRight){
  }
  */
 
- LPCWSTR Utilities::convert_StrToLPCWSTR(QString str){
+void Utilities::saveImgToOutPutFolder(QImage* img, QString extraName){
+	QString tmp = QDateTime::currentDateTime().toString("mm_ss_zzz");
+	QString fullname = VariablesClass::outPutFolderPath() + "\\" + tmp + "_" + extraName + ".png";
+	img->save(fullname);
+}
+
+LPCWSTR Utilities::convert_StrToLPCWSTR(QString str){
      return (const wchar_t*)str.utf16();
  }
 

@@ -20,8 +20,11 @@ void ScreenSaver::sendScreenRequestToGame(Key keyCodeForScreen){
 
 void ScreenSaver::screenLoop(){
 	while (true){
-		if (!enableScreenCapture);
-			sendScreenRequestToGame(Key::HOME);
+		if (!enableScreenCapture) {
+			msleep(5 * timeBetweenScreens);
+			continue;
+		}
+		sendScreenRequestToGame(Key::HOME);
 		msleep(timeBetweenScreens);
 	}
 }

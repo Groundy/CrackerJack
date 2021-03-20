@@ -12,7 +12,9 @@
 #include "RGBstruct.h"
 #include "qdir.h"
 #include "qdebug.h"
-
+#include "VariablesClass.h"
+#include "qdatetime.h"
+#include "qrgb.h"
 class Utilities {
 public:
 
@@ -24,14 +26,13 @@ public:
 		int mask = 1 << postition;
 		return (numberToEdit & ~mask) | ((zeroOrOne << postition) & mask);
 	}
-	static void test() {
-		;
-	};
+	static void saveImgToOutPutFolder(QImage* img, QString extraName);
 	static LPCWSTR convert_StrToLPCWSTR(QString str);
 
 	static void cutBlackBordersOfImg(QImage* img);
 	static void imgToBlackAndWhiteOneColor(QImage* img, int threshold);
 	static void imgToBlackAndWhiteAllColors(QImage* img, int threshold);
+	static void imgToOneColor(QImage* img, QRgb minimalColorValues, QRgb maxColorValues, QRgb colorToSet, bool allOfThem);
 	static void changeGreyPixelsToBlack(QImage* img, int min, int max);
 	static QStringList getCodesOfAllLetersInFolder(QString pathToInputFolder, QString pathToOutputFolder);
 	static void cutImgWithLettersToSingleLettersImgList(QImage* img, QList<QImage>* list);
@@ -42,4 +43,5 @@ public:
 	static QList<QPoint> findStartPositionInImg(QImage* imgToFind, QImage* imgToShareWithin);
 	static QImage fromCharToImg(QChar CharToImg);
 	static void rotateImgToRight(QImage* imgToRotate, int timesToRotateRight);
+	//static void showQImageInWindow(QImage* img);
 };

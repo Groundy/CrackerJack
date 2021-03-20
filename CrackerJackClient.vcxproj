@@ -137,7 +137,7 @@
     <QtMoc Include="sources\MainMenu.h" />
     <QtMoc Include="sources\activeGameThread.h" />
     <QtMoc Include="sources\ManaHealthStateAnalyzer.h" />
-    <ClInclude Include="sources\ScreenAnalyzer.h" />
+    <QtMoc Include="sources\ScreenAnalyzer.h" />
     <QtMoc Include="sources\RGBstruct.h" />
     <ClInclude Include="sources\StringResource.h" />
     <QtMoc Include="sources\NewProfileConfiguartor.h" />
