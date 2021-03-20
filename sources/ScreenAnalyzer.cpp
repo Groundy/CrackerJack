@@ -212,7 +212,7 @@ int ScreenAnalyzer::calibrate(){
 		int interfaceIsHor = determineManaHealthManaShieldPosHor(&img);
 		if (interfaceIsVert != OK && interfaceIsHor != OK) {
 			var->caliState = var->NOT_CALIBRATED;
-			qDebug() << "Calibration failed";//diag err
+			qDebug() << "Calibration failed";
 			return NO_SLASHES_FOUND_IN_GAME_SCREEN;
 		}
 		int res = setImgRectsForHealthAnalyzerClass(&img);
@@ -222,6 +222,7 @@ int ScreenAnalyzer::calibrate(){
 			return OK;
 		}
 		else {
+			qDebug() << "Calibration failed";
 			return res;
 		}
 	}
