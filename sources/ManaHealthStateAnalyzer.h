@@ -13,8 +13,10 @@ public:
 	ManaHealthStateAnalyzer(QObject *parent, VariablesClass* varClass);
 	~ManaHealthStateAnalyzer();
 	int miliSecBetweenCheckingForNewValuesImg = 100;
-	bool shouldThisThreadBeActive = true;
+	bool shouldThisThreadBeActive = false;
 	void run();
+public slots:
+	void setThreadEnabilityToRun(bool stateToSet);
 signals:
 	void demandReCalibration();
 	void sendValueToMainThread(QString, QString, QString);

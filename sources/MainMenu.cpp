@@ -59,12 +59,10 @@ void MainMenu::onGameStateChanged(int state){
 	if (state == activeGameThread::gameActivityStates::ACTIVE) {
 		this->screenAnalyzer->enableScreenAnalyzer = true;
 		this->screenSaverThread->enableScreenCapture = true;
-		this->healthManaStateAnalyzer->shouldThisThreadBeActive = true;
 	}
 	else {
 		this->screenAnalyzer->enableScreenAnalyzer = false;
 		this->screenSaverThread->enableScreenCapture = false;
-		this->healthManaStateAnalyzer->shouldThisThreadBeActive = false;
 	}
 }
 
@@ -142,6 +140,11 @@ void MainMenu::signalSlotConnector(){
 	slot = SLOT(changedValueOfCharHealthOrMana(QString, QString, QString));
 	bool connectionAccepted_2 = connect(sigSender, sig, slotRec, slot, Qt::UniqueConnection);
 
+	sigSender = this->screenAnalyzer;
+	slotRec = this->healthManaStateAnalyzer;
+	sig = SIGNAL(sendAllowenceToAnalyze(bool));
+	slot = SLOT(setThreadEnabilityToRun(bool));
+	bool connectionAccepted_3 = connect(sigSender, sig, slotRec, slot, Qt::UniqueConnection);
 }
 
 void MainMenu::helpButtonAction(){

@@ -11,10 +11,10 @@ public:
 	bool useAdvancedShearch = true;
 
 	//Advaned health and mana shearch
-	enum calibrationState{NOT_CALIBRATED = (1024*1024*1024), DURING_CALIBRATION, CALIBRATED};
-	QImage* var_healthPieceImg;
-	QImage* var_manaPieceImg;
-	QImage* var_manaShieldPieceImg;
+	enum calibrationState{CALIBRATED, NOT_CALIBRATED , DURING_CALIBRATION};
+	QImage var_healthPieceImg;
+	QImage var_manaPieceImg;
+	QImage var_manaShieldPieceImg;
 	bool isManaShieldActive;
 	calibrationState caliState;
 	int rotationNeededForPointsAbove;

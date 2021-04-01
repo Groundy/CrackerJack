@@ -46,9 +46,6 @@
     <ClCompile Include="sources\Profile.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="sources\ErrorManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="sources\Utilities.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -99,9 +96,6 @@
     <QtMoc Include="sources\Profile.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="sources\ErrorManager.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
     <QtMoc Include="sources\NewProfileConfiguartor.h">
       <Filter>Header Files</Filter>
     </QtMoc>
@@ -127,6 +121,9 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="sources\ManaHealthStateAnalyzer.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="sources\ScreenAnalyzer.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>
@@ -155,9 +152,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="sources\StringResource.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="sources\ScreenAnalyzer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

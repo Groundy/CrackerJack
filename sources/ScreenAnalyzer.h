@@ -9,12 +9,10 @@
 #include "qmap.h"
 #include "qdebug.h"
 #include "Utilities.h"
-#include "ErrorManager.h"
 class ScreenAnalyzer : public QThread
 {
 	Q_OBJECT
-	enum style {DEFAULT, PARALLEL, LARGE, COMPACT};
-	enum position { LEFT, RIGHT, TOP, DOWN };
+
 public:
 	enum ERROR_CODE {
 		OK = 0,
@@ -23,6 +21,18 @@ public:
 		CANT_LOAD_SCREEN_FROM_SCREENSHOT_FOLDER = 8,
 		NO_SLASHES_FOUND_IN_GAME_SCREEN = 16,
 		NO_POSTION_ASSIGNED_TO_SLASHES = 32,
+		NO_RECTANGLE_COPYING_WHOLE_SCREEN_TO_VAR = 64,
+		NO_FRAMES_FOUND = 128,
+		NO_ENOUGH_FRAMES_FOUND = 256,
+		ERROR_IN_SETTING_POSITION_OF_INTERFACE = 512
+	};
+	struct Frames {
+		QRect gameFrame;
+		QRect miniMapFrame;
+		QRect healthFrame;
+		QRect manaFrame;
+		QRect manaShieldFrame;
+		bool manaShieldIsIncludedInManaBar = false;
 	};
 	ScreenAnalyzer( QObject *parent, VariablesClass* var);
 	~ScreenAnalyzer();
@@ -31,38 +41,40 @@ public:
 
 public slots:
 	void reCalibrate();
-
+signals:
+	void sendAllowenceToAnalyze(bool state);
 private:
 	VariablesClass* var;
 	int timeBetweenNextCheckingsOfScrennShotFolder = 100;
-
-	//simple shearch
-	void SIMPLE_mainLoop();
-	void SIMPLE_calibration();
-	QRect manaBar;
-	QRect healthBar;
+	bool stateOfAnalyzer = false;
 
 	//Advanced shearch
-	QPoint healthSlash;
-	QPoint manaSlash;
-	QPoint manaShieldSlash;
+	//QPoint healthSlash;
+	//QPoint manaSlash;
+	//QPoint manaShieldSlash;
 	QRect healthRectImg;
 	QRect manaRectImg;
 	QRect manaShieldRectImg;
-	const int heightOfHealthImgStr = 11;
-	const int widthFromSlashChar = 75;
+	//const int HEIGHT_OF_HEALING_SLASH = 11;
+	//const int WIDTH_FROM_SLASH = 75;
+
 	void mainLoop();
 	int calibrate();
-	int setImgRectsForHealthAnalyzerClass(QImage* full);
-	int determineManaHealthManaShieldPosHor(QImage* fullImg);
-	int determineManaHealthManaShieldPosVer(QImage* fullImg);
-	int splitToPieces(QImage* fullImg);
-	void sortByXAndY(QList<QPoint>* points, QList<QPoint>* pointsSortedByX, QList<QPoint>* pointsSortedByY);
-	int howTheyShouldBeRotatedInRight; //-1 one time to left, 1 one time to right
-	
+	//int calibrate_ManaHealthManaShield(QImage* fullScreenBlackAndWhite);
+	int categorizeWindows(QImage fullscreen, QList<QRect> importantRectangles, Frames* frames);
+	//int setImgRectsForHealthAnalyzerClass(QImage* full);
+	//int determineManaHealthManaShieldPosHor(QImage* fullImg);
+	//int determineManaHealthManaShieldPosVer(QImage* fullImg);
+	//int splitToPieces(QImage* fullImg);
+	void sortByXAndYPoints(QList<QPoint>* points, QList<QPoint>* pointsSortedByX, QList<QPoint>* pointsSortedByY);
+	void sortByXAndYRects(QList<QRect> inputRects, QList<int>* indexesOfRectsSortedByPosX, QList<int>* indexesOfRectsSortedByPosY);
+	int findWindowsOnScreen(QImage fullScreen, QList<QRect>* importantRectangles);
+	int setPositionHealthImgs(QImage fullscreen, QList<QRect> listOfImportantRectangles, bool* manaAndManashieldAreToghere, int* indexOfHealth, int* indexOfMana, int* indexOfManaShield, int* howTheyShouldBeRotated);
 	int loadScreen(QImage* img);
 	void deleteScreenShotFolder();
 	QString getNameOfLastTakenScreenShot();
 	int getNameOfLastTakenScreenShotForSure(QString& toRet, int maxTries);
 	QString pathToScreenFolder = "C:\\Users\\ADMIN\\AppData\\Local\\Tibia\\packages\\Tibia\\screenshots";//TODO
+
+	void TEST_setPositionHealthImhs(QString pathToFolderWithDiffrentPositionsStylesScreen, QString pathToOutPutFolder);
 };

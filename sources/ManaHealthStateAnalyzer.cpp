@@ -10,11 +10,15 @@ ManaHealthStateAnalyzer::~ManaHealthStateAnalyzer(){
 }
 
 void ManaHealthStateAnalyzer::run(){
-	sleep(4);
 	if(var->useAdvancedShearch)
 		mainLoop();
 	else
 		SIMPLE_mainloop();
+}
+
+void ManaHealthStateAnalyzer::setThreadEnabilityToRun(bool stateToSet) {
+	qDebug() << "ManaHealthStateAnalyzer::setThreadEnabilityToRun " << stateToSet;
+	shouldThisThreadBeActive = stateToSet;
 }
 
 void ManaHealthStateAnalyzer::imgsToBlackAndWhite(){
@@ -24,28 +28,12 @@ void ManaHealthStateAnalyzer::imgsToBlackAndWhite(){
 		Utilities::imgToBlackAndWhiteAllColors(&manaShieldImg,240);
 }
 
-void ManaHealthStateAnalyzer::getInfoFromVarClass(){
-	bool healthIsNull = (var->var_healthPieceImg == nullptr);
-	bool manaIsNull = var->var_manaPieceImg == NULL;
-	bool manaShieldIsNull = var->var_manaShieldPieceImg == NULL;
-	QImage emptyImg = QImage();
-	if (!healthIsNull)
-		healthImg = *var->var_healthPieceImg;
-	else
-		healthImg = emptyImg;
-
-	if (!manaIsNull)
-		manaImg = *var->var_manaPieceImg;
-	else
-		manaImg = emptyImg;
-
-	if (!manaShieldIsNull)
-		manaShieldImg = *var->var_manaShieldPieceImg;
-	else
-		manaShieldImg = emptyImg;
+void ManaHealthStateAnalyzer::getInfoFromVarClass() {
+	healthImg = var->var_healthPieceImg;
+	manaImg = var->var_manaPieceImg;
+	manaShieldImg = var->var_manaShieldPieceImg;
 	rotationNeeded = var->rotationNeededForPointsAbove;
 	isManaShieldActive = var->isManaShieldActive;
-
 }
 
 void ManaHealthStateAnalyzer::setImagesToAnalyze(){
@@ -102,13 +90,13 @@ void ManaHealthStateAnalyzer::mainLoop(){
 			continue;
 		}
 		getInfoFromVarClass();
-		if (!checkIfImgWereLoadedCorrectly()) {
-			msleep(miliSecBetweenCheckingForNewValuesImg);
-			//emit demandReCalibration();
-			qDebug() << "ManaHealthStateAnalyzer:: mainLoop skipped, error in reading imgs";
+		bool error = checkIfImgWereLoadedCorrectly();
+		if (error) {
+			msleep(miliSecBetweenCheckingForNewValuesImg * 6);
+			qDebug() << "ManaHealthStateAnalyzer:: mainLoop skipped, error img loaded";
 			continue;
 		}
-		if (!var->CALIBRATED) {
+		if (var->caliState != var-> CALIBRATED) {
 			msleep(miliSecBetweenCheckingForNewValuesImg * 5);
 			qDebug() << "ManaHealthStateAnalyzer:: mainLoop skipped, error lack of calibration";
 			//emit demandReCalibration();
@@ -139,7 +127,7 @@ bool ManaHealthStateAnalyzer::changeImgsToStrings(){
 	if (isManaShieldActive)
 		manaShieldStr = Utilities::imgWithStrToStr(&manaShieldImg);
 	else
-		manaShieldStr = QString();
+		manaShieldStr = "";
 
 	bool reasonToEmit = healthStr.isEmpty() || manaStr.isEmpty();
 	bool reasonToEmit2 = !(healthStr.contains("\\") && manaStr.contains("\\"));
@@ -150,7 +138,10 @@ bool ManaHealthStateAnalyzer::changeImgsToStrings(){
 
 	healthValueStr = healthStr;
 	manaValueStr = manaStr;
-	manaShieldValueStr = manaShieldStr;
+	if (isManaShieldActive)
+		manaShieldValueStr = manaShieldStr;
+	else
+		manaShieldValueStr = "";//[poss err]
 	return true;
 }
 
@@ -161,22 +152,15 @@ void ManaHealthStateAnalyzer::cutBorders(){
 		Utilities::cutBlackBordersOfImg(&manaShieldImg);
 }
 
-bool ManaHealthStateAnalyzer::checkIfImgWereLoadedCorrectly() {
-	QImage emptyImg = QImage();
-	bool good1 = healthImg != emptyImg;
-	bool good2 = manaImg != emptyImg;
-	bool good3 = manaShieldImg != emptyImg;
-	bool loadedCorrectly;
-	if (isManaShieldActive)
-		loadedCorrectly = good1 && good2 && good3;
-	else
-		loadedCorrectly = good1 && good2;
+bool ManaHealthStateAnalyzer::checkIfImgWereLoadedCorrectly(){
+	bool error1 = healthImg.width() == 0 || healthImg.height() == 0;
+	bool error2 = manaImg.width() == 0 || manaImg.height() == 0;
+	bool error3 = manaShieldImg.width() == 0 || manaShieldImg.height() == 0;
 
-	if (loadedCorrectly)
-		return true;
-	else 
-		return false;
-	
+	if (!isManaShieldActive)
+		return error1 || error2;
+	else
+		return error1 || error2 || error3;
 }
 
 void ManaHealthStateAnalyzer::setHealthManaValues(){

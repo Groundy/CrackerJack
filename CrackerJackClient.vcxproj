@@ -109,7 +109,6 @@
     <ClCompile Include="sources\NewProfileConfiguartor.cpp" />
     <ClCompile Include="sources\Key.cpp" />
     <ClCompile Include="sources\ProfileDataBaseManager.cpp" />
-    <ClCompile Include="sources\ErrorManager.cpp" />
     <ClCompile Include="sources\LoginWindow.cpp" />
     <ClCompile Include="sources\main.cpp" />
     <ClCompile Include="sources\Profile.cpp" />
@@ -144,7 +143,6 @@
     <ClInclude Include="sources\Key.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="sources\Utilities.h" />
-    <QtMoc Include="sources\ErrorManager.h" />
     <QtMoc Include="sources\ProfileDataBaseManager.h" />
     <QtMoc Include="sources\Profile.h" />
     <QtMoc Include="sources\SelectProfileWindow.h" />

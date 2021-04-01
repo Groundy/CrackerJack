@@ -110,18 +110,46 @@
 	 }
  }
 
+ void Utilities::imgAvoideOneColor(QImage* img, QRgb minimalColorValues, QRgb maxColorValues, bool allOfThem){
+	 int width = img->width();
+	 int height = img->height();
+	 auto black = qRgb(0, 0, 0);
+	 uint minValue = (uint)minimalColorValues;
+	 uint maxValue = (uint)maxColorValues;
+	 RGBstruct minV(minValue);
+	 RGBstruct maxV(maxValue);
+	 bool redIsEnough, greenIsEnough, blueIsEnough;
+	 bool setGiveColor;
+
+	 for (size_t x = 0; x < width; x++) {
+		 for (size_t y = 0; y < height; y++) {
+			 QRgb colorOfPixel = img->pixel(x, y);
+			 RGBstruct current(colorOfPixel);
+
+			 redIsEnough = (current.r >= minV.r) && (current.r <= maxV.r) ? true : false;
+			 greenIsEnough = (current.g >= minV.g) && (current.g <= maxV.g) ? true : false;
+			 blueIsEnough = (current.b >= minV.b) && (current.b <= maxV.b) ? true : false;
+
+			 if (allOfThem)
+				 setGiveColor = (redIsEnough && greenIsEnough && blueIsEnough);
+			 else
+				 setGiveColor = (redIsEnough || greenIsEnough || blueIsEnough);
+
+			 if (setGiveColor)
+				 img->setPixel(x, y, black);
+		 }
+	 }
+ }
+
  void Utilities::changeGreyPixelsToBlack(QImage* img, int minVal, int maxVal) {
 	 int width = img->size().width();
 	 int height = img->size().height();
-	 QPoint point;
 	 for (size_t x = 0; x < width; x++) {
 		 for (size_t y = 0; y < height; y++) {
-			 point.setX(x);
-			 point.setY(y);
-			 uint pixVal = img->pixel(point);
+			 uint pixVal = img->pixel(x,y);
 			 bool shouldBeBlacked = RGBstruct::isPixelInRangeOfGrey(pixVal, minVal, maxVal);
 			 if (shouldBeBlacked)
-				 img->setPixel(point, 0);
+				 img->setPixel(x, y, 0);
 		 }
 	 }
  }
@@ -469,6 +497,61 @@ void Utilities::rotateImgToRight(QImage* imgToRotate, int timesToRotateRight){
 	rotating.rotate(timesToRotateRight *90,Qt::Axis::ZAxis);
 	QImage tmp = imgToRotate->transformed(rotating);
 	*imgToRotate = tmp;
+}
+
+bool Utilities::isItPixelFromFrame(uint color, int minValueAcceptable, int maxValueAcceptable, bool requireSameValuesOfRGB){
+	RGBstruct rgb(color);
+	int minValueFound = min(min(rgb.r, rgb.g), rgb.b);
+	int maxValueFound = max(max(rgb.r, rgb.g), rgb.b);
+	if (requireSameValuesOfRGB) {
+		if (maxValueFound - minValueFound > 1)
+			return false;
+	}
+	if (minValueFound >= minValueAcceptable && maxValueFound <= maxValueAcceptable)
+		return true;
+	else
+		return false;
+}
+
+void Utilities::UNSUED_findBoredersOfFrames(QImage fullScreen){
+	QImage screeOfFrames(fullScreen);
+	auto  minBlack = qRgb(19, 19, 19);
+	auto  maxBlack = qRgb(29, 29, 29);
+	auto minBlack2 = qRgb(108, 108, 108);
+	auto maxBlack2 = qRgb(125, 125, 125);
+	auto black = qRgb(0, 0, 0);
+	auto white = qRgb(255, 255, 255);
+	Utilities::imgToOneColor(&screeOfFrames, minBlack, maxBlack, white, true);
+
+	int width = screeOfFrames.width();
+	int height = screeOfFrames.height();
+	uint pix;
+	bool blueIsEnough, redIsEnough, greenIsEnough;
+	bool blueIsEnough1, redIsEnough1, greenIsEnough1;
+	bool finalBool;
+	RGBstruct minV(minBlack);
+	RGBstruct maxV(maxBlack);
+	RGBstruct minV2(minBlack2);
+	RGBstruct maxV2(maxBlack2);
+	uint toSet;
+	for (int x = 0; x < width; x++) {
+		for (int y = 0; y < height; y++) {
+			pix = fullScreen.pixel(x, y);
+			RGBstruct rgb(pix);
+			blueIsEnough = (rgb.b >= minV.b) && (rgb.b <= maxV.b);
+			blueIsEnough1 = (rgb.b >= minV2.b) && (rgb.b <= maxV2.b);
+			redIsEnough = (rgb.r >= minV.r) && (rgb.r <= maxV.r);
+			redIsEnough1 = (rgb.r >= minV2.r) && (rgb.r <= maxV2.r);
+			greenIsEnough = (rgb.g >= minV.g) && (rgb.g <= maxV.g);
+			greenIsEnough1 = (rgb.g >= minV2.g) && (rgb.g <= maxV2.g);
+			finalBool = (blueIsEnough || blueIsEnough1) && (redIsEnough || redIsEnough1) && (greenIsEnough || greenIsEnough1);
+			toSet = finalBool ? white : black;
+			screeOfFrames.setPixel(x, y, toSet);
+		}
+	}
+	Utilities::saveImgToOutPutFolder(&screeOfFrames, "");
+
+	QImage startOfFrame = QImage(3, 3, QImage::Format::Format_RGB32);
 }
 
  /*

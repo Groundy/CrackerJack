@@ -33,6 +33,7 @@ public:
 	static void imgToBlackAndWhiteOneColor(QImage* img, int threshold);
 	static void imgToBlackAndWhiteAllColors(QImage* img, int threshold);
 	static void imgToOneColor(QImage* img, QRgb minimalColorValues, QRgb maxColorValues, QRgb colorToSet, bool allOfThem);
+	static void imgAvoideOneColor(QImage* img, QRgb minimalColorValues, QRgb maxColorValues, bool allOfThem);
 	static void changeGreyPixelsToBlack(QImage* img, int min, int max);
 	static QStringList getCodesOfAllLetersInFolder(QString pathToInputFolder, QString pathToOutputFolder);
 	static void cutImgWithLettersToSingleLettersImgList(QImage* img, QList<QImage>* list);
@@ -43,5 +44,10 @@ public:
 	static QList<QPoint> findStartPositionInImg(QImage* imgToFind, QImage* imgToShareWithin);
 	static QImage fromCharToImg(QChar CharToImg);
 	static void rotateImgToRight(QImage* imgToRotate, int timesToRotateRight);
+	static bool isItPixelFromFrame(uint color, int minValueAcceptable, int maxValueAcceptable, bool requireSameValuesOfRGB);
+
+
+
+	static void UNSUED_findBoredersOfFrames(QImage fullScreen);
 	//static void showQImageInWindow(QImage* img);
 };

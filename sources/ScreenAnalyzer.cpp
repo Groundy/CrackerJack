@@ -1,6 +1,5 @@
 #include "ScreenAnalyzer.h"
 
-
 ScreenAnalyzer::ScreenAnalyzer(QObject *parent, VariablesClass *varClass)
 	: QThread(parent){
 	var = varClass;
@@ -10,132 +9,38 @@ ScreenAnalyzer::~ScreenAnalyzer(){
 }
 
 void ScreenAnalyzer::run() {	
+	QString in = "C:\\Users\\ADMIN\\Desktop\\screenshots";
+	QString out = in + "2";
+	TEST_setPositionHealthImhs(in, out);
+	int breakpointInt;
 	while (true) {
 		if (!enableScreenAnalyzer) {
 			msleep(6 * timeBetweenNextCheckingsOfScrennShotFolder);
 			continue;
 		}
-
-		if (var->useAdvancedShearch)
-			mainLoop();
-		else
-			SIMPLE_mainLoop();
+		mainLoop();
 	}
 }
 
 void ScreenAnalyzer::reCalibrate(){
-	if (var->useAdvancedShearch) {
-		if (var->caliState != var->DURING_CALIBRATION) {
-			var->caliState = var->DURING_CALIBRATION;
-			qDebug() << "Recalibration";
-			calibrate();
-		}
-	}
-	else {
-		qDebug() << "Recalibration simple";
-		SIMPLE_calibration();
-	}
-}
-
-void ScreenAnalyzer::SIMPLE_mainLoop(){
-	SIMPLE_calibration();
-	msleep(this->timeBetweenNextCheckingsOfScrennShotFolder);
-	bool endLoop = false;
-	while (!endLoop){
-		QImage scr;
-		loadScreen(&scr);
-		QImage healthBarToSend = scr.copy(healthBar);
-		QImage manabarToSend = scr.copy(manaBar);
-		var->healthBarImg = healthBarToSend;
-		var->manaBarImg = manabarToSend;
-		msleep(timeBetweenNextCheckingsOfScrennShotFolder);
+	if (var->caliState != var->DURING_CALIBRATION) {
+		var->caliState = var->DURING_CALIBRATION;
+		qDebug() << "Recalibration";
+		calibrate();
 	}
 }
 
 int ScreenAnalyzer::loadScreen(QImage* img){
 	QString nameOfImgToCapture;
-	int code = getNameOfLastTakenScreenShotForSure(nameOfImgToCapture, 15);
+	auto code = (ERROR_CODE)getNameOfLastTakenScreenShotForSure(nameOfImgToCapture, 55);
 	if (code != OK)
 		return code;
 	QString pathToImg = pathToScreenFolder + QString("\\") + nameOfImgToCapture;
-	bool openCorrectly = img->load(pathToImg);
+	auto openCorrectly = img->load(pathToImg);
 	if (openCorrectly)
 		return OK;
 	else
 		return CANT_LOAD_SCREEN_FROM_SCREENSHOT_FOLDER;
-}
-
-void ScreenAnalyzer::SIMPLE_calibration(){
-	QImage fullScreen;
-	loadScreen(&fullScreen);
-	if (fullScreen == QImage()); //diag err
-	const int distanceFromStartBarsToEndOfScreen = 170;
-	int startPosX = fullScreen.width() - distanceFromStartBarsToEndOfScreen;
-	int startPosY = 0;
-	int width = distanceFromStartBarsToEndOfScreen;
-	int height = fullScreen.height();
-	if (startPosX < 0); //diag err img is smaller than 155 pix, but it should be
-	QRect oneFourthOfScreen(startPosX, startPosY, width, height);
-	QImage partOfFullScreen = fullScreen.copy(oneFourthOfScreen);
-
-	QImage fullScreenBlue(partOfFullScreen);
-	QImage fullScreenRed(partOfFullScreen);
-
-	auto minRed = qRgb(140, 0, 0);
-	auto maxRed = qRgb(255, 150, 150);
-
-	auto minBlue = qRgb(45, 45, 140);
-	auto maxBlue = qRgb(170, 170, 255);
-
-	auto red = qRgb(255, 0, 0);
-	auto blue = qRgb(0, 0, 255);
-
-	Utilities::imgToOneColor(&fullScreenRed, minRed, maxRed, red, true);
-	Utilities::imgToOneColor(&fullScreenBlue, minBlue, maxBlue, blue, true);
-
-	Utilities::imgToBlackAndWhiteOneColor(&fullScreenRed,254);///
-	Utilities::imgToBlackAndWhiteOneColor(&fullScreenBlue, 255);///
-
-
-	//200 201 are chars defined in Utilites::getQmapWithCodes();
-	QImage healthIconImg = Utilities::fromCharToImg(200);
-	QImage manaIconImg = Utilities::fromCharToImg(201);
-
-	QList<QPoint> healthIconList = Utilities::findStartPositionInImg(&healthIconImg, &fullScreenRed);
-	QList<QPoint> manaIconList = Utilities::findStartPositionInImg(&manaIconImg, &fullScreenBlue);
-	//can't find mana and health icon to analize
-	if (healthIconList.size() != 1 || manaIconList.size() != 1);//diag err
-
-	QPoint healthIconCorner = healthIconList[0];
-	QPoint manaIconCorner = manaIconList[0];
-
-	int healthIconCenterY = healthIconCorner.y() + healthIconImg.height() / 2;
-	int manaIconCenterY = manaIconCorner.y() + manaIconImg.height() / 2;
-
-	QPoint vectorFromCornerOfHealthIconToStartHealthBar(13,4);
-	QPoint vectorFromCornerOfManaIconToStartManaBar(15,4);
-
-	QPoint startOfHealthBar = vectorFromCornerOfHealthIconToStartHealthBar + healthIconCorner;
-	QPoint startOfManaBar = vectorFromCornerOfManaIconToStartManaBar + manaIconCorner;
-
-	int x_pos_start_health = fullScreen.width() - distanceFromStartBarsToEndOfScreen + startOfHealthBar.x();
-	int x_pos_start_mana = fullScreen.width() - distanceFromStartBarsToEndOfScreen + startOfManaBar.x();
-	int y_pos_start_health = startOfHealthBar.y();
-	int y_pos_start_mana = startOfManaBar.y();
-	int heightToCut = 1;
-	int lenghtFromStartToEndOfBar = 92;
-	
-	QRect partOfBarThanShouldBeReturned_Healing(x_pos_start_health, y_pos_start_health, lenghtFromStartToEndOfBar, heightToCut);
-	QRect partOfBarThanShouldBeReturned_Mana(x_pos_start_mana, y_pos_start_mana, lenghtFromStartToEndOfBar, heightToCut);
-
-	healthBar = partOfBarThanShouldBeReturned_Healing;
-	manaBar = partOfBarThanShouldBeReturned_Mana;
-
-	//QImage helathBar = fullScreen.copy(partOfBarThanShouldBeReturned_Healing);
-	//QImage manaBar = fullScreen.copy(partOfBarThanShouldBeReturned_Mana);
-
-	//Utilities::saveImgToOutPutFolder(&helathBar, "he");///
-	//Utilities::saveImgToOutPutFolder(&manaBar, "ma");///
 }
 
 QString ScreenAnalyzer::getNameOfLastTakenScreenShot(){
@@ -171,9 +76,86 @@ int ScreenAnalyzer::getNameOfLastTakenScreenShotForSure(QString& toRet, int MaxT
 		if (!toRet.isEmpty())
 			return ERROR_CODE::OK;
 		else 
-			msleep(123);
+			msleep(100);
 	}
 	return CANT_LOAD_SCREEN_FROM_SCREENSHOT_FOLDER;
+}
+
+void ScreenAnalyzer::TEST_setPositionHealthImhs(QString pathToFolderWithDiffrentPositionsStylesScreen, QString pathToOutPutFolder){
+	QImage combined, health, mana, manaShield;
+	QDir directory(pathToFolderWithDiffrentPositionsStylesScreen);
+	QStringList listOfFIles = directory.entryList(QStringList() << "*.png", QDir::Files);
+	// tmp i=0
+	for (int i = 10; i < listOfFIles.size(); i++) {
+		QString nameOfFile = listOfFIles[i];
+		qDebug() << QString::number(i);
+		QString pathToPng = pathToFolderWithDiffrentPositionsStylesScreen + "\\" + nameOfFile;
+		QImage img;
+		img.load(pathToPng);
+		QList<QRect> importantRects;
+		findWindowsOnScreen(img, &importantRects);
+		bool areBarsCombined;
+		int indHealth;
+		int indMana;
+		int indManaShield;
+		int howTheyShouldBeRotated;
+		setPositionHealthImgs(img, importantRects, &areBarsCombined, &indHealth, &indMana, &indManaShield, &howTheyShouldBeRotated);
+
+		health = img.copy(importantRects[indHealth]);
+		QString healthStr, manaStr, ManaShieldStr, combinedStr;
+
+		Utilities::rotateImgToRight(&health, howTheyShouldBeRotated);
+		Utilities::imgToBlackAndWhiteAllColors(&health, 240);
+		healthStr = Utilities::imgWithStrToStr(&health);
+		qDebug() << "Health: " + healthStr;
+
+		if (indManaShield != -1){
+			if (areBarsCombined) {
+				QRect rect = importantRects.at(indManaShield);
+				combined = img.copy(rect);
+
+				Utilities::rotateImgToRight(&combined, howTheyShouldBeRotated);
+				Utilities::imgToBlackAndWhiteAllColors(&combined, 240);
+				QString combinedStr = Utilities::imgWithStrToStr(&combined);
+				qDebug() << "combinedStr: " + combinedStr;
+			}
+			else{
+				QRect rect = importantRects.at(indMana);
+				mana = img.copy(rect);
+				rect = importantRects.at(indManaShield);
+				manaShield = img.copy(rect);
+
+				Utilities::rotateImgToRight(&mana, howTheyShouldBeRotated);
+				Utilities::imgToBlackAndWhiteAllColors(&mana, 240);
+				QString manaStr = Utilities::imgWithStrToStr(&mana);
+				qDebug() << "manaStr: " + manaStr;
+
+				Utilities::rotateImgToRight(&manaShield, howTheyShouldBeRotated);
+				Utilities::imgToBlackAndWhiteAllColors(&manaShield, 240);
+				QString ManaShieldStr = Utilities::imgWithStrToStr(&manaShield);
+				qDebug() << "ManaShieldStr: " + ManaShieldStr;
+			}
+
+		}
+		QString name = QDateTime::currentDateTime().toString("mmss_mmm_");
+
+		QString h =  "Health_";
+		QString m = "Mana_";
+		QString c = "Combined_";
+		QString ms = "ManaShield_";
+		QString path = pathToOutPutFolder + "\\_";
+		QString finalName_h = path +name + h + nameOfFile;
+		QString finalName_m = path + name + m + nameOfFile;
+		QString finalName_ms = path + name + ms + nameOfFile;
+		QString finalName_c = path + name + c + nameOfFile;
+		health.save(finalName_h);
+		if(areBarsCombined)
+			combined.save(finalName_c);
+		else{
+			mana.save(finalName_m);
+			manaShield.save(finalName_ms);
+		} 
+	}
 }
 
 void ScreenAnalyzer::deleteScreenShotFolder(){
@@ -187,53 +169,84 @@ void ScreenAnalyzer::deleteScreenShotFolder(){
 }
 
 void ScreenAnalyzer::mainLoop(){
-	sleep(2);
+	sleep(4);
 	calibrate();
 	while (enableScreenAnalyzer){
 		QImage img;
-		int openCorrectly = loadScreen(&img);
+		auto openCorrectly = (ERROR_CODE)loadScreen(&img);
+		if (var->caliState != var->CALIBRATED) 
+			calibrate();
 		if (openCorrectly == OK) {
 			deleteScreenShotFolder();
-			splitToPieces(&img);
+			//auto res = (ERROR_CODE)splitToPieces(&img);
+			auto res = OK;//tmp;
+			if (res == OK && stateOfAnalyzer == false) {
+				emit sendAllowenceToAnalyze(true);
+				stateOfAnalyzer = true;
+			}
+			else if (res != OK && stateOfAnalyzer == true) {
+				calibrate();
+			 	emit sendAllowenceToAnalyze(false);
+				stateOfAnalyzer = false;
+			}
+			else if (res != OK && stateOfAnalyzer == false) 
+				calibrate();
+			else
+				;
 		}
 		msleep(timeBetweenNextCheckingsOfScrennShotFolder);
 	}
 }
 
 int ScreenAnalyzer::calibrate(){
-	//this fun looking for certain pixel sequences and save their locations for
-	//further img splitting
 	qDebug() << "ScreenAnalyzer::calibrate()";
-	QImage img;
-	int openCorrectly = loadScreen(&img);
-	if (openCorrectly == OK) {
-		Utilities::imgToBlackAndWhiteAllColors(&img, 240);
-		int interfaceIsVert = determineManaHealthManaShieldPosVer(&img);
-		int interfaceIsHor = determineManaHealthManaShieldPosHor(&img);
-		if (interfaceIsVert != OK && interfaceIsHor != OK) {
-			var->caliState = var->NOT_CALIBRATED;
-			qDebug() << "Calibration failed";
-			return NO_SLASHES_FOUND_IN_GAME_SCREEN;
-		}
-		int res = setImgRectsForHealthAnalyzerClass(&img);
-		if(res == OK){
-			var->caliState = var->CALIBRATED;
-			qDebug() << "Calibration completed";
-			return OK;
-		}
-		else {
-			qDebug() << "Calibration failed";
-			return res;
-		}
+	QImage fullScreen;
+	ERROR_CODE res1 = (ERROR_CODE)loadScreen(&fullScreen);
+
+	if (res1 != OK) {
+		qDebug() << "ScreenAnalyzer::calibrate() failed";
+		return res1;
 	}
-	else {
-		var->caliState = var->NOT_CALIBRATED;
-		qDebug() << "Calibration failed";
-		return CANT_LOAD_SCREEN_FROM_SCREENSHOT_FOLDER;
+	QList<QRect> importantRectangles;
+	ERROR_CODE res2 = (ERROR_CODE)findWindowsOnScreen(fullScreen, &importantRectangles);
+	if (res2 != OK) {
+		qDebug() << "ScreenAnalyzer::findMiniMapWindow(QImage fullScreen) failed";
+		return res2;
 	}
+	Frames frames;
+	ERROR_CODE res3 = (ERROR_CODE)categorizeWindows(fullScreen, importantRectangles, &frames);
+
+	return OK;
 }
 
-void ScreenAnalyzer::sortByXAndY(QList<QPoint>* points, QList<QPoint>* pointsSortedByX, QList<QPoint>* pointsSortedByY) {
+int ScreenAnalyzer::categorizeWindows(QImage fullscreen, QList<QRect> importantRectangles, Frames* frame){
+	//5 cause 1-minimap 2-gameScreen 3-text input 4-health 5-mana, those 5 have to be found
+	if (importantRectangles.size() < 5)
+		return NO_ENOUGH_FRAMES_FOUND;
+
+
+	QList<int> surphacesOfFrames;
+	for each (QRect var in importantRectangles){
+		int surf = var.width() * var.height();
+		surphacesOfFrames.push_back(surf);
+	}
+	int indexOfBiggestValue = 0;
+	int previousBiggestValue = 0;
+	for (size_t i = 0; i < surphacesOfFrames.size(); i++){
+		if (surphacesOfFrames[i] > previousBiggestValue) {
+			previousBiggestValue = surphacesOfFrames[i];
+			indexOfBiggestValue = i;
+		}
+	}
+	frame->miniMapFrame = importantRectangles.at(indexOfBiggestValue);
+	importantRectangles.removeAt(indexOfBiggestValue);
+
+	bool* isManaAndManaShieldTogether = false;
+	int *indexOfHealth, *indexOfMana, *indexOfManaShield, *howTheyShouldBeRotated;
+	setPositionHealthImgs(fullscreen, importantRectangles, isManaAndManaShieldTogether, indexOfHealth, indexOfMana, indexOfManaShield, howTheyShouldBeRotated);
+}
+
+void ScreenAnalyzer::sortByXAndYPoints(QList<QPoint>* points, QList<QPoint>* pointsSortedByX, QList<QPoint>* pointsSortedByY) {
 	QMap<int, int> sortedByX; //x is key
 	QMap<int, int> sortedByY; //y is key
 	QList<QPoint> copyOfInput = *points;
@@ -253,11 +266,422 @@ void ScreenAnalyzer::sortByXAndY(QList<QPoint>* points, QList<QPoint>* pointsSor
 		int x = sortedByY.value(mapEle);
 		sortedByYToRet.push_back(QPoint(x, y));
 	}
+
+	//it's possibility that two points in vector have diffrent one of cordinates but
+	//second cordinate differ by few pixels, next part of fun is designed to
+	//make set for both cordinates the same value
+	bool fixPoints = true; //turn on/off that fixing
+	if (fixPoints) {
+		bool needToReWriteLists = false;
+		const int MAX_DIFFRENCE_IN_PIXELS = 4;
+		for (int i = 1; i < sortedByXToRet.size(); i++) {
+			bool areTheSame = sortedByXToRet[i].x() - sortedByXToRet[i - 1].x() <= MAX_DIFFRENCE_IN_PIXELS;
+			if (areTheSame) {
+				needToReWriteLists = true;
+				int toSet = sortedByXToRet[i - 1].x();
+				sortedByXToRet[i].setX(toSet);
+				//making the same change in second container
+				int yValueOfmodifiedPoint = sortedByXToRet[i].y();
+				for (QPoint& point : sortedByYToRet) {
+					if (point.y() == yValueOfmodifiedPoint)
+						point.setX(toSet);
+				}
+			}
+		}
+		for (int i = 1; i < sortedByYToRet.size(); i++) {
+			bool areTheSame = sortedByYToRet[i].y() - sortedByYToRet[i - 1].y() <= MAX_DIFFRENCE_IN_PIXELS;
+			if (areTheSame) {
+				needToReWriteLists = true;
+				int toSet = sortedByYToRet[i - 1].y();
+				sortedByYToRet[i].setY(toSet);
+				int xValueOfmodifiedPoint = sortedByYToRet[i].x();
+				for (QPoint& point : sortedByXToRet) {
+					if (point.x() == xValueOfmodifiedPoint)
+						point.setY(toSet);
+				}
+			}
+		}
+		if (needToReWriteLists) {
+			//ReWriting begining of fun to eliminate duplicates
+			QMap<int, int> sortedByX_TMP; //x is key
+			QMap<int, int> sortedByY_TMP; //y is key
+			QList<QPoint> copyOfInput = *points;
+
+			for each (QPoint var in sortedByXToRet) 
+				sortedByX_TMP.insert(var.x(), var.y());
+
+			for each (QPoint var in sortedByYToRet) 
+				sortedByY_TMP.insert(var.y(), var.x());//inverted order
+			
+			QList<QPoint>sortedByXToRet_TMP;
+			QList<QPoint>sortedByYToRet_TMP;
+			for (auto mapEle : sortedByX_TMP.keys()) {
+				int x = mapEle;
+				int y = sortedByX.value(mapEle);
+				sortedByXToRet_TMP.push_back(QPoint(x, y));
+			}
+			for (auto mapEle : sortedByY_TMP.keys()) {
+				int y = mapEle;
+				int x = sortedByY.value(mapEle);
+				sortedByYToRet_TMP.push_back(QPoint(x, y));
+			}
+			*pointsSortedByX = sortedByXToRet_TMP;
+			*pointsSortedByY = sortedByYToRet_TMP;
+			return;
+		}//end of rewriting
+	}//end of slightly correcting
+
 	*pointsSortedByX = sortedByXToRet;
 	*pointsSortedByY = sortedByYToRet;
 }
 
-int ScreenAnalyzer::determineManaHealthManaShieldPosVer(QImage* fullImg) {
+void ScreenAnalyzer::sortByXAndYRects(QList<QRect> inputRects, QList<int>* indexesOfRectsSortedByPosX, QList<int>* indexesOfRectsSortedByPosY) {
+	QList<QRect> sortedByX, sortedByY;
+	for (int i = 0; i < inputRects.size(); i++) {
+		QRect rect = inputRects[i];
+		int startPosX = rect.x();
+		int startPosY = rect.y();
+
+		if (i == 0) {
+			sortedByX.push_back(rect);
+			sortedByY.push_back(rect);
+			continue;
+		}
+
+		int size = sortedByX.size();
+		for (int i = 0; i < size; i++){
+			if (startPosX > sortedByX[i].x()) {
+			
+			}
+		}
+		size = sortedByY.size();
+		for (int i = 0; i < size; i++) {
+
+		}
+
+	}
+		int tmp = 4;
+}
+
+int ScreenAnalyzer::findWindowsOnScreen(QImage fullScreen, QList<QRect>* importantRectangles){
+	int width = fullScreen.width();
+	int height = fullScreen.height();
+	auto black = qRgb(0, 0, 0);
+	const uint minAcceptableValue = 17;
+	const uint maxAcceptableValue = 29;
+	QList<QPoint> startOfFrames;
+	bool isPixelOfFrame;
+	for (size_t x = 0; x < width-2; x++) {
+		for (size_t y = 0; y < height-2; y++) {
+			isPixelOfFrame = Utilities::isItPixelFromFrame(fullScreen.pixel(x, y), minAcceptableValue, maxAcceptableValue, true);
+			if (!isPixelOfFrame) continue;
+			//next four pixel next shouldn't be frame pix
+			isPixelOfFrame = Utilities::isItPixelFromFrame(fullScreen.pixel(x+1, y+1), minAcceptableValue, maxAcceptableValue, false);
+			if (isPixelOfFrame) continue;
+
+			isPixelOfFrame = Utilities::isItPixelFromFrame(fullScreen.pixel(x+1, y+2), minAcceptableValue, maxAcceptableValue, false);
+			if (isPixelOfFrame) continue;
+
+			isPixelOfFrame = Utilities::isItPixelFromFrame(fullScreen.pixel(x+2, y+1), minAcceptableValue, maxAcceptableValue, false);
+			if (isPixelOfFrame) continue;
+
+			isPixelOfFrame = Utilities::isItPixelFromFrame(fullScreen.pixel(x+2, y+2), minAcceptableValue, maxAcceptableValue, false);
+			if (isPixelOfFrame) continue;
+
+			isPixelOfFrame = Utilities::isItPixelFromFrame(fullScreen.pixel(x+1, y), minAcceptableValue, maxAcceptableValue, true);
+			if (!isPixelOfFrame) continue;
+
+			isPixelOfFrame = Utilities::isItPixelFromFrame(fullScreen.pixel(x+2, y), minAcceptableValue, maxAcceptableValue, true);
+			if (!isPixelOfFrame) continue;
+
+			isPixelOfFrame = Utilities::isItPixelFromFrame(fullScreen.pixel(x, y+1), minAcceptableValue, maxAcceptableValue, true);
+			if (!isPixelOfFrame) continue;
+
+			isPixelOfFrame = Utilities::isItPixelFromFrame(fullScreen.pixel(x, y+2), minAcceptableValue, maxAcceptableValue, true);
+			if (!isPixelOfFrame) continue;
+
+			startOfFrames.push_back(QPoint(x, y));
+		}
+	}
+	//looking for rectangles from start points of frames
+	QList<QRect> frameToRet;
+	for each (QPoint startPoint in startOfFrames){
+		int currentWidth = 0;
+		int currentHeight = 0;
+		for (size_t x = startPoint.x(); x < width; x++){
+			uint color = fullScreen.pixel(x, startPoint.y());
+			bool isPixOfFrame = Utilities::isItPixelFromFrame(color, minAcceptableValue, maxAcceptableValue, true);
+			if (isPixOfFrame)
+				currentWidth++;
+			else
+				break;
+		}
+		for (size_t y = startPoint.y(); y < height; y++) {
+			uint color = fullScreen.pixel(startPoint.x(), y);
+			bool isPixOfFrame = Utilities::isItPixelFromFrame(color, minAcceptableValue, maxAcceptableValue, true);
+			if (isPixOfFrame)
+				currentHeight++;
+			else
+				break;
+		}
+		if (currentWidth > 0 && currentHeight > 0){
+			int x = startPoint.x();
+			int y = startPoint.y();
+			int w = currentWidth;
+			int h = currentHeight;
+			if (w < 5 || h < 5)//removing too small imgs
+				continue;
+			frameToRet.push_back(QRect(x+1,y+1,w-1,h-1));
+		}
+	}
+
+	*importantRectangles = frameToRet;
+	if (frameToRet.size() > 0)
+		return OK;
+	else
+		return NO_FRAMES_FOUND;
+}
+
+int ScreenAnalyzer::setPositionHealthImgs(QImage fullscreen, QList<QRect> listOfImportantRectangles, bool* manaAndManashieldAreToghere, int* indexOfHealth, int* indexOfMana, int* indexOfManaShield, int* howTheyShouldBeRotated) {
+	QList<int> indexesOfRectWithSlashVert;
+	QList<int> indexesOfRectWithSlashHor;
+	QImage vertSlashes = Utilities::fromCharToImg(QChar(47));
+	QImage horSlashes = Utilities::fromCharToImg(QChar(92));
+	int indexOfFrameWithManaShieldAndMana = -1;
+	for (size_t i = 0; i < listOfImportantRectangles.size(); i++) {
+		QImage imgTmp = fullscreen.copy(listOfImportantRectangles[i]);
+		Utilities::imgToBlackAndWhiteAllColors(&imgTmp, 250);
+
+		QList<QPoint> pointsVert = Utilities::findStartPositionInImg(&vertSlashes, &imgTmp);
+		if (pointsVert.size() == 0)
+			;
+		else if (pointsVert.size() == 1)
+			indexesOfRectWithSlashVert.push_back(i);
+		else if (pointsVert.size() == 2) {
+			indexOfFrameWithManaShieldAndMana = i;
+			indexesOfRectWithSlashVert.push_back(i);
+		}
+
+		QList<QPoint> pointsHor = Utilities::findStartPositionInImg(&horSlashes, &imgTmp);
+		if (pointsHor.size() == 0)
+			;
+		else if (pointsHor.size() == 1)
+			indexesOfRectWithSlashHor.push_back(i);
+		else if (pointsHor.size() == 2) {
+			indexOfFrameWithManaShieldAndMana = i;
+			indexesOfRectWithSlashHor.push_back(i);
+		}
+	}
+	if (indexesOfRectWithSlashVert.size() == 0 && indexesOfRectWithSlashHor.size() == 0)
+		return NO_SLASHES_FOUND_IN_GAME_SCREEN;
+
+	enum positionsOfInterface { TOP, RIGHT, DOWN, LEFT };
+
+	positionsOfInterface position;
+	QPoint midOfScreen(fullscreen.width() / 2, fullscreen.height() / 2);
+
+	if (indexesOfRectWithSlashVert.size() != 0) {
+		QRect first = listOfImportantRectangles[indexesOfRectWithSlashVert[0]];
+		position = first.x() < midOfScreen.x() ? LEFT : RIGHT;
+	}
+	else if (indexesOfRectWithSlashHor.size() != 0) {
+		QRect first = listOfImportantRectangles[indexesOfRectWithSlashHor[0]];
+		position = first.y() < midOfScreen.y() ? TOP : DOWN;
+	}
+	else
+		return NO_SLASHES_FOUND_IN_GAME_SCREEN;
+
+	bool combined = indexOfFrameWithManaShieldAndMana != -1;
+	*manaAndManashieldAreToghere = combined;
+	switch (position) {
+	case TOP: case DOWN: {
+		int size = indexesOfRectWithSlashHor.size();
+		*howTheyShouldBeRotated = 0;
+		if (combined && size == 2) {
+			*manaAndManashieldAreToghere = true;
+			*indexOfMana = indexOfFrameWithManaShieldAndMana;
+			*indexOfManaShield = indexOfFrameWithManaShieldAndMana;
+			indexesOfRectWithSlashHor.removeOne(indexOfFrameWithManaShieldAndMana);
+			*indexOfHealth = indexesOfRectWithSlashHor[0];
+		}
+		else if (!combined && size == 3) {
+			//QMap<surface, indexInList>, Qmap to sort them from smallest to biggest surface
+			QMap<int, int> surfaces;
+			for each (int index in indexesOfRectWithSlashHor) {
+				QRect currentRect = listOfImportantRectangles[index];
+				int surface = currentRect.width() * currentRect.height();
+				surfaces.insert(surface, index);
+			}
+			int indexOfLargestRect = surfaces.last();
+			indexesOfRectWithSlashHor.removeOne(indexOfLargestRect);
+			//QMap<positionSortedByY, indexInList>, Qmap to sort them from smallest to biggest Y position
+			QMap<int, int> sortedByY;
+			for each (int index in indexesOfRectWithSlashHor) {
+				int yPosition = listOfImportantRectangles[index].y();
+				sortedByY.insert(yPosition, index);
+			}
+			*indexOfHealth = indexOfLargestRect;
+			*indexOfMana = sortedByY.first();
+			*indexOfManaShield = sortedByY.last();
+		}
+		else if (!combined && size == 2) {
+			QRect firstRect = listOfImportantRectangles[indexesOfRectWithSlashHor[0]];
+			QRect secondRect = listOfImportantRectangles[indexesOfRectWithSlashHor[1]];
+			bool areRectInCorrectOrder = firstRect.x() < secondRect.x() ? true : false;
+			if (areRectInCorrectOrder) {
+				*indexOfHealth = indexesOfRectWithSlashHor[0];
+				*indexOfMana = indexesOfRectWithSlashHor[1];
+			}
+			else{
+				*indexOfHealth = indexesOfRectWithSlashHor[1];
+				*indexOfMana = indexesOfRectWithSlashHor[0];
+			}
+			*indexOfManaShield = -1;
+		}
+		else
+			return ERROR_IN_SETTING_POSITION_OF_INTERFACE;
+
+
+		break;
+	};
+	case LEFT: {
+		int size = indexesOfRectWithSlashVert.size();
+		//  1*90degree to right
+		*howTheyShouldBeRotated = 1;
+		if (size == 2 && !combined) {
+			//no mana shield
+			int w = listOfImportantRectangles[indexesOfRectWithSlashVert[0]].width();
+			//25 is more less width of big bar, smaller is half of its width
+			bool isParallelStyle = w < 20 ? true : false;
+			if (isParallelStyle) {
+				//QMap<XPosition, indexOnList
+				QMap<int, int> sortedByX;
+				for each (int index in indexesOfRectWithSlashVert) {
+					int startPos = listOfImportantRectangles[index].x();
+					sortedByX.insert(startPos, index);
+				}
+				*indexOfHealth = sortedByX[0];
+				*indexOfMana = sortedByX[1];
+				*indexOfManaShield = -1;
+					
+			}
+			else {
+				//QMap<YPosition, indexOnList
+				QMap<int, int> sortedByY;
+				for each (int index in indexesOfRectWithSlashVert) {
+					int startPos = listOfImportantRectangles[index].y();
+					sortedByY.insert(startPos, index);
+				}
+				*indexOfHealth = sortedByY[0];
+				*indexOfMana = sortedByY[1];
+				*indexOfManaShield = -1;
+
+			}
+		}
+		else if (size == 2 && combined) {
+			//mana shield, DEFAULT, PARALLEL AND COMPACT STYLE
+			*indexOfMana = indexOfFrameWithManaShieldAndMana;
+			*indexOfManaShield = indexOfFrameWithManaShieldAndMana;
+			indexesOfRectWithSlashVert.removeOne(indexOfFrameWithManaShieldAndMana);
+			*indexOfHealth = indexesOfRectWithSlashVert[0];
+		}
+		else if (size == 3 && !combined) {
+			//mana shields, LARGE
+
+			//Qmap<startPosX, indexinList>
+			QMap<int, int> startPosSortedByX;
+			for each (int index in indexesOfRectWithSlashVert){
+				int startPosX = listOfImportantRectangles[index].x();
+				startPosSortedByX.insert(startPosX, index);
+			}
+			*indexOfHealth = startPosSortedByX[1];
+			*indexOfMana = startPosSortedByX[0];
+			*indexOfManaShield = startPosSortedByX[2];
+
+		}
+		else
+			return ERROR_IN_SETTING_POSITION_OF_INTERFACE;
+		break;
+	};
+	case RIGHT: {
+		int size = indexesOfRectWithSlashVert.size();
+		//  -1*90degree to right
+		*howTheyShouldBeRotated = -1;
+		if (size == 2 && !combined) {
+			//no mana shield
+
+			int w = listOfImportantRectangles[indexesOfRectWithSlashVert[0]].width();
+			//25 is more less width of big bar, smaller is half of its width
+			bool isParallelStyle = w < 20 ? true : false;
+			if (isParallelStyle) {
+				//QMap<XPosition, indexOnList
+				QMap<int, int> sortedByX;
+				for each (int index in indexesOfRectWithSlashVert) {
+					int startPos = listOfImportantRectangles[index].x();
+					sortedByX.insert(startPos, index);
+				}
+				*indexOfHealth = sortedByX.first();
+				*indexOfMana = sortedByX.last();
+				*indexOfManaShield = -1;
+
+			}
+			else {
+				//QMap<YPosition, indexOnList
+				QMap<int, int> sortedByY;
+				for each (int index in indexesOfRectWithSlashVert) {
+					int startPos = listOfImportantRectangles[index].y();
+					sortedByY.insert(startPos, index);
+				}
+				*indexOfHealth = sortedByY.first();
+				*indexOfMana = sortedByY.last();
+				*indexOfManaShield = -1;
+
+			}
+		}
+		else if (size == 2 && combined) {
+			//mana shield, DEFAULT, PARALLEL AND COMPACT STYLE
+			*indexOfMana = indexOfFrameWithManaShieldAndMana;
+			*indexOfManaShield = indexOfFrameWithManaShieldAndMana;
+			indexesOfRectWithSlashVert.removeOne(indexOfFrameWithManaShieldAndMana);
+			*indexOfHealth = indexesOfRectWithSlashVert[0];
+		}
+		else if (size == 3 && !combined) {
+			//mana shields, LARGE
+			QList<int> sortedByX, sortedByY;
+			QList<QRect> rectangles;
+
+			for each (int var in indexesOfRectWithSlashVert)
+				rectangles.push_back(listOfImportantRectangles[var]);
+			
+			sortByXAndYRects(listOfImportantRectangles, &sortedByX, &sortedByY);
+			/*
+			QMap<int, int> startPosSortedByX;
+			for each (int index in indexesOfRectWithSlashVert) {
+				int startPosX = listOfImportantRectangles[index].x();
+				//prevent from adding item with same key value to qmap
+				if (startPosSortedByX.contains(startPosX)) 
+					startPosX++;
+				startPosSortedByX.insert(startPosX, index);
+			}
+			const QList<int> keysOfKeyMap = startPosSortedByX.uniqueKeys();
+			*indexOfHealth = startPosSortedByX.value(keysOfKeyMap[1]);
+			*indexOfMana = startPosSortedByX.value(keysOfKeyMap[2]);
+			*indexOfManaShield = startPosSortedByX.value(keysOfKeyMap[0]);
+			*/
+		}
+		else
+			return ERROR_IN_SETTING_POSITION_OF_INTERFACE;
+		break;
+	};
+	default: {
+		return ERROR_IN_SETTING_POSITION_OF_INTERFACE;
+		break;
+	}
+	}
+	return OK;
+}
+
+/*int ScreenAnalyzer::determineManaHealthManaShieldPosVer(QImage* fullImg) {
 	QImage slash = Utilities::fromCharToImg(47);
 	QList<QPoint> slashesPos = Utilities::findStartPositionInImg(&slash, fullImg);
 	if (slashesPos.size() == 0) 
@@ -374,11 +798,11 @@ int ScreenAnalyzer::determineManaHealthManaShieldPosVer(QImage* fullImg) {
 		return NO_POSTION_ASSIGNED_TO_SLASHES;
 	else
 		return OK;
-}
+}*/
 
-int ScreenAnalyzer::splitToPieces(QImage* fullImg){
+/*int ScreenAnalyzer::splitToPieces(QImage* fullImg){
 	//qDebug() << "ScreenAnalyzer::splitToPieces(QImage* fullImg)";
-	bool manaShieldFound = !(manaShieldRectImg.x() < 0 || manaShieldRectImg.y() < 0);
+	bool manaShieldFound = manaShieldRectImg.x() > 0 && manaShieldRectImg.y() > 0;
 	int width = fullImg->width();
 	int height = fullImg->height();
 
@@ -390,10 +814,6 @@ int ScreenAnalyzer::splitToPieces(QImage* fullImg){
 	QImage manaShieldPieceImgToSave;
 	if (manaShieldFound) 
 		manaShieldPieceImgToSave = fullImg->copy(manaShieldRectImg);
-	//tmp
-	Utilities::saveImgToOutPutFolder(&healthPieceImgToSave, "H");
-	Utilities::saveImgToOutPutFolder(&manaPieceImgToSave, "M");
-	Utilities::saveImgToOutPutFolder(&manaShieldPieceImgToSave, "MS");
 
 	bool toBreak1 = healthPieceImgToSave.width() == width;
 	bool toBreak2 = healthPieceImgToSave.height() == height;
@@ -409,25 +829,27 @@ int ScreenAnalyzer::splitToPieces(QImage* fullImg){
 		toBreakFinal = toBreak1 || toBreak2 || toBreak3 || toBreak4;
 
 	if (!toBreakFinal) {
-		*var->var_healthPieceImg = healthPieceImgToSave;
-		*var->var_manaPieceImg = manaPieceImgToSave;
+		var->var_healthPieceImg = healthPieceImgToSave;
+		var->var_manaPieceImg = manaPieceImgToSave;
 		if (manaShieldFound)
-			*var->var_manaShieldPieceImg = manaShieldPieceImgToSave;
+			var->var_manaShieldPieceImg = manaShieldPieceImgToSave;
+		else
+			var->var_manaShieldPieceImg = QImage();//??is is good?
 		var->rotationNeededForPointsAbove = howTheyShouldBeRotatedInRight;
-		return true;
+		var->isManaShieldActive = manaShieldFound;
+		return OK;
 	}
 	else {
-		*var->var_healthPieceImg = QImage();
-		*var->var_manaPieceImg = QImage();
+		var->var_healthPieceImg = QImage();
+		var->var_manaPieceImg = QImage();
 		if (manaShieldFound)
-			*var->var_manaShieldPieceImg = QImage();
+			var->var_manaShieldPieceImg = QImage();
 		var->rotationNeededForPointsAbove = howTheyShouldBeRotatedInRight;
-		return false;
+		return NO_RECTANGLE_COPYING_WHOLE_SCREEN_TO_VAR;
 	}
+}*/
 
-}
-
-int ScreenAnalyzer::setImgRectsForHealthAnalyzerClass(QImage* full){
+/*int ScreenAnalyzer::setImgRectsForHealthAnalyzerClass(QImage* full){
 	bool foundHealthSlash = healthSlash.x() > 0 && healthSlash.y() > 0 ? true : false;
 	bool foundManaSlash = manaSlash.x() > 0 && manaSlash.y() > 0 ? true : false;
 	bool foundManaShieldSlash = manaShieldSlash.x() > 0 && manaShieldSlash.y() > 0 ? true : false;
@@ -455,10 +877,10 @@ int ScreenAnalyzer::setImgRectsForHealthAnalyzerClass(QImage* full){
 		int width = 0;
 		int height = 0;
 		if (howTheyShouldBeRotatedInRight == 0){//hortizontal
-			startPosition_X = centresOfImgs[i].x() - widthFromSlashChar;
-			startPosition_Y = centresOfImgs[i].y() - heightOfHealthImgStr;
-			height = heightOfHealthImgStr;
-			width = 2 * widthFromSlashChar;
+			startPosition_X = centresOfImgs[i].x() - WIDTH_FROM_SLASH;
+			startPosition_Y = centresOfImgs[i].y();
+ 			height = HEIGHT_OF_HEALING_SLASH;
+			width = 2 * WIDTH_FROM_SLASH;
 			if (startPosition_X < 0)
 				startPosition_X = 0;
 			if (startPosition_Y < 0)
@@ -470,9 +892,9 @@ int ScreenAnalyzer::setImgRectsForHealthAnalyzerClass(QImage* full){
 		}
 		else{//vertical
 			startPosition_X = centresOfImgs[i].x();
-			startPosition_Y = centresOfImgs[i].y() - widthFromSlashChar;
-			height = 2 * widthFromSlashChar;
-			width = heightOfHealthImgStr;
+			startPosition_Y = centresOfImgs[i].y() - WIDTH_FROM_SLASH;
+			height = 2 * WIDTH_FROM_SLASH;
+			width = HEIGHT_OF_HEALING_SLASH;
 			if (startPosition_X < 0)
 				startPosition_X = 0;
 			if (startPosition_Y < 0)
@@ -598,5 +1020,30 @@ int ScreenAnalyzer::determineManaHealthManaShieldPosHor(QImage *imgFull) {
 		return NO_POSTION_ASSIGNED_TO_SLASHES;
 	else
 		return OK;
+}*/
+
+/*
+int ScreenAnalyzer::calibrate_ManaHealthManaShield(QImage* fullScreenBlackAndWhite){
+	//this fun looking for certain pixel sequences and save their locations for
+	//further img splitting
+	auto interfaceIsVert = (ERROR_CODE)determineManaHealthManaShieldPosVer(fullScreenBlackAndWhite);
+	auto interfaceIsHor = (ERROR_CODE)determineManaHealthManaShieldPosHor(fullScreenBlackAndWhite);
+	if (interfaceIsVert != OK && interfaceIsHor != OK) {
+		var->caliState = var->NOT_CALIBRATED;
+		qDebug() << "Calibration Health/Mana/ManaShield completed";
+		return NO_SLASHES_FOUND_IN_GAME_SCREEN;
+	}
+	auto res = (ERROR_CODE)setImgRectsForHealthAnalyzerClass(fullScreenBlackAndWhite);
+	if(res == OK){
+		var->caliState = var->CALIBRATED;
+		qDebug() << "Calibration Health/Mana/ManaShield completed";
+		return OK;
+	}
+	else {
+		qDebug() << "Calibration Health/Mana/ManaShield completed";
+		return res;
+	}
 }
+*/
+
 
