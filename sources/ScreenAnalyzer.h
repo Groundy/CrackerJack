@@ -67,9 +67,9 @@ private:
 	//int determineManaHealthManaShieldPosVer(QImage* fullImg);
 	//int splitToPieces(QImage* fullImg);
 	void sortByXAndYPoints(QList<QPoint>* points, QList<QPoint>* pointsSortedByX, QList<QPoint>* pointsSortedByY);
-	void sortByXAndYRects(QList<QRect> inputRects, QList<int>* indexesOfRectsSortedByPosX, QList<int>* indexesOfRectsSortedByPosY);
+	int sortByXAndYRects(QList<QRect> inputRects, QList<QRect>* rectsSortedByPosX, QList<QRect>* rectsSortedByPosY);
 	int findWindowsOnScreen(QImage fullScreen, QList<QRect>* importantRectangles);
-	int setPositionHealthImgs(QImage fullscreen, QList<QRect> listOfImportantRectangles, bool* manaAndManashieldAreToghere, int* indexOfHealth, int* indexOfMana, int* indexOfManaShield, int* howTheyShouldBeRotated);
+	int setPositionHealthImgs(QImage fullscreen, QList<QRect> listOfImportantRectangles, bool* manaAndManashieldAreToghere, int* indexOfHealth, int* indexOfMana, int* indexOfManaShield, int* indexOfManaAndManaShieldCombined, int* howTheyShouldBeRotated);
 	int loadScreen(QImage* img);
 	void deleteScreenShotFolder();
 	QString getNameOfLastTakenScreenShot();

@@ -86,7 +86,7 @@ void ScreenAnalyzer::TEST_setPositionHealthImhs(QString pathToFolderWithDiffrent
 	QDir directory(pathToFolderWithDiffrentPositionsStylesScreen);
 	QStringList listOfFIles = directory.entryList(QStringList() << "*.png", QDir::Files);
 	// tmp i=0
-	for (int i = 10; i < listOfFIles.size(); i++) {
+	for (int i = 0; i < listOfFIles.size(); i++) {
 		QString nameOfFile = listOfFIles[i];
 		qDebug() << QString::number(i);
 		QString pathToPng = pathToFolderWithDiffrentPositionsStylesScreen + "\\" + nameOfFile;
@@ -137,7 +137,8 @@ void ScreenAnalyzer::TEST_setPositionHealthImhs(QString pathToFolderWithDiffrent
 			}
 
 		}
-		QString name = QDateTime::currentDateTime().toString("mmss_mmm_");
+		//QString name = QDateTime::currentDateTime().toString("mmss_mmm_");
+		QString name = "";
 
 		QString h =  "Health_";
 		QString m = "Mana_";
@@ -335,32 +336,45 @@ void ScreenAnalyzer::sortByXAndYPoints(QList<QPoint>* points, QList<QPoint>* poi
 	*pointsSortedByY = sortedByYToRet;
 }
 
-void ScreenAnalyzer::sortByXAndYRects(QList<QRect> inputRects, QList<int>* indexesOfRectsSortedByPosX, QList<int>* indexesOfRectsSortedByPosY) {
+int ScreenAnalyzer::sortByXAndYRects(QList<QRect> inputRects, QList<QRect>* rectsSortedByPosX, QList<QRect>* rectsSortedByPosY) {
+	if (inputRects.size() == 0)
+		return UNDEFINED_ERROR;
+	
 	QList<QRect> sortedByX, sortedByY;
-	for (int i = 0; i < inputRects.size(); i++) {
+	sortedByX.push_back(inputRects[0]);
+	sortedByY.push_back(inputRects[0]);
+
+	for (int i = 1; i < inputRects.size(); i++) {
 		QRect rect = inputRects[i];
 		int startPosX = rect.x();
-		int startPosY = rect.y();
+		int startPosY = rect.y(); 
 
-		if (i == 0) {
-			sortedByX.push_back(rect);
-			sortedByY.push_back(rect);
-			continue;
-		}
+		int indexToInsertNewElement_X = -1;
+		int indexToInsertNewElement_Y = -1;
 
 		int size = sortedByX.size();
 		for (int i = 0; i < size; i++){
-			if (startPosX > sortedByX[i].x()) {
-			
+			if (startPosX <= sortedByX[i].x()) {
+				indexToInsertNewElement_X = i;
+				break;
 			}
 		}
-		size = sortedByY.size();
 		for (int i = 0; i < size; i++) {
-
+			if (startPosY <= sortedByY[i].y()) {
+				indexToInsertNewElement_Y = i;
+				break;
+			}
 		}
-
+		if (indexToInsertNewElement_X == -1)
+			indexToInsertNewElement_X = size;
+		if (indexToInsertNewElement_Y == -1)
+			indexToInsertNewElement_Y = size;
+		sortedByX.insert(indexToInsertNewElement_X, rect);
+		sortedByY.insert(indexToInsertNewElement_Y, rect);
 	}
-		int tmp = 4;
+	*rectsSortedByPosX = sortedByX;
+	*rectsSortedByPosY = sortedByY;
+	return OK;
 }
 
 int ScreenAnalyzer::findWindowsOnScreen(QImage fullScreen, QList<QRect>* importantRectangles){
@@ -442,7 +456,7 @@ int ScreenAnalyzer::findWindowsOnScreen(QImage fullScreen, QList<QRect>* importa
 		return NO_FRAMES_FOUND;
 }
 
-int ScreenAnalyzer::setPositionHealthImgs(QImage fullscreen, QList<QRect> listOfImportantRectangles, bool* manaAndManashieldAreToghere, int* indexOfHealth, int* indexOfMana, int* indexOfManaShield, int* howTheyShouldBeRotated) {
+int ScreenAnalyzer::setPositionHealthImgs(QImage fullscreen, QList<QRect> listOfImportantRectangles, bool* manaAndManashieldAreToghere, int* indexOfHealth, int* indexOfMana, int* indexOfManaShield, int* indexOfManaAndManaShieldCombined, int* howTheyShouldBeRotated) {
 	QList<int> indexesOfRectWithSlashVert;
 	QList<int> indexesOfRectWithSlashHor;
 	QImage vertSlashes = Utilities::fromCharToImg(QChar(47));
@@ -488,195 +502,152 @@ int ScreenAnalyzer::setPositionHealthImgs(QImage fullscreen, QList<QRect> listOf
 		QRect first = listOfImportantRectangles[indexesOfRectWithSlashHor[0]];
 		position = first.y() < midOfScreen.y() ? TOP : DOWN;
 	}
-	else
+	else {
 		return NO_SLASHES_FOUND_IN_GAME_SCREEN;
+	}
 
 	bool combined = indexOfFrameWithManaShieldAndMana != -1;
 	*manaAndManashieldAreToghere = combined;
 	switch (position) {
-	case TOP: case DOWN: {
-		int size = indexesOfRectWithSlashHor.size();
-		*howTheyShouldBeRotated = 0;
-		if (combined && size == 2) {
-			*manaAndManashieldAreToghere = true;
-			*indexOfMana = indexOfFrameWithManaShieldAndMana;
-			*indexOfManaShield = indexOfFrameWithManaShieldAndMana;
-			indexesOfRectWithSlashHor.removeOne(indexOfFrameWithManaShieldAndMana);
-			*indexOfHealth = indexesOfRectWithSlashHor[0];
-		}
-		else if (!combined && size == 3) {
-			//QMap<surface, indexInList>, Qmap to sort them from smallest to biggest surface
-			QMap<int, int> surfaces;
-			for each (int index in indexesOfRectWithSlashHor) {
-				QRect currentRect = listOfImportantRectangles[index];
-				int surface = currentRect.width() * currentRect.height();
-				surfaces.insert(surface, index);
-			}
-			int indexOfLargestRect = surfaces.last();
-			indexesOfRectWithSlashHor.removeOne(indexOfLargestRect);
-			//QMap<positionSortedByY, indexInList>, Qmap to sort them from smallest to biggest Y position
-			QMap<int, int> sortedByY;
-			for each (int index in indexesOfRectWithSlashHor) {
-				int yPosition = listOfImportantRectangles[index].y();
-				sortedByY.insert(yPosition, index);
-			}
-			*indexOfHealth = indexOfLargestRect;
-			*indexOfMana = sortedByY.first();
-			*indexOfManaShield = sortedByY.last();
-		}
-		else if (!combined && size == 2) {
-			QRect firstRect = listOfImportantRectangles[indexesOfRectWithSlashHor[0]];
-			QRect secondRect = listOfImportantRectangles[indexesOfRectWithSlashHor[1]];
-			bool areRectInCorrectOrder = firstRect.x() < secondRect.x() ? true : false;
-			if (areRectInCorrectOrder) {
-				*indexOfHealth = indexesOfRectWithSlashHor[0];
-				*indexOfMana = indexesOfRectWithSlashHor[1];
-			}
-			else{
-				*indexOfHealth = indexesOfRectWithSlashHor[1];
-				*indexOfMana = indexesOfRectWithSlashHor[0];
-			}
-			*indexOfManaShield = -1;
-		}
-		else
-			return ERROR_IN_SETTING_POSITION_OF_INTERFACE;
+		case TOP: case DOWN: {
+			int size = indexesOfRectWithSlashHor.size();
+			*howTheyShouldBeRotated = 0;
+			QList<QRect> sortedByX, sortedByY, rectangles;
+			for each (int var in indexesOfRectWithSlashHor)
+				rectangles.push_back(listOfImportantRectangles[var]);
+			sortByXAndYRects(rectangles, &sortedByX, &sortedByY);
 
-
-		break;
-	};
-	case LEFT: {
-		int size = indexesOfRectWithSlashVert.size();
-		//  1*90degree to right
-		*howTheyShouldBeRotated = 1;
-		if (size == 2 && !combined) {
-			//no mana shield
-			int w = listOfImportantRectangles[indexesOfRectWithSlashVert[0]].width();
-			//25 is more less width of big bar, smaller is half of its width
-			bool isParallelStyle = w < 20 ? true : false;
-			if (isParallelStyle) {
-				//QMap<XPosition, indexOnList
-				QMap<int, int> sortedByX;
-				for each (int index in indexesOfRectWithSlashVert) {
-					int startPos = listOfImportantRectangles[index].x();
-					sortedByX.insert(startPos, index);
+			if (combined && size == 2) {
+				*manaAndManashieldAreToghere = true;
+				int h = sortedByX[0].height();
+				//25 is more less height of big bar, smaller is half of its height
+				bool isParallelStyle = h < 20 ? true : false;
+				if (isParallelStyle) {
+					*indexOfHealth = listOfImportantRectangles.indexOf(sortedByY[0]);
+					*indexOfMana = listOfImportantRectangles.indexOf(sortedByY[1]);
+					*indexOfManaShield = listOfImportantRectangles.indexOf(sortedByY[1]);
 				}
-				*indexOfHealth = sortedByX[0];
-				*indexOfMana = sortedByX[1];
+				else {
+					*indexOfHealth = listOfImportantRectangles.indexOf(sortedByX[0]);
+					*indexOfMana = listOfImportantRectangles.indexOf(sortedByX[1]);
+					*indexOfManaShield = listOfImportantRectangles.indexOf(sortedByX[1]);
+				}
+			}
+			else if (!combined && size == 3) {
+				*manaAndManashieldAreToghere = false;
+				*indexOfHealth = listOfImportantRectangles.indexOf(sortedByX[0]);
+				rectangles.removeOne(sortedByX[0]);
+				sortByXAndYRects(rectangles, &sortedByX, &sortedByY);
+				*indexOfMana = listOfImportantRectangles.indexOf(sortedByY[0]);
+				*indexOfManaShield = listOfImportantRectangles.indexOf(sortedByY[1]);
+			}
+			else if (!combined && size == 2) {
+				*manaAndManashieldAreToghere = false;
+				*indexOfHealth = listOfImportantRectangles.indexOf(sortedByX[0]);
+				*indexOfMana = listOfImportantRectangles.indexOf(sortedByX[1]);
 				*indexOfManaShield = -1;
-					
 			}
 			else {
-				//QMap<YPosition, indexOnList
-				QMap<int, int> sortedByY;
-				for each (int index in indexesOfRectWithSlashVert) {
-					int startPos = listOfImportantRectangles[index].y();
-					sortedByY.insert(startPos, index);
-				}
-				*indexOfHealth = sortedByY[0];
-				*indexOfMana = sortedByY[1];
-				*indexOfManaShield = -1;
-
+				return ERROR_IN_SETTING_POSITION_OF_INTERFACE;
 			}
-		}
-		else if (size == 2 && combined) {
-			//mana shield, DEFAULT, PARALLEL AND COMPACT STYLE
-			*indexOfMana = indexOfFrameWithManaShieldAndMana;
-			*indexOfManaShield = indexOfFrameWithManaShieldAndMana;
-			indexesOfRectWithSlashVert.removeOne(indexOfFrameWithManaShieldAndMana);
-			*indexOfHealth = indexesOfRectWithSlashVert[0];
-		}
-		else if (size == 3 && !combined) {
-			//mana shields, LARGE
 
-			//Qmap<startPosX, indexinList>
-			QMap<int, int> startPosSortedByX;
-			for each (int index in indexesOfRectWithSlashVert){
-				int startPosX = listOfImportantRectangles[index].x();
-				startPosSortedByX.insert(startPosX, index);
-			}
-			*indexOfHealth = startPosSortedByX[1];
-			*indexOfMana = startPosSortedByX[0];
-			*indexOfManaShield = startPosSortedByX[2];
+			for each (QRect var in sortedByX)
+				listOfImportantRectangles.removeOne(var);
 
-		}
-		else
-			return ERROR_IN_SETTING_POSITION_OF_INTERFACE;
-		break;
-	};
-	case RIGHT: {
-		int size = indexesOfRectWithSlashVert.size();
-		//  -1*90degree to right
-		*howTheyShouldBeRotated = -1;
-		if (size == 2 && !combined) {
-			//no mana shield
-
-			int w = listOfImportantRectangles[indexesOfRectWithSlashVert[0]].width();
-			//25 is more less width of big bar, smaller is half of its width
-			bool isParallelStyle = w < 20 ? true : false;
-			if (isParallelStyle) {
-				//QMap<XPosition, indexOnList
-				QMap<int, int> sortedByX;
-				for each (int index in indexesOfRectWithSlashVert) {
-					int startPos = listOfImportantRectangles[index].x();
-					sortedByX.insert(startPos, index);
-				}
-				*indexOfHealth = sortedByX.first();
-				*indexOfMana = sortedByX.last();
-				*indexOfManaShield = -1;
-
-			}
-			else {
-				//QMap<YPosition, indexOnList
-				QMap<int, int> sortedByY;
-				for each (int index in indexesOfRectWithSlashVert) {
-					int startPos = listOfImportantRectangles[index].y();
-					sortedByY.insert(startPos, index);
-				}
-				*indexOfHealth = sortedByY.first();
-				*indexOfMana = sortedByY.last();
-				*indexOfManaShield = -1;
-
-			}
-		}
-		else if (size == 2 && combined) {
-			//mana shield, DEFAULT, PARALLEL AND COMPACT STYLE
-			*indexOfMana = indexOfFrameWithManaShieldAndMana;
-			*indexOfManaShield = indexOfFrameWithManaShieldAndMana;
-			indexesOfRectWithSlashVert.removeOne(indexOfFrameWithManaShieldAndMana);
-			*indexOfHealth = indexesOfRectWithSlashVert[0];
-		}
-		else if (size == 3 && !combined) {
-			//mana shields, LARGE
-			QList<int> sortedByX, sortedByY;
-			QList<QRect> rectangles;
-
+			break;
+		};
+		case LEFT: {
+			int size = indexesOfRectWithSlashVert.size();
+			*howTheyShouldBeRotated = 1;//  1*90degree to right
+			QList<QRect> sortedByX, sortedByY, rectangles;
 			for each (int var in indexesOfRectWithSlashVert)
 				rectangles.push_back(listOfImportantRectangles[var]);
-			
-			sortByXAndYRects(listOfImportantRectangles, &sortedByX, &sortedByY);
-			/*
-			QMap<int, int> startPosSortedByX;
-			for each (int index in indexesOfRectWithSlashVert) {
-				int startPosX = listOfImportantRectangles[index].x();
-				//prevent from adding item with same key value to qmap
-				if (startPosSortedByX.contains(startPosX)) 
-					startPosX++;
-				startPosSortedByX.insert(startPosX, index);
+			sortByXAndYRects(rectangles, &sortedByX, &sortedByY);
+
+			if (size == 2 && !combined) {
+				//no mana shield
+				int w = listOfImportantRectangles[indexesOfRectWithSlashVert[0]].width();
+				//25 is more less width of big bar, smaller is half of its width
+				bool isParallelStyle = w < 20 ? true : false;
+				if (isParallelStyle) {
+					*indexOfHealth = listOfImportantRectangles.indexOf(sortedByX[0]);
+					*indexOfMana = listOfImportantRectangles.indexOf(sortedByX[1]);
+					*indexOfManaShield = -1;
+				}
+				else {
+					*indexOfHealth = listOfImportantRectangles.indexOf(sortedByY[0]);
+					*indexOfMana = listOfImportantRectangles.indexOf(sortedByY[1]);
+					*indexOfManaShield = -1;
+				}
 			}
-			const QList<int> keysOfKeyMap = startPosSortedByX.uniqueKeys();
-			*indexOfHealth = startPosSortedByX.value(keysOfKeyMap[1]);
-			*indexOfMana = startPosSortedByX.value(keysOfKeyMap[2]);
-			*indexOfManaShield = startPosSortedByX.value(keysOfKeyMap[0]);
-			*/
-		}
-		else
+			else if (size == 2 && combined) {//mana shield, DEFAULT, PARALLEL AND COMPACT STYLE
+				*indexOfMana = indexOfFrameWithManaShieldAndMana;
+				*indexOfManaShield = indexOfFrameWithManaShieldAndMana;
+				indexesOfRectWithSlashVert.removeOne(indexOfFrameWithManaShieldAndMana);
+				*indexOfHealth = indexesOfRectWithSlashVert[0];
+			}
+			else if (size == 3 && !combined) {//mana shields, LARGE
+				*indexOfHealth = listOfImportantRectangles.indexOf(sortedByX[1]);
+				*indexOfMana = listOfImportantRectangles.indexOf(sortedByX[0]);
+				*indexOfManaShield = listOfImportantRectangles.indexOf(sortedByX[2]);
+			}
+			else
+				return ERROR_IN_SETTING_POSITION_OF_INTERFACE;
+
+			for each (QRect var in sortedByX)
+				listOfImportantRectangles.removeOne(var);
+
+			break;
+		};
+		case RIGHT: {
+			int size = indexesOfRectWithSlashVert.size();
+			*howTheyShouldBeRotated = -1;//  -1*90degree to right
+			QList<QRect> sortedByX, sortedByY, rectangles;
+			for each (int var in indexesOfRectWithSlashVert)
+				rectangles.push_back(listOfImportantRectangles[var]);
+
+			sortByXAndYRects(rectangles, &sortedByX, &sortedByY);
+			if (size == 2 && !combined) {//no mana shield
+
+				//25 is more less width of big bar, smaller is half of its width
+				int w = listOfImportantRectangles[indexesOfRectWithSlashVert[0]].width();
+				bool isParallelStyle = w < 20 ? true : false;
+
+				if (isParallelStyle) {
+					*indexOfHealth = listOfImportantRectangles.indexOf(sortedByX[0]);
+					*indexOfMana = listOfImportantRectangles.indexOf(sortedByX[1]);
+					*indexOfManaShield = -1;
+				}
+				else {
+					*indexOfHealth = listOfImportantRectangles.indexOf(sortedByY[0]);
+					*indexOfMana = listOfImportantRectangles.indexOf(sortedByY[1]);
+					*indexOfManaShield = -1;
+				}
+			}
+			else if (size == 2 && combined) {//mana shield, DEFAULT, PARALLEL AND COMPACT STYLE
+				*indexOfMana = indexOfFrameWithManaShieldAndMana;
+				*indexOfManaShield = indexOfFrameWithManaShieldAndMana;
+				indexesOfRectWithSlashVert.removeOne(indexOfFrameWithManaShieldAndMana);
+				*indexOfHealth = indexesOfRectWithSlashVert[0];
+			}
+			else if (size == 3 && !combined) {//mana shields, LARGE
+				*indexOfHealth = listOfImportantRectangles.indexOf(sortedByX[1]);
+				*indexOfMana = listOfImportantRectangles.indexOf(sortedByX[2]);
+				*indexOfManaShield = listOfImportantRectangles.indexOf(sortedByX[0]);
+			}
+			else {
+				return ERROR_IN_SETTING_POSITION_OF_INTERFACE;
+			}
+
+			for each (QRect var in sortedByX)
+				listOfImportantRectangles.removeOne(var);
+
+			break;
+		};
+		default: {
 			return ERROR_IN_SETTING_POSITION_OF_INTERFACE;
-		break;
-	};
-	default: {
-		return ERROR_IN_SETTING_POSITION_OF_INTERFACE;
-		break;
-	}
+			break;
+		}
 	}
 	return OK;
 }
