@@ -32,8 +32,9 @@ public:
 		QRect healthFrame;
 		QRect manaFrame;
 		QRect manaShieldFrame;
-		bool manaShieldIsIncludedInManaBar = false;
+		QRect combinedFrame;
 	};
+
 	ScreenAnalyzer( QObject *parent, VariablesClass* var);
 	~ScreenAnalyzer();
 	void run();
@@ -47,34 +48,20 @@ private:
 	VariablesClass* var;
 	int timeBetweenNextCheckingsOfScrennShotFolder = 100;
 	bool stateOfAnalyzer = false;
-
-	//Advanced shearch
-	//QPoint healthSlash;
-	//QPoint manaSlash;
-	//QPoint manaShieldSlash;
-	QRect healthRectImg;
-	QRect manaRectImg;
-	QRect manaShieldRectImg;
-	//const int HEIGHT_OF_HEALING_SLASH = 11;
-	//const int WIDTH_FROM_SLASH = 75;
+	Frames frames;
 
 	void mainLoop();
 	int calibrate();
-	//int calibrate_ManaHealthManaShield(QImage* fullScreenBlackAndWhite);
-	int categorizeWindows(QImage fullscreen, QList<QRect> importantRectangles, Frames* frames);
-	//int setImgRectsForHealthAnalyzerClass(QImage* full);
-	//int determineManaHealthManaShieldPosHor(QImage* fullImg);
-	//int determineManaHealthManaShieldPosVer(QImage* fullImg);
-	//int splitToPieces(QImage* fullImg);
+	int categorizeWindows(QImage fullscreen, QList<QRect>* importantRectangles, Frames* frames);
 	void sortByXAndYPoints(QList<QPoint>* points, QList<QPoint>* pointsSortedByX, QList<QPoint>* pointsSortedByY);
 	int sortByXAndYRects(QList<QRect> inputRects, QList<QRect>* rectsSortedByPosX, QList<QRect>* rectsSortedByPosY);
 	int findWindowsOnScreen(QImage fullScreen, QList<QRect>* importantRectangles);
-	int setPositionHealthImgs(QImage fullscreen, QList<QRect> listOfImportantRectangles, bool* manaAndManashieldAreToghere, int* indexOfHealth, int* indexOfMana, int* indexOfManaShield, int* indexOfManaAndManaShieldCombined, int* howTheyShouldBeRotated);
+	int setPositionHealthImgs(QImage fullscreen, QList<QRect> listOfImportantRectangles, int* indexOfHealth, int* indexOfMana, int* indexOfManaShield, int* indexOfManaAndManaShieldCombined, int* howTheyShouldBeRotated);
 	int loadScreen(QImage* img);
 	void deleteScreenShotFolder();
 	QString getNameOfLastTakenScreenShot();
 	int getNameOfLastTakenScreenShotForSure(QString& toRet, int maxTries);
 	QString pathToScreenFolder = "C:\\Users\\ADMIN\\AppData\\Local\\Tibia\\packages\\Tibia\\screenshots";//TODO
-
+	int findIndexesOfRectangleThatContainsSlashes(QImage fullScreen, QList<QRect> importantFrames, QList<int>* indexesOfFramesWithSlashesVert, QList<int>* indexesOfFramesWithSlashesHor, int* indexOfFrameCombined);
 	void TEST_setPositionHealthImhs(QString pathToFolderWithDiffrentPositionsStylesScreen, QString pathToOutPutFolder);
 };

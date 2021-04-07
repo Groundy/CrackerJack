@@ -441,8 +441,8 @@
 	 QRgb pixFirst, pixSecond;
 	 bool foundPosition;
 
-	 for (int x = 0; x < maxPixIndThatShoudldBeTested_X; x++){//loop1
-		 for (int y = 0; y < maxPixIndThatShoudldBeTested_Y; y++){//loop2
+	 for (int x = 0; x <= maxPixIndThatShoudldBeTested_X; x++){//loop1
+		 for (int y = 0; y <= maxPixIndThatShoudldBeTested_Y; y++){//loop2
 			 pixFirst = imgToFind->pixel(0, 0);
 			 pixSecond = imgToShareWithin->pixel(x, y);
 			 if (pixFirst == pixSecond){
