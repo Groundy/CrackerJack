@@ -103,6 +103,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="sources\activeGameThread.cpp" />
+    <ClCompile Include="sources\JsonParser.cpp" />
     <ClCompile Include="sources\KeySender.cpp" />
     <ClCompile Include="sources\MainMenu.cpp" />
     <ClCompile Include="sources\ManaHealthStateAnalyzer.cpp" />
@@ -140,6 +141,7 @@
     <QtMoc Include="sources\ScreenAnalyzer.h" />
     <QtMoc Include="sources\RGBstruct.h" />
     <QtMoc Include="sources\KeySender.h" />
+    <QtMoc Include="sources\JsonParser.h" />
     <ClInclude Include="sources\StringResource.h" />
     <QtMoc Include="sources\NewProfileConfiguartor.h" />
     <ClInclude Include="sources\Key.h" />

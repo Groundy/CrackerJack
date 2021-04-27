@@ -513,6 +513,7 @@ bool Utilities::isItPixelFromFrame(uint color, int minValueAcceptable, int maxVa
 		return false;
 }
 
+/*
 void Utilities::UNSUED_findBoredersOfFrames(QImage fullScreen){
 	QImage screeOfFrames(fullScreen);
 	auto  minBlack = qRgb(19, 19, 19);
@@ -553,8 +554,9 @@ void Utilities::UNSUED_findBoredersOfFrames(QImage fullScreen){
 
 	QImage startOfFrame = QImage(3, 3, QImage::Format::Format_RGB32);
 }
+*/
 
- /*
+/*
  unsigned int Utilities::getPIDofProcess(QString nameOfProcess){
      QList<QString> names;
      QList<unsigned int> ids;

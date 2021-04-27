@@ -14,6 +14,7 @@ SelectProfileWindow::SelectProfileWindow(QWidget *parent, Profile* prof) : QDial
 SelectProfileWindow::~SelectProfileWindow()
 {
 	delete ui;
+	this->reject();
 }
 
 void SelectProfileWindow::prepareProfiles(){

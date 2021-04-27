@@ -98,7 +98,7 @@ void KeySender::sendHealingKeyStrokeToGame(float currentHealthPercentage){
 	if (indexOfHealthThreshold != -1) {
 		Key key = healthKeys[indexOfHealthThreshold];
 		Profile::KEY_ITEM typeOfAction = healthItemTypes[indexOfHealthThreshold];
-		int timeToWait;
+		int timeToWait = 0;
 		if (typeOfAction == Profile::KEY_ITEM::SPELL) 
 			timeToWait = getMiliSecondsNeededToWaitToUseHealingSpell();
 		Sleep(timeToWait);

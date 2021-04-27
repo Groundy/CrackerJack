@@ -3,6 +3,7 @@
 #include "ScreenSaver.h"
 #include "MainMenu.h"
 #include <memory.h>
+#include "JsonParser.h"
 /*This function is designed to make ranom name of Process to avoid giving the same name the name that could be easily detected*/
 QString makeRandomProccessName() {
     const QString possibleCharacters("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789 ");
@@ -30,14 +31,18 @@ QString makeRandomProccessName() {
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    a.setQuitOnLastWindowClosed(false);
-   // LoginWindow w;
-   // w.show();
+    a.setQuitOnLastWindowClosed(true);
+    LoginWindow w;
+    w.show();
     Profile prof;
     SelectProfileWindow win(NULL, &prof);
-    win.exec();
+    int result2 = win.exec();
+    if (result2 != SelectProfileWindow::Accepted)
+        return 0;
     MainMenu* mainMenu = new MainMenu(&prof, NULL);
     mainMenu->exec();
     return a.exec();
 }
+
+
 

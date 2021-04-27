@@ -45,9 +45,24 @@ public:
 	static QImage fromCharToImg(QChar CharToImg);
 	static void rotateImgToRight(QImage* imgToRotate, int timesToRotateRight);
 	static bool isItPixelFromFrame(uint color, int minValueAcceptable, int maxValueAcceptable, bool requireSameValuesOfRGB);
+	
+	class Spell {
+	public:
+		enum TYPE_OF_SPELL { HEALING, SUPPORT, ATTACK };
+		QString name, incantations;
+		bool EK, MS, ED, RP;
+		int mana, cd, cdGroup, soulPoints;
+		TYPE_OF_SPELL typeOfSpell;
+	};
 
-
-
-	static void UNSUED_findBoredersOfFrames(QImage fullScreen);
-	//static void showQImageInWindow(QImage* img);
+	class Item {
+	public:
+		enum TYPE_OF_ITEM { ARMOR, AMULETS, BOOTS, CREATURE, HELMETS, LEGS, OTHER, POTIONS, RINGS, RUNES, SHIELDS, VALUABLES, AMMO, AXES, SWORDS, CLUBS, DISTANCES, ROD, WANDS };
+		enum SELLER {BLUE_DJIN, GREEN_DJIN, YASIR, ZAO, OTHER_SELLER, RASHID};
+		QString name;
+		int price, weight;
+		TYPE_OF_ITEM type;
+		SELLER seller;
+	};
+	//static void UNSUED_findBoredersOfFrames(QImage fullScreen);
 };
