@@ -18,12 +18,12 @@ void ScreenAnalyzer::run() {
 	}
 }
 
-void ScreenAnalyzer::reCalibrate(){
-	if (var->caliState != var->DURING_CALIBRATION) {
-		var->caliState = var->DURING_CALIBRATION;
-		qDebug() << "Recalibration";
-		calibrate();
-	}
+int ScreenAnalyzer::reCalibrate(){
+	var->caliState = var->DURING_CALIBRATION;
+	notifyOtherProcessOfStateOfAnalyzer(false);
+	qDebug() << "Recalibration";
+	int res = calibrate();
+	return res;
 }
 
 int ScreenAnalyzer::loadScreen(QImage* img){
@@ -209,6 +209,21 @@ void ScreenAnalyzer::TEST_setPositionHealthImhs(QString pathToFolderWithDiffrent
 	}
 }
 
+void ScreenAnalyzer::notifyOtherProcessOfStateOfAnalyzer(bool worksGood){
+	if (isManaHealthClassEnabledToAnalyzeImgs && worksGood)
+		;
+	else if (!isManaHealthClassEnabledToAnalyzeImgs && worksGood) {
+		isManaHealthClassEnabledToAnalyzeImgs = true;
+		emit sendAllowenceToAnalyze(true);
+	}
+	else if (isManaHealthClassEnabledToAnalyzeImgs && !worksGood) {
+		isManaHealthClassEnabledToAnalyzeImgs = false;
+		emit sendAllowenceToAnalyze(false);
+	}
+	else if (!isManaHealthClassEnabledToAnalyzeImgs && !worksGood)
+		;
+}
+
 void ScreenAnalyzer::deleteScreenShotFolder(){
 	QDir dir(pathToScreenFolder);
 	dir.setNameFilters(QStringList() << "*.*");
@@ -220,32 +235,25 @@ void ScreenAnalyzer::deleteScreenShotFolder(){
 }
 
 void ScreenAnalyzer::mainLoop(){
-	sleep(4);
+	sleep(1);
 	calibrate();
 	while (enableScreenAnalyzer){
+		msleep(timeBetweenNextCheckingsOfScrennShotFolder);
 		QImage img;
-		auto openCorrectly = (ERROR_CODE)loadScreen(&img);
-		if (var->caliState != var->CALIBRATED) 
-			calibrate();
+		ERROR_CODE openCorrectly = (ERROR_CODE)loadScreen(&img);
+		bool isCalibrated = var->caliState == var->CALIBRATED;
+		if (!isCalibrated) {
+			reCalibrate();
+			continue;
+		}
 		if (openCorrectly == OK) {
 			deleteScreenShotFolder();
-			//auto res = (ERROR_CODE)splitToPieces(&img);
-			//auto res = OK;//tmp;
-			if (res == OK && stateOfAnalyzer == false) {
-				emit sendAllowenceToAnalyze(true);
-				stateOfAnalyzer = true;
-			}
-			else if (res != OK && stateOfAnalyzer == true) {
-				calibrate();
-			 	emit sendAllowenceToAnalyze(false);
-				stateOfAnalyzer = false;
-			}
-			else if (res != OK && stateOfAnalyzer == false) 
-				calibrate();
-			else
-				;
+			notifyOtherProcessOfStateOfAnalyzer(true);
+			cutImportantImgsFromWholeScreenAndSendThemToVarClass(img);
+			var->newData = true;
 		}
-		msleep(timeBetweenNextCheckingsOfScrennShotFolder);
+		else
+			notifyOtherProcessOfStateOfAnalyzer(false);
 	}
 }
 
@@ -275,11 +283,51 @@ int ScreenAnalyzer::calibrate(){
 	}
 }
 
+int ScreenAnalyzer::cutImportantImgsFromWholeScreenAndSendThemToVarClass(QImage fullscreen){
+	bool healthFrameFound = frames.healthFrame != QRect();
+	bool manaFrameFound = frames.manaFrame != QRect();
+	bool manaShieldFound = frames.manaShieldFrame != QRect();
+	bool combinedBoxFound = frames.combinedFrame != QRect();
+
+	bool notEnoughFramesFound = !((manaFrameFound || combinedBoxFound) && healthFrameFound);
+	if(notEnoughFramesFound)
+		return NO_ENOUGH_FRAMES_FOUND;
+
+	if (healthFrameFound) {
+		QImage healthValueImg = fullscreen.copy(frames.healthFrame);
+		if (frames.howTheyShouldBeRotated != 0)
+			Utilities::rotateImgToRight(&healthValueImg, frames.howTheyShouldBeRotated);
+		var->var_healthPieceImg = healthValueImg;
+	}
+	if (manaFrameFound) {
+		QImage manaValueImg = fullscreen.copy(frames.manaFrame);
+		if (frames.howTheyShouldBeRotated != 0)
+			Utilities::rotateImgToRight(&manaValueImg, frames.howTheyShouldBeRotated);
+		var->var_manaPieceImg = manaValueImg;
+	}
+	if (manaShieldFound) {
+		QImage manaShieldValueImg = fullscreen.copy(frames.manaShieldFrame);
+		if (frames.howTheyShouldBeRotated != 0)
+			Utilities::rotateImgToRight(&manaShieldValueImg, frames.howTheyShouldBeRotated);
+		var->var_manaShieldPieceImg = manaShieldValueImg;
+	}
+	if (combinedBoxFound) {
+		QImage combinedValueImg = fullscreen.copy(frames.combinedFrame);
+		if (frames.howTheyShouldBeRotated != 0)
+			Utilities::rotateImgToRight(&combinedValueImg, frames.howTheyShouldBeRotated);
+		var->var_combinedBoxPieceImg = combinedValueImg;
+	}
+	var->healthFound = healthFrameFound;
+	var->manaFound = manaFrameFound;
+	var->manaShieldFound = manaShieldFound;
+	var->combinedFound = combinedBoxFound;
+	return OK;
+}
+
 int ScreenAnalyzer::categorizeWindows(QImage fullscreen, QList<QRect>* importantRectangles, Frames* frame){
 	//5 cause 1-minimap 2-gameScreen 3-text input 4-health 5-mana, those 5 have to be found
 	if (importantRectangles->size() < 5)
 		return NO_ENOUGH_FRAMES_FOUND;
-
 
 	QList<int> surphacesOfFrames;
 	for each (QRect var in *importantRectangles){
@@ -299,7 +347,8 @@ int ScreenAnalyzer::categorizeWindows(QImage fullscreen, QList<QRect>* important
 
 	int indexOfHealth, indexOfMana, indexOfManaShield, howTheyShouldBeRotated, indexOfCombinedBox;
 	setPositionHealthImgs(fullscreen, *importantRectangles, &indexOfHealth, &indexOfMana, &indexOfManaShield, &indexOfCombinedBox, &howTheyShouldBeRotated);
-	
+	frame->howTheyShouldBeRotated = howTheyShouldBeRotated;
+
 	bool healthFound = indexOfHealth != -1 && indexOfHealth >= 0 && indexOfHealth<= importantRectangles->size();
 	bool manaFound = indexOfMana != -1 && indexOfMana >= 0 && indexOfMana <= importantRectangles->size();
 	bool manaShieldFound = indexOfManaShield != -1 && indexOfManaShield >= 0 && indexOfManaShield <= importantRectangles->size();
@@ -333,7 +382,7 @@ int ScreenAnalyzer::categorizeWindows(QImage fullscreen, QList<QRect>* important
 	if (deleteHelath) rectsToDelete.push_back(importantRectangles->at(indexOfHealth));
 	if (deleteMana) rectsToDelete.push_back(importantRectangles->at(indexOfMana));
 	if (deleteManaShield) rectsToDelete.push_back(importantRectangles->at(indexOfManaShield));
-	if (deleteCombined) rectsToDelete.push_back(importantRectangles->at(indexOfManaShield));
+	if (deleteCombined) rectsToDelete.push_back(importantRectangles->at(indexOfCombinedBox));
 	for each (QRect var in rectsToDelete)
 		importantRectangles->removeOne(var);
 	return OK;

@@ -27,8 +27,9 @@ void SelectProfileWindow::prepareProfiles(){
 void SelectProfileWindow::addNewProfileButtonAction(){
 	Profile* prof = new Profile();
 	NewProfileConfiguartor newProfWind(prof,this);
-	newProfWind.exec();
-	dbManager.saveProfileToDatabase(prof);
+	int result = newProfWind.exec();
+	if (result == QDialog::Accepted)
+		dbManager.saveProfileToDatabase(prof);
 	delete prof;
 	Sleep(20);
 	prepareProfiles();
@@ -39,12 +40,21 @@ void SelectProfileWindow::editProfileButtonAction(){
 	QString nameOfProfToSplit = ui->listOfProfs->item(row)->text();
 	QStringList nameParts = nameOfProfToSplit.split("] ");
 	QString profileName = nameParts[1];
-	Profile* prof = new Profile();
-	dbManager.readProfileFroDataBase(prof, profileName);
-	NewProfileConfiguartor* NewProfDial = new NewProfileConfiguartor(prof, this);
-	NewProfDial->fillWidgetsWithDataFromProf();
-	NewProfDial->exec();
-	delete prof;
+
+	Profile* profToBeRead = new Profile();
+	dbManager.readProfileFroDataBase(profToBeRead, profileName);
+	NewProfileConfiguartor* newProfDialog = new NewProfileConfiguartor(profToBeRead, this);
+	newProfDialog->fillWidgetsWithDataFromProf(profToBeRead);
+	profToBeRead->clearProfile();
+	auto result = newProfDialog->exec();
+	if (result == QDialog::Accepted) {
+		dbManager.deleteRecord(profileName);
+		dbManager.saveProfileToDatabase(profToBeRead);
+	}
+	delete newProfDialog;
+	delete profToBeRead;
+
+	prepareProfiles();
 }
 
 void SelectProfileWindow::deleteProfileButtonAction(){

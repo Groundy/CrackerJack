@@ -10,7 +10,6 @@ MainMenu::MainMenu(Profile* selectedProf, QWidget* parent)
 	ui->profileNameLabel->setText(prof->profileName);
 	threadStarter();
 	signalSlotConnector();
-
 }
 
 MainMenu::~MainMenu(){
@@ -67,46 +66,19 @@ void MainMenu::onGameStateChanged(int state){
 }
 
 void MainMenu::changedValueOfCharHealthOrMana(QString healthPercentage, QString manaPercentage, QString manaShieldPercentage){
-	qDebug() << "MainMenu::changedValueOfCharHealthOrMana";
-	QString errCompare = "Error";
-	bool healthIsCorrect = !(healthPercentage == errCompare);
-	bool manaIsCorrect = !(manaPercentage == errCompare);
-	bool manaShieldIsCorrect = !(manaShieldPercentage == errCompare);
-
-	QString previousHealthText = "health: ";
-	QString previousManaText = "mana: ";
-	QString previousManaShieldText = "mana shield: ";
-
-	QString healthFinal;
-	if (healthIsCorrect) {
-		QString tmpHealth = healthPercentage.rightJustified(3, ' ') + "%";
-		healthFinal = previousHealthText + tmpHealth;
-	}
-	else 
-		healthFinal = previousHealthText + errCompare;
+	QString tmpHealth = healthPercentage.rightJustified(3, ' ');
+	QString tmpMana = manaPercentage.rightJustified(3, ' ');
+	QString tmpManaShield = manaShieldPercentage.rightJustified(3, ' ');
+	QString healthFinal = "health: " + tmpHealth;
+	QString manaFinal= "mana: " + tmpMana;
+	QString manaShieldFinal = "mana shield: " + tmpManaShield;
 	ui->healthInfoLabel->setText(healthFinal);
-	ui->healthInfoLabel->repaint();
-
-	QString manaFinal;
-	if (manaIsCorrect) {
-		QString tmpMana = manaPercentage.rightJustified(3, ' ') + "%";
-		manaFinal = previousManaText + tmpMana;
-	}
-	else 
-		manaFinal = previousManaText + errCompare;
 	ui->manaInfoLabel->setText(manaFinal);
-	ui->manaInfoLabel->repaint();
-
-
-	QString manaShieldFinal;
-	if (manaShieldIsCorrect) {
-		QString tmpManaShield = manaShieldPercentage.rightJustified(3, ' ') + "%";
-		manaShieldFinal = previousManaShieldText + tmpManaShield;
-	}
-	else
-		manaShieldFinal = previousManaShieldText + errCompare;
 	ui->manaShieldLabel->setText(manaShieldFinal);
+	ui->healthInfoLabel->repaint();
+	ui->manaInfoLabel->repaint();
 	ui->manaShieldLabel->repaint();
+
 }
 
 void MainMenu::setProblemsWindow(QStringList problemsToShow){
@@ -125,6 +97,8 @@ void MainMenu::threadStarter(){
 	screenAnalyzer->start();
 	healthManaStateAnalyzer = new ManaHealthStateAnalyzer(this, &var);
 	healthManaStateAnalyzer->start();
+	keySender = new KeySender(this, prof, &var);
+	keySender->start();
 }
 
 void MainMenu::signalSlotConnector(){

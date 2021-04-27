@@ -24,7 +24,8 @@ public:
 		NO_RECTANGLE_COPYING_WHOLE_SCREEN_TO_VAR = 64,
 		NO_FRAMES_FOUND = 128,
 		NO_ENOUGH_FRAMES_FOUND = 256,
-		ERROR_IN_SETTING_POSITION_OF_INTERFACE = 512
+		ERROR_IN_SETTING_POSITION_OF_INTERFACE = 512,
+		CALIBRATION_FAILED = 1024
 	};
 	struct Frames {
 		QRect gameFrame;
@@ -33,6 +34,7 @@ public:
 		QRect manaFrame;
 		QRect manaShieldFrame;
 		QRect combinedFrame;
+		int howTheyShouldBeRotated;
 	};
 
 	ScreenAnalyzer( QObject *parent, VariablesClass* var);
@@ -41,17 +43,18 @@ public:
 	bool enableScreenAnalyzer = true;
 
 public slots:
-	void reCalibrate();
+	int reCalibrate();
 signals:
 	void sendAllowenceToAnalyze(bool state);
 private:
 	VariablesClass* var;
 	int timeBetweenNextCheckingsOfScrennShotFolder = 100;
-	bool stateOfAnalyzer = false;
+	bool isManaHealthClassEnabledToAnalyzeImgs = false;
 	Frames frames;
 
 	void mainLoop();
 	int calibrate();
+	int cutImportantImgsFromWholeScreenAndSendThemToVarClass(QImage fullscreen);
 	int categorizeWindows(QImage fullscreen, QList<QRect>* importantRectangles, Frames* frames);
 	void sortByXAndYPoints(QList<QPoint>* points, QList<QPoint>* pointsSortedByX, QList<QPoint>* pointsSortedByY);
 	int sortByXAndYRects(QList<QRect> inputRects, QList<QRect>* rectsSortedByPosX, QList<QRect>* rectsSortedByPosY);
@@ -64,4 +67,5 @@ private:
 	QString pathToScreenFolder = "C:\\Users\\ADMIN\\AppData\\Local\\Tibia\\packages\\Tibia\\screenshots";//TODO
 	int findIndexesOfRectangleThatContainsSlashes(QImage fullScreen, QList<QRect> importantFrames, QList<int>* indexesOfFramesWithSlashesVert, QList<int>* indexesOfFramesWithSlashesHor, int* indexOfFrameCombined);
 	void TEST_setPositionHealthImhs(QString pathToFolderWithDiffrentPositionsStylesScreen, QString pathToOutPutFolder);
+	void notifyOtherProcessOfStateOfAnalyzer(bool worksGood);
 };

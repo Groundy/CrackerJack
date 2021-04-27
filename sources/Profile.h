@@ -7,16 +7,17 @@
 #include "qkeysequence.h"
 #include "Key.h"
 
-enum PROFESSION { RP, EK, ED, MS};
-enum AUTO_LOOT_KEY { RIGHT_MOUSE_BUTTON, SHIFT_RIGHT, LEFT_MOUSE_BUTTON };//enable only if controls
-enum CONTROLS { CLSSIC_CONTROLS, REGULARCONTROLS, LEFT_SMART_CLICK };
-enum KEY_ITEM { POTION, SPELL, CUPCAKE, OTHER };
-class Profile : public QObject 
-{
+class Profile : public QObject{
 	Q_OBJECT
 
 public:
+	enum PROFESSION { RP, EK, ED, MS};
+	enum AUTO_LOOT_KEY { RIGHT_MOUSE_BUTTON, SHIFT_RIGHT, LEFT_MOUSE_BUTTON };//enable only if controls
+	enum CONTROLS { CLSSIC_CONTROLS, REGULARCONTROLS, LEFT_SMART_CLICK };
+	enum KEY_ITEM { POTION, SPELL, CUPCAKE, OTHER };
+
 	Profile(QObject *parent);
+	Profile(const Profile&);
 	Profile();
 	~Profile();
 
@@ -34,4 +35,6 @@ public:
 	QString lastLoginDate;
 	QString creationDate;
 	QString secondsSpent;
+	Profile operator=(const Profile prof) { return this; };
+	void clearProfile();
 };

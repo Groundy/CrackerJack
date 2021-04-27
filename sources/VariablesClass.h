@@ -8,20 +8,18 @@ class VariablesClass : public QObject
 public:
 	uint var_pidOfGame;
 	QString var_winTitleOfGame;
-	bool useAdvancedShearch = true;
 
 	//Advaned health and mana shearch
-	enum calibrationState{CALIBRATED, NOT_CALIBRATED , DURING_CALIBRATION};
+	enum calibrationState{NOT_CALIBRATED, CALIBRATED, DURING_CALIBRATION};
 	QImage var_healthPieceImg;
 	QImage var_manaPieceImg;
 	QImage var_manaShieldPieceImg;
-	bool isManaShieldActive;
-	calibrationState caliState;
+	QImage var_combinedBoxPieceImg;
+	float health, mana, manashield;
 	int rotationNeededForPointsAbove;
-
-	//simply health and mana shearch
-	QImage healthBarImg;
-	QImage manaBarImg;
+	bool manaFound, healthFound, manaShieldFound, combinedFound;
+	bool newData;
+	calibrationState caliState;
 
 	static QString outPutFolderPath();
 	VariablesClass();

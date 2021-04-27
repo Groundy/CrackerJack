@@ -55,6 +55,6 @@ public:
 	QString DB_writer_ManaAndHealthKeys(QList<Key> keylist);
 	QList<Key> DB_reader_ManaAndHealthKeys(QString str);
 	//are they even usefull?
-	QString DB_writer_ManaAndHealthItems(QList<KEY_ITEM> keylist);
-	QList<KEY_ITEM> DB_reader_ManaAndHealthItems(QString str);
+	QString DB_writer_ManaAndHealthItems(QList<Profile::KEY_ITEM> keylist);
+	QList<Profile::KEY_ITEM> DB_reader_ManaAndHealthItems(QString str);
 };

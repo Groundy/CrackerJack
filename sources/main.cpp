@@ -2,6 +2,7 @@
 #include <QtWidgets/QApplication>
 #include "ScreenSaver.h"
 #include "MainMenu.h"
+#include <memory.h>
 /*This function is designed to make ranom name of Process to avoid giving the same name the name that could be easily detected*/
 QString makeRandomProccessName() {
     const QString possibleCharacters("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789 ");
@@ -32,10 +33,10 @@ int main(int argc, char *argv[])
     a.setQuitOnLastWindowClosed(false);
    // LoginWindow w;
    // w.show();
-    Profile*  tt = new Profile();
-    //SelectProfileWindow win(NULL, tt);
-    //win.exec();
-    MainMenu* mainMenu = new MainMenu(tt,NULL);
+    Profile prof;
+    SelectProfileWindow win(NULL, &prof);
+    win.exec();
+    MainMenu* mainMenu = new MainMenu(&prof, NULL);
     mainMenu->exec();
     return a.exec();
 }

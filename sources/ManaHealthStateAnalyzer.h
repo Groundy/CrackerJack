@@ -8,10 +8,15 @@
 class ManaHealthStateAnalyzer : public QThread
 {
 	Q_OBJECT
-
 public:
 	ManaHealthStateAnalyzer(QObject *parent, VariablesClass* varClass);
 	~ManaHealthStateAnalyzer();
+	enum ERROR_CODES {
+		OK = 0,
+		OTHER_ERROR = 2,
+		WRONG_STR_OF_VALUES = 4,
+		ZERO_AS_MAX_VALUE = 8
+	};
 	int miliSecBetweenCheckingForNewValuesImg = 100;
 	bool shouldThisThreadBeActive = false;
 	void run();
@@ -21,34 +26,31 @@ signals:
 	void demandReCalibration();
 	void sendValueToMainThread(QString, QString, QString);
 private:
-	//simple
-	void SIMPLE_mainloop();
 	//advanced
 	QImage healthImg;
 	QImage manaImg;
 	QImage manaShieldImg;
-	QList<QImage*> listOfImg;
+	QImage combinedImg;
+
+	bool healthFound;
+	bool manaFound;
+	bool manaShieldFound;
+	bool combinedFound;
+
 	QString healthValueStr;
 	QString manaValueStr;
 	QString manaShieldValueStr;
-	int mana;
-	int manaShield;
-	int health;
-	int rotationNeeded;
-	bool isManaShieldActive;
-	void imgsToBlackAndWhite();
-	void getInfoFromVarClass();
-	void setImagesToAnalyze();
-	void rotateImgsInfNeeded();
+	QString combinedValueStr;
+	int mana, maxMana;
+	int manaShield, maxManaShield;
+	int health, maxHealth;
+	bool getInfoFromVarClass();
 	void mainLoop();
-	bool changeImgsToStrings();
-	void cutBorders();
-	bool checkIfImgWereLoadedCorrectly();
+	int changeImgsToStrings();
 	void setHealthManaValues();
-	void deletePartOfStrSideOfBracket_Outside(QString* strToEdit);
-	void deletePartOfStrOutSideOfBracket_Inside(QString* strToEdit);
-	void changeStrWithValueToValue(QString in, int* outValue);
-	void makeStringsForSignalToSend(QString* health, QString* mana, QString* manaShield);
-	
+	int getValuesFromStringRegularCase(QString in, int* min, int* max);
+	int getValuesFromStringOfCombinedBox(QString in, int* minMana, int* maxMana, int* minManaShield, int* maxManaShield);
+	int makeStringsForSignalToSend(QString* health, QString* mana, QString* manaShield);
+	void writeDataToVariableClass();
 	VariablesClass* var;
 };

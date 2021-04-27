@@ -574,7 +574,7 @@ void Utilities::UNSUED_findBoredersOfFrames(QImage fullScreen){
 
 void Utilities::saveImgToOutPutFolder(QImage* img, QString extraName){
 	QString tmp = QDateTime::currentDateTime().toString("mm_ss_zzz");
-	QString fullname = VariablesClass::outPutFolderPath() + "\\" + tmp + "_" + extraName + ".png";
+	QString fullname = VariablesClass::outPutFolderPath() + "\\_" + tmp + "_" + extraName + ".png";
 	img->save(fullname);
 }
 

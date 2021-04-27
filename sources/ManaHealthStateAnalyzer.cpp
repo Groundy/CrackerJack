@@ -10,10 +10,7 @@ ManaHealthStateAnalyzer::~ManaHealthStateAnalyzer(){
 }
 
 void ManaHealthStateAnalyzer::run(){
-	if(var->useAdvancedShearch)
-		mainLoop();
-	else
-		SIMPLE_mainloop();
+	mainLoop();
 }
 
 void ManaHealthStateAnalyzer::setThreadEnabilityToRun(bool stateToSet) {
@@ -21,287 +18,187 @@ void ManaHealthStateAnalyzer::setThreadEnabilityToRun(bool stateToSet) {
 	shouldThisThreadBeActive = stateToSet;
 }
 
-void ManaHealthStateAnalyzer::imgsToBlackAndWhite(){
-	Utilities::imgToBlackAndWhiteAllColors(&healthImg, 240);
-	Utilities::imgToBlackAndWhiteAllColors(&manaImg, 240);
-	if (isManaShieldActive)
-		Utilities::imgToBlackAndWhiteAllColors(&manaShieldImg,240);
-}
-
-void ManaHealthStateAnalyzer::getInfoFromVarClass() {
-	healthImg = var->var_healthPieceImg;
-	manaImg = var->var_manaPieceImg;
-	manaShieldImg = var->var_manaShieldPieceImg;
-	rotationNeeded = var->rotationNeededForPointsAbove;
-	isManaShieldActive = var->isManaShieldActive;
-}
-
-void ManaHealthStateAnalyzer::setImagesToAnalyze(){
-	Utilities::imgToBlackAndWhiteAllColors(&healthImg, 240);
-	Utilities::imgToBlackAndWhiteAllColors(&manaImg, 240);
-	if(isManaShieldActive)
-		Utilities::imgToBlackAndWhiteAllColors(&manaShieldImg, 240);
-}
-
-void ManaHealthStateAnalyzer::rotateImgsInfNeeded(){
-	bool skip = !(rotationNeeded == 1 || rotationNeeded == -1);
-	if (skip)
-		return;
-	Utilities::rotateImgToRight(&healthImg, rotationNeeded);
-	Utilities::rotateImgToRight(&manaImg, rotationNeeded);
-	if (isManaShieldActive)
-		Utilities::rotateImgToRight(&manaShieldImg, rotationNeeded);
-}
-
-void ManaHealthStateAnalyzer::SIMPLE_mainloop() {
-	while (true) {
-		if (!shouldThisThreadBeActive) {
-			msleep(miliSecBetweenCheckingForNewValuesImg * 5);
-			qDebug() << "ManaHealthStateAnalyzer:: simple mainLoop skipped, it isn't enabled";
-			continue;
-		}
-		QImage healthBar = var->healthBarImg;
-		QImage manaBar = var->manaBarImg;
-
-		int blueManaPixels = 0;
-		int redHealthPixels = 0;
-		for (int x = 0; x < healthBar.width(); x++) {
-			RGBstruct helthPixel = healthBar.pixel(x, 0);
-			RGBstruct manaPixel = manaBar.pixel(x, 0);
-			if (helthPixel.r > 180)
-				redHealthPixels++;
-			if (manaPixel.b > 180)
-				blueManaPixels++;
-		}
-		int percentage_health = (100 * redHealthPixels) / healthBar.width();
-		int percentage_mana = (100 * blueManaPixels) / healthBar.width();
-
-		emit sendValueToMainThread(QString::number(percentage_health), QString::number(percentage_mana), "Error");
-		msleep(miliSecBetweenCheckingForNewValuesImg );
+bool ManaHealthStateAnalyzer::getInfoFromVarClass() {
+	if (var->newData) {
+		var->newData = false;
+		healthImg = var->var_healthPieceImg;
+		manaImg = var->var_manaPieceImg;
+		manaShieldImg = var->var_manaShieldPieceImg;
+		combinedImg = var->var_combinedBoxPieceImg;
+		healthFound = var->healthFound;
+		manaFound = var->manaFound;
+		manaShieldFound = var->manaShieldFound;
+		combinedFound = var->combinedFound;
+		return true;
 	}
+	else
+		return false;
 }
 
 void ManaHealthStateAnalyzer::mainLoop(){
-	bool cont;
 	while (true) {
 		if (!shouldThisThreadBeActive) {
 			msleep(miliSecBetweenCheckingForNewValuesImg * 5);
 			qDebug() << "ManaHealthStateAnalyzer:: mainLoop skipped, it isn't enabled";
 			continue;
 		}
-		getInfoFromVarClass();
-		bool error = checkIfImgWereLoadedCorrectly();
-		if (error) {
-			msleep(miliSecBetweenCheckingForNewValuesImg * 6);
-			qDebug() << "ManaHealthStateAnalyzer:: mainLoop skipped, error img loaded";
-			continue;
-		}
 		if (var->caliState != var-> CALIBRATED) {
 			msleep(miliSecBetweenCheckingForNewValuesImg * 5);
 			qDebug() << "ManaHealthStateAnalyzer:: mainLoop skipped, error lack of calibration";
-			//emit demandReCalibration();
+			emit sendValueToMainThread("Calibrating", "Calibrating", "Calibrating");
+			emit demandReCalibration();
 			continue;
 		}
-		rotateImgsInfNeeded();
-		imgsToBlackAndWhite();
-		cutBorders();
-		bool succes = changeImgsToStrings();
-		if (!succes) {
+		bool dataReady = getInfoFromVarClass();
+		if (!dataReady)
+			continue;
+		int res = changeImgsToStrings();
+		if (res != OK) {
 			qDebug() << "ManaHealthStateAnalyzer:: mainLoop skipped, error in changing img to strings";
-			//emit demandReCalibration();
-			msleep(miliSecBetweenCheckingForNewValuesImg);
+			emit demandReCalibration();
+			emit sendValueToMainThread("Calibrating", "Calibrating", "Calibrating");
+			msleep(miliSecBetweenCheckingForNewValuesImg*5);
 			continue;
 		}
 		setHealthManaValues();
 		QString healthStr,manaStr,manaShieldStr;
 		makeStringsForSignalToSend(&healthStr, &manaStr, &manaShieldStr);
 		emit sendValueToMainThread(healthStr, manaStr, manaShieldStr);
+		writeDataToVariableClass();
 		msleep(miliSecBetweenCheckingForNewValuesImg);
 	}
 }
 
-bool ManaHealthStateAnalyzer::changeImgsToStrings(){
-	QString healthStr = Utilities::imgWithStrToStr(&healthImg);
-	QString manaStr = Utilities::imgWithStrToStr(&manaImg);
-	QString manaShieldStr;
-	if (isManaShieldActive)
-		manaShieldStr = Utilities::imgWithStrToStr(&manaShieldImg);
-	else
-		manaShieldStr = "";
-
-	bool reasonToEmit = healthStr.isEmpty() || manaStr.isEmpty();
-	bool reasonToEmit2 = !(healthStr.contains("\\") && manaStr.contains("\\"));
-	if (reasonToEmit || reasonToEmit2){
-		emit demandReCalibration();
-		return false;//diag err
+int ManaHealthStateAnalyzer::changeImgsToStrings(){
+	QString healthStr, manaStr, manaShieldStr, combinedStr, tmp;
+	if (healthFound) {
+		healthStr = Utilities::imgWithStrToStr(&healthImg);
+		tmp = healthStr.remove("\0");
+		healthStr = tmp;
 	}
-
-	healthValueStr = healthStr;
-	manaValueStr = manaStr;
-	if (isManaShieldActive)
+	if (manaFound) {
+		manaStr = Utilities::imgWithStrToStr(&manaImg);
+		tmp = manaStr.remove("\0");
+		manaStr = tmp;
+	}
+	if (manaShieldFound) {
+		manaShieldStr = Utilities::imgWithStrToStr(&manaShieldImg);
+		tmp = manaShieldStr.remove("\0");
+		manaShieldStr = tmp;
+	}
+	if (combinedFound) {
+		combinedStr = Utilities::imgWithStrToStr(&combinedImg);
+		tmp = combinedStr.remove("\0");
+		combinedStr = tmp;
+	}
+	bool isHealthCorrect = healthStr.size() >= 3;
+	bool isManaCorrect = manaStr.size() >= 3 || combinedStr.size() >= 3;
+	bool minimumRequiredMade = isHealthCorrect && isManaCorrect;
+	if (minimumRequiredMade) {
+		healthValueStr = healthStr;
+		manaValueStr = manaStr;
 		manaShieldValueStr = manaShieldStr;
+		combinedValueStr = combinedStr;
+		return OK;
+	}
 	else
-		manaShieldValueStr = "";//[poss err]
-	return true;
-}
+		return WRONG_STR_OF_VALUES;
 
-void ManaHealthStateAnalyzer::cutBorders(){
-	Utilities::cutBlackBordersOfImg(&healthImg);
-	Utilities::cutBlackBordersOfImg(&manaImg);
-	if (isManaShieldActive)
-		Utilities::cutBlackBordersOfImg(&manaShieldImg);
-}
-
-bool ManaHealthStateAnalyzer::checkIfImgWereLoadedCorrectly(){
-	bool error1 = healthImg.width() == 0 || healthImg.height() == 0;
-	bool error2 = manaImg.width() == 0 || manaImg.height() == 0;
-	bool error3 = manaShieldImg.width() == 0 || manaShieldImg.height() == 0;
-
-	if (!isManaShieldActive)
-		return error1 || error2;
-	else
-		return error1 || error2 || error3;
 }
 
 void ManaHealthStateAnalyzer::setHealthManaValues(){
-	int healthValueToRet = -1;
-	int manaValueToRet = -1;
-	int manaShieldValueToRet = -1;
-
-	deletePartOfStrSideOfBracket_Outside(&healthValueStr);
-	deletePartOfStrSideOfBracket_Outside(&manaValueStr);
-
-	changeStrWithValueToValue(healthValueStr, &healthValueToRet);
-	changeStrWithValueToValue(manaValueStr, &manaValueToRet);
-
-	if (isManaShieldActive) {
-		deletePartOfStrOutSideOfBracket_Inside(&manaShieldValueStr);
-		changeStrWithValueToValue(manaShieldValueStr, &manaShieldValueToRet);
-	}
-
-	if (healthValueToRet >= 0 && healthValueToRet <= 100)
-		health = healthValueToRet;
-	else
-		health = -1;
-	if (manaValueToRet >= 0 && manaValueToRet <= 100)
-		mana = manaValueToRet;
-	else
-		mana = -1;
-	if (manaShieldValueToRet >= 0 && manaShieldValueToRet <= 100)
-		manaShield = manaShieldValueToRet;
-	else
-		manaShield = -1;
+	if (healthFound)
+		getValuesFromStringRegularCase(healthValueStr, &health, &maxHealth);
+	if (combinedFound)	
+		getValuesFromStringOfCombinedBox(combinedValueStr, &mana, &maxMana, &manaShield, &maxManaShield);
+	if (manaShieldFound)
+		getValuesFromStringRegularCase(manaShieldValueStr, &manaShield, &maxManaShield);
+	if (manaFound)
+		getValuesFromStringRegularCase(manaValueStr, &mana, &maxMana);
 }
 
-void ManaHealthStateAnalyzer::deletePartOfStrSideOfBracket_Outside(QString* strToEdit){
-	QString toDel_TMp = *strToEdit;
-	bool haveOpeningBracket = strToEdit->contains('(');
-	bool haveClosingBracket = strToEdit->contains(')');
-	int indexOfOpeningBracket = haveOpeningBracket ? strToEdit->indexOf('(') : 0;
-	int indexOfClosingBracket = haveClosingBracket ? strToEdit->indexOf(')') : 0;
+int ManaHealthStateAnalyzer::getValuesFromStringRegularCase(QString in, int* current, int* max){
+	//wanted form of input minVal/maxVal
+	QStringList partOfStr = in.split("\\");
+	if (partOfStr.size() != 2)
+		return ERROR_CODES::WRONG_STR_OF_VALUES;
+	int minToRet = partOfStr[0].toInt();
+	int maxToRet = partOfStr[1].toInt();
+	
+	bool error1 = maxToRet < 0 || maxToRet > 90000;//mana of 3000 lvl mage, no probability that there would be bigger value needed
+	bool error2 = minToRet < 0 || minToRet > maxToRet;
+	if( error1 || error2)
+		return ERROR_CODES::WRONG_STR_OF_VALUES;
 
-	if (haveOpeningBracket && haveClosingBracket) {
-		int startPosToDelete = indexOfOpeningBracket;
-		int widthToDelete = indexOfClosingBracket - startPosToDelete;
-		QString tmp = strToEdit->remove(startPosToDelete,widthToDelete);
-		*strToEdit = tmp;
-		return;
-	}
-	else if (!haveOpeningBracket && haveClosingBracket) {
-		int startPosToDelete = 0;
-		int widthToDelete = indexOfClosingBracket;
-		QString tmp = strToEdit->remove(startPosToDelete, widthToDelete);
-		*strToEdit = tmp;
-		return;
-	}
-	else if (haveOpeningBracket && !haveClosingBracket) {
-		int startPosToDelete = indexOfOpeningBracket;
-		int widthToDelete = strToEdit->size() - startPosToDelete;
-		QString tmp = strToEdit->remove(startPosToDelete, widthToDelete);
-		*strToEdit = tmp;
-		return;
-	}
-	//required format after curentHealth//maxHealth
+	*current = minToRet;
+	*max = maxToRet;
+	return OK;
 }
 
-void ManaHealthStateAnalyzer::deletePartOfStrOutSideOfBracket_Inside(QString* strToEdit){
-	bool haveOpeningBracket = strToEdit->contains('(');
-	bool haveClosingBracket = strToEdit->contains(')');
-	int indexOfOpeningBracket = haveOpeningBracket ? strToEdit->indexOf('(') : 0;
-	int indexOfClosingBracket = haveClosingBracket ? strToEdit->indexOf(')') : 0;
+int ManaHealthStateAnalyzer::getValuesFromStringOfCombinedBox(QString in, int* currentMana, int* maxMana, int* currentManaShield, int* maxManaShield){
+	//wanted form of input minVal/maxVal(minShieldValue/maxShieldValue)
+	in.remove(")");
+	QStringList foo = in.split("(");
+	if (foo.size() != 2)
+		return ERROR_CODES::WRONG_STR_OF_VALUES;
+	QString manaStr = foo[0];
+	QString shieldStr = foo[1];
 
-	if (haveOpeningBracket && haveClosingBracket) {
-		int startPosToDelete = 0;
-		int widthToDelete = indexOfOpeningBracket+1;
-		QString tmp = strToEdit->remove(startPosToDelete, widthToDelete);
-		*strToEdit = tmp;
+	int minManaToRet, maxManaToRet, minShieldToRet, maxShieldToRet;
+	int res = getValuesFromStringRegularCase(manaStr, &minManaToRet, &maxManaToRet);
+	int res2 = getValuesFromStringRegularCase(shieldStr, &minShieldToRet, &maxShieldToRet);
 
-		indexOfClosingBracket = haveClosingBracket ? strToEdit->indexOf(')') : 0;
-
-		startPosToDelete = indexOfClosingBracket;
-		widthToDelete = strToEdit->size() - startPosToDelete;
-		tmp = strToEdit->remove(startPosToDelete, widthToDelete);
-		*strToEdit = tmp;
-
-		return;
+	if (res == OK) {
+		*currentMana = minManaToRet;
+		*maxMana = maxManaToRet;
 	}
-	else{
-		//diag err
+	else
+		return ERROR_CODES::WRONG_STR_OF_VALUES;
+
+	if (res2 == OK) {
+		*currentManaShield = minShieldToRet;
+		*maxManaShield = maxShieldToRet;
 	}
-	//required format after curentHealth//maxHealth
+	else
+		return ERROR_CODES::WRONG_STR_OF_VALUES;
+	return OK;
 }
 
-void ManaHealthStateAnalyzer::changeStrWithValueToValue(QString in, int* outValue){
-	QStringList partsOfString = in.split("\\");
-	int PercentageToRet = -1;
-
-	if (partsOfString.size() == 2) {
-
-		//deleting  escape sequence char if needed
-		if (partsOfString[1].right(1) == QChar(0)) {
-			int size = partsOfString[1].size();
-			QString tmp = partsOfString[1].left(size - 1);
-			partsOfString[1] = tmp;
-		}
-
-		int currentValue = partsOfString[0].toInt();
-		int maxValue = partsOfString[1].toInt();
-		bool properValues =  currentValue <= maxValue;
-		if (properValues && maxValue !=0)
-			PercentageToRet = (100 * currentValue) / maxValue;
-		else if (properValues && maxValue == 0)//manaShieldCase
-			PercentageToRet = 0;
-		else {
-			PercentageToRet = 0;
-			return; //diag err Wrong Parameter after reading values from IMG;
-		}
-	}
+int ManaHealthStateAnalyzer::makeStringsForSignalToSend(QString* healthOut, QString* manaOut, QString* manaShieldOut){
+	if (maxHealth == 0 || maxMana == 0)
+		return ZERO_AS_MAX_VALUE;
+	float value = (health * 100.0f) / maxHealth;
+	QString healthPercentageToRet = QString::number(value,'f',1) + "%";
+	value = (mana * 100.0f) / maxMana;
+	QString manaPercentageToRet = QString::number(value, 'f', 1) + "%";
+	QString manaShieldPercentageToRet;
+	if (maxManaShield <= 0)
+		manaShieldPercentageToRet = "not found or zero";
 	else {
-		*outValue = 0;
-		return;//diag err Wrong Parameter, there are more or less than one \\ char in str with values
+		if (maxManaShield == 0)
+			return ZERO_AS_MAX_VALUE;
+		value = (manaShield * 100.0f) / maxManaShield;
+		manaShieldPercentageToRet = QString::number(value, 'f', 1) + "%";
 	}
-	*outValue = PercentageToRet;
+	*healthOut = healthPercentageToRet;
+	*manaOut = manaPercentageToRet;
+	*manaShieldOut = manaShieldPercentageToRet;
+	return OK;
 }
 
-void ManaHealthStateAnalyzer::makeStringsForSignalToSend(QString* healthOut, QString* manaOut, QString* manaShieldOut){
-	bool healthCorrect = !(health == -1);
-	bool manaCorrect = !(mana == -1);
-	bool manaShieldCorrect = !(manaShield == -1);
-	QString err = "Error";
-
-	if (healthCorrect)
-		*healthOut = QString::number(health);
-	else 
-		*healthOut = err;
-
-	if (manaCorrect)
-		*manaOut = QString::number(mana);
-	else
-		*manaOut = err;
-
-	if (manaShieldCorrect)
-		*manaShieldOut = QString::number(manaShield);
-	else
-		*manaShieldOut = err;
+void ManaHealthStateAnalyzer::writeDataToVariableClass(){
+		float healthInfoToSend = (100.0f * health)/maxHealth;
+		float manaInfoToSend = (100.0f * mana) / maxMana;
+		float manaShieldInfoToSend;
+		if (maxManaShield != 0)
+			manaShieldInfoToSend = (100.0f * manaShield) / maxManaShield;
+		else
+			manaShieldInfoToSend = 0;
+		var->health = healthInfoToSend;
+		var->mana = manaInfoToSend;
+		var->manashield = manaShieldInfoToSend;
+		var->newData = true;
 }
+
+
 

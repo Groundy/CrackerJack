@@ -162,7 +162,7 @@ void ProfileDataBaseManager::saveProfileToDatabase(Profile* prof){
 void ProfileDataBaseManager::readProfileFroDataBase(Profile* prof, QString name) {
     prof->profileName = getValueOfCell(FieldsOfDB::PROFILE_NAME, name);
     QString profession = getValueOfCell(FieldsOfDB::PROFESION, name);
-    prof->profession = PROFESSION(profession.toInt());
+    prof->profession = Profile::PROFESSION(profession.toInt());
     QString healthPercentages = getValueOfCell(FieldsOfDB::HEALTH_RESTORE_STRING, name);
     prof->healthRestorePercentages = DB_reader_ManaAndHealthRestorePercentages(healthPercentages);
     QString manaPercentage = getValueOfCell(FieldsOfDB::MANA_RESTORE_STRING, name);
@@ -184,7 +184,7 @@ QString ProfileDataBaseManager::DB_writer_ManaAndHealthRestorePercentages(QList<
     if (size == 0)
         return QString("#");
 
-    QString toRet = "" + QString::number(size) + QString("#");
+    QString toRet =QString("#");
     for (int i = 0; i < size; i++)
         toRet.append(QString::number(vect[i]) + "-");
 
@@ -193,17 +193,14 @@ QString ProfileDataBaseManager::DB_writer_ManaAndHealthRestorePercentages(QList<
 
 QList<int> ProfileDataBaseManager::DB_reader_ManaAndHealthRestorePercentages(QString str) {
     QList<int> vectWithThreshold;
-    if (str == "#");
-    return vectWithThreshold;
-    QStringList list = str.split("#");
-    if (list.size() != 2) {
-        //DIAG //ERROR
-        return vectWithThreshold;
-    }
-    int size = list.first().toInt();
-    QStringList thresholds = list[1].split("-");
-    for (int i = 0; i < size; i++)
-        vectWithThreshold.push_back(list[i].toInt());
+
+    QStringList list = str.split("#",Qt::SplitBehaviorFlags::SkipEmptyParts);
+    if (list.size() != 1)
+        return vectWithThreshold;        //DIAG //ERROR
+    QStringList thresholds = list[0].split("-",Qt::SplitBehaviorFlags::SkipEmptyParts);
+
+    for (int i = 0; i < thresholds.size(); i++)
+        vectWithThreshold.push_back(thresholds[i].toInt());
 
     return vectWithThreshold;
 }
@@ -221,35 +218,35 @@ QString ProfileDataBaseManager::DB_writer_ManaAndHealthKeys(QList<Key> keylist) 
 
 QList<Key> ProfileDataBaseManager::DB_reader_ManaAndHealthKeys(QString str) {
     QList<Key> keyList;
-    if (str == QString("#"));
-     return keyList;
+    QString tmp = str.remove(0, 1);
+    if(tmp.size() == 0)
+        return keyList;
+    str = tmp;
 
-    QStringList list = str.split("#");
+    QStringList list = str.split("#", Qt::SplitBehaviorFlags::SkipEmptyParts);
     for (int i = 0; i < list.size(); i++)
         keyList.push_back(Key(list[i].toInt()));
 
     return keyList;
 }
 
-QString ProfileDataBaseManager::DB_writer_ManaAndHealthItems(QList<KEY_ITEM> keylist) {
+QString ProfileDataBaseManager::DB_writer_ManaAndHealthItems(QList<Profile::KEY_ITEM> keylist) {
     if (keylist.size() == 0)
         return QString("#");
 
     QString toRet = "";
-    for each (KEY_ITEM var in keylist)
+    for each (Profile::KEY_ITEM var in keylist)
         toRet.append(QString::number((int)var)+"#");
 
     return toRet;
 }
 
-QList<KEY_ITEM> ProfileDataBaseManager::DB_reader_ManaAndHealthItems(QString str){
-    QList<KEY_ITEM> listOfItems;
-    if (str == QString("#"));
-        return listOfItems;
+QList<Profile::KEY_ITEM> ProfileDataBaseManager::DB_reader_ManaAndHealthItems(QString str){
+    QList<Profile::KEY_ITEM> listOfItems;
 
-    QStringList list = str.split("#");
+    QStringList list = str.split("#", Qt::SplitBehaviorFlags::SkipEmptyParts);
     for (int i = 0; i < list.size(); i++)
-        listOfItems.push_back(KEY_ITEM(list[i].toInt()));
+        listOfItems.push_back(Profile::KEY_ITEM(list[i].toInt()));
 
     return listOfItems;
 }

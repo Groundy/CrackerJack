@@ -9,6 +9,8 @@
 #include "Key.h"
 #include "ManaHealthStateAnalyzer.h"
 #include "ScreenAnalyzer.h"
+#include "KeySender.h"
+#include "memory"
 namespace Ui { class MainMenu; };
 
 class MainMenu : public QDialog
@@ -40,6 +42,7 @@ private:
 	activeGameThread* activityThread;
 	ScreenAnalyzer* screenAnalyzer;
 	ManaHealthStateAnalyzer* healthManaStateAnalyzer;
+	KeySender* keySender;
 	VariablesClass var;
 
 	void setProblemsWindow(QStringList problemsToShow);
