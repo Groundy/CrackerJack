@@ -1,7 +1,8 @@
 #include "LoginWindow.h"
 
 
-LoginWindow::LoginWindow(QWidget *parent)   :   QMainWindow(parent){
+LoginWindow::LoginWindow(QWidget *parent): 
+        QDialog(parent){
     ui.setupUi(this);
     getAndSetVersion();
     checkLogInPossibility();

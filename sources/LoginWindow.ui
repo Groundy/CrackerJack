@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <class>LoginWindowClass</class>
- <widget class="QMainWindow" name="LoginWindowClass">
+ <widget class="QDialog" name="LoginWindowClass">
   <property name="enabled">
    <bool>true</bool>
   </property>

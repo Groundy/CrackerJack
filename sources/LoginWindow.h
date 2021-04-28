@@ -1,11 +1,10 @@
-#pragma once
-
-#include <QtWidgets/QMainWindow>
+#pragma onc
+#include "qdialog.h"
 #include "ui_LoginWindow.h"
 #include "SelectProfileWindow.h"
 
 
-class LoginWindow : public QMainWindow
+class LoginWindow : public QDialog
 {
     Q_OBJECT
 

@@ -32,12 +32,16 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
     a.setQuitOnLastWindowClosed(true);
+    /*
     LoginWindow w;
-    w.show();
+    int result = w.exec();
+    if (result != QDialog::Accepted)
+        return 0;
+    */
     Profile prof;
     SelectProfileWindow win(NULL, &prof);
     int result2 = win.exec();
-    if (result2 != SelectProfileWindow::Accepted)
+    if (result2 != QDialog::Accepted)
         return 0;
     MainMenu* mainMenu = new MainMenu(&prof, NULL);
     mainMenu->exec();
