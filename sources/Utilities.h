@@ -64,5 +64,9 @@ public:
 		TYPE_OF_ITEM type;
 		SELLER seller;
 	};
+	class Potion :Item {
+	public:
+		bool forMage, forRp, forEk;
+	};
 	//static void UNSUED_findBoredersOfFrames(QImage fullScreen);
 };
