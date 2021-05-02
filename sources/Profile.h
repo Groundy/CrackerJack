@@ -14,7 +14,6 @@ public:
 	enum PROFESSION { RP, EK, ED, MS};
 	enum AUTO_LOOT_KEY { RIGHT_MOUSE_BUTTON, SHIFT_RIGHT, LEFT_MOUSE_BUTTON };//enable only if controls
 	enum CONTROLS { CLSSIC_CONTROLS, REGULARCONTROLS, LEFT_SMART_CLICK };
-	enum KEY_ITEM { POTION, SPELL, CUPCAKE, OTHER };
 
 	Profile(QObject *parent);
 	Profile(const Profile&);
@@ -25,8 +24,8 @@ public:
 	QList<int> ManaRestoreMethodesPercentage;//done
 	QList<Key> healthKeys;//done
 	QList<Key> ManaKeys;//done
-	QList<KEY_ITEM> healthItems;//done
-	QList<KEY_ITEM> manaItems;//done
+	QList<QString> healthRestoreMethodeNames;
+	QList<QString> manaRestoreMethodeNames;
 
 	PROFESSION profession;//done
 	AUTO_LOOT_KEY lootKey;
@@ -35,6 +34,6 @@ public:
 	QString lastLoginDate;
 	QString creationDate;
 	QString secondsSpent;
-	Profile operator=(const Profile prof) { return this; };
 	void clearProfile();
+
 };

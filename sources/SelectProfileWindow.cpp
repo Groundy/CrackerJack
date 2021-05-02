@@ -46,7 +46,7 @@ void SelectProfileWindow::editProfileButtonAction(){
 	dbManager.readProfileFroDataBase(profToBeRead, profileName);
 	NewProfileConfiguartor* newProfDialog = new NewProfileConfiguartor(profToBeRead, this);
 	newProfDialog->fillWidgetsWithDataFromProf(profToBeRead);
-	profToBeRead->clearProfile();
+	//profToBeRead->clearProfile();
 	auto result = newProfDialog->exec();
 	if (result == QDialog::Accepted) {
 		dbManager.deleteRecord(profileName);

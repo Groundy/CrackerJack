@@ -20,7 +20,6 @@ public:
 	KeySender(QObject *parent, Profile* profile, VariablesClass* variableClass);
 	~KeySender();
 	void run();
-	struct keyStroke { int thresHold; QKeySequence keySeq; Profile::KEY_ITEM itemType; };
 private:
 	VariablesClass* var;
 	long long lastTime_HealingSpell = 0;
@@ -30,8 +29,8 @@ private:
 	QList<int> manaThreshHolds;
 	QList<Key> healthKeys;
 	QList<Key> manaKeys;
-	QList<Profile::KEY_ITEM> healthItemTypes;
-	QList<Profile::KEY_ITEM> manaItemTypes;
+	QList<QString> nameOfHealthRestoreMethodes;
+	QList<QString> nameOfManaRestoreMethodes;
 
 	void mainLoop();
 	unsigned long long getCurrentTimeInMiliSeconds();

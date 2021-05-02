@@ -14,11 +14,12 @@ class JsonParser : public QObject
 public:
 	JsonParser();
 	~JsonParser();
-	const QString spellFilePath = "C:\\Users\\ADMIN\\source\\repos\\CrackerJackClient\\spells.json";
-	const QString itemsFilePath = "C:\\Users\\ADMIN\\source\\repos\\CrackerJackClient\\items.json";
+	const QString spellFilePath = "C:\\Users\\ADMIN\\source\\repos\\CrackerJackClient\\Resources\\spells.json";
+	const QString itemsFilePath = "C:\\Users\\ADMIN\\source\\repos\\CrackerJackClient\\Resources\\items.json";
 	bool openJsonFile(QJsonObject* jsonDoc, QString pathToFile);
 	bool readSpellsJson(QList<Utilities::Spell>* spells);
 	bool filtrSpells(QList<Utilities::Spell>* spells, Profile::PROFESSION* prof, Utilities::Spell::TYPE_OF_SPELL* type);
+	bool getPotionsForProf(QList<Utilities::Potion>& potions ,Profile::PROFESSION* prof, bool getOnlyHealthPotions, bool getOnlyManaPotions);
 	bool readItemJson(QList<Utilities::Item>* items);
 
 };

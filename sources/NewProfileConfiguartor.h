@@ -6,6 +6,7 @@
 #include "qstring.h"
 #include "StringResource.h"
 #include "Profile.h"
+#include "JsonParser.h"
 
 namespace Ui { class NewProfileConfiguartor; };
 
@@ -49,5 +50,9 @@ private:
 	bool checkCorrectnessOfPage_3();
 	bool checkCorrectnessOfPage_4();
 	bool checkCorrectnessOfPage_5();
-	
+	QStringList getNamesOfHealthRestoringMethodes(Profile::PROFESSION prof);
+	QStringList getNamesOfManaRestoringMethodes(Profile::PROFESSION prof);
+	void fillGuiElementsWithNamesRestoreMethodes_Health(Profile::PROFESSION prof);
+	void fillGuiElementsWithNamesRestoreMethodes_Mana(Profile::PROFESSION prof);
+	Profile::PROFESSION getProfessionFromRadioButtonOnPage2();
 };

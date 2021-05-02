@@ -1262,19 +1262,6 @@
       "TYPE": "HEALING"
     },
     {
-      "name": "Restoration",
-      "incantantion": "exura max vita",
-      "EK": false,
-      "MS": true,
-      "ED": true,
-      "RP": false,
-      "mana": 260,
-      "CD": 6,
-      "CDGROUP": 1,
-      "SoulPoints": 0,
-      "TYPE": "HEALING"
-    },
-    {
       "name": "Nature's Embrace",
       "incantantion": "exura gran sio \"name\"",
       "EK": false,

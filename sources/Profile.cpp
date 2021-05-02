@@ -9,8 +9,7 @@ Profile::Profile()
 {
 }
 
-Profile::Profile(const Profile &profile){
-}
+Profile::Profile(const Profile &profile){}
 
 Profile::~Profile()
 {
@@ -21,8 +20,8 @@ void Profile::clearProfile(){
 	ManaRestoreMethodesPercentage.clear();
 	healthKeys.clear();
 	ManaKeys.clear();
-	healthItems.clear();
-	manaItems.clear();
+	healthRestoreMethodeNames.clear();
+	manaRestoreMethodeNames.clear();
 
 	PROFESSION profession = PROFESSION(0);//done
 	QString profileName = "";//done

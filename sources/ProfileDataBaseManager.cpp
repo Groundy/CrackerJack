@@ -151,8 +151,8 @@ void ProfileDataBaseManager::saveProfileToDatabase(Profile* prof){
     modifyAtribute(name, ProfileDataBaseManager::HEALTH_RESTORE_STRING, DB_writer_ManaAndHealthRestorePercentages(prof->healthRestorePercentages));
     modifyAtribute(name, ProfileDataBaseManager::MANA_RESTORE_KEY, DB_writer_ManaAndHealthKeys(prof->ManaKeys));
     modifyAtribute(name, ProfileDataBaseManager::HEALTH_RESTORE_KEY, DB_writer_ManaAndHealthKeys(prof->healthKeys));
-    modifyAtribute(name, ProfileDataBaseManager::HEALTH_RESTORE_ITEM, DB_writer_ManaAndHealthItems(prof->healthItems));
-    modifyAtribute(name, ProfileDataBaseManager::MANA_RESTORE_ITEM, DB_writer_ManaAndHealthItems(prof->manaItems));
+    modifyAtribute(name, ProfileDataBaseManager::HEALTH_RESTORE_ITEM, DB_writer_ManaAndHealthRestoreMethhodesNames(prof->healthRestoreMethodeNames));
+    modifyAtribute(name, ProfileDataBaseManager::MANA_RESTORE_ITEM, DB_writer_ManaAndHealthRestoreMethhodesNames(prof->manaRestoreMethodeNames));
     if (prof->creationDate.isEmpty()) {
         QString creation = QDateTime::currentDateTime().toString("dd-MM-yyyy hh:mm");
         modifyAtribute(name, ProfileDataBaseManager::CREATION_TIME, creation);
@@ -171,10 +171,10 @@ void ProfileDataBaseManager::readProfileFroDataBase(Profile* prof, QString name)
     prof->healthKeys = DB_reader_ManaAndHealthKeys(healthKeys);
     QString manaKeys = getValueOfCell(FieldsOfDB::MANA_RESTORE_KEY, name);
     prof->ManaKeys = DB_reader_ManaAndHealthKeys(manaKeys);
-    QString healthItems = getValueOfCell(FieldsOfDB::HEALTH_RESTORE_ITEM, name);
-    prof->healthItems = DB_reader_ManaAndHealthItems(healthItems);
-    QString manaItems = getValueOfCell(FieldsOfDB::MANA_RESTORE_ITEM, name);
-    prof->manaItems = DB_reader_ManaAndHealthItems(manaItems);
+    QString healthRestoreNames = getValueOfCell(FieldsOfDB::HEALTH_RESTORE_ITEM, name);
+    prof->healthRestoreMethodeNames = DB_reader_ManaAndHealthRestoreMethhodesNames(healthRestoreNames);
+    QString manaRestoreNames = getValueOfCell(FieldsOfDB::MANA_RESTORE_ITEM, name);
+    prof->manaRestoreMethodeNames = DB_reader_ManaAndHealthRestoreMethhodesNames(manaRestoreNames);
     prof->creationDate = getValueOfCell(FieldsOfDB::CREATION_TIME, name);
 }
 
@@ -230,23 +230,20 @@ QList<Key> ProfileDataBaseManager::DB_reader_ManaAndHealthKeys(QString str) {
     return keyList;
 }
 
-QString ProfileDataBaseManager::DB_writer_ManaAndHealthItems(QList<Profile::KEY_ITEM> keylist) {
-    if (keylist.size() == 0)
-        return QString("#");
-
+QString ProfileDataBaseManager::DB_writer_ManaAndHealthRestoreMethhodesNames(QList<QString> restorationMethodesNames) {
     QString toRet = "";
-    for each (Profile::KEY_ITEM var in keylist)
-        toRet.append(QString::number((int)var)+"#");
+    for each (QString RestorationName in restorationMethodesNames)
+        toRet.append(RestorationName +"#");
 
     return toRet;
 }
 
-QList<Profile::KEY_ITEM> ProfileDataBaseManager::DB_reader_ManaAndHealthItems(QString str){
-    QList<Profile::KEY_ITEM> listOfItems;
+QList<QString> ProfileDataBaseManager::DB_reader_ManaAndHealthRestoreMethhodesNames(QString str){
+    QList<QString> listOfMethodes;
 
     QStringList list = str.split("#", Qt::SplitBehaviorFlags::SkipEmptyParts);
-    for (int i = 0; i < list.size(); i++)
-        listOfItems.push_back(Profile::KEY_ITEM(list[i].toInt()));
+    for each (QString var in list)
+        listOfMethodes.push_back(var);
 
-    return listOfItems;
+    return listOfMethodes;
 }

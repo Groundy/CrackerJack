@@ -15,6 +15,8 @@
 #include "VariablesClass.h"
 #include "qdatetime.h"
 #include "qrgb.h"
+//#include "Profile.h"
+//#include "JsonParser.h"
 class Utilities {
 public:
 
@@ -64,8 +66,9 @@ public:
 		TYPE_OF_ITEM type;
 		SELLER seller;
 	};
-	class Potion :Item {
+	class Potion : public Item {
 	public:
+		int manaReg, healthReg;
 		bool forMage, forRp, forEk;
 	};
 	//static void UNSUED_findBoredersOfFrames(QImage fullScreen);

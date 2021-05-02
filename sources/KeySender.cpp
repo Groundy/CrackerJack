@@ -74,8 +74,8 @@ void KeySender::getInfoFromProfile(Profile* profile){
 	manaThreshHolds = profile->ManaRestoreMethodesPercentage;
 	healthKeys = profile->healthKeys;
 	manaKeys = profile->ManaKeys;
-	healthItemTypes = profile->healthItems;
-	manaItemTypes = profile->manaItems;
+	nameOfHealthRestoreMethodes = profile->healthRestoreMethodeNames;
+	nameOfManaRestoreMethodes = profile->manaRestoreMethodeNames;
 }
 
 int KeySender::getMiliSecondsNeededToWaitToUseHealingSpell(){
@@ -96,6 +96,8 @@ void KeySender::sendHealingKeyStrokeToGame(float currentHealthPercentage){
 	int indexOfHealthThreshold;
 	findNearestThresholdIndex(currentHealthPercentage, lifeThreshHolds, &indexOfHealthThreshold);
 	if (indexOfHealthThreshold != -1) {
+		/*
+		//TODO //TMP
 		Key key = healthKeys[indexOfHealthThreshold];
 		Profile::KEY_ITEM typeOfAction = healthItemTypes[indexOfHealthThreshold];
 		int timeToWait = 0;
@@ -106,6 +108,7 @@ void KeySender::sendHealingKeyStrokeToGame(float currentHealthPercentage){
 		QString titleOfGameWindow = var->var_winTitleOfGame;
 		Utilities::sendKeyStrokeToProcess(key, pidOfGame, titleOfGameWindow);
 		lastTime_HealingSpell = getCurrentTimeInMiliSeconds();
+	  */
 	}
 }
 

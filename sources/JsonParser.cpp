@@ -1,5 +1,5 @@
 #include "JsonParser.h"
-
+#include "Utilities.h"
 JsonParser::JsonParser()
 {
 }
@@ -71,37 +71,85 @@ bool JsonParser::filtrSpells(QList<Utilities::Spell>* spells, Profile::PROFESSIO
         return false;
     typedef Utilities::Spell Spell;
 
-    //filtr by type
-    if (type != NULL) {
-        QList<Utilities::Spell> spellsToRet;
-        for each (Spell var in *spells) {
-            bool isProperType = var.typeOfSpell == *type;
-            if (isProperType)
-                spellsToRet.push_back(var);
-        }
-        *spells = spellsToRet;
-    }
-    if (prof != NULL) {
-        QList<Utilities::Spell> spellsToRet;
-        for each (Spell var in *spells) {
-            Profile::PROFESSION profToCompare;
-            if (var.ED)
-                profToCompare = Profile::ED;
-            else if (var.EK)
-                profToCompare = Profile::EK;
-            else if (var.MS)
-                profToCompare = Profile::MS;
-            else if (var.RP)
-                profToCompare = Profile::RP;
-            else
-                return false; //diag //err
+    bool filtrByProf = prof != NULL;
+    bool filtrByType = type != NULL;
+    QList<Spell> spellsCopy = *spells;      
+    QList<Spell> spelsToRet;
+    Profile::PROFESSION profToCompare;
+    for each (Spell var in spellsCopy) {
 
-            bool isProperProf = profToCompare == *prof;
-            if (isProperProf)
-                spellsToRet.push_back(var);
+        if (filtrByProf) {
+            bool isProperProf = false;
+            if (*prof == Profile::ED)
+                isProperProf = var.ED;
+            else if (*prof == Profile::EK)
+                isProperProf = var.EK;
+            else if (*prof == Profile::MS)
+                isProperProf = var.MS;
+            else if (*prof == Profile::RP)
+                isProperProf = var.RP;
+
+            if (!isProperProf)
+                continue;
         }
-        *spells = spellsToRet;
+        if (filtrByType) {
+            bool isProperType = var.typeOfSpell == *type;
+            if (!isProperType)
+                continue;
+        }
+        spelsToRet.push_back(var);
     }
+    *spells = spelsToRet;
+    return true;
+}
+
+bool JsonParser::getPotionsForProf(QList<Utilities::Potion>& potions, Profile::PROFESSION* prof, bool getOnlyHealthPotions, bool getOnlyManaPotions){
+    typedef Utilities::Potion Potion;
+    QJsonObject obj;
+    bool res = openJsonFile(&obj, itemsFilePath);
+    if (!res)
+        return false;//diag //err
+
+    QJsonArray arr = obj["potions"].toArray();
+    int size = arr.count();
+    if (size == 0)
+        return false;//diag err
+    QList<Potion> potionsToRet;
+    for each (QJsonValue var in arr) {
+        Potion potionToAdd;
+        potionToAdd.name = var["name"].toString();
+        potionToAdd.type = Utilities::Item::TYPE_OF_ITEM::POTIONS;
+        potionToAdd.manaReg = var["mana"].toInt();
+        potionToAdd.healthReg = var["health"].toInt();
+        potionToAdd.forMage = var["for_mage"].toBool();
+        potionToAdd.forRp = var["for_RP"].toBool();
+        potionToAdd.forEk = var["for_EK"].toBool();
+
+        bool skipCauseHealthCondition = getOnlyHealthPotions && potionToAdd.healthReg <= 0;
+        bool skipCauseManaCondition = getOnlyManaPotions && potionToAdd.manaReg <= 0;
+        if (skipCauseHealthCondition || skipCauseManaCondition)
+            continue;
+
+        bool isMage = *prof == Profile::PROFESSION::ED || *prof == Profile::PROFESSION::MS;
+        bool isRP = *prof == Profile::PROFESSION::RP;
+        bool isEK = *prof == Profile::PROFESSION::EK;
+
+        bool skipCauseProfCon = true;
+        if (*prof == NULL)
+            skipCauseProfCon = false;
+        else if(potionToAdd.forMage && isMage)
+            skipCauseProfCon = false;
+        else if(potionToAdd.forEk && isEK)
+            skipCauseProfCon = false;
+        else if(potionToAdd.forRp && isRP)
+            skipCauseProfCon = false;
+
+        if (skipCauseProfCon)
+            continue;
+
+        potionsToRet.push_back(potionToAdd);
+    }
+    potions = potionsToRet;
     return true;
 }
 
