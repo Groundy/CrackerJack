@@ -1,4 +1,4 @@
-#pragma onc
+#pragma once
 #include "qdialog.h"
 #include "ui_LoginWindow.h"
 #include "SelectProfileWindow.h"

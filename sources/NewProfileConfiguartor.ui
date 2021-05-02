@@ -50,7 +50,7 @@
       <enum>QFrame::Plain</enum>
      </property>
      <property name="currentIndex">
-      <number>0</number>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="_1_namePage">
       <widget class="QWidget" name="gridLayoutWidget">
@@ -157,20 +157,20 @@
       <layout class="QGridLayout" name="gridLayout_5">
        <item row="0" column="0">
         <layout class="QGridLayout" name="gridLayout">
-         <item row="0" column="1" rowspan="5">
-          <spacer name="verticalSpacer_3">
+         <item row="6" column="1">
+          <spacer name="horizontalSpacer_6">
            <property name="orientation">
-            <enum>Qt::Vertical</enum>
+            <enum>Qt::Horizontal</enum>
            </property>
            <property name="sizeHint" stdset="0">
             <size>
-             <width>20</width>
-             <height>40</height>
+             <width>40</width>
+             <height>20</height>
             </size>
            </property>
           </spacer>
          </item>
-         <item row="6" column="1">
+         <item row="6" column="2">
           <layout class="QVBoxLayout" name="verticalLayout_2">
            <item>
             <widget class="QRadioButton" name="_2_RadButt_ED">
@@ -202,7 +202,7 @@
            </item>
           </layout>
          </item>
-         <item row="0" column="2" rowspan="12">
+         <item row="0" column="4" rowspan="12">
           <spacer name="horizontalSpacer_2">
            <property name="orientation">
             <enum>Qt::Horizontal</enum>
@@ -214,19 +214,6 @@
             <size>
              <width>100</width>
              <height>20</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item row="7" column="1" rowspan="5">
-          <spacer name="verticalSpacer">
-           <property name="orientation">
-            <enum>Qt::Vertical</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>20</width>
-             <height>40</height>
             </size>
            </property>
           </spacer>
@@ -247,7 +234,33 @@
            </property>
           </spacer>
          </item>
-         <item row="5" column="1">
+         <item row="6" column="3">
+          <spacer name="horizontalSpacer_9">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item row="7" column="1" rowspan="5" colspan="3">
+          <spacer name="verticalSpacer">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>20</width>
+             <height>40</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item row="5" column="1" colspan="3">
           <widget class="QLabel" name="_2_infoLabel">
            <property name="text">
             <string>Choose your vocation</string>
@@ -257,6 +270,19 @@
            </property>
           </widget>
          </item>
+         <item row="0" column="1" rowspan="5" colspan="3">
+          <spacer name="verticalSpacer_3">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>20</width>
+             <height>40</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
         </layout>
        </item>
       </layout>
@@ -265,30 +291,35 @@
       <widget class="QWidget" name="gridLayoutWidget_3">
        <property name="geometry">
         <rect>
-         <x>0</x>
-         <y>0</y>
-         <width>391</width>
-         <height>251</height>
+         <x>10</x>
+         <y>10</y>
+         <width>371</width>
+         <height>231</height>
         </rect>
        </property>
        <layout class="QGridLayout" name="gridLayout_4">
-        <item row="5" column="0">
-         <widget class="QSlider" name="_3_horizontalSlider_5">
+        <item row="3" column="2">
+         <widget class="QKeySequenceEdit" name="_3_shortKey_3">
           <property name="enabled">
            <bool>false</bool>
           </property>
-          <property name="maximum">
-           <number>100</number>
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
           </property>
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
+          <property name="minimumSize">
+           <size>
+            <width>80</width>
+            <height>0</height>
+           </size>
           </property>
-         </widget>
-        </item>
-        <item row="5" column="2">
-         <widget class="QKeySequenceEdit" name="_3_shortKey_5">
-          <property name="enabled">
-           <bool>false</bool>
+          <property name="maximumSize">
+           <size>
+            <width>100</width>
+            <height>16777215</height>
+           </size>
           </property>
          </widget>
         </item>
@@ -302,6 +333,61 @@
           </property>
          </widget>
         </item>
+        <item row="1" column="1">
+         <widget class="QLabel" name="_3_label_1">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <property name="text">
+           <string>  0%</string>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="2">
+         <widget class="QKeySequenceEdit" name="_3_shortKey_4">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>80</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>100</width>
+            <height>16777215</height>
+           </size>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="3">
+         <widget class="QComboBox" name="_3_comboBox_2">
+          <property name="maximumSize">
+           <size>
+            <width>120</width>
+            <height>16777215</height>
+           </size>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="3">
+         <widget class="QComboBox" name="_3_comboBox_4">
+          <property name="maximumSize">
+           <size>
+            <width>120</width>
+            <height>16777215</height>
+           </size>
+          </property>
+         </widget>
+        </item>
         <item row="3" column="0">
          <widget class="QSlider" name="_3_horizontalSlider_3">
           <property name="enabled">
@@ -312,6 +398,53 @@
           </property>
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
+          </property>
+         </widget>
+        </item>
+        <item row="5" column="3">
+         <widget class="QComboBox" name="_3_comboBox_5">
+          <property name="maximumSize">
+           <size>
+            <width>120</width>
+            <height>16777215</height>
+           </size>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="0">
+         <widget class="QCheckBox" name="_3_enableAutoHealing">
+          <property name="text">
+           <string>Enable auto healing</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="1">
+         <widget class="QLabel" name="_3_label_2">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <property name="text">
+           <string>  0%</string>
+          </property>
+         </widget>
+        </item>
+        <item row="5" column="1">
+         <widget class="QLabel" name="_3_label_5">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <property name="text">
+           <string>  0%</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="3">
+         <widget class="QComboBox" name="_3_comboBox_3">
+          <property name="maximumSize">
+           <size>
+            <width>120</width>
+            <height>16777215</height>
+           </size>
           </property>
          </widget>
         </item>
@@ -340,63 +473,6 @@
           </property>
          </widget>
         </item>
-        <item row="5" column="1">
-         <widget class="QLabel" name="_3_label_5">
-          <property name="enabled">
-           <bool>false</bool>
-          </property>
-          <property name="text">
-           <string>  0%</string>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="2">
-         <widget class="QKeySequenceEdit" name="_3_shortKey_2">
-          <property name="enabled">
-           <bool>false</bool>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="2">
-         <widget class="QKeySequenceEdit" name="_3_shortKey_1">
-          <property name="enabled">
-           <bool>false</bool>
-          </property>
-          <property name="locale">
-           <locale language="English" country="UnitedStates"/>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="0">
-         <widget class="QCheckBox" name="_3_enableAutoHealing">
-          <property name="text">
-           <string>Enable auto healing</string>
-          </property>
-         </widget>
-        </item>
-        <item row="4" column="1">
-         <widget class="QLabel" name="_3_label_4">
-          <property name="enabled">
-           <bool>false</bool>
-          </property>
-          <property name="text">
-           <string>  0%</string>
-          </property>
-         </widget>
-        </item>
-        <item row="4" column="2">
-         <widget class="QKeySequenceEdit" name="_3_shortKey_4">
-          <property name="enabled">
-           <bool>false</bool>
-          </property>
-         </widget>
-        </item>
-        <item row="5" column="3">
-         <widget class="QComboBox" name="_3_comboBox_5"/>
-        </item>
-        <item row="3" column="3">
-         <widget class="QComboBox" name="_3_comboBox_3"/>
-        </item>
         <item row="1" column="0">
          <widget class="QSlider" name="_3_horizontalSlider_1">
           <property name="enabled">
@@ -410,10 +486,16 @@
           </property>
          </widget>
         </item>
-        <item row="3" column="2">
-         <widget class="QKeySequenceEdit" name="_3_shortKey_3">
+        <item row="5" column="0">
+         <widget class="QSlider" name="_3_horizontalSlider_5">
           <property name="enabled">
            <bool>false</bool>
+          </property>
+          <property name="maximum">
+           <number>100</number>
+          </property>
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
           </property>
          </widget>
         </item>
@@ -436,18 +518,8 @@
           </property>
          </widget>
         </item>
-        <item row="1" column="1">
-         <widget class="QLabel" name="_3_label_1">
-          <property name="enabled">
-           <bool>false</bool>
-          </property>
-          <property name="text">
-           <string>  0%</string>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="1">
-         <widget class="QLabel" name="_3_label_2">
+        <item row="4" column="1">
+         <widget class="QLabel" name="_3_label_4">
           <property name="enabled">
            <bool>false</bool>
           </property>
@@ -471,16 +543,94 @@
         </item>
         <item row="1" column="3">
          <widget class="QComboBox" name="_3_comboBox">
+          <property name="maximumSize">
+           <size>
+            <width>120</width>
+            <height>120</height>
+           </size>
+          </property>
           <property name="currentIndex">
            <number>-1</number>
           </property>
          </widget>
         </item>
-        <item row="2" column="3">
-         <widget class="QComboBox" name="_3_comboBox_2"/>
+        <item row="1" column="2">
+         <widget class="QKeySequenceEdit" name="_3_shortKey_1">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>80</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>100</width>
+            <height>16777215</height>
+           </size>
+          </property>
+          <property name="locale">
+           <locale language="English" country="UnitedStates"/>
+          </property>
+         </widget>
         </item>
-        <item row="4" column="3">
-         <widget class="QComboBox" name="_3_comboBox_4"/>
+        <item row="2" column="2">
+         <widget class="QKeySequenceEdit" name="_3_shortKey_2">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>80</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>100</width>
+            <height>16777215</height>
+           </size>
+          </property>
+         </widget>
+        </item>
+        <item row="5" column="2">
+         <widget class="QKeySequenceEdit" name="_3_shortKey_5">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>80</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>100</width>
+            <height>16777215</height>
+           </size>
+          </property>
+         </widget>
         </item>
        </layout>
       </widget>
@@ -489,10 +639,10 @@
       <widget class="QWidget" name="gridLayoutWidget_6">
        <property name="geometry">
         <rect>
-         <x>0</x>
-         <y>0</y>
-         <width>391</width>
-         <height>251</height>
+         <x>10</x>
+         <y>10</y>
+         <width>371</width>
+         <height>231</height>
         </rect>
        </property>
        <layout class="QGridLayout" name="gridLayout_3">
@@ -518,19 +668,6 @@
            <string>  0%</string>
           </property>
          </widget>
-        </item>
-        <item row="0" column="2">
-         <spacer name="horizontalSpacer_5">
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>40</width>
-            <height>20</height>
-           </size>
-          </property>
-         </spacer>
         </item>
         <item row="1" column="2">
          <widget class="QKeySequenceEdit" name="_4_shortKey_1">
@@ -708,6 +845,19 @@
         </item>
         <item row="5" column="3">
          <widget class="QComboBox" name="_4_comboBox_5"/>
+        </item>
+        <item row="0" column="2">
+         <spacer name="horizontalSpacer_5">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
         </item>
        </layout>
       </widget>
