@@ -99,7 +99,7 @@ bool NewProfileConfiguartor::pageIsCorrectlyFilled() {
 }
 
 void NewProfileConfiguartor::saveDataToProfile(Profile* prof) {
-	prof->profileName = ui->_1_nameEdit->toPlainText();
+	prof->profileName = ui->_1_nameEdit->text();
 	//2
 	if (ui->_2_RadButt_ED->isChecked())
 		prof->profession = Profile::PROFESSION::ED;
@@ -190,7 +190,7 @@ void NewProfileConfiguartor::saveDataToProfile(Profile* prof) {
 }
 
 bool NewProfileConfiguartor::checkCorrectnessOfPage_1(){
-	QString nameOfProf = ui->_1_nameEdit->toPlainText();
+	QString nameOfProf = ui->_1_nameEdit->text();
 	bool nameisTooLong = nameOfProf.size() > 50;
 	bool nameIsTooShort = nameOfProf.size() < 3;
 	bool nameConsistForbiddenChars = false;

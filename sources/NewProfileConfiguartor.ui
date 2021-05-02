@@ -50,7 +50,7 @@
       <enum>QFrame::Plain</enum>
      </property>
      <property name="currentIndex">
-      <number>1</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="_1_namePage">
       <widget class="QWidget" name="gridLayoutWidget">
@@ -59,7 +59,7 @@
          <x>9</x>
          <y>9</y>
          <width>371</width>
-         <height>231</height>
+         <height>249</height>
         </rect>
        </property>
        <layout class="QGridLayout" name="gridLayout_2">
@@ -105,32 +105,44 @@
           </property>
          </spacer>
         </item>
-        <item row="2" column="1">
-         <widget class="QTextEdit" name="_1_nameEdit">
+        <item row="1" column="1">
+         <widget class="QLabel" name="_1_namePageInfoLabel">
           <property name="sizePolicy">
-           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+           <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
           </property>
           <property name="maximumSize">
            <size>
-            <width>16777215</width>
-            <height>30</height>
+            <width>253</width>
+            <height>16777215</height>
            </size>
           </property>
-         </widget>
-        </item>
-        <item row="1" column="1">
-         <widget class="QLabel" name="_1_namePageInfoLabel">
           <property name="autoFillBackground">
            <bool>false</bool>
           </property>
           <property name="text">
-           <string>Choose name for your new profile</string>
+           <string>Choose name for your new profile.</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="1">
+         <widget class="QLineEdit" name="_1_nameEdit">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>253</width>
+            <height>16777215</height>
+           </size>
           </property>
          </widget>
         </item>
