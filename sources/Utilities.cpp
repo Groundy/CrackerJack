@@ -428,12 +428,13 @@
 	 const int widthBig = imgToShareWithin->width();
 	 const int heightBig = imgToShareWithin->height();
 
-	 if (widthSmall >= widthBig)
-		 ;//diag err
-	 if (heightSmall >= heightBig)
-		 ;//diag err
-	 if (format1 != format2)
-		 ;//diag err
+
+	 bool errWidth = widthSmall >= widthBig;
+	 bool errHeight = heightSmall >= heightBig;
+	 bool errFormat = format1 != format2;
+	 bool anyErr = errWidth || errHeight || errFormat;
+	 if (anyErr);//diag /err
+
 	 const int maxPixIndThatShoudldBeTested_X = widthBig - widthSmall;
 	 const int maxPixIndThatShoudldBeTested_Y = heightBig - heightSmall;
 
@@ -441,29 +442,29 @@
 	 QRgb pixFirst, pixSecond;
 	 bool foundPosition;
 
-	 for (int x = 0; x <= maxPixIndThatShoudldBeTested_X; x++){//loop1
-		 for (int y = 0; y <= maxPixIndThatShoudldBeTested_Y; y++){//loop2
+	 for (int x = 0; x <= maxPixIndThatShoudldBeTested_X; x++){
+		 for (int y = 0; y <= maxPixIndThatShoudldBeTested_Y; y++){
 			 pixFirst = imgToFind->pixel(0, 0);
 			 pixSecond = imgToShareWithin->pixel(x, y);
 			 if (pixFirst == pixSecond){
 				 //first pix matched, looking for more
 				 foundPosition = true;
-				 for (int x_TMP = 1; x_TMP < widthSmall; x_TMP++){//loop3
-					 for (int y_TMP = 1; y_TMP < heightSmall; y_TMP++){//loop4
+				 for (int x_TMP = 1; x_TMP < widthSmall; x_TMP++){
+					 for (int y_TMP = 1; y_TMP < heightSmall; y_TMP++){
 						 pixFirst = imgToFind->pixel(x_TMP,y_TMP);
 						 pixSecond = imgToShareWithin->pixel(x + x_TMP, y + y_TMP);
-						 if (pixFirst != pixSecond) {//ending loop 3 and 4
+						 if (pixFirst != pixSecond) {
 							 x_TMP = widthSmall;
 							 y_TMP = heightSmall;
 							 foundPosition = false;
 						 }
-					 }//end loop4
-				 }//end loop3
+					 }
+				 }
 				 if (foundPosition)
 					 startPointsListToRet.push_back(QPoint(x, y));
 			 }
-		 }//end loop2
-	 }//end loop1
+		 }
+	 }
 	 return startPointsListToRet;
  }
 
@@ -494,7 +495,8 @@ QImage Utilities::fromCharToImg(QChar CharToImg){
 
 void Utilities::rotateImgToRight(QImage* imgToRotate, int timesToRotateRight){
 	QTransform rotating;
-	rotating.rotate(timesToRotateRight *90,Qt::Axis::ZAxis);
+	qreal degreeToRotateToRight = timesToRotateRight * 90;
+	rotating.rotate(degreeToRotateToRight,Qt::Axis::ZAxis);
 	QImage tmp = imgToRotate->transformed(rotating);
 	*imgToRotate = tmp;
 }
@@ -511,6 +513,12 @@ bool Utilities::isItPixelFromFrame(uint color, int minValueAcceptable, int maxVa
 		return true;
 	else
 		return false;
+}
+
+long long Utilities::getCurrentTimeInMiliSeconds() {
+	QDateTime date = QDateTime::currentDateTime();
+	qint64 mseconds = date.currentMSecsSinceEpoch();
+	return mseconds;
 }
 
 /*

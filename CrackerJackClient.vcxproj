@@ -107,7 +107,6 @@
     <ClCompile Include="sources\KeySender.cpp" />
     <ClCompile Include="sources\MainMenu.cpp" />
     <ClCompile Include="sources\ManaHealthStateAnalyzer.cpp" />
-    <ClCompile Include="sources\miniMapAnalyser.cpp" />
     <ClCompile Include="sources\NewProfileConfiguartor.cpp" />
     <ClCompile Include="sources\Key.cpp" />
     <ClCompile Include="sources\ProfileDataBaseManager.cpp" />
@@ -133,7 +132,6 @@
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="sources\VariablesClass.h" />
-    <QtMoc Include="sources\miniMapAnalyser.h" />
     <QtMoc Include="sources\ScreenSaver.h" />
     <QtMoc Include="sources\MainMenu.h" />
     <QtMoc Include="sources\activeGameThread.h" />

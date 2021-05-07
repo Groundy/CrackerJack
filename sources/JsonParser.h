@@ -21,5 +21,6 @@ public:
 	bool filtrSpells(QList<Utilities::Spell>* spells, Profile::PROFESSION* prof, Utilities::Spell::TYPE_OF_SPELL* type);
 	bool getPotionsForProf(QList<Utilities::Potion>& potions ,Profile::PROFESSION* prof, bool getOnlyHealthPotions, bool getOnlyManaPotions);
 	bool readItemJson(QList<Utilities::Item>* items);
-
+	bool getSpellsFromTheirIncantations(QStringList incantations, QList<Utilities::Spell>& spells);
+	bool getPotionsFromTheirNames(QStringList namesOfPotions, QList<Utilities::Potion>& potions);
 };

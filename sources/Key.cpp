@@ -12,7 +12,7 @@ Key::Key(){
 	number =endOfEnum;
 }
 
-Key::Key(unsigned int numberToSet){
+Key::Key(int numberToSet){
 	bool isAllowed = checkIfnumberIsAloowed(numberToSet);
 	if (isAllowed) {
 		this->number = numberToSet;

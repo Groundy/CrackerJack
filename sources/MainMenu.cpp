@@ -95,7 +95,7 @@ void MainMenu::threadStarter(){
 	screenSaverThread->start();
 	screenAnalyzer = new ScreenAnalyzer(this, &var);
 	screenAnalyzer->start();
-	healthManaStateAnalyzer = new ManaHealthStateAnalyzer(this, &var);
+	healthManaStateAnalyzer = new ManaHealthStateAnalyzer(this, prof , &var);
 	healthManaStateAnalyzer->start();
 	keySender = new KeySender(this, prof, &var);
 	keySender->start();

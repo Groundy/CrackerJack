@@ -243,3 +243,57 @@ bool JsonParser::readItemJson(QList<Utilities::Item>* items){
     *items = itemToRet;
     return true;
 }
+
+bool JsonParser::getSpellsFromTheirIncantations(QStringList incantations, QList<Utilities::Spell>& spells){
+    QList<Utilities::Spell> readSpells;
+    bool sucess = readSpellsJson(&readSpells);
+    if (!sucess)
+        return false;
+
+    QList<Utilities::Spell> spellsToRet;
+    for each (QString inc in incantations){
+        for each (Utilities::Spell spell in readSpells){
+            bool addSpellToList = inc == spell.incantations;
+            if (addSpellToList) {
+                spellsToRet.push_back(spell);
+                break;
+            }
+        }
+
+    }
+  
+    bool foundAllSpells = spellsToRet.size() == incantations.size();
+    if (foundAllSpells) {
+        spells = spellsToRet;
+        return true;
+    }
+    else
+        return false;
+}
+
+bool JsonParser::getPotionsFromTheirNames(QStringList namesOfPotions, QList<Utilities::Potion>& potions){
+    //that function is currently abbadoned, it maybe will be finished later,
+    //when functionality of finding if char has avaible potion will be implemented
+    //now it will be u
+    typedef Utilities::Potion Potion;
+    QJsonObject obj;
+    bool res = openJsonFile(&obj, itemsFilePath);
+    if (!res)
+        return false;//diag //err
+
+    QJsonArray arr = obj["potions"].toArray();
+    int size = arr.count();
+    if (size == 0)
+        return false;//diag err
+    /*
+    for each (QString nameOfPotionFromList in namesOfPotions){
+        for each (QJsonValue val in arr){
+            QString nameOfPotion = val.toObject()["name"].toString();
+            bool itsProperName = nameOfPotion == nameOfPotionFromList;
+            if (!itsProperName)
+                continue;
+            val
+        }
+    }
+    */
+}

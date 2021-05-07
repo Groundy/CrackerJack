@@ -47,7 +47,7 @@ public:
 	static QImage fromCharToImg(QChar CharToImg);
 	static void rotateImgToRight(QImage* imgToRotate, int timesToRotateRight);
 	static bool isItPixelFromFrame(uint color, int minValueAcceptable, int maxValueAcceptable, bool requireSameValuesOfRGB);
-	
+	static long long getCurrentTimeInMiliSeconds();
 	class Spell {
 	public:
 		enum TYPE_OF_SPELL { HEALING, SUPPORT, ATTACK };

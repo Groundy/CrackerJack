@@ -24,11 +24,11 @@ public:
 		endOfEnum = -1
 	};	
 
-	unsigned int number;
+	int number;
 
 	static bool checkIfnumberIsAloowed(int keyNumber);
 	Key();
-	Key(unsigned int numberToSet);
+	Key(int numberToSet);
 	Key(QKeySequence qsec);
 	QKeySequence toQKeySequence(Key key);
 

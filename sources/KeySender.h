@@ -24,18 +24,12 @@ private:
 	VariablesClass* var;
 	long long lastTime_HealingSpell = 0;
 	long long lastTime_Item = 0;
-	void getInfoFromProfile(Profile* profile);
-	QList<int> lifeThreshHolds;
-	QList<int> manaThreshHolds;
-	QList<Key> healthKeys;
-	QList<Key> manaKeys;
-	QList<QString> nameOfHealthRestoreMethodes;
-	QList<QString> nameOfManaRestoreMethodes;
 
 	void mainLoop();
-	unsigned long long getCurrentTimeInMiliSeconds();
-	int findNearestThresholdIndex(int value, QList<int> thresholds, int* out_index);
+	/*
+	void getInfoFromProfile(Profile* profile);
 	bool getInfoFromVarClass(float* health, float* mana, float* manashield);
 	int getMiliSecondsNeededToWaitToUseHealingSpell();
 	void sendHealingKeyStrokeToGame(float currentHealthPercentage);
+	*/
 };

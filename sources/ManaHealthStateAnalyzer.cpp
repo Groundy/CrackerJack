@@ -1,9 +1,16 @@
 #include "ManaHealthStateAnalyzer.h"
 #include <QChar>
 
-ManaHealthStateAnalyzer::ManaHealthStateAnalyzer(QObject *parent, VariablesClass* varClass)
+ManaHealthStateAnalyzer::ManaHealthStateAnalyzer(QObject *parent, Profile* profile, VariablesClass* varClass)
 	: QThread(parent){
 	var = varClass;
+
+	lifeThreshholds = profile->healthRestorePercentages;;
+	manaThreshholds= profile->ManaRestoreMethodesPercentage;
+	healthKeys = profile->healthKeys;
+	manaKeys = profile->ManaKeys;
+	namesOfHealthRestoreMethodes = profile->healthRestoreMethodeNames;
+	namesOfManaRestoreMethodes = profile->manaRestoreMethodeNames;
 }
 
 ManaHealthStateAnalyzer::~ManaHealthStateAnalyzer(){
@@ -37,33 +44,11 @@ bool ManaHealthStateAnalyzer::getInfoFromVarClass() {
 
 void ManaHealthStateAnalyzer::mainLoop(){
 	while (true) {
-		if (!shouldThisThreadBeActive) {
-			msleep(miliSecBetweenCheckingForNewValuesImg * 5);
-			qDebug() << "ManaHealthStateAnalyzer:: mainLoop skipped, it isn't enabled";
+		bool everythingIsOk = checkIfEverythingIsCorrectToProcess();
+		if (!everythingIsOk)
 			continue;
-		}
-		if (var->caliState != var-> CALIBRATED) {
-			msleep(miliSecBetweenCheckingForNewValuesImg * 5);
-			qDebug() << "ManaHealthStateAnalyzer:: mainLoop skipped, error lack of calibration";
-			emit sendValueToMainThread("Calibrating", "Calibrating", "Calibrating");
-			emit demandReCalibration();
-			continue;
-		}
-		bool dataReady = getInfoFromVarClass();
-		if (!dataReady)
-			continue;
-		int res = changeImgsToStrings();
-		if (res != OK) {
-			qDebug() << "ManaHealthStateAnalyzer:: mainLoop skipped, error in changing img to strings";
-			emit demandReCalibration();
-			emit sendValueToMainThread("Calibrating", "Calibrating", "Calibrating");
-			msleep(miliSecBetweenCheckingForNewValuesImg*5);
-			continue;
-		}
-		setHealthManaValues();
-		QString healthStr,manaStr,manaShieldStr;
-		makeStringsForSignalToSend(&healthStr, &manaStr, &manaShieldStr);
-		emit sendValueToMainThread(healthStr, manaStr, manaShieldStr);
+		getValuesFromStringsToGlobablVariables();
+		PreapareAndSendInfoToGuiInMainThread();
 		writeDataToVariableClass();
 		msleep(miliSecBetweenCheckingForNewValuesImg);
 	}
@@ -106,7 +91,7 @@ int ManaHealthStateAnalyzer::changeImgsToStrings(){
 
 }
 
-void ManaHealthStateAnalyzer::setHealthManaValues(){
+void ManaHealthStateAnalyzer::getValuesFromStringsToGlobablVariables(){
 	if (healthFound)
 		getValuesFromStringRegularCase(healthValueStr, &health, &maxHealth);
 	if (combinedFound)	
@@ -115,6 +100,12 @@ void ManaHealthStateAnalyzer::setHealthManaValues(){
 		getValuesFromStringRegularCase(manaShieldValueStr, &manaShield, &maxManaShield);
 	if (manaFound)
 		getValuesFromStringRegularCase(manaValueStr, &mana, &maxMana);
+}
+
+void ManaHealthStateAnalyzer::PreapareAndSendInfoToGuiInMainThread(){
+	QString healthStr,manaStr,manaShieldStr;
+	makeStringsForSignalToSend(&healthStr, &manaStr, &manaShieldStr);
+	emit sendValueToMainThread(healthStr, manaStr, manaShieldStr);
 }
 
 int ManaHealthStateAnalyzer::getValuesFromStringRegularCase(QString in, int* current, int* max){
@@ -186,6 +177,56 @@ int ManaHealthStateAnalyzer::makeStringsForSignalToSend(QString* healthOut, QStr
 	return OK;
 }
 
+int ManaHealthStateAnalyzer::findNearestThresholdIndex(int currentValue, QList<int> thresholds, int* out_index){
+	if (currentValue < 0 || currentValue >100 || thresholds.size() > 5) {
+		*out_index = -1;
+		return ERROR_CODES::WRONG_INPUT_PARAMETERS;
+	}
+
+	int vectSize = thresholds.size();
+	int indexToRet = -1;
+	if (vectSize > 0) {
+		for (int i = vectSize - 1; i >= 0; i--) {
+			int currentThreshold = thresholds[i];
+			if (currentValue < currentThreshold) {
+				indexToRet = i;
+				break;
+			}
+		}
+	}
+	else
+		return NOT_THRESHOLDS_ON_THE_LIST;
+	*out_index = indexToRet;
+	return OK;
+}
+
+bool ManaHealthStateAnalyzer::checkIfEverythingIsCorrectToProcess(){
+	if (!shouldThisThreadBeActive) {
+		msleep(miliSecBetweenCheckingForNewValuesImg * 5);
+		//qDebug() << "ManaHealthStateAnalyzer:: mainLoop skipped, it isn't enabled";
+		return false;
+	}
+	if (var->caliState != var-> CALIBRATED) {
+		//qDebug() << "ManaHealthStateAnalyzer:: mainLoop skipped, error lack of calibration";
+		emit sendValueToMainThread("Calibrating", "Calibrating", "Calibrating");
+		emit demandReCalibration();
+		msleep(miliSecBetweenCheckingForNewValuesImg * 5);
+		return false;
+	}
+	bool dataReady = getInfoFromVarClass();
+	if (!dataReady)
+		return false;
+	int res = changeImgsToStrings();
+	if (res != OK) {
+		//qDebug() << "ManaHealthStateAnalyzer:: mainLoop skipped, error in changing img to strings";
+		emit demandReCalibration();
+		emit sendValueToMainThread("Calibrating", "Calibrating", "Calibrating");
+		msleep(miliSecBetweenCheckingForNewValuesImg*5);
+		return false;
+	}
+	return true;
+}
+
 void ManaHealthStateAnalyzer::writeDataToVariableClass(){
 		float healthInfoToSend = (100.0f * health)/maxHealth;
 		float manaInfoToSend = (100.0f * mana) / maxMana;
@@ -200,5 +241,11 @@ void ManaHealthStateAnalyzer::writeDataToVariableClass(){
 		var->newData = true;
 }
 
+void ManaHealthStateAnalyzer::fillListsWithMethodesOfRestoring(QList<QObject>* listOfHealthRestoration, QList<Utilities::Item>* listOfManaRestore, QList<QString> namesOfHealthMethodes, QList<QString> namesOfManaMethodes){
 
+}
+
+void ManaHealthStateAnalyzer::findKeysThatShouldBePassedToKeySender(){
+
+}
 

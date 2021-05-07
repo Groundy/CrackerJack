@@ -61,9 +61,6 @@
     <ClCompile Include="sources\StringResource.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="sources\miniMapAnalyser.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="sources\ScreenSaver.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -106,9 +103,6 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="sources\ProfileDataBaseManager.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-    <QtMoc Include="sources\miniMapAnalyser.h">
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="sources\ScreenSaver.h">

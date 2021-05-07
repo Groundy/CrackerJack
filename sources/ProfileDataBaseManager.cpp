@@ -33,6 +33,7 @@ void ProfileDataBaseManager::openDB() {
 void ProfileDataBaseManager::makeDataBase(){
     QSqlQuery query;
     QString createCommand = "CREATE TABLE profiles ( ";
+
     createCommand.append("profileName TEXT, ");
     createCommand.append("profession INTEGER, ");
     createCommand.append("manaString TEXT, ");

@@ -45,6 +45,7 @@ int main(int argc, char *argv[])
         return 0;
     MainMenu* mainMenu = new MainMenu(&prof, NULL);
     mainMenu->exec();
+    //delete mainMenu;
     return a.exec();
 }
 
