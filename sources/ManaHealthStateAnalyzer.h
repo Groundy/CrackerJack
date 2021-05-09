@@ -6,6 +6,7 @@
 #include "Utilities.h"
 #include "qdatetime.h"
 #include "Profile.h"
+#include "JsonParser.h"
 class ManaHealthStateAnalyzer : public QThread
 {
 	Q_OBJECT
@@ -36,37 +37,32 @@ private:
 	int mana, maxMana;
 	int manaShield, maxManaShield;
 	int health, maxHealth;
-	/*
-	struct RestoreMethode{
-		enum Type {Potion, Spell};
-		QString name, inc;
-		Type type;
-		int mana, cd, groupCd, threshold, key;
-	};
-	*/
+	float healthPercentage, manaPercentage, manaShieldPercentage;
+
 	//info from prof
 	QList<int> lifeThreshholds;
 	QList<int> manaThreshholds;
 	QList<Key> healthKeys;
 	QList<Key> manaKeys;
-	QList<QString> namesOfHealthRestoreMethodes;
-	QList<QString> namesOfManaRestoreMethodes;
 
-	QList<QObject> healthMethodes;
+	QList<Utilities::RestoreMethode> healthMethodes;
 	QList<Utilities::Item> manaMethodes;
+
+	QList<LONG64> lastTimesWhenSpellAndPotionWereUsedInMiliSec;
+	LONG64 lastTimeUsed_Potion, lastTimeUsed_Spell;
 
 	bool getInfoFromVarClass();
 	void mainLoop();
 	int changeImgsToStrings();
 	void getValuesFromStringsToGlobablVariables();
 	void PreapareAndSendInfoToGuiInMainThread();
-	int getValuesFromStringRegularCase(QString in, int* min, int* max);
+	int getValuesFromStringRegularCase(QString in, int& min, int& max);
 	int getValuesFromStringOfCombinedBox(QString in, int* minMana, int* maxMana, int* minManaShield, int* maxManaShield);
 	int makeStringsForSignalToSend(QString* health, QString* mana, QString* manaShield);
-	int findNearestThresholdIndex(int value, QList<int> thresholds, int* out_index);
+	int findNearestThresholdIndex(int value, QList<int> thresholds, int& out_index);
 	bool checkIfEverythingIsCorrectToProcess();
 	void writeDataToVariableClass();
-	void fillListsWithMethodesOfRestoring(QList<QObject>* listOfHealthRestoration, QList<Utilities::Item>* listOfManaRestore, QList<QString> namesOfHealthMethodes, QList<QString> namesOfManaMethodes);
-	void findKeysThatShouldBePassedToKeySender();
+	void setupRestorationMethodes(QStringList listOfRestorationMethode_Health, QStringList listOfRestorationMethode_Mana);
+	int getKeyThatShouldBeSendToKeySenderClass();
 	VariablesClass* var;
 };

@@ -416,10 +416,10 @@ QStringList NewProfileConfiguartor::getNamesOfHealthRestoringMethodes(Profile::P
 	JsonParser parser;
 	QList<Utilities::Potion> potions;
 	QList<Utilities::Spell> spells;
-	parser.readSpellsJson(&spells);
+	parser.readSpellsJson(spells);
 	auto typeOfSpell = Utilities::Spell::TYPE_OF_SPELL::HEALING;
-	parser.filtrSpells(&spells, &prof, &typeOfSpell);
-	parser.getPotionsForProf(potions, &prof, true, false);
+	parser.filtrSpells(spells, &prof, &typeOfSpell);
+	parser.getPotionsForProf(potions, &prof, JsonParser::TypeOfPotion::HEALTH);
 
 	QStringList namesOfAvaibleHealthRestoreMethodes;
 	for each (auto var in spells)
@@ -433,7 +433,7 @@ QStringList NewProfileConfiguartor::getNamesOfHealthRestoringMethodes(Profile::P
 QStringList NewProfileConfiguartor::getNamesOfManaRestoringMethodes(Profile::PROFESSION prof){
 	JsonParser parser;
 	QList<Utilities::Potion> potions;
-	parser.getPotionsForProf(potions, &prof, false, true);
+	parser.getPotionsForProf(potions, &prof, JsonParser::TypeOfPotion::MANA);
 
 	QStringList namesOfAvaibleManaRestoreMethodes;
 	for each (auto var in potions)

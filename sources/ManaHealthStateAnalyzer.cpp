@@ -9,8 +9,13 @@ ManaHealthStateAnalyzer::ManaHealthStateAnalyzer(QObject *parent, Profile* profi
 	manaThreshholds= profile->ManaRestoreMethodesPercentage;
 	healthKeys = profile->healthKeys;
 	manaKeys = profile->ManaKeys;
-	namesOfHealthRestoreMethodes = profile->healthRestoreMethodeNames;
-	namesOfManaRestoreMethodes = profile->manaRestoreMethodeNames;
+	QStringList restorationMethodeList_Health = profile->healthRestoreMethodeNames;
+	QStringList restorationMethodeList_Mana = profile->manaRestoreMethodeNames;
+	setupRestorationMethodes(restorationMethodeList_Health, restorationMethodeList_Mana);
+	for each (auto var in restorationMethodeList_Health)
+		lastTimesWhenSpellAndPotionWereUsedInMiliSec.push_back(0);
+	lastTimeUsed_Potion = 0;
+	lastTimeUsed_Spell = 0;
 }
 
 ManaHealthStateAnalyzer::~ManaHealthStateAnalyzer(){
@@ -50,6 +55,7 @@ void ManaHealthStateAnalyzer::mainLoop(){
 		getValuesFromStringsToGlobablVariables();
 		PreapareAndSendInfoToGuiInMainThread();
 		writeDataToVariableClass();
+		getKeyThatShouldBeSendToKeySenderClass();
 		msleep(miliSecBetweenCheckingForNewValuesImg);
 	}
 }
@@ -93,13 +99,13 @@ int ManaHealthStateAnalyzer::changeImgsToStrings(){
 
 void ManaHealthStateAnalyzer::getValuesFromStringsToGlobablVariables(){
 	if (healthFound)
-		getValuesFromStringRegularCase(healthValueStr, &health, &maxHealth);
+		getValuesFromStringRegularCase(healthValueStr, health, maxHealth);
 	if (combinedFound)	
 		getValuesFromStringOfCombinedBox(combinedValueStr, &mana, &maxMana, &manaShield, &maxManaShield);
 	if (manaShieldFound)
-		getValuesFromStringRegularCase(manaShieldValueStr, &manaShield, &maxManaShield);
+		getValuesFromStringRegularCase(manaShieldValueStr, manaShield, maxManaShield);
 	if (manaFound)
-		getValuesFromStringRegularCase(manaValueStr, &mana, &maxMana);
+		getValuesFromStringRegularCase(manaValueStr, mana, maxMana);
 }
 
 void ManaHealthStateAnalyzer::PreapareAndSendInfoToGuiInMainThread(){
@@ -108,7 +114,7 @@ void ManaHealthStateAnalyzer::PreapareAndSendInfoToGuiInMainThread(){
 	emit sendValueToMainThread(healthStr, manaStr, manaShieldStr);
 }
 
-int ManaHealthStateAnalyzer::getValuesFromStringRegularCase(QString in, int* current, int* max){
+int ManaHealthStateAnalyzer::getValuesFromStringRegularCase(QString in, int& current, int& max){
 	//wanted form of input minVal/maxVal
 	QStringList partOfStr = in.split("\\");
 	if (partOfStr.size() != 2)
@@ -121,8 +127,8 @@ int ManaHealthStateAnalyzer::getValuesFromStringRegularCase(QString in, int* cur
 	if( error1 || error2)
 		return ERROR_CODES::WRONG_STR_OF_VALUES;
 
-	*current = minToRet;
-	*max = maxToRet;
+	current = minToRet;
+	max = maxToRet;
 	return OK;
 }
 
@@ -136,8 +142,8 @@ int ManaHealthStateAnalyzer::getValuesFromStringOfCombinedBox(QString in, int* c
 	QString shieldStr = foo[1];
 
 	int minManaToRet, maxManaToRet, minShieldToRet, maxShieldToRet;
-	int res = getValuesFromStringRegularCase(manaStr, &minManaToRet, &maxManaToRet);
-	int res2 = getValuesFromStringRegularCase(shieldStr, &minShieldToRet, &maxShieldToRet);
+	int res = getValuesFromStringRegularCase(manaStr, minManaToRet, maxManaToRet);
+	int res2 = getValuesFromStringRegularCase(shieldStr, minShieldToRet, maxShieldToRet);
 
 	if (res == OK) {
 		*currentMana = minManaToRet;
@@ -159,8 +165,10 @@ int ManaHealthStateAnalyzer::makeStringsForSignalToSend(QString* healthOut, QStr
 	if (maxHealth == 0 || maxMana == 0)
 		return ZERO_AS_MAX_VALUE;
 	float value = (health * 100.0f) / maxHealth;
+	healthPercentage = value;
 	QString healthPercentageToRet = QString::number(value,'f',1) + "%";
 	value = (mana * 100.0f) / maxMana;
+	manaPercentage = value;
 	QString manaPercentageToRet = QString::number(value, 'f', 1) + "%";
 	QString manaShieldPercentageToRet;
 	if (maxManaShield <= 0)
@@ -169,6 +177,7 @@ int ManaHealthStateAnalyzer::makeStringsForSignalToSend(QString* healthOut, QStr
 		if (maxManaShield == 0)
 			return ZERO_AS_MAX_VALUE;
 		value = (manaShield * 100.0f) / maxManaShield;
+		manaShieldPercentage = value;
 		manaShieldPercentageToRet = QString::number(value, 'f', 1) + "%";
 	}
 	*healthOut = healthPercentageToRet;
@@ -177,26 +186,40 @@ int ManaHealthStateAnalyzer::makeStringsForSignalToSend(QString* healthOut, QStr
 	return OK;
 }
 
-int ManaHealthStateAnalyzer::findNearestThresholdIndex(int currentValue, QList<int> thresholds, int* out_index){
-	if (currentValue < 0 || currentValue >100 || thresholds.size() > 5) {
-		*out_index = -1;
+int ManaHealthStateAnalyzer::findNearestThresholdIndex(int currentValue, QList<int> thresholds, int& out_index){
+	int listSize = thresholds.size();
+	bool wrongInput = currentValue < 0 || currentValue > 100 || listSize > 5 || listSize < 0;
+	if (wrongInput) {
+		out_index = -1;
 		return ERROR_CODES::WRONG_INPUT_PARAMETERS;
 	}
-
-	int vectSize = thresholds.size();
-	int indexToRet = -1;
-	if (vectSize > 0) {
-		for (int i = vectSize - 1; i >= 0; i--) {
-			int currentThreshold = thresholds[i];
-			if (currentValue < currentThreshold) {
-				indexToRet = i;
-				break;
-			}
-		}
+	if (listSize == 0) {
+		out_index = -1;
+		return OK;
 	}
-	else
-		return NOT_THRESHOLDS_ON_THE_LIST;
-	*out_index = indexToRet;
+	if (listSize == 1){
+		out_index = currentValue < thresholds[0] ? -1 : 0;
+		return OK;
+	}
+
+	int indexToRet = -1;
+	for (int i = 0; i < listSize; i++) {
+
+		bool beyondThreshold = currentValue > thresholds[i];
+		bool isLastThreshold = i + 1 == listSize;
+		bool isFirstOne = i == 0;
+
+		if (beyondThreshold && !isLastThreshold) {
+			indexToRet = i - 1;
+			i = listSize;//break from loop
+		}
+		else if (beyondThreshold && isLastThreshold)
+			indexToRet = i;
+		else if (beyondThreshold && isFirstOne)
+			indexToRet = -1;
+	}
+
+	out_index = indexToRet;
 	return OK;
 }
 
@@ -206,7 +229,8 @@ bool ManaHealthStateAnalyzer::checkIfEverythingIsCorrectToProcess(){
 		//qDebug() << "ManaHealthStateAnalyzer:: mainLoop skipped, it isn't enabled";
 		return false;
 	}
-	if (var->caliState != var-> CALIBRATED) {
+	bool isNotCalibrated = var->caliState != var->CALIBRATED;
+	if (isNotCalibrated) {
 		//qDebug() << "ManaHealthStateAnalyzer:: mainLoop skipped, error lack of calibration";
 		emit sendValueToMainThread("Calibrating", "Calibrating", "Calibrating");
 		emit demandReCalibration();
@@ -241,11 +265,25 @@ void ManaHealthStateAnalyzer::writeDataToVariableClass(){
 		var->newData = true;
 }
 
-void ManaHealthStateAnalyzer::fillListsWithMethodesOfRestoring(QList<QObject>* listOfHealthRestoration, QList<Utilities::Item>* listOfManaRestore, QList<QString> namesOfHealthMethodes, QList<QString> namesOfManaMethodes){
+void ManaHealthStateAnalyzer::setupRestorationMethodes(QStringList listOfRestorationMethode_Health, QStringList listOfRestorationMethode_Mana){
+	JsonParser parser;
+	QList<Utilities::RestoreMethode> spellsAndPotions;
+	QList<Utilities::Item> manaPotions;
 
+	parser.getHealthRestoreMethodes(listOfRestorationMethode_Health, spellsAndPotions);
+	parser.getManaRestoreMethodes(listOfRestorationMethode_Mana, manaPotions);
+
+	healthMethodes = spellsAndPotions;
+	manaMethodes = manaPotions;
 }
 
-void ManaHealthStateAnalyzer::findKeysThatShouldBePassedToKeySender(){
+int ManaHealthStateAnalyzer::getKeyThatShouldBeSendToKeySenderClass(){
+	int indexOfHealth;
+	findNearestThresholdIndex(healthPercentage, lifeThreshholds, indexOfHealth);
 
+	int indexOfMana;
+	findNearestThresholdIndex(manaPercentage, manaThreshholds, indexOfMana);
+
+	qDebug() << "g  " + QString::number(indexOfHealth) + "   m  " + QString::number(indexOfMana);
+	return indexOfHealth;
 }
-

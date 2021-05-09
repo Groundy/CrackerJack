@@ -8,6 +8,73 @@ JsonParser::~JsonParser()
 {
 }
 
+QString JsonParser::getItemCategoryName(Utilities::Item::TYPE_OF_ITEM typeOfItem)
+{
+    switch (typeOfItem)
+    {
+        case Utilities::Item::TYPE_OF_ITEM::ARMOR: {
+            return "armors"; break; 
+        }
+        case Utilities::Item::TYPE_OF_ITEM::AMULETS: {
+            return "amulets"; break; 
+        }
+        case Utilities::Item::TYPE_OF_ITEM::BOOTS: {
+            return "boots"; break;
+        }
+        case Utilities::Item::TYPE_OF_ITEM::CREATURE: {
+            return "creature"; break; 
+        }
+        case Utilities::Item::TYPE_OF_ITEM::HELMETS: {
+              return "helmets"; break; 
+        }
+        case Utilities::Item::TYPE_OF_ITEM::LEGS: {
+            return "legs"; break; 
+        }
+        case Utilities::Item::TYPE_OF_ITEM::OTHER: {
+            return "other"; break; 
+        }
+        case Utilities::Item::TYPE_OF_ITEM::POTIONS: {
+            return "potions"; break; 
+        }
+        case Utilities::Item::TYPE_OF_ITEM::RINGS: {
+            return "rings"; break; 
+        }
+        case Utilities::Item::TYPE_OF_ITEM::RUNES: {
+            return "runes"; break; 
+        }
+        case Utilities::Item::TYPE_OF_ITEM::SHIELDS: {
+            return "shields"; break; 
+        }
+        case Utilities::Item::TYPE_OF_ITEM::VALUABLES: {
+            return "valuables"; break; 
+        }
+        case Utilities::Item::TYPE_OF_ITEM::AMMO: {
+            return "ammo"; break;
+        }
+        case Utilities::Item::TYPE_OF_ITEM::AXES: {
+            return "axes"; break;
+        }
+        case Utilities::Item::TYPE_OF_ITEM::SWORDS: {
+            return "swords"; break;
+        }
+        case Utilities::Item::TYPE_OF_ITEM::CLUBS: {
+            return "clubs"; break;
+        }
+        case Utilities::Item::TYPE_OF_ITEM::DISTANCES: {
+            return "distance"; break; 
+        }
+        case Utilities::Item::TYPE_OF_ITEM::ROD: {
+            return "rod"; break; 
+        }
+        case Utilities::Item::TYPE_OF_ITEM::WANDS: {
+            return "wands"; break; 
+        }
+   
+        default:    
+            return "";  break;
+    }
+}
+
 bool JsonParser::openJsonFile(QJsonObject* jsonDoc, QString pathToFile){
     QString val;
     QFile file;
@@ -24,8 +91,7 @@ bool JsonParser::openJsonFile(QJsonObject* jsonDoc, QString pathToFile){
     return true;
 }
 
-bool JsonParser::readSpellsJson(QList<Utilities::Spell>* spells){
-    typedef Utilities::Spell Spell;
+bool JsonParser::readSpellsJson(QList<Utilities::Spell>& spells){
     QJsonObject obj;
     bool res = openJsonFile(&obj, spellFilePath);
     if (!res)
@@ -35,10 +101,10 @@ bool JsonParser::readSpellsJson(QList<Utilities::Spell>* spells){
     int size = arr.count();
     if (size == 0)
         return false;//diag err
-    QList<Spell> spellsToRet;
+    QList<Utilities::Spell> spellsToRet;
     for (size_t i = 0; i < size; i++){
         QJsonValue val = arr.at(i);
-        Spell objToAdd;
+        Utilities::Spell objToAdd;
         objToAdd.name = val["name"].toString();
         objToAdd.incantations = val["incantantion"].toString();
         objToAdd.EK = val["EK"].toBool();
@@ -50,32 +116,31 @@ bool JsonParser::readSpellsJson(QList<Utilities::Spell>* spells){
         objToAdd.cdGroup = val["CDGROUP"].toInt();
         objToAdd.soulPoints = val["SoulPoints"].toInt();
         QString typeAsStr = val["TYPE"].toString();
-        Spell::TYPE_OF_SPELL type;
+        Utilities::Spell::TYPE_OF_SPELL type;
         if (typeAsStr == "HEALING")
-            type = Spell::HEALING;
+            type = Utilities::Spell::TYPE_OF_SPELL::HEALING;
         else if (typeAsStr == "SUPPORT")
-            type = Spell::SUPPORT;
+            type = Utilities::Spell::TYPE_OF_SPELL::SUPPORT;
         else if (typeAsStr == "ATTACK")
-            type = Spell::ATTACK;
+            type = Utilities::Spell::TYPE_OF_SPELL::ATTACK;
         else
             return false; // diag //err
         objToAdd.typeOfSpell = type;
         spellsToRet.push_back(objToAdd);
     }
-    *spells = spellsToRet;
+    spells = spellsToRet;
     return true;
 }
 
-bool JsonParser::filtrSpells(QList<Utilities::Spell>* spells, Profile::PROFESSION* prof, Utilities::Spell::TYPE_OF_SPELL* type){
+bool JsonParser::filtrSpells(QList<Utilities::Spell>& spells, Profile::PROFESSION* prof, Utilities::Spell::TYPE_OF_SPELL* type){
     if (prof == NULL && type == NULL)
         return false;
     typedef Utilities::Spell Spell;
 
     bool filtrByProf = prof != NULL;
     bool filtrByType = type != NULL;
-    QList<Spell> spellsCopy = *spells;      
+    QList<Spell> spellsCopy = spells;      
     QList<Spell> spelsToRet;
-    Profile::PROFESSION profToCompare;
     for each (Spell var in spellsCopy) {
 
         if (filtrByProf) {
@@ -99,11 +164,11 @@ bool JsonParser::filtrSpells(QList<Utilities::Spell>* spells, Profile::PROFESSIO
         }
         spelsToRet.push_back(var);
     }
-    *spells = spelsToRet;
+    spells = spelsToRet;
     return true;
 }
 
-bool JsonParser::getPotionsForProf(QList<Utilities::Potion>& potions, Profile::PROFESSION* prof, bool getOnlyHealthPotions, bool getOnlyManaPotions){
+bool JsonParser::getPotionsForProf(QList<Utilities::Potion>& potions, Profile::PROFESSION* prof, TypeOfPotion type){
     typedef Utilities::Potion Potion;
     QJsonObject obj;
     bool res = openJsonFile(&obj, itemsFilePath);
@@ -125,8 +190,11 @@ bool JsonParser::getPotionsForProf(QList<Utilities::Potion>& potions, Profile::P
         potionToAdd.forRp = var["for_RP"].toBool();
         potionToAdd.forEk = var["for_EK"].toBool();
 
-        bool skipCauseHealthCondition = getOnlyHealthPotions && potionToAdd.healthReg <= 0;
-        bool skipCauseManaCondition = getOnlyManaPotions && potionToAdd.manaReg <= 0;
+        bool healthPotionsWanted = (type == TypeOfPotion::EVERYPOTION || type == TypeOfPotion::HEALTH);
+        bool manaPotionsWanted = (type == TypeOfPotion::EVERYPOTION || type == TypeOfPotion::MANA);
+
+        bool skipCauseHealthCondition = healthPotionsWanted && potionToAdd.healthReg <= 0;
+        bool skipCauseManaCondition = manaPotionsWanted && potionToAdd.manaReg <= 0;
         if (skipCauseHealthCondition || skipCauseManaCondition)
             continue;
 
@@ -244,56 +312,84 @@ bool JsonParser::readItemJson(QList<Utilities::Item>* items){
     return true;
 }
 
-bool JsonParser::getSpellsFromTheirIncantations(QStringList incantations, QList<Utilities::Spell>& spells){
-    QList<Utilities::Spell> readSpells;
-    bool sucess = readSpellsJson(&readSpells);
-    if (!sucess)
+bool JsonParser::getHealthRestoreMethodes(QStringList incantationsAndSpellsList, QList<Utilities::RestoreMethode>& spellsAndPotionsObjects) {
+    QList<Utilities::Item> potions;
+    QList<Utilities::Spell> spells;
+    bool sucess = readSpellsJson(spells);
+    Utilities::Spell::TYPE_OF_SPELL typeToFiltr = Utilities::Spell::TYPE_OF_SPELL::HEALING;
+    bool sucess2 = filtrSpells(spells, NULL, &typeToFiltr);
+    getItemsFromCategory(potions, Utilities::Item::TYPE_OF_ITEM::POTIONS);
+
+    bool sucess3 = potions.size() != 0 && spells.size() != 0;
+    bool failure = !(sucess && sucess2 && sucess3);
+    if (failure)
         return false;
 
-    QList<Utilities::Spell> spellsToRet;
-    for each (QString inc in incantations){
-        for each (Utilities::Spell spell in readSpells){
-            bool addSpellToList = inc == spell.incantations;
-            if (addSpellToList) {
-                spellsToRet.push_back(spell);
+    QList<Utilities::RestoreMethode> restoreMethodesToRet;
+    for each(QString nameOfMethodes in incantationsAndSpellsList){
+
+        bool skipLookingInPotions = false;
+        for each (Utilities::Spell spell in spells){
+            bool isProperSpellToReturn = spell.incantations == nameOfMethodes;
+            if (isProperSpellToReturn) {
+                skipLookingInPotions = true;
+                Utilities::RestoreMethode toAdd = spell.toRestoreMethode();
+                restoreMethodesToRet.push_back(toAdd);
                 break;
             }
         }
-
-    }
-  
-    bool foundAllSpells = spellsToRet.size() == incantations.size();
-    if (foundAllSpells) {
-        spells = spellsToRet;
-        return true;
-    }
-    else
-        return false;
-}
-
-bool JsonParser::getPotionsFromTheirNames(QStringList namesOfPotions, QList<Utilities::Potion>& potions){
-    //that function is currently abbadoned, it maybe will be finished later,
-    //when functionality of finding if char has avaible potion will be implemented
-    //now it will be u
-    typedef Utilities::Potion Potion;
-    QJsonObject obj;
-    bool res = openJsonFile(&obj, itemsFilePath);
-    if (!res)
-        return false;//diag //err
-
-    QJsonArray arr = obj["potions"].toArray();
-    int size = arr.count();
-    if (size == 0)
-        return false;//diag err
-    /*
-    for each (QString nameOfPotionFromList in namesOfPotions){
-        for each (QJsonValue val in arr){
-            QString nameOfPotion = val.toObject()["name"].toString();
-            bool itsProperName = nameOfPotion == nameOfPotionFromList;
-            if (!itsProperName)
-                continue;
-            val
+        if (skipLookingInPotions)
+            continue;
+        for each (Utilities::Item item in potions){
+            bool isProperPotionToReturn = item.name == nameOfMethodes;
+            if (isProperPotionToReturn) {
+                Utilities::RestoreMethode toAdd = item.toRestoreMethode();
+                restoreMethodesToRet.push_back(toAdd);
+                break;
+            }
         }
     }
-    */
+    spellsAndPotionsObjects = restoreMethodesToRet;
+    bool allWentGood = incantationsAndSpellsList.size() == restoreMethodesToRet.size();
+    return allWentGood;
 }
+
+bool JsonParser::getManaRestoreMethodes(QStringList potionNameList, QList<Utilities::Item>& potionToReturn){
+    QList<Utilities::Item> potions;
+    getItemsFromCategory(potions, Utilities::Item::TYPE_OF_ITEM::POTIONS);
+
+    bool failure = potions.size() == 0;
+    if (failure)
+        return false;
+
+    QList<Utilities::Item> filtredpotions;
+    for each (QString nameOfMethodes in potionNameList) {
+        for each (Utilities::Item item in potions) {
+            bool isProperPotionToReturn = item.name == nameOfMethodes;
+            if (isProperPotionToReturn) {
+                filtredpotions.push_back(item);
+                break;
+            }
+        }
+    }
+    potionToReturn = filtredpotions;
+    bool allWentGood = filtredpotions.size() == potionNameList.size();
+    return allWentGood;
+}
+
+bool JsonParser::getItemsFromCategory(QList<Utilities::Item>& itemsToRet, Utilities::Item::TYPE_OF_ITEM type){
+    QList<Utilities::Item> readItems, itemsTmp;
+    bool sucess = readItemJson(&readItems);
+    if (!sucess)
+        return false;
+
+    for each (Utilities::Item var in readItems){
+        bool isProperCategory = type == var.type;
+        if (isProperCategory)
+            itemsTmp.push_back(var);
+    }
+
+    itemsToRet = itemsTmp;
+    return true;
+}
+

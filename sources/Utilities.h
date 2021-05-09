@@ -48,28 +48,61 @@ public:
 	static void rotateImgToRight(QImage* imgToRotate, int timesToRotateRight);
 	static bool isItPixelFromFrame(uint color, int minValueAcceptable, int maxValueAcceptable, bool requireSameValuesOfRGB);
 	static long long getCurrentTimeInMiliSeconds();
+
+	class RestoreMethode {
+	public:
+		enum class TypeOfMethode{ POTION, SPELL };
+		QString name;
+		int mana, cd, cdGroup;
+		TypeOfMethode type;
+	};
+
 	class Spell {
 	public:
-		enum TYPE_OF_SPELL { HEALING, SUPPORT, ATTACK };
+		enum class TYPE_OF_SPELL { HEALING, SUPPORT, ATTACK };
 		QString name, incantations;
 		bool EK, MS, ED, RP;
 		int mana, cd, cdGroup, soulPoints;
 		TYPE_OF_SPELL typeOfSpell;
+		RestoreMethode toRestoreMethode() {
+			RestoreMethode toRet;
+			toRet.name = this->name;
+			toRet.mana = this->mana;
+			toRet.cd = this->cd;
+			toRet.cdGroup = this->cdGroup;
+			toRet.type = RestoreMethode::TypeOfMethode::SPELL;
+			return toRet;
+		}
 	};
 
 	class Item {
 	public:
-		enum TYPE_OF_ITEM { ARMOR, AMULETS, BOOTS, CREATURE, HELMETS, LEGS, OTHER, POTIONS, RINGS, RUNES, SHIELDS, VALUABLES, AMMO, AXES, SWORDS, CLUBS, DISTANCES, ROD, WANDS };
-		enum SELLER {BLUE_DJIN, GREEN_DJIN, YASIR, ZAO, OTHER_SELLER, RASHID};
+		enum class TYPE_OF_ITEM { ARMOR, AMULETS, BOOTS, CREATURE, HELMETS, LEGS, OTHER, POTIONS, RINGS, RUNES, SHIELDS, VALUABLES, AMMO, AXES, SWORDS, CLUBS, DISTANCES, ROD, WANDS };
+		enum class SELLER {BLUE_DJIN, GREEN_DJIN, YASIR, ZAO, OTHER_SELLER, RASHID};
 		QString name;
 		int price, weight;
 		TYPE_OF_ITEM type;
 		SELLER seller;
+		RestoreMethode toRestoreMethode() {
+			bool isPotion = this->type == TYPE_OF_ITEM::POTIONS;
+			if (isPotion) {
+				RestoreMethode toRet;
+				toRet.name = this->name;
+				toRet.mana = 0;//manaNeededToUsePotion
+				toRet.cd = 1;//potions have 1 sec cooldown, for all potions
+				toRet.cdGroup = 1;
+				toRet.type = RestoreMethode::TypeOfMethode::POTION;
+				return toRet;
+			}
+			else
+				return RestoreMethode();//diag err
+		}
 	};
 	class Potion : public Item {
 	public:
 		int manaReg, healthReg;
 		bool forMage, forRp, forEk;
 	};
+
 	//static void UNSUED_findBoredersOfFrames(QImage fullScreen);
 };
