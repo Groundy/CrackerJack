@@ -1,5 +1,5 @@
 #include "ProfileDataBaseManager.h"
-
+#include "StringResource.h"
 ProfileDataBaseManager::ProfileDataBaseManager(){
     getPathToDB();
     openDB();
@@ -17,10 +17,8 @@ void ProfileDataBaseManager::openDB() {
     dataBase.setDatabaseName(DATABASE_NAME);
     bool DBExist = checkIfDbExist();
     if (!DBExist) {
-        QString textToDisplay = "Database with profiles not found in " + pathToDB.absolutePath();
-        textToDisplay.append("\nNew and empty database will be create.");
-        QString windowTitle = "Problem occured!";
-        Utilities::showMessageBox(windowTitle, textToDisplay,QMessageBox::Ok);  
+        QString textToDisplay = StringResource::ProfileDataBaseManager_DbDoesNotExist() + pathToDB.absolutePath() + StringResource::ProfileDataBaseManager_NewDBWillBeCreated(); 
+        Utilities::showMessageBox(StringResource::WindowTitle_CrackerJackProblem(), textToDisplay,QMessageBox::Ok);  
         dataBase.open(); 
         makeDataBase(); 
     }

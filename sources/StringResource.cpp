@@ -89,6 +89,11 @@ QString StringResource::NewProfileConfig_3_ShortcutManyValue()
 	return "at least one of shortcuts field have more than one key assigned to itself";
 }
 
+QString StringResource::NewProfileConfig_3_LastSliderIsZero()
+{
+	return "Last slider has to be more than zero";
+}
+
 QString StringResource::NewProfileConfig_3_ShortCutHasForbiddenChars()
 {	
 	QString toRet = "Shortcut can accept only keys";
@@ -103,3 +108,17 @@ QString StringResource::NewProfileConfig_3_ShortCutHasForbiddenChars()
 	return toRet;
 }
 
+QString StringResource::NewProfileConfig_3_comboBoxNoValue()
+{
+	return "You have to choose restoriation methode from the list.";
+}
+
+QString StringResource::ProfileDataBaseManager_DbDoesNotExist()
+{
+	return  "Database with profiles not found in ";
+}
+
+QString StringResource::ProfileDataBaseManager_NewDBWillBeCreated()
+{
+	return "\nNew and empty database will be create.";
+}

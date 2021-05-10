@@ -76,13 +76,12 @@ QString JsonParser::getItemCategoryName(Utilities::Item::TYPE_OF_ITEM typeOfItem
 }
 
 bool JsonParser::openJsonFile(QJsonObject* jsonDoc, QString pathToFile){
-    QString val;
     QFile file;
     file.setFileName(pathToFile);
     bool sucess = file.open(QIODevice::ReadOnly | QIODevice::Text);
     if (!sucess)
         return false;//diag //err
-    val = file.readAll();
+    QString val = file.readAll();
     if (val.size() == 0)
         return false;//diag //err
     file.close();
