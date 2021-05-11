@@ -68,14 +68,18 @@ Key::Key(QKeySequence qsec){
 QKeySequence Key::toQKeySequence(Key key){
 	int keyValue = key.number;
 	QString toRetStr;
-	if (keyValue >= F1 && keyValue <= F12) {
+	bool isFKey = keyValue >= F1 && keyValue <= F12;
+	bool isNumber = keyValue >= n0 && keyValue <= n9;
+	if (isFKey) {
 		toRetStr = "F";
 		int fkey = keyValue - F1 + 1;
 		toRetStr.append(QString::number(fkey));
 	}
-	else if (keyValue >= n0 && keyValue <= n9) {
+	else if (isNumber) {
 		int key = keyValue - n0 + 1;
-		toRetStr.append(QString::number(key));
+		const int codeOfValueZeroInDataBase = 57;
+		bool zeroValueShouldBeDisplayed = keyValue == codeOfValueZeroInDataBase;
+		toRetStr = zeroValueShouldBeDisplayed ? QString::number(0) : QString::number(key);
 	}
 	else if (keyValue == ESC) toRetStr = "Esc";
 	else if (keyValue == INSERT) toRetStr = "Ins";

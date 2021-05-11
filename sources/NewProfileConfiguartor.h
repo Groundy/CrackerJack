@@ -7,6 +7,7 @@
 #include "StringResource.h"
 #include "Profile.h"
 #include "JsonParser.h"
+#include "Key.h"
 
 namespace Ui { class NewProfileConfiguartor; };
 

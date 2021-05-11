@@ -26,7 +26,6 @@ void ManaHealthStateAnalyzer::run(){
 }
 
 void ManaHealthStateAnalyzer::setThreadEnabilityToRun(bool stateToSet) {
-	qDebug() << "ManaHealthStateAnalyzer::setThreadEnabilityToRun " << stateToSet;
 	shouldThisThreadBeActive = stateToSet;
 }
 
@@ -158,6 +157,7 @@ int ManaHealthStateAnalyzer::getValuesFromStringOfCombinedBox(QString in, int* c
 	}
 	else
 		return ERROR_CODES::WRONG_STR_OF_VALUES;
+
 	return OK;
 }
 
@@ -197,28 +197,16 @@ int ManaHealthStateAnalyzer::findNearestThresholdIndex(int currentValue, QList<i
 		out_index = -1;
 		return OK;
 	}
-	if (listSize == 1){
-		out_index = currentValue < thresholds[0] ? -1 : 0;
-		return OK;
-	}
 
 	int indexToRet = -1;
-	for (int i = 0; i < listSize; i++) {
-
-		bool beyondThreshold = currentValue > thresholds[i];
-		bool isLastThreshold = i + 1 == listSize;
-		bool isFirstOne = i == 0;
-
-		if (beyondThreshold && !isLastThreshold) {
+	thresholds.push_back(0);
+	for (int i = 0; i < thresholds.size(); i++) {
+		if (currentValue > thresholds[i]) {
 			indexToRet = i - 1;
-			i = listSize;//break from loop
+			break;
 		}
-		else if (beyondThreshold && isLastThreshold)
-			indexToRet = i;
-		else if (beyondThreshold && isFirstOne)
-			indexToRet = -1;
 	}
-
+	qDebug() <<QString::number(currentValue) + "    ind_" + QString::number(indexToRet);
 	out_index = indexToRet;
 	return OK;
 }

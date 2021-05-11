@@ -4,6 +4,8 @@ class StringResource{
 public:
 	static QString WindowTitle_CrackerJackProblem();
 
+	static QString LoginWindow_WrongLoginPasword();
+
 	static QString NewProfileConfigHelp(int page);
 	static QString NewProfileConfig_1_TooLongName();
 	static QString NewProfileConfig_1_TooShortName();
@@ -19,6 +21,7 @@ public:
 	static QString NewProfileConfig_3_ShortcutManyValue();
 	static QString NewProfileConfig_3_ShortCutHasForbiddenChars();
 	static QString NewProfileConfig_3_comboBoxNoValue();
+	static QString NewProfileConfig_3_comboBoxShareTheSameValue();
 
 	static QString ProfileDataBaseManager_DbDoesNotExist();
 	static QString ProfileDataBaseManager_NewDBWillBeCreated();

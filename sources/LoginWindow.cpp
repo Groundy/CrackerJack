@@ -15,11 +15,7 @@ void LoginWindow::loginInserted() {
 }
 
 void LoginWindow::loginButtonPressed() {
-    bool loginOK = checkPasswordCorrectness();
-    if (loginOK)
-        goToSelectProfileWindow();
-    else
-        showThatPasswordFailed();
+    // TODO 
 }
 
 void LoginWindow::passwordInserted() {
@@ -42,7 +38,7 @@ void LoginWindow::getAndSetVersion() {
 }
 
 void LoginWindow::showThatPasswordFailed() {
-    QString msg = "That combination of login and password doesn't exist!\ntry again.";
+    QString msg = StringResource::LoginWindow_WrongLoginPasword();
     ui.wrongPasswordLabel->setText(msg);
     ui.wrongPasswordLabel->setVisible(true);
     ui.passwordLine->clear();
@@ -51,10 +47,4 @@ void LoginWindow::showThatPasswordFailed() {
 bool LoginWindow::checkPasswordCorrectness() {
     //[TODO]
     return true;
-}
-
-void LoginWindow::goToSelectProfileWindow() {
-   auto t = new SelectProfileWindow();
-   t->show();
-   this->close();
 }

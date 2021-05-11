@@ -47,6 +47,23 @@ bool NewProfileConfiguartor::finishAddingNewProfile(){
 void NewProfileConfiguartor::additionalGuiSettings(){
 	ui->_3_spinGetNumberOfMethodes->setMinimum(0);
 	ui->_3_spinGetNumberOfMethodes->setMaximum(5);
+
+	QList<QComboBox*> restoreMethodes; {
+		restoreMethodes.push_back(ui->_3_comboBox);
+		restoreMethodes.push_back(ui->_3_comboBox_2);
+		restoreMethodes.push_back(ui->_3_comboBox_3);
+		restoreMethodes.push_back(ui->_3_comboBox_4);
+		restoreMethodes.push_back(ui->_3_comboBox_5);
+		restoreMethodes.push_back(ui->_4_comboBox);
+		restoreMethodes.push_back(ui->_4_comboBox_2);
+		restoreMethodes.push_back(ui->_4_comboBox_3);
+		restoreMethodes.push_back(ui->_4_comboBox_4);
+		restoreMethodes.push_back(ui->_4_comboBox_5);
+	
+	}
+	for each (QComboBox * var in restoreMethodes)
+		var->setDisabled(true);
+
 	ui->_4_spinGetNumberOfMethodes->setMinimum(0);
 	ui->_4_spinGetNumberOfMethodes->setMaximum(5);
 
@@ -281,49 +298,68 @@ bool NewProfileConfiguartor::checkCorrectnessOfPage_3(){
 
 	bool slidersAreInCorrectOrder = true;
 	bool everySliderHasDiffrentValue = true;
-
-	int biggestValue = 101;
-
-	for each (QAbstractSlider* slider in activeSliders) {
-		if (slider->value() < biggestValue)
-			biggestValue = slider->value();
-		else if (slider->value() == biggestValue) 
-			everySliderHasDiffrentValue = false;
-		else 
-			slidersAreInCorrectOrder = false;
+	{
+		int biggestValue = 101;
+		for each (QAbstractSlider * slider in activeSliders) {
+			if (slider->value() < biggestValue)
+				biggestValue = slider->value();
+			else if (slider->value() == biggestValue)
+				everySliderHasDiffrentValue = false;
+			else
+				slidersAreInCorrectOrder = false;
+		}
 	}
 
-	int lastSliderIndex = activeSliders.size() - 1;
-	int valOfLastSlider = activeSliders[lastSliderIndex]->value();
-	bool lastSliderIsZero = valOfLastSlider == 0;
+	bool lastSliderIsZero = false;
+	{
+		if (activeSliders.size() > 0) {
+			int lastSliderIndex = activeSliders.size() - 1;
+			int valOfLastSlider = activeSliders[lastSliderIndex]->value();
+			lastSliderIsZero = valOfLastSlider <= 0 ? true : false;
+		}
+	}
+
 	bool oneOfKeyFieldsHasManyValues = false;
 	bool oneOfKeyFieldsHasNoValue = false;
 	bool oneOfKeyFieldsHasForbiddenChars = false;
-
-	int size = ui->_3_spinGetNumberOfMethodes->value();
-	for each (QKeySequence keySequence in activeKeys)
 	{
-		if (keySequence.count() == 0)
-			oneOfKeyFieldsHasNoValue = true;
-		else if (keySequence.count() > 1)
-			oneOfKeyFieldsHasManyValues = true;
+		for each (QKeySequence keySequence in activeKeys)
+		{
+			if (keySequence.count() == 0)
+				oneOfKeyFieldsHasNoValue = true;
+			else if (keySequence.count() > 1)
+				oneOfKeyFieldsHasManyValues = true;
 
-		int keyValueToCheck = Key(keySequence).number;
-		bool isProperKey = Key::checkIfnumberIsAloowed(keyValueToCheck);
-		if (!isProperKey)
-			oneOfKeyFieldsHasForbiddenChars = true;
+			int keyValueToCheck = Key(keySequence).number;
+			bool isProperKey = Key::checkIfnumberIsAloowed(keyValueToCheck);
+			if (!isProperKey)
+				oneOfKeyFieldsHasForbiddenChars = true;
+		}
 	}
-
 
 	bool comboBoxHasNotChoosenValue = false;
-	for each (QComboBox * var in activeBoxes) {
-		int maxIndex = var->count();
-		int currentIndex = var->currentIndex();
-		bool indexIsInProperRange = currentIndex >= 0 && currentIndex < maxIndex;
-		if (!indexIsInProperRange)
-			comboBoxHasNotChoosenValue = true;
+	{
+		for each (QComboBox * var in activeBoxes) {
+			int maxIndex = var->count();
+			int currentIndex = var->currentIndex();
+			bool indexIsInProperRange = currentIndex >= 0 && currentIndex < maxIndex;
+			if (!indexIsInProperRange)
+				comboBoxHasNotChoosenValue = true;
+		}
 	}
-	
+
+	bool theSameValueIsAssignedToMoreThanOneBox = false;
+	{
+		QMap<int, int> mapToDeleteReplicatedValues;
+		for (size_t i = 0; i < activeKeys.size(); i++) {
+			QKeySequence keySeq = activeKeys[i];
+			int valueOfKey = Key(keySeq).number;
+			mapToDeleteReplicatedValues.insert(valueOfKey, 0);
+		}
+		bool allWidgetsAreDiffrent = mapToDeleteReplicatedValues.size() == activeBoxes.size();
+		bool AtLeastOneIsActive = activeKeys.size() > 0;
+		theSameValueIsAssignedToMoreThanOneBox = AtLeastOneIsActive ? false : allWidgetsAreDiffrent;
+	}
 
 	if (!everySliderHasDiffrentValue) {
 		Utilities::showMessageBox(StringResource::WindowTitle_CrackerJackProblem(), StringResource::NewProfileConfig_3_SlidersAreInTheSamePosition(), QMessageBox::Ok);
@@ -351,6 +387,10 @@ bool NewProfileConfiguartor::checkCorrectnessOfPage_3(){
 	}
 	if (comboBoxHasNotChoosenValue) {
 		Utilities::showMessageBox(StringResource::WindowTitle_CrackerJackProblem(), StringResource::NewProfileConfig_3_comboBoxNoValue(), QMessageBox::Ok);
+		return false;
+	}
+	if (theSameValueIsAssignedToMoreThanOneBox) {
+		Utilities::showMessageBox(StringResource::WindowTitle_CrackerJackProblem(), StringResource::NewProfileConfig_3_comboBoxShareTheSameValue(), QMessageBox::Ok);
 		return false;
 	}
 	return true;
@@ -381,59 +421,83 @@ bool NewProfileConfiguartor::checkCorrectnessOfPage_4(){
 		if (isActive4) activeBoxes.push_back(ui->_4_comboBox_4);
 		if (isActive5) activeBoxes.push_back(ui->_4_comboBox_5);
 	}
-	QList<QKeySequence> Activekeys; {
-		Activekeys.push_back(ui->_4_shortKey_1->keySequence());
-		Activekeys.push_back(ui->_4_shortKey_2->keySequence());
-		Activekeys.push_back(ui->_4_shortKey_3->keySequence());
-		Activekeys.push_back(ui->_4_shortKey_4->keySequence());
-		Activekeys.push_back(ui->_4_shortKey_5->keySequence());
+	QList<QKeySequence> activeKeys; {
+		bool isActive1 = ui->_4_shortKey_1->isEnabled();
+		bool isActive2 = ui->_4_shortKey_2->isEnabled();
+		bool isActive3 = ui->_4_shortKey_3->isEnabled();
+		bool isActive4 = ui->_4_shortKey_4->isEnabled();
+		bool isActive5 = ui->_4_shortKey_5->isEnabled();
+		if (isActive1) activeKeys.push_back(ui->_4_shortKey_1->keySequence());
+		if (isActive2) activeKeys.push_back(ui->_4_shortKey_2->keySequence());
+		if (isActive3) activeKeys.push_back(ui->_4_shortKey_3->keySequence());
+		if (isActive4) activeKeys.push_back(ui->_4_shortKey_4->keySequence());
+		if (isActive5) activeKeys.push_back(ui->_4_shortKey_5->keySequence());
 	}
 
 
 	bool slidersAreInCorrectOrder = true;
 	bool everySliderHasDiffrentValue = true;
-
-
-	int biggestValue = 101;
-	for each (QAbstractSlider * slider in activeSliders) {
-		if (slider->value() < biggestValue)
-			biggestValue = slider->value();
-		else if (slider->value() == biggestValue) 
-			everySliderHasDiffrentValue = false;
-		else
-			slidersAreInCorrectOrder = false;
+	{
+		int biggestValue = 101;
+		for each (QAbstractSlider * slider in activeSliders) {
+			if (slider->value() < biggestValue)
+				biggestValue = slider->value();
+			else if (slider->value() == biggestValue)
+				everySliderHasDiffrentValue = false;
+			else
+				slidersAreInCorrectOrder = false;
+		}
 	}
 
-	int valueOfLastSlider = activeSliders[activeSliders.size() - 1]->value();
-	bool lastSliderIsZero = valueOfLastSlider == 0 ? true : false;
-
+	bool lastSliderIsZero = false;
+	{
+		if (activeSliders.size() > 0) {
+			int valueOfLastSlider = activeSliders[activeSliders.size() - 1]->value();
+			if (valueOfLastSlider == 0)
+				lastSliderIsZero = true;
+		}
+	}
 
 	bool oneOfKeyFieldHasManyValues = false;
 	bool oneOfKeyFieldHasNoValue = false;
 	bool oneOfKeyFieldsHasForbiddenChars = false;
+	{
+		for (int i = 0; i < activeKeys.size(); i++) {
+			if (activeKeys[i].count() == 0)
+				oneOfKeyFieldHasNoValue = true;
+			else if (activeKeys[i].count() > 1)
+				oneOfKeyFieldHasManyValues = true;
 
-	int size = Activekeys.size();
-	for (int i = 0; i < size; i++) {
-		if (Activekeys[i].count() == 0)
-			oneOfKeyFieldHasNoValue = true;
-		else if (Activekeys[i].count() > 1)
-			oneOfKeyFieldHasManyValues = true;
-
-		int keyValurToCheck = Key(Activekeys[i]).number;
-		bool isProperKey = Key::checkIfnumberIsAloowed(keyValurToCheck);
-		if (!isProperKey)
-			oneOfKeyFieldsHasForbiddenChars = true;
+			int keyValurToCheck = Key(activeKeys[i]).number;
+			bool isProperKey = Key::checkIfnumberIsAloowed(keyValurToCheck);
+			if (!isProperKey)
+				oneOfKeyFieldsHasForbiddenChars = true;
+		}
+	}
+	
+	bool comboBoxHasNotChoosenValue = false; 
+	{
+		for each (QComboBox * var in activeBoxes) {
+			int maxIndex = var->count();
+			int currentIndex = var->currentIndex();
+			bool indexIsInProperRange = currentIndex >= 0 && currentIndex < maxIndex;
+			if (!indexIsInProperRange)
+				comboBoxHasNotChoosenValue = true;
+		}
 	}
 
-	bool comboBoxHasNotChoosenValue = false;
-	for each (QComboBox * var in activeBoxes) {
-		int maxIndex = var->count();
-		int currentIndex = var->currentIndex();
-		bool indexIsInProperRange = currentIndex >= 0 && currentIndex < maxIndex;
-		if (!indexIsInProperRange)
-			comboBoxHasNotChoosenValue = true;
+	bool theSameValueIsAssignedToMoreThanOneBox = false;
+	{
+		QMap<int, int> mapToDeleteReplicatedValues;
+		for (size_t i = 0; i < activeKeys.size(); i++) {
+			QKeySequence keySeq = activeKeys[i];
+			int valueOfKey = Key(keySeq).number;
+			mapToDeleteReplicatedValues.insert(valueOfKey, 0);
+		}
+		bool allWidgetsAreDiffrent = mapToDeleteReplicatedValues.size() == activeBoxes.size();
+		bool AtLeastOneIsActive = activeKeys.size() > 0;
+		theSameValueIsAssignedToMoreThanOneBox = AtLeastOneIsActive ? false : allWidgetsAreDiffrent;
 	}
-
 	if (!everySliderHasDiffrentValue) {
 		Utilities::showMessageBox(StringResource::WindowTitle_CrackerJackProblem(), StringResource::NewProfileConfig_3_SlidersAreInTheSamePosition(), QMessageBox::Ok);
 		return false;
@@ -460,6 +524,10 @@ bool NewProfileConfiguartor::checkCorrectnessOfPage_4(){
 	}
 	if (comboBoxHasNotChoosenValue) {
 		Utilities::showMessageBox(StringResource::WindowTitle_CrackerJackProblem(), StringResource::NewProfileConfig_3_comboBoxNoValue(), QMessageBox::Ok);
+		return false;
+	}
+	if (theSameValueIsAssignedToMoreThanOneBox) {
+		Utilities::showMessageBox(StringResource::WindowTitle_CrackerJackProblem(), StringResource::NewProfileConfig_3_comboBoxShareTheSameValue(), QMessageBox::Ok);
 		return false;
 	}
 
@@ -753,9 +821,11 @@ void NewProfileConfiguartor::helpButtonAction() {
 void NewProfileConfiguartor::_3_healingEnabledChanged(){
 	bool enabled = ui->_3_enableAutoHealing->isChecked() ? true : false;
 	ui->_3_spinGetNumberOfMethodes->setEnabled(enabled);
-	if (!enabled) 
+	if (!enabled) {
 		ui->_3_spinGetNumberOfMethodes->setValue(0);
-	
+		ui->_3_spinGetNumberOfMethodes->setEnabled(false);
+	}
+	_3_spinChanged();
 }
 
 void NewProfileConfiguartor::_3_spinChanged() {
@@ -841,7 +911,8 @@ void NewProfileConfiguartor::_3_slidersChanged() {
 	int MAX_NUMBER_OF_SLIDERS = 5;
 	for (size_t i = 0; i < MAX_NUMBER_OF_SLIDERS; i++) {
 		bool isEnabled = labels[i]->isEnabled();
-		QString strToSet = isEnabled ? rangesOfSlidersValue[i] : QString("");
+		bool sliderExist = rangesOfSlidersValue.size() > i;
+		QString strToSet = (isEnabled && sliderExist) ? rangesOfSlidersValue[i] : QString("");
 		labels[i]->setText(strToSet);
 	}
 }
@@ -849,8 +920,11 @@ void NewProfileConfiguartor::_3_slidersChanged() {
 void NewProfileConfiguartor::_4_ManaEnabledChanged() {
 	bool enabled = ui->_4_enableManaRestore ? true : false;
 	ui->_4_spinGetNumberOfMethodes->setEnabled(enabled);
-	if (!enabled)
+	if (!enabled) {
 		ui->_4_spinGetNumberOfMethodes->setValue(0);
+		ui->_4_spinGetNumberOfMethodes->setEnabled(false);
+	}
+	_4_spinChanged();
 }
 
 void NewProfileConfiguartor::_4_spinChanged() {

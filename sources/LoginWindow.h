@@ -2,7 +2,7 @@
 #include "qdialog.h"
 #include "ui_LoginWindow.h"
 #include "SelectProfileWindow.h"
-
+#include "StringResource.h"
 
 class LoginWindow : public QDialog
 {
@@ -10,8 +10,6 @@ class LoginWindow : public QDialog
 
 public:
     LoginWindow(QWidget *parent = Q_NULLPTR);  
-    //[Przeniesc do private na koniec testow]
-    void goToSelectProfileWindow();
 
 public slots:
     void loginInserted();

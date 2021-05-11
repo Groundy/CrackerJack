@@ -5,6 +5,11 @@ QString StringResource::WindowTitle_CrackerJackProblem()
 	return "CrackerJack problem";
 }
 
+QString StringResource::LoginWindow_WrongLoginPasword()
+{
+	return "That combination of login and password doesn't exist!";
+}
+
 QString StringResource::NewProfileConfigHelp(int page){
 	QString toRet = "";
 	switch (page)
@@ -111,6 +116,11 @@ QString StringResource::NewProfileConfig_3_ShortCutHasForbiddenChars()
 QString StringResource::NewProfileConfig_3_comboBoxNoValue()
 {
 	return "You have to choose restoriation methode from the list.";
+}
+
+QString StringResource::NewProfileConfig_3_comboBoxShareTheSameValue()
+{
+	return "The same key is assigned to more than one restore methode.";
 }
 
 QString StringResource::ProfileDataBaseManager_DbDoesNotExist()
