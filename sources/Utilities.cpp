@@ -154,7 +154,7 @@
 	 }
  }
 
- QStringList Utilities::getCodesOfAllLetersInFolder(QString pathToInputFolder, QString pathToOutputFolder) {
+ QStringList Utilities::TOOL_getCodesOfAllInFolder_regular(QString pathToInputFolder, QString pathToOutputFolder) {
 	 QDir directory(pathToInputFolder);
 	 QStringList litOfFIles = directory.entryList(QStringList() << "*.png", QDir::Files);
 	 QList<QString> list;
@@ -521,6 +521,98 @@ long long Utilities::getCurrentTimeInMiliSeconds() {
 	return mseconds;
 }
 
+QImage Utilities::getImageFromAdvancedCode(QString codeOfImg){
+	QStringList partsOfCode = codeOfImg.split(QString("_"),Qt::SkipEmptyParts);
+	int width = partsOfCode[0].toInt();
+	int height = partsOfCode[1].toInt();
+	partsOfCode.removeFirst();
+	partsOfCode.removeFirst();
+	QImage imgToCreate(width, height, QImage::Format::Format_ARGB32);
+	int i = 0;
+	for (size_t x = 0; x < width; x++){
+		for (size_t y = 0; y < height; y++){
+			QStringList rgb = partsOfCode[i].split(QString("#"), Qt::SkipEmptyParts);
+			i++;
+			int r = rgb[0].toInt();
+			int g = rgb[1].toInt();
+			int b = rgb[2].toInt();
+			auto pixToSet = qRgb(r, g, b);
+			imgToCreate.setPixel(x, y, pixToSet);
+		}
+	}
+	return imgToCreate;
+}
+
+QStringList Utilities::TOOL_getCodesOfAllInFolder_bottom(QString pathToInputFolder) {
+	QDir directory(pathToInputFolder);
+	QStringList litOfFIles = directory.entryList(QStringList() << "*.png", QDir::Files);
+	QList<QString> list;
+	for (size_t i = 0; i < litOfFIles.size(); i++) {
+		QString pathToFile = pathToInputFolder + "\\" + litOfFIles[i];
+		QImage* img = new QImage(pathToFile);
+		int width = img->width();
+		int height = img->height();
+		// patern width_height_digits
+		// digits = #r#g#b_#r#g#b_#r#g#b_#r#g#b_#r#g#b_#r#g#b 
+		QString hash = QString("#");
+		QString floor = QString("_");
+		QString strWithCode = QString::number(width) + floor + QString::number(height) + floor;
+		
+		for (size_t x = 0; x < width; x++){
+			for (size_t y = 0; y < height; y++){
+				uint pixVal = (uint)img->pixel(x, y);
+				RGBstruct rgb(pixVal);
+				QString r = QString::number(rgb.r);
+				QString g = QString::number(rgb.g);
+				QString b = QString::number(rgb.b);
+				QString strToAppend = hash + r + hash + g + hash + b + floor;
+				strWithCode.append(strToAppend);
+			}
+		}
+		list.push_back(strWithCode);
+	}
+
+	for each (QString var in list) 
+		qDebug() << var;
+	
+	return list;
+}
+
+QMap<QString, int> Utilities::getMapWithNumbersFromBottomBar(){
+	QMap<QString, int> toRet;
+	toRet.insert("4_6_#125#125#125_#223#223#223_#223#223#223_#223#223#223_#223#223#223_#180#180#180_#208#208#208_#83#83#83_#0#0#0_#0#0#0_#29#29#29_#223#223#223_#194#194#194_#125#125#125_#56#56#56_#56#56#56_#111#111#111_#223#223#223_#83#83#83_#223#223#223_#223#223#223_#223#223#223_#223#223#223_#111#111#111_", 0);
+	toRet.insert("2_6_#125#125#125_#223#223#223_#167#167#167_#167#167#167_#167#167#167_#223#223#223_#125#125#125_#167#167#167_#167#167#167_#167#167#167_#167#167#167_#223#223#223_", 1);
+	toRet.insert("4_6_#167#167#167_#111#111#111_#39#39#39_#4#4#4_#125#125#125_#223#223#223_#223#223#223_#56#56#56_#0#0#0_#83#83#83_#208#208#208_#223#223#223_#194#194#194_#153#153#153_#139#139#139_#223#223#223_#56#56#56_#223#223#223_#83#83#83_#223#223#223_#194#194#194_#69#69#69_#0#0#0_#223#223#223_", 2);
+	toRet.insert("2_4_#153#153#153_#194#194#194_#180#180#180_#139#139#139_#223#223#223_#111#111#111_#180#180#180_#223#223#223_", 3);
+	toRet.insert("3_4_#194#194#194_#83#83#83_#111#111#111_#167#167#167_#194#194#194_#167#167#167_#194#194#194_#208#208#208_#111#111#111_#111#111#111_#167#167#167_#194#194#194_", 4);
+	toRet.insert("4_6_#167#167#167_#223#223#223_#223#223#223_#83#83#83_#41#41#41_#223#223#223_#167#167#167_#97#97#97_#180#180#180_#56#56#56_#0#0#0_#223#223#223_#167#167#167_#56#56#56_#167#167#167_#167#167#167_#125#125#125_#223#223#223_#167#167#167_#56#56#56_#69#69#69_#223#223#223_#223#223#223_#111#111#111_", 5);
+	toRet.insert("4_5_#208#208#208_#223#223#223_#223#223#223_#223#223#223_#167#167#167_#139#139#139_#167#167#167_#56#56#56_#29#29#29_#223#223#223_#56#56#56_#167#167#167_#111#111#111_#69#69#69_#223#223#223_#41#41#41_#125#125#125_#223#223#223_#223#223#223_#139#139#139_", 6);
+	toRet.insert("2_4_#167#167#167_#56#56#56_#29#29#29_#153#153#153_#167#167#167_#153#153#153_#223#223#223_#208#208#208_", 7);
+	toRet.insert("4_6_#139#139#139_#223#223#223_#208#208#208_#194#194#194_#194#194#194_#194#194#194_#223#223#223_#29#29#29_#194#194#194_#111#111#111_#0#0#0_#223#223#223_#208#208#208_#97#97#97_#167#167#167_#194#194#194_#56#56#56_#223#223#223_#125#125#125_#223#223#223_#139#139#139_#208#208#208_#223#223#223_#167#167#167_", 8);
+	toRet.insert("2_6_#223#223#223_#29#29#29_#0#0#0_#223#223#223_#0#0#0_#223#223#223_#194#194#194_#125#125#125_#56#56#56_#208#208#208_#153#153#153_#194#194#194_", 9);
+	return toRet;
+}
+
+int Utilities::getNumberFromBottomBar(QImage* bottomBar){
+	auto map = Utilities::getMapWithNumbersFromBottomBar();
+	QStringList listOfCodes = map.keys();
+	QMap<int, int> anotherMap; // <positionX, value>
+	for (size_t i = 0; i < listOfCodes.size(); i++){
+		QImage numerImg = Utilities::getImageFromAdvancedCode(listOfCodes[i]);
+		int digit = map[listOfCodes[i]];
+		auto listOfStartingPoints = findStartPositionInImg(&numerImg, bottomBar);
+		for each (QPoint var in listOfStartingPoints)
+			anotherMap.insert(var.x(), digit);
+	}
+	QString strToRe;
+	for each (auto key in anotherMap.keys())
+		strToRe.push_back(QString::number(anotherMap[key]));
+	 
+	return strToRe.toInt();
+}
+
+
+
 /*
 void Utilities::UNSUED_findBoredersOfFrames(QImage fullScreen){
 	QImage screeOfFrames(fullScreen);
@@ -582,9 +674,13 @@ void Utilities::UNSUED_findBoredersOfFrames(QImage fullScreen){
  }
  */
 
-void Utilities::saveImgToOutPutFolder(QImage* img, QString extraName){
-	QString tmp = QDateTime::currentDateTime().toString("mm_ss_zzz");
-	QString fullname = VariablesClass::outPutFolderPath() + "\\_" + tmp + "_" + extraName + ".png";
+void Utilities::saveImgToOutPutFolder(QImage* img, QString *extraName){
+	QString prefixOfName;
+	if (*extraName == NULL)
+		prefixOfName = QDateTime::currentDateTime().toString("mm_ss_zzz");
+	else
+		prefixOfName = *extraName;
+	QString fullname = VariablesClass::outPutFolderPath() + "\\_" + prefixOfName + "_" + ".png";
 	img->save(fullname);
 }
 

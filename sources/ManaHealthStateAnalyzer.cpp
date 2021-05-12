@@ -206,7 +206,6 @@ int ManaHealthStateAnalyzer::findNearestThresholdIndex(int currentValue, QList<i
 			break;
 		}
 	}
-	qDebug() <<QString::number(currentValue) + "    ind_" + QString::number(indexToRet);
 	out_index = indexToRet;
 	return OK;
 }

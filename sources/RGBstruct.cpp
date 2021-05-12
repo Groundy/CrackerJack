@@ -15,6 +15,12 @@ RGBstruct::RGBstruct(uint rgb){
 	b = rgb & 0xff;
 }
 
+RGBstruct::RGBstruct(uint r, uint g, uint b) {
+	this->r = r;
+	this->g = g;
+	this->b = b;
+}
+
 RGBstruct::~RGBstruct()
 {
 }

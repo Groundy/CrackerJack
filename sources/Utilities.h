@@ -28,7 +28,7 @@ public:
 		int mask = 1 << postition;
 		return (numberToEdit & ~mask) | ((zeroOrOne << postition) & mask);
 	}
-	static void saveImgToOutPutFolder(QImage* img, QString extraName);
+	static void saveImgToOutPutFolder(QImage* img, QString* extraName);
 	static LPCWSTR convert_StrToLPCWSTR(QString str);
 
 	static void cutBlackBordersOfImg(QImage* img);
@@ -37,7 +37,8 @@ public:
 	static void imgToOneColor(QImage* img, QRgb minimalColorValues, QRgb maxColorValues, QRgb colorToSet, bool allOfThem);
 	static void imgAvoideOneColor(QImage* img, QRgb minimalColorValues, QRgb maxColorValues, bool allOfThem);
 	static void changeGreyPixelsToBlack(QImage* img, int min, int max);
-	static QStringList getCodesOfAllLetersInFolder(QString pathToInputFolder, QString pathToOutputFolder);
+	static QStringList TOOL_getCodesOfAllInFolder_regular(QString pathToInputFolder, QString pathToOutputFolder);
+	static QStringList TOOL_getCodesOfAllInFolder_bottom(QString pathToInputFolder);
 	static void cutImgWithLettersToSingleLettersImgList(QImage* img, QList<QImage>* list);
 	static QString imgWithStrToStr(QImage* img);
 	static QString letterImgToLetterCodeStr(QImage* SingleLetterImg);
@@ -48,6 +49,10 @@ public:
 	static void rotateImgToRight(QImage* imgToRotate, int timesToRotateRight);
 	static bool isItPixelFromFrame(uint color, int minValueAcceptable, int maxValueAcceptable, bool requireSameValuesOfRGB);
 	static long long getCurrentTimeInMiliSeconds();
+	static QImage getImageFromAdvancedCode(QString codeOfImg);
+
+	static QMap<QString, int> getMapWithNumbersFromBottomBar();
+	static int getNumberFromBottomBar(QImage* bottomBar);
 
 	class RestoreMethode {
 	public:
@@ -56,7 +61,6 @@ public:
 		int mana, cd, cdGroup;
 		TypeOfMethode type;
 	};
-
 	class Spell {
 	public:
 		enum class TYPE_OF_SPELL { HEALING, SUPPORT, ATTACK };
@@ -74,7 +78,6 @@ public:
 			return toRet;
 		}
 	};
-
 	class Item {
 	public:
 		enum class TYPE_OF_ITEM { ARMOR, AMULETS, BOOTS, CREATURE, HELMETS, LEGS, OTHER, POTIONS, RINGS, RUNES, SHIELDS, VALUABLES, AMMO, AXES, SWORDS, CLUBS, DISTANCES, ROD, WANDS };
