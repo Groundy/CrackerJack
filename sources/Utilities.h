@@ -45,13 +45,14 @@ public:
 	static QChar StrCodeToQChar(QString code);
 	static QMap<QString, QChar> getQmapWithCodes();
 	static QList<QPoint> findStartPositionInImg(QImage* imgToFind, QImage* imgToShareWithin);
+	static QList<QPoint> findStartPositionInImg_mulitpeImgs(QList<QImage*> imgsToFind, QImage* imgToShareWithin);
 	static QImage fromCharToImg(QChar CharToImg);
 	static void rotateImgToRight(QImage* imgToRotate, int timesToRotateRight);
 	static bool isItPixelFromFrame(uint color, int minValueAcceptable, int maxValueAcceptable, bool requireSameValuesOfRGB);
 	static long long getCurrentTimeInMiliSeconds();
 	static QImage getImageFromAdvancedCode(QString codeOfImg);
 
-	static QMap<QString, int> getMapWithNumbersFromBottomBar();
+	static void getMapWithNumbersFromBottomBar(QMap<QString, int>& lightToRet, QMap<QString, int>& darkToRet);
 	static int getNumberFromBottomBar(QImage* bottomBar);
 
 	class RestoreMethode {

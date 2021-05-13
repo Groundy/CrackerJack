@@ -417,16 +417,16 @@
 	 return letters;
  }
 
- QList<QPoint> Utilities::findStartPositionInImg(QImage* imgToFind, QImage* imgToShareWithin){
+ QList<QPoint> Utilities::findStartPositionInImg(QImage* imgToFind, QImage* imgToSearchWithin){
 	 //it can be opitimalized, now we compare the same pixels few times
 	 //fun return list of start positions of imgToFind, position is lef down corner
 	 QImage::Format format1 = imgToFind->format();
-	 QImage::Format format2 = imgToShareWithin->format();
+	 QImage::Format format2 = imgToSearchWithin->format();
 
 	 const int widthSmall = imgToFind->width();
 	 const int heightSmall = imgToFind->height();
-	 const int widthBig = imgToShareWithin->width();
-	 const int heightBig = imgToShareWithin->height();
+	 const int widthBig = imgToSearchWithin->width();
+	 const int heightBig = imgToSearchWithin->height();
 
 
 	 bool errWidth = widthSmall >= widthBig;
@@ -445,14 +445,14 @@
 	 for (int x = 0; x <= maxPixIndThatShoudldBeTested_X; x++){
 		 for (int y = 0; y <= maxPixIndThatShoudldBeTested_Y; y++){
 			 pixFirst = imgToFind->pixel(0, 0);
-			 pixSecond = imgToShareWithin->pixel(x, y);
+			 pixSecond = imgToSearchWithin->pixel(x, y);
 			 if (pixFirst == pixSecond){
 				 //first pix matched, looking for more
 				 foundPosition = true;
 				 for (int x_TMP = 1; x_TMP < widthSmall; x_TMP++){
 					 for (int y_TMP = 1; y_TMP < heightSmall; y_TMP++){
 						 pixFirst = imgToFind->pixel(x_TMP,y_TMP);
-						 pixSecond = imgToShareWithin->pixel(x + x_TMP, y + y_TMP);
+						 pixSecond = imgToSearchWithin->pixel(x + x_TMP, y + y_TMP);
 						 if (pixFirst != pixSecond) {
 							 x_TMP = widthSmall;
 							 y_TMP = heightSmall;
@@ -461,6 +461,76 @@
 					 }
 				 }
 				 if (foundPosition)
+					 startPointsListToRet.push_back(QPoint(x, y));
+			 }
+		 }
+	 }
+	 return startPointsListToRet;
+ }
+
+ QList<QPoint> Utilities::findStartPositionInImg_mulitpeImgs(QList<QImage*> imgsToFind, QImage* imgToShareWithin){
+	 // this fun return starting points from imgToSharePoints than consist pixels from one of imgsToFind
+
+	 bool properFormats = true;
+	 QImage::Format formatBig = imgToShareWithin->format();
+
+	 for each (QImage * var in imgsToFind){
+		 if (formatBig != var->format()) {
+			 properFormats = false;
+			 break;
+		 }
+	 }
+	 if (!properFormats)
+		 ;//diag /err
+
+	 bool allPicAreInTheSameSize = true;
+	 int widthOfFirst = imgsToFind[0]->width();
+	 int heightOfFirst = imgsToFind[0]->height();
+	 for each (QImage* var in imgsToFind){
+		 bool widthIsGood = var->width() == widthOfFirst;
+		 bool heightIsGood = var->height() == heightOfFirst;
+		 if (!(widthIsGood && heightIsGood)) {
+			 allPicAreInTheSameSize = false;
+			 break;//diag /err
+		 }
+	 }
+
+
+	 const int maxPixIndThatShoudldBeTested_X = imgToShareWithin->width() - widthOfFirst;
+	 const int maxPixIndThatShoudldBeTested_Y = imgToShareWithin->height() - heightOfFirst;
+
+	 QList<QPoint> startPointsListToRet;
+	 for (int x = 0; x <= maxPixIndThatShoudldBeTested_X; x++) {
+		 for (int y = 0; y <= maxPixIndThatShoudldBeTested_Y; y++) {
+			 bool atLeastOnePixIsMatched = false;
+			 QRgb pixFromImg_big = imgToShareWithin->pixel(x, y);
+
+			 for each (QImage * var in imgsToFind) {
+				 QRgb pixFromImg_small = var->pixel(0, 0);
+				 if (pixFromImg_big == pixFromImg_small) {
+					 atLeastOnePixIsMatched = true;
+					 break;
+				 }
+			 }
+
+			 if (atLeastOnePixIsMatched) {
+				 //first pix matched, looking for more
+				 int wrongPixels = (widthOfFirst - 1) * (heightOfFirst - 1);
+				 for (int x_TMP = 1; x_TMP < widthOfFirst; x_TMP++) {
+					 for (int y_TMP = 1; y_TMP < heightOfFirst; y_TMP++) {
+
+						 QRgb pixFromImg_big2 = imgToShareWithin->pixel(x + x_TMP, y + y_TMP);
+					     bool metReq = true;
+						 for each (QImage* var in imgsToFind) {
+							 QRgb pixFromImg_small2 = var->pixel(x_TMP, y_TMP);
+							 if (pixFromImg_big2 != pixFromImg_small2)
+								 metReq = false;
+						 }
+						 if (metReq)
+							 wrongPixels--;
+					 }
+				 }
+				 if (wrongPixels == 0)
 					 startPointsListToRet.push_back(QPoint(x, y));
 			 }
 		 }
@@ -578,44 +648,55 @@ QStringList Utilities::TOOL_getCodesOfAllInFolder_bottom(QString pathToInputFold
 	return list;
 }
 
-QMap<QString, int> Utilities::getMapWithNumbersFromBottomBar(){
-	QMap<QString, int> toRet;
-	toRet.insert("4_6_#125#125#125_#223#223#223_#223#223#223_#223#223#223_#223#223#223_#180#180#180_#208#208#208_#83#83#83_#0#0#0_#0#0#0_#29#29#29_#223#223#223_#194#194#194_#125#125#125_#56#56#56_#56#56#56_#111#111#111_#223#223#223_#83#83#83_#223#223#223_#223#223#223_#223#223#223_#223#223#223_#111#111#111_", 0);
-	toRet.insert("2_6_#125#125#125_#223#223#223_#167#167#167_#167#167#167_#167#167#167_#223#223#223_#125#125#125_#167#167#167_#167#167#167_#167#167#167_#167#167#167_#223#223#223_", 1);
-	toRet.insert("4_6_#167#167#167_#111#111#111_#39#39#39_#4#4#4_#125#125#125_#223#223#223_#223#223#223_#56#56#56_#0#0#0_#83#83#83_#208#208#208_#223#223#223_#194#194#194_#153#153#153_#139#139#139_#223#223#223_#56#56#56_#223#223#223_#83#83#83_#223#223#223_#194#194#194_#69#69#69_#0#0#0_#223#223#223_", 2);
-	toRet.insert("2_4_#153#153#153_#194#194#194_#180#180#180_#139#139#139_#223#223#223_#111#111#111_#180#180#180_#223#223#223_", 3);
-	toRet.insert("3_4_#194#194#194_#83#83#83_#111#111#111_#167#167#167_#194#194#194_#167#167#167_#194#194#194_#208#208#208_#111#111#111_#111#111#111_#167#167#167_#194#194#194_", 4);
-	toRet.insert("4_6_#167#167#167_#223#223#223_#223#223#223_#83#83#83_#41#41#41_#223#223#223_#167#167#167_#97#97#97_#180#180#180_#56#56#56_#0#0#0_#223#223#223_#167#167#167_#56#56#56_#167#167#167_#167#167#167_#125#125#125_#223#223#223_#167#167#167_#56#56#56_#69#69#69_#223#223#223_#223#223#223_#111#111#111_", 5);
-	toRet.insert("4_5_#208#208#208_#223#223#223_#223#223#223_#223#223#223_#167#167#167_#139#139#139_#167#167#167_#56#56#56_#29#29#29_#223#223#223_#56#56#56_#167#167#167_#111#111#111_#69#69#69_#223#223#223_#41#41#41_#125#125#125_#223#223#223_#223#223#223_#139#139#139_", 6);
-	toRet.insert("2_4_#167#167#167_#56#56#56_#29#29#29_#153#153#153_#167#167#167_#153#153#153_#223#223#223_#208#208#208_", 7);
-	toRet.insert("4_6_#139#139#139_#223#223#223_#208#208#208_#194#194#194_#194#194#194_#194#194#194_#223#223#223_#29#29#29_#194#194#194_#111#111#111_#0#0#0_#223#223#223_#208#208#208_#97#97#97_#167#167#167_#194#194#194_#56#56#56_#223#223#223_#125#125#125_#223#223#223_#139#139#139_#208#208#208_#223#223#223_#167#167#167_", 8);
-	toRet.insert("2_6_#223#223#223_#29#29#29_#0#0#0_#223#223#223_#0#0#0_#223#223#223_#194#194#194_#125#125#125_#56#56#56_#208#208#208_#153#153#153_#194#194#194_", 9);
-	//lowest values are for digits in dark version
-	toRet.insert("4_6_#37#37#37_#66#66#66_#66#66#66_#66#66#66_#66#66#66_#54#54#54_#62#62#62_#25#25#25_#0#0#0_#0#0#0_#9#9#9_#66#66#66_#58#58#58_#37#37#37_#17#17#17_#17#17#17_#33#33#33_#66#66#66_#25#25#25_#66#66#66_#66#66#66_#66#66#66_#66#66#66_#33#33#33_",0);
-	toRet.insert("2_6_#37#37#37_#66#66#66_#50#50#50_#50#50#50_#50#50#50_#66#66#66_#37#37#37_#50#50#50_#50#50#50_#50#50#50_#50#50#50_#66#66#66_", 1);
-	toRet.insert("4_6_#50#50#50_#33#33#33_#0#0#0_#1#1#1_#37#37#37_#66#66#66_#66#66#66_#17#17#17_#0#0#0_#25#25#25_#62#62#62_#66#66#66_#58#58#58_#46#46#46_#41#41#41_#66#66#66_#17#17#17_#66#66#66_#25#25#25_#66#66#66_#58#58#58_#21#21#21_#0#0#0_#66#66#66_", 2);
-	toRet.insert("2_4_#46#46#46_#58#58#58_#54#54#54_#41#41#41_#66#66#66_#33#33#33_#54#54#54_#66#66#66_", 3);
-	toRet.insert("3_4_#58#58#58_#25#25#25_#33#33#33_#50#50#50_#58#58#58_#50#50#50_#58#58#58_#62#62#62_#33#33#33_#33#33#33_#50#50#50_#58#58#58_", 4);
-	toRet.insert("4_6_#50#50#50_#66#66#66_#66#66#66_#25#25#25_#12#12#12_#66#66#66_#50#50#50_#29#29#29_#54#54#54_#17#17#17_#0#0#0_#66#66#66_#50#50#50_#17#17#17_#50#50#50_#50#50#50_#37#37#37_#66#66#66_#50#50#50_#17#17#17_#21#21#21_#66#66#66_#66#66#66_#33#33#33_", 5);
-	toRet.insert("4_5_#62#62#62_#66#66#66_#66#66#66_#66#66#66_#50#50#50_#41#41#41_#50#50#50_#17#17#17_#9#9#9_#66#66#66_#17#17#17_#50#50#50_#33#33#33_#21#21#21_#66#66#66_#12#12#12_#37#37#37_#66#66#66_#66#66#66_#41#41#41_", 6);
-	toRet.insert("2_4_#50#50#50_#17#17#17_#9#9#9_#46#46#46_#50#50#50_#46#46#46_#66#66#66_#62#62#62_", 7);
-	toRet.insert("4_6_#41#41#41_#66#66#66_#62#62#62_#58#58#58_#58#58#58_#58#58#58_#66#66#66_#9#9#9_#58#58#58_#33#33#33_#0#0#0_#66#66#66_#62#62#62_#29#29#29_#50#50#50_#58#58#58_#17#17#17_#66#66#66_#37#37#37_#66#66#66_#41#41#41_#62#62#62_#66#66#66_#50#50#50_", 8);
-	toRet.insert("2_6_#66#66#66_#9#9#9_#0#0#0_#66#66#66_#0#0#0_#66#66#66_#58#58#58_#37#37#37_#17#17#17_#62#62#62_#46#46#46_#58#58#58_", 9);
+void Utilities::getMapWithNumbersFromBottomBar(QMap<QString, int>& lightToRet, QMap<QString, int>& darkToRet){
+	QMap<QString, int> lightVersion;
+	lightVersion.insert("4_6_#125#125#125_#223#223#223_#223#223#223_#223#223#223_#223#223#223_#180#180#180_#208#208#208_#83#83#83_#0#0#0_#0#0#0_#29#29#29_#223#223#223_#194#194#194_#125#125#125_#56#56#56_#56#56#56_#111#111#111_#223#223#223_#83#83#83_#223#223#223_#223#223#223_#223#223#223_#223#223#223_#111#111#111_", 0);
+	lightVersion.insert("2_6_#125#125#125_#223#223#223_#167#167#167_#167#167#167_#167#167#167_#223#223#223_#125#125#125_#167#167#167_#167#167#167_#167#167#167_#167#167#167_#223#223#223_", 1);
+	lightVersion.insert("4_6_#167#167#167_#111#111#111_#39#39#39_#4#4#4_#125#125#125_#223#223#223_#223#223#223_#56#56#56_#0#0#0_#83#83#83_#208#208#208_#223#223#223_#194#194#194_#153#153#153_#139#139#139_#223#223#223_#56#56#56_#223#223#223_#83#83#83_#223#223#223_#194#194#194_#69#69#69_#0#0#0_#223#223#223_", 2);
+	lightVersion.insert("2_4_#153#153#153_#194#194#194_#180#180#180_#139#139#139_#223#223#223_#111#111#111_#180#180#180_#223#223#223_", 3);
+	lightVersion.insert("3_4_#194#194#194_#83#83#83_#111#111#111_#167#167#167_#194#194#194_#167#167#167_#194#194#194_#208#208#208_#111#111#111_#111#111#111_#167#167#167_#194#194#194_", 4);
+	lightVersion.insert("4_6_#167#167#167_#223#223#223_#223#223#223_#83#83#83_#41#41#41_#223#223#223_#167#167#167_#97#97#97_#180#180#180_#56#56#56_#0#0#0_#223#223#223_#167#167#167_#56#56#56_#167#167#167_#167#167#167_#125#125#125_#223#223#223_#167#167#167_#56#56#56_#69#69#69_#223#223#223_#223#223#223_#111#111#111_", 5);
+	lightVersion.insert("4_5_#208#208#208_#223#223#223_#223#223#223_#223#223#223_#167#167#167_#139#139#139_#167#167#167_#56#56#56_#29#29#29_#223#223#223_#56#56#56_#167#167#167_#111#111#111_#69#69#69_#223#223#223_#41#41#41_#125#125#125_#223#223#223_#223#223#223_#139#139#139_", 6);
+	lightVersion.insert("2_4_#167#167#167_#56#56#56_#29#29#29_#153#153#153_#167#167#167_#153#153#153_#223#223#223_#208#208#208_", 7);
+	lightVersion.insert("4_6_#139#139#139_#223#223#223_#208#208#208_#194#194#194_#194#194#194_#194#194#194_#223#223#223_#29#29#29_#194#194#194_#111#111#111_#0#0#0_#223#223#223_#208#208#208_#97#97#97_#167#167#167_#194#194#194_#56#56#56_#223#223#223_#125#125#125_#223#223#223_#139#139#139_#208#208#208_#223#223#223_#167#167#167_", 8);
+	lightVersion.insert("2_6_#223#223#223_#29#29#29_#0#0#0_#223#223#223_#0#0#0_#223#223#223_#194#194#194_#125#125#125_#56#56#56_#208#208#208_#153#153#153_#194#194#194_", 9);
+	lightToRet = lightVersion;
 
-	return toRet;
+	QMap<QString, int> darkVersion;
+	darkVersion.insert("4_6_#37#37#37_#66#66#66_#66#66#66_#66#66#66_#66#66#66_#54#54#54_#62#62#62_#25#25#25_#0#0#0_#0#0#0_#9#9#9_#66#66#66_#58#58#58_#37#37#37_#17#17#17_#17#17#17_#33#33#33_#66#66#66_#25#25#25_#66#66#66_#66#66#66_#66#66#66_#66#66#66_#33#33#33_",0);
+	darkVersion.insert("2_6_#37#37#37_#66#66#66_#50#50#50_#50#50#50_#50#50#50_#66#66#66_#37#37#37_#50#50#50_#50#50#50_#50#50#50_#50#50#50_#66#66#66_", 1);
+	darkVersion.insert("4_6_#50#50#50_#33#33#33_#0#0#0_#1#1#1_#37#37#37_#66#66#66_#66#66#66_#17#17#17_#0#0#0_#25#25#25_#62#62#62_#66#66#66_#58#58#58_#46#46#46_#41#41#41_#66#66#66_#17#17#17_#66#66#66_#25#25#25_#66#66#66_#58#58#58_#21#21#21_#0#0#0_#66#66#66_", 2);
+	darkVersion.insert("2_4_#46#46#46_#58#58#58_#54#54#54_#41#41#41_#66#66#66_#33#33#33_#54#54#54_#66#66#66_", 3);
+	darkVersion.insert("3_4_#58#58#58_#25#25#25_#33#33#33_#50#50#50_#58#58#58_#50#50#50_#58#58#58_#62#62#62_#33#33#33_#33#33#33_#50#50#50_#58#58#58_", 4);
+	darkVersion.insert("4_6_#50#50#50_#66#66#66_#66#66#66_#25#25#25_#12#12#12_#66#66#66_#50#50#50_#29#29#29_#54#54#54_#17#17#17_#0#0#0_#66#66#66_#50#50#50_#17#17#17_#50#50#50_#50#50#50_#37#37#37_#66#66#66_#50#50#50_#17#17#17_#21#21#21_#66#66#66_#66#66#66_#33#33#33_", 5);
+	darkVersion.insert("4_5_#62#62#62_#66#66#66_#66#66#66_#66#66#66_#50#50#50_#41#41#41_#50#50#50_#17#17#17_#9#9#9_#66#66#66_#17#17#17_#50#50#50_#33#33#33_#21#21#21_#66#66#66_#12#12#12_#37#37#37_#66#66#66_#66#66#66_#41#41#41_", 6);
+	darkVersion.insert("2_4_#50#50#50_#17#17#17_#9#9#9_#46#46#46_#50#50#50_#46#46#46_#66#66#66_#62#62#62_", 7);
+	darkVersion.insert("4_6_#41#41#41_#66#66#66_#62#62#62_#58#58#58_#58#58#58_#58#58#58_#66#66#66_#9#9#9_#58#58#58_#33#33#33_#0#0#0_#66#66#66_#62#62#62_#29#29#29_#50#50#50_#58#58#58_#17#17#17_#66#66#66_#37#37#37_#66#66#66_#41#41#41_#62#62#62_#66#66#66_#50#50#50_", 8);
+	darkVersion.insert("2_6_#66#66#66_#9#9#9_#0#0#0_#66#66#66_#0#0#0_#66#66#66_#58#58#58_#37#37#37_#17#17#17_#62#62#62_#46#46#46_#58#58#58_", 9);
+	darkToRet = darkVersion;
 }
 
 int Utilities::getNumberFromBottomBar(QImage* bottomBar){
-	auto map = Utilities::getMapWithNumbersFromBottomBar();
-	QStringList listOfCodes = map.keys();
+	QMap<QString, int> lightMap, darkMap;
+	Utilities::getMapWithNumbersFromBottomBar(lightMap, darkMap);
+	QStringList lightCodes = lightMap.keys();
+	QStringList darkCodes = darkMap.keys();
+
 	QMap<int, int> anotherMap; // <positionX, value>
-	for (size_t i = 0; i < listOfCodes.size(); i++){
-		QImage numerImg = Utilities::getImageFromAdvancedCode(listOfCodes[i]);
-		int digit = map[listOfCodes[i]];
-		auto listOfStartingPoints = findStartPositionInImg(&numerImg, bottomBar);
+
+	for (size_t i = 0; i < lightCodes.size(); i++){
+		QList<QImage*> listWithLightAndDarkLetterImg;
+		QImage darkLetter = Utilities::getImageFromAdvancedCode(darkCodes[i]);
+		QImage lightLetter = Utilities::getImageFromAdvancedCode(lightCodes[i]);
+		listWithLightAndDarkLetterImg.push_back(&darkLetter);
+		listWithLightAndDarkLetterImg.push_back(&lightLetter);
+
+		int digit = lightMap[lightCodes[i]];
+		auto listOfStartingPoints = findStartPositionInImg_mulitpeImgs(listWithLightAndDarkLetterImg, bottomBar);
 		for each (QPoint var in listOfStartingPoints)
 			anotherMap.insert(var.x(), digit);
 	}
+
 	QString strToRe;
 	for each (auto key in anotherMap.keys())
 		strToRe.push_back(QString::number(anotherMap[key]));
