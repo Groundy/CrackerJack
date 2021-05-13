@@ -28,6 +28,7 @@ QString makeRandomProccessName() {
 }
 
 void test() {
+    Utilities::TOOL_getCodesOfAllInFolder_bottom("C:\\Users\\ADMIN\\Desktop\\digitsFromBottomBar");
 }
 
 int main(int argc, char *argv[])
