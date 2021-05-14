@@ -28,11 +28,7 @@ QString makeRandomProccessName() {
 }
 
 void test() {
-    QString path = "C:\\Users\\ADMIN\\Desktop\\test.png";
-    QImage imgToTest;
-    imgToTest.load(path);
-    int t = Utilities::getNumberFromBottomBar(&imgToTest);
-    int ggg = 5;
+
 }
 
 int main(int argc, char *argv[])

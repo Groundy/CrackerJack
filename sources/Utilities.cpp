@@ -520,11 +520,11 @@
 					 for (int y_TMP = 1; y_TMP < heightOfFirst; y_TMP++) {
 
 						 QRgb pixFromImg_big2 = imgToShareWithin->pixel(x + x_TMP, y + y_TMP);
-					     bool metReq = true;
+					     bool metReq = false;
 						 for each (QImage* var in imgsToFind) {
 							 QRgb pixFromImg_small2 = var->pixel(x_TMP, y_TMP);
-							 if (pixFromImg_big2 != pixFromImg_small2)
-								 metReq = false;
+							 if (pixFromImg_big2 == pixFromImg_small2)
+								 metReq = true;
 						 }
 						 if (metReq)
 							 wrongPixels--;
