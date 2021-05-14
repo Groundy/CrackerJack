@@ -2,7 +2,6 @@
 
 KeySender::KeySender(QObject *parent, Profile* profile, VariablesClass* variableClass)
 	: QThread(parent){
-	//getInfoFromProfile(profile);
 	var = variableClass;
 }
 
@@ -13,70 +12,23 @@ void KeySender::run(){
 	mainLoop();
 }
 
+void KeySender::getKeyToSend(Key keyToSend){
+	unsigned int pidOfGame = var->var_pidOfGame;
+	QString titleOfGameWindow = var->var_winTitleOfGame;
+	Utilities::sendKeyStrokeToProcess(keyToSend, pidOfGame, titleOfGameWindow);
+}
+
 void KeySender::mainLoop(){
-	while(true) {
-		
-		Sleep(50);/*
-		float health, mana, manashield;
-		bool newData = getInfoFromVarClass(&health, &mana, &manashield);
-		if (!newData)
-			continue;
-
-		sendHealingKeyStrokeToGame(health);
-
-		int indexOfManaThreshold;
-		//findNearestThresholdIndex(mana, manaThreshHolds, &indexOfManaThreshold);
-		*/
-	}
-}
-/*	
-bool KeySender::getInfoFromVarClass(float* health, float* mana, float* manashield) {
-
-	bool newDataAvaible = var->newData;
-	if (newDataAvaible) {
-		*health = var->health;
-		*mana = var->mana;
-		*manashield = var->manashield;
-		var->newData = false;
-	}
-	return newDataAvaible;
-}
-	*/
-
-/*
-int KeySender::getMiliSecondsNeededToWaitToUseHealingSpell(){
-	const int COOLDOWN_TIME_IN_MILI_SEC = 1000;
-	int timeBetweenSpells = getCurrentTimeInMiliSeconds() - lastTime_HealingSpell;
-	int valueToReturn;
-	if (timeBetweenSpells > 1100)
-		valueToReturn = 0;
-	else
-		valueToReturn = COOLDOWN_TIME_IN_MILI_SEC - timeBetweenSpells;
-	if (valueToReturn < 0 || valueToReturn > 5000)
-		return 2000; //diag err
-	else
-		return valueToReturn;
-}
-
-/*
-void KeySender::sendHealingKeyStrokeToGame(float currentHealthPercentage){
-	int indexOfHealthThreshold;
-	findNearestThresholdIndex(currentHealthPercentage, lifeThreshHolds, &indexOfHealthThreshold);
-	if (indexOfHealthThreshold != -1) {
-		/*
-		//TODO //TMP
-		Key key = healthKeys[indexOfHealthThreshold];
-		Profile::KEY_ITEM typeOfAction = healthItemTypes[indexOfHealthThreshold];
-		int timeToWait = 0;
-		if (typeOfAction == Profile::KEY_ITEM::SPELL) 
-			timeToWait = getMiliSecondsNeededToWaitToUseHealingSpell();
-		Sleep(timeToWait);
-		unsigned int pidOfGame = var->var_pidOfGame;
-		QString titleOfGameWindow = var->var_winTitleOfGame;
-		Utilities::sendKeyStrokeToProcess(key, pidOfGame, titleOfGameWindow);
-		lastTime_HealingSpell = getCurrentTimeInMiliSeconds();
+	while (true) {
+		Sleep(10);
 
 	}
 }
-*/
+
+void KeySender::sendKeyToGame(Key keyToSend){
+	unsigned int pidOfGame = var->var_pidOfGame;
+	QString titleOfGameWindow = var->var_winTitleOfGame;
+	Utilities::sendKeyStrokeToProcess(keyToSend, pidOfGame, titleOfGameWindow);
+}
+
 

@@ -30,7 +30,7 @@ public:
 	Key();
 	Key(int numberToSet);
 	Key(QKeySequence qsec);
-	QKeySequence toQKeySequence(Key key);
+	static QKeySequence toQKeySequence(Key key);
 
 };
 

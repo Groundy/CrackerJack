@@ -21,7 +21,6 @@ MainMenu::~MainMenu(){
 }
 
 void MainMenu::onGameStateChanged(int state){
-	qDebug() << "MainMenu::onGameStateChanged, signal recived: " + QString::number(state);
 	QString previousText = "game status: ";
 	QString toWrite;
 	QLabel* label = ui->gameActiveLabel;

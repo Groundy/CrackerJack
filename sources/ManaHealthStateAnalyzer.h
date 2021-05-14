@@ -1,7 +1,7 @@
 #pragma once
 
 #include <QThread>
-#include "VariablesClass.h";
+#include "VariablesClass.h"
 #include "qimage.h"
 #include "Utilities.h"
 #include "qdatetime.h"
@@ -48,7 +48,7 @@ private:
 	QList<Utilities::RestoreMethode> healthMethodes;
 	QList<Utilities::Item> manaMethodes;
 
-	QList<LONG64> lastTimesWhenSpellAndPotionWereUsedInMiliSec;
+	QList<LONG64> lastTimeUsedHealthMethode{5};
 	LONG64 lastTimeUsed_Potion, lastTimeUsed_Spell;
 
 	bool getInfoFromVarClass();
@@ -63,6 +63,6 @@ private:
 	bool checkIfEverythingIsCorrectToProcess();
 	void writeDataToVariableClass();
 	void setupRestorationMethodes(QStringList listOfRestorationMethode_Health, QStringList listOfRestorationMethode_Mana);
-	int getKeyThatShouldBeSendToKeySenderClass();
+	int getKeyThatShouldBeSendToKeySenderClass(Key& key1, Key& key2);
 	VariablesClass* var;
 };
