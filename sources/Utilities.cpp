@@ -773,7 +773,7 @@ void Utilities::saveImgToOutPutFolder(QImage* img, QString *extraName){
 		prefixOfName = QDateTime::currentDateTime().toString("mm_ss_zzz");
 	else
 		prefixOfName = *extraName;
-	QString fullname = VariablesClass::outPutFolderPath() + "\\_" + prefixOfName + "_" + ".png";
+	QString fullname = "C:\\Users\\ADMIN\\Desktop\\output\\_" + prefixOfName + ".png";
 	img->save(fullname);
 }
 

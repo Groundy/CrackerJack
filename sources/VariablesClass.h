@@ -2,6 +2,7 @@
 #include <QObject>
 #include "qmap.h"
 #include "qimage.h"
+#include <basetsd.h>
 class VariablesClass : public QObject
 {
 	Q_OBJECT
@@ -21,7 +22,14 @@ public:
 	bool newData;
 	calibrationState caliState;
 
-	static QString outPutFolderPath();
+	//
+	LONG64 lastTimeMethodeUsed_Healing[5];
+	LONG64 lastTimeMethodeUsed_Mana[5];
+	LONG64 lastTimeUsed_spell_healing;
+	LONG64 lastTimeUsed_spell_attack;
+	LONG64 lastTimeUsed_spell_support;
+	LONG64 lastTimeUsed_item;
+
 	VariablesClass();
 	~VariablesClass();
 };

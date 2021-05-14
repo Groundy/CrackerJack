@@ -47,9 +47,7 @@ private:
 
 	QList<Utilities::RestoreMethode> healthMethodes;
 	QList<Utilities::Item> manaMethodes;
-
-	QList<LONG64> lastTimeUsedHealthMethode{5};
-	LONG64 lastTimeUsed_Potion, lastTimeUsed_Spell;
+	LONG64 lastTimeAnalyzed = 0;
 
 	bool getInfoFromVarClass();
 	void mainLoop();
@@ -64,5 +62,6 @@ private:
 	void writeDataToVariableClass();
 	void setupRestorationMethodes(QStringList listOfRestorationMethode_Health, QStringList listOfRestorationMethode_Mana);
 	int getKeyThatShouldBeSendToKeySenderClass(Key& key1, Key& key2);
+	void sleepAppropirateTimeToNextAnalyze();
 	VariablesClass* var;
 };

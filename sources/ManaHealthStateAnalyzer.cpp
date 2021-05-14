@@ -12,10 +12,12 @@ ManaHealthStateAnalyzer::ManaHealthStateAnalyzer(QObject *parent, Profile* profi
 	QStringList restorationMethodeList_Health = profile->healthRestoreMethodeNames;
 	QStringList restorationMethodeList_Mana = profile->manaRestoreMethodeNames;
 	setupRestorationMethodes(restorationMethodeList_Health, restorationMethodeList_Mana);
+	/*
 	for each (auto var in restorationMethodeList_Health)
 		lastTimeUsedHealthMethode.push_back(0);
 	lastTimeUsed_Potion = 0;
 	lastTimeUsed_Spell = 0;
+	*/
 }
 
 ManaHealthStateAnalyzer::~ManaHealthStateAnalyzer(){
@@ -54,18 +56,13 @@ void ManaHealthStateAnalyzer::mainLoop(){
 		getValuesFromStringsToGlobablVariables();
 		PreapareAndSendInfoToGuiInMainThread();
 		writeDataToVariableClass();
+		sleepAppropirateTimeToNextAnalyze();
 		Key key1, key2;
-		getKeyThatShouldBeSendToKeySenderClass(key1, key2);
-
-		//tmp 
-		QString sKey, pKey;
-		sKey = Key::toQKeySequence(key1).toString();
-		pKey = Key::toQKeySequence(key2).toString();
-		QString t = QString::number(Utilities::getCurrentTimeInMiliSeconds() % 100000);
-		if( key1.number != -1 || key2.number != -1)
-		qDebug() << "[" + t + "]spell____" + pKey + "      potion_" + sKey;
-
-		msleep(miliSecBetweenCheckingForNewValuesImg);
+		bool sucess = getKeyThatShouldBeSendToKeySenderClass(key1, key2);
+		if(key1.number != -1)
+			Utilities::sendKeyStrokeToProcess(key1, var->var_pidOfGame, var->var_winTitleOfGame);
+		if (key2.number != -1)
+			Utilities::sendKeyStrokeToProcess(key2, var->var_pidOfGame, var->var_winTitleOfGame);
 	}
 }
 
@@ -260,16 +257,6 @@ void ManaHealthStateAnalyzer::writeDataToVariableClass(){
 	var->mana = manaInfoToSend;
 	var->manashield = manaShieldInfoToSend;
 	var->newData = true;
-	//tmp
-	int MsecondsInThatH = Utilities::getCurrentTimeInMiliSeconds() % 3600000;
-	int minutes = MsecondsInThatH / (1000 * 60);
-	int sec = (MsecondsInThatH- (minutes * 60000)) / 1000;
-	int rest = (MsecondsInThatH - (minutes * 60000) - (sec * 1000));
-	QString m1 = QString::number(minutes);
-	QString s1 = QString::number(sec);
-	QString mr1 = QString::number(rest);
-	QString tmp = m1 + "___" + s1 + "___" + mr1;
-	//qDebug() << tmp;
 }
 
 void ManaHealthStateAnalyzer::setupRestorationMethodes(QStringList listOfRestorationMethode_Health, QStringList listOfRestorationMethode_Mana){
@@ -307,29 +294,29 @@ int ManaHealthStateAnalyzer::getKeyThatShouldBeSendToKeySenderClass(Key& key1, K
 		TypeOfMethode type = healthMethodes[i].type;
 
 		if (type == TypeOfMethode::POTION && !potionSlotIsUsed) {
-			LONG64 nextTimeThisItemWillBeAvaible = ((LONG64)healthMethodes[i].cd * 1000) + lastTimeUsedHealthMethode[i];
-			LONG64 nextTimeAnyItemWillBeAvaible = lastTimeUsed_Potion + 1000;
+			LONG64 nextTimeThisItemWillBeAvaible = ((LONG64)healthMethodes[i].cd * 1000) + var->lastTimeMethodeUsed_Healing[i];
+			LONG64 nextTimeAnyItemWillBeAvaible = var->lastTimeUsed_item + 1000;
 			bool useThis = max(nextTimeThisItemWillBeAvaible, nextTimeAnyItemWillBeAvaible) <= currentTime;
 			if (useThis){
 				potionKey = healthKeys[i];
 				potionSlotIsUsed = true;
-				lastTimeUsed_Potion = currentTime;
-				lastTimeUsedHealthMethode[i] = currentTime;
+				var->lastTimeUsed_item = currentTime;
+				var->lastTimeMethodeUsed_Healing[i] = currentTime;
 			}
 		}
 		else if (type == TypeOfMethode::SPELL && !spellSlotIsUsed) {
-			LONG64 lastTimeUsed= lastTimeUsedHealthMethode[i];
+			LONG64 lastTimeUsed = var->lastTimeMethodeUsed_Healing[i];
 			LONG64 minTimeCd = ((LONG64)healthMethodes[i].cd * 1000) + lastTimeUsed;
 			LONG64 minTimeCdGroup = ((LONG64)healthMethodes[i].cdGroup * 1000) + lastTimeUsed;
-			LONG64 nextTimeAnySpellWillBeAvaible = lastTimeUsed_Spell + 1000;
+			LONG64 nextTimeAnySpellWillBeAvaible = var->lastTimeUsed_spell_healing + 1000;
 			LONG64 nextTimeThisSpellWillBeAvaible = max(max(minTimeCd, minTimeCdGroup), nextTimeAnySpellWillBeAvaible);
 			bool canUseNow =  nextTimeThisSpellWillBeAvaible <= currentTime;
 			bool haveManaForIt = mana >= healthMethodes[i].mana;
 			if (canUseNow && haveManaForIt) {
 				spellKey = healthKeys[i];
 				spellSlotIsUsed = true;
-				lastTimeUsed_Spell = currentTime;
-				lastTimeUsedHealthMethode[i] = currentTime;
+				var->lastTimeUsed_spell_healing = currentTime;
+				var->lastTimeMethodeUsed_Healing[i] = currentTime;
 			}
 		}
 		i--;
@@ -337,12 +324,12 @@ int ManaHealthStateAnalyzer::getKeyThatShouldBeSendToKeySenderClass(Key& key1, K
 
 	i = potionSlotIsUsed ? -1 : indexOfMana;
 	while (i >= 0){
-		LONG64 nextTimeThisItemWillBeAvaible = lastTimeUsed_Potion + 1000;
+		LONG64 nextTimeThisItemWillBeAvaible = var->lastTimeUsed_item + 1000;
 		bool isReady = nextTimeThisItemWillBeAvaible <= currentTime;
 		if (isReady) {
 			potionKey = manaKeys[i];
 			potionSlotIsUsed = true;
-			lastTimeUsed_Potion = currentTime;
+			var->lastTimeUsed_item = currentTime;
 		}
 		i--;
 	}
@@ -350,4 +337,17 @@ int ManaHealthStateAnalyzer::getKeyThatShouldBeSendToKeySenderClass(Key& key1, K
 	key1 = potionKey;
 	key2 = spellKey;
 	return OK;
+}
+
+void ManaHealthStateAnalyzer::sleepAppropirateTimeToNextAnalyze(){
+	LONG64 currentTime = Utilities::getCurrentTimeInMiliSeconds();
+	LONG64 time = 1015;
+	LONG64 timeToSleep = time - (currentTime - lastTimeAnalyzed);
+	if (timeToSleep > time)
+		timeToSleep = time;
+	if (timeToSleep < 0)
+		timeToSleep = 0;
+	//qDebug() << QString::number(timeToSleep);
+	lastTimeAnalyzed = currentTime + timeToSleep;
+	Sleep(timeToSleep);
 }
