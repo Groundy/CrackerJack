@@ -4,6 +4,7 @@
 #include "MainMenu.h"
 #include <memory.h>
 #include "JsonParser.h"
+#include "qsettings.h"
 /*This function is designed to make ranom name of Process to avoid giving the same name the name that could be easily detected*/
 QString makeRandomProccessName() {
     const QString possibleCharacters("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789 ");
@@ -28,7 +29,6 @@ QString makeRandomProccessName() {
 }
 
 void test() {
-
 }
 
 int main(int argc, char *argv[])

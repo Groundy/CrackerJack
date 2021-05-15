@@ -1,7 +1,11 @@
 #pragma once
 #include "qstring.h"
+#include "qsettings.h"
+ 
 class StringResource{
 public:
+	static bool languageIsPl();
+
 	static QString WindowTitle_CrackerJackProblem();
 
 	static QString LoginWindow_WrongLoginPasword();
@@ -9,9 +13,6 @@ public:
 	static QString NewProfileConfigHelp(int page);
 	static QString NewProfileConfig_1_TooLongName();
 	static QString NewProfileConfig_1_TooShortName();
-	static QString NewProfileConfig_1_TooShortExactName();
-	static QString NewProfileConfig_1_TooLongExactName();
-	static QString NewProfileConfig_1_ExactNameHasNewLineChars();
 	static QString NewProfileConfig_1_ForbiddenChars();
 	static QString NewProfileConfig_2_anyProfIsChecked();
 	static QString NewProfileConfig_3_SlidersAreInTheSamePosition();

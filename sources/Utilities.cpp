@@ -1,7 +1,7 @@
 #include "Utilities.h"
 #include <QRgb>
 
- int Utilities::showMessageBox(QString title = "CrackerJack", QString text = "", QFlags<QMessageBox::StandardButton> buttons = QMessageBox::Ok) {
+int Utilities::showMessageBox(QString title = "CrackerJack", QString text = "", QFlags<QMessageBox::StandardButton> buttons = QMessageBox::Ok) {
 	QMessageBox box;
 	box.setText(text);
 	box.setWindowTitle(title);
@@ -11,7 +11,7 @@
 	return ret;
 }
 
- bool Utilities::showMessageBox_NO_YES(QString title, QString text)
+bool Utilities::showMessageBox_NO_YES(QString title, QString text)
  {
 	 QFlags<QMessageBox::StandardButton> flags = { QMessageBox::StandardButton::Yes, QMessageBox::StandardButton::No };
 	 int res = Utilities::showMessageBox(title, text, flags);
@@ -21,7 +21,7 @@
 		 return false;
  }
 
- void Utilities::sendKeyStrokeToProcess(Key key, unsigned int PID, QString nameOfWindow) {
+void Utilities::sendKeyStrokeToProcess(Key key, unsigned int PID, QString nameOfWindow) {
     LPCWSTR nameOfWindowLPCWSTR = convert_StrToLPCWSTR(nameOfWindow);
     HWND handler = FindWindow(NULL, nameOfWindowLPCWSTR);
     if (handler == NULL)
@@ -37,7 +37,7 @@
         ;//errToDo
  }
 
- void Utilities::imgToBlackAndWhiteOneColor(QImage& img, int threshold) {
+void Utilities::imgToBlackAndWhiteOneColor(QImage& img, int threshold) {
 	 int width = img.width();
 	 int height = img.height();
 	 for (size_t x = 0; x < width; x++) {
@@ -55,7 +55,7 @@
 	 }
  }
 
- void Utilities::imgToBlackAndWhiteAllColors(QImage& img, int threshold) {
+void Utilities::imgToBlackAndWhiteAllColors(QImage& img, int threshold) {
 	 int width = img.width();
 	 int height = img.height();
 	 for (size_t x = 0; x < width; x++) {
@@ -73,32 +73,7 @@
 	 }
  }
 
- QStringList Utilities::TOOL_getCodesOfAllInFolder_regular(QString pathToInputFolder, QString pathToOutputFolder) {
-	 QDir directory(pathToInputFolder);
-	 QStringList litOfFIles = directory.entryList(QStringList() << "*.png", QDir::Files);
-	 QList<QString> list;
-	 for (size_t i = 0; i < litOfFIles.size(); i++) {
-		 QString pathToFile = pathToInputFolder + "\\" + litOfFIles[i];
-		 QImage img = QImage(pathToFile);
-		 Utilities::imgToBlackAndWhiteOneColor(img, 200);
-		 QString name = pathToOutputFolder + "\\" + litOfFIles[i];
-		 img.save(name);
-		 QString code = letterImgToLetterCodeStr(&img);
-
-		 //changing "slash.png" to "slash"
-		 QString tmp = litOfFIles[i].left(litOfFIles[i].size() - 4);
-		 litOfFIles[i] = tmp;
-
-		 list.push_back(litOfFIles[i] + QString("___") + code);
-	 }
-
-	 for each (QString var in list) {
-		 qDebug() << var;
-	 }
-	 return list;
- }
-
- void Utilities::cutBlackBordersOfImg(QImage& img) {
+void Utilities::cutBlackBordersOfImg(QImage& img) {
 	 int linesOfBlackrows_TOP = 0, linesOfBlackrows_DOWN = 0, linesOfBlackrows_RIGHT = 0, linesOfBlackrows_LEFT = 0;
 	 int w = img.width();
 	 int h = img.height();
@@ -154,7 +129,7 @@
 	 img = img.copy(linesOfBlackrows_LEFT, linesOfBlackrows_TOP, widthToCut, heightToCut);
  }
 
- void Utilities::cutImgWithLettersToSingleLettersImgList(QImage& img, QList<QImage>& letterImages) {
+void Utilities::cutImgWithLettersToSingleLettersImgList(QImage& img, QList<QImage>& letterImages) {
 	 QList<int> colThatAreNotBlack;
 	 int w = img.width();
 	 int h = img.height();
@@ -195,7 +170,7 @@
 	 }
  }
 
- QString Utilities::imgWithStrToStr(QImage* img) {
+QString Utilities::imgWithStrToStr(QImage* img) {
 	 imgToBlackAndWhiteAllColors(*img, 240);
 	 cutBlackBordersOfImg(*img);
 	 QList<QImage>* imgs = new QList<QImage>;
@@ -213,7 +188,7 @@
 	 return toRet;
  }
 
- QString Utilities::letterImgToLetterCodeStr(QImage* SingleLetterImg) {
+QString Utilities::letterImgToLetterCodeStr(QImage* SingleLetterImg) {
 	 int width = SingleLetterImg->width();
 	 int height = SingleLetterImg->height();
 	 uint pixelColor;
@@ -233,13 +208,13 @@
 	 return toRet;
  }
 
- QChar Utilities::StrCodeToQChar(QString code){
+QChar Utilities::StrCodeToQChar(QString code){
 	 //todo, it's terrible solution, it has to be changed
 	QMap<QString, QChar> letters = getQmapWithCodes();
 	return letters[code];
  }
 
- QMap<QString, QChar>  Utilities::getQmapWithCodes() {
+QMap<QString, QChar>  Utilities::getQmapWithCodes() {
 	 QMap<QString, QChar> letters;
 	 //char 200 it's some weird char but here it's symbol of healthIcon
 	 letters.insert("9_9_101110000011111000111111100111111110011111111111111110111111100111111000011110000",QChar(200));
@@ -317,7 +292,7 @@
 	 return letters;
  }
 
- QList<QPoint> Utilities::findStartPositionInImg(QImage* imgToFind, QImage* imgToSearchWithin){
+QList<QPoint> Utilities::findStartPositionInImg(QImage* imgToFind, QImage* imgToSearchWithin){
 	 //it can be opitimalized, now we compare the same pixels few times
 	 //fun return list of start positions of imgToFind, position is lef down corner
 	 QImage::Format format1 = imgToFind->format();
@@ -368,7 +343,7 @@
 	 return startPointsListToRet;
  }
 
- QList<QPoint> Utilities::findStartPositionInImg_mulitpeImgs(QList<QImage*> imgsToFind, QImage* imgToShareWithin){
+QList<QPoint> Utilities::findStartPositionInImg_mulitpeImgs(QList<QImage*> imgsToFind, QImage* imgToShareWithin){
 	 // this fun return starting points from imgToSharePoints than consist pixels from one of imgsToFind
 
 	 bool properFormats = true;
@@ -618,6 +593,32 @@ QStringList Utilities::TOOL_getCodesOfAllInFolder_bottom(QString pathToInputFold
 	return list;
 }
 
+QStringList Utilities::TOOL_getCodesOfAllInFolder_regular(QString pathToInputFolder, QString pathToOutputFolder) {
+	 QDir directory(pathToInputFolder);
+	 QStringList litOfFIles = directory.entryList(QStringList() << "*.png", QDir::Files);
+	 QList<QString> list;
+	 for (size_t i = 0; i < litOfFIles.size(); i++) {
+		 QString pathToFile = pathToInputFolder + "\\" + litOfFIles[i];
+		 QImage img = QImage(pathToFile);
+		 Utilities::imgToBlackAndWhiteOneColor(img, 200);
+		 QString name = pathToOutputFolder + "\\" + litOfFIles[i];
+		 img.save(name);
+		 QString code = letterImgToLetterCodeStr(&img);
+
+		 //changing "slash.png" to "slash"
+		 QString tmp = litOfFIles[i].left(litOfFIles[i].size() - 4);
+		 litOfFIles[i] = tmp;
+
+		 list.push_back(litOfFIles[i] + QString("___") + code);
+	 }
+
+	 for each (QString var in list) {
+		 qDebug() << var;
+	 }
+	 return list;
+ }
+
+/*
 void Utilities::UNSUED_findBoredersOfFrames(QImage fullScreen){
 	QImage screeOfFrames(fullScreen);
 	auto  minBlack = qRgb(19, 19, 19);
@@ -732,4 +733,4 @@ void Utilities::UNUSED_changeGreyPixelsToBlack(QImage& img, int minGreyVal, int 
 	int mask = 1 << postition;
 	return (numberToEdit & ~mask) | ((zeroOrOne << postition) & mask);
 }
- 
+*/ 
