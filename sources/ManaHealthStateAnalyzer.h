@@ -49,6 +49,7 @@ private:
 	QList<Utilities::Item> manaMethodes;
 	LONG64 lastTimeAnalyzed = 0;
 
+	int extraTimeToWaitBetweenManaPotUse = 1400;
 	bool getInfoFromVarClass();
 	void mainLoop();
 	int changeImgsToStrings();

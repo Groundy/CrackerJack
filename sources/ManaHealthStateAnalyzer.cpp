@@ -57,12 +57,17 @@ void ManaHealthStateAnalyzer::mainLoop(){
 		PreapareAndSendInfoToGuiInMainThread();
 		writeDataToVariableClass();
 		sleepAppropirateTimeToNextAnalyze();
-		Key key1, key2;
-		bool sucess = getKeyThatShouldBeSendToKeySenderClass(key1, key2);
-		if(key1.number != -1)
-			Utilities::sendKeyStrokeToProcess(key1, var->var_pidOfGame, var->var_winTitleOfGame);
-		if (key2.number != -1)
-			Utilities::sendKeyStrokeToProcess(key2, var->var_pidOfGame, var->var_winTitleOfGame);
+
+		Key healthKey, manaKey;
+		bool sucess = getKeyThatShouldBeSendToKeySenderClass(healthKey, manaKey) == OK;
+		bool thereIsHealthKey = (healthKey.number != -1) && sucess;
+		bool thereIsManaKey = (manaKey.number != -1) && sucess;
+		if(thereIsHealthKey)
+			Utilities::sendKeyStrokeToProcess(healthKey, var->var_pidOfGame, var->var_winTitleOfGame);
+		if (thereIsManaKey) {
+			Sleep(extraTimeToWaitBetweenManaPotUse);
+			Utilities::sendKeyStrokeToProcess(manaKey, var->var_pidOfGame, var->var_winTitleOfGame);
+		}
 	}
 }
 
@@ -271,7 +276,7 @@ void ManaHealthStateAnalyzer::setupRestorationMethodes(QStringList listOfRestora
 	manaMethodes = manaPotions;
 }
 
-int ManaHealthStateAnalyzer::getKeyThatShouldBeSendToKeySenderClass(Key& key1, Key& key2){
+int ManaHealthStateAnalyzer::getKeyThatShouldBeSendToKeySenderClass(Key& healthKey, Key& manaKey){
 	int indexOfHealth;
 	auto res1 = findNearestThresholdIndex(healthPercentage, lifeThreshholds, indexOfHealth);
 	if (res1!= OK)
@@ -283,7 +288,6 @@ int ManaHealthStateAnalyzer::getKeyThatShouldBeSendToKeySenderClass(Key& key1, K
 		return res2;
 
 
-	typedef Utilities::RestoreMethode::TypeOfMethode TypeOfMethode;
 	bool potionSlotIsUsed = false;
 	bool spellSlotIsUsed = false;
 	Key potionKey = -1, spellKey = -1;
@@ -291,9 +295,9 @@ int ManaHealthStateAnalyzer::getKeyThatShouldBeSendToKeySenderClass(Key& key1, K
 	int i = indexOfHealth;
 	LONG64 currentTime = Utilities::getCurrentTimeInMiliSeconds();
 	while (i >= 0) {
-		TypeOfMethode type = healthMethodes[i].type;
+		Utilities::RestoreMethode::TypeOfMethode type = healthMethodes[i].type;
 
-		if (type == TypeOfMethode::POTION && !potionSlotIsUsed) {
+		if (type == Utilities::RestoreMethode::TypeOfMethode::POTION && !potionSlotIsUsed) {
 			LONG64 nextTimeThisItemWillBeAvaible = ((LONG64)healthMethodes[i].cd * 1000) + var->lastTimeMethodeUsed_Healing[i];
 			LONG64 nextTimeAnyItemWillBeAvaible = var->lastTimeUsed_item + 1000;
 			bool useThis = max(nextTimeThisItemWillBeAvaible, nextTimeAnyItemWillBeAvaible) <= currentTime;
@@ -304,7 +308,7 @@ int ManaHealthStateAnalyzer::getKeyThatShouldBeSendToKeySenderClass(Key& key1, K
 				var->lastTimeMethodeUsed_Healing[i] = currentTime;
 			}
 		}
-		else if (type == TypeOfMethode::SPELL && !spellSlotIsUsed) {
+		else if (type == Utilities::RestoreMethode::TypeOfMethode::SPELL && !spellSlotIsUsed) {
 			LONG64 lastTimeUsed = var->lastTimeMethodeUsed_Healing[i];
 			LONG64 minTimeCd = ((LONG64)healthMethodes[i].cd * 1000) + lastTimeUsed;
 			LONG64 minTimeCdGroup = ((LONG64)healthMethodes[i].cdGroup * 1000) + lastTimeUsed;
@@ -334,8 +338,8 @@ int ManaHealthStateAnalyzer::getKeyThatShouldBeSendToKeySenderClass(Key& key1, K
 		i--;
 	}
 
-	key1 = potionKey;
-	key2 = spellKey;
+	manaKey = potionKey;
+	healthKey = spellKey;
 	return OK;
 }
 
