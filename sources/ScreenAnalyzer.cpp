@@ -84,7 +84,7 @@ int ScreenAnalyzer::findIndexesOfRectangleThatContainsSlashes(QImage fullScreen,
 	*indexOfFrameCombined = -1;
 	for (size_t i = 0; i < importantFrames.size(); i++) {
 		QImage imgTmp = fullScreen.copy(importantFrames[i]);
-		Utilities::imgToBlackAndWhiteAllColors(&imgTmp, 250);
+		Utilities::imgToBlackAndWhiteAllColors(imgTmp, 250);
 
 		QList<QPoint> pointsVert = Utilities::findStartPositionInImg(&vertSlashes, &imgTmp);
 		if (pointsVert.size() == 0)
@@ -139,19 +139,19 @@ void ScreenAnalyzer::TEST_setPositionHealthImhs(QString pathToFolderWithDiffrent
 		QString healthStr, manaStr, ManaShieldStr, combinedStr;
 
 		Utilities::rotateImgToRight(&health, howTheyShouldBeRotated);
-		Utilities::imgToBlackAndWhiteAllColors(&health, 240);
+		Utilities::imgToBlackAndWhiteAllColors(health, 240);
 		healthStr = Utilities::imgWithStrToStr(&health);
 		qDebug() << "Health: " + healthStr;
 
-		bool thereIsCombinedBox = indCombined != -1 ? true : false;
-		bool manaFound = indMana != -1 ? true : false;
-		bool manaShieldFound = indManaShield != -1 ? true : false;
+		bool thereIsCombinedBox = indCombined != -1;
+		bool manaFound = indMana != -1;
+		bool manaShieldFound = indManaShield != -1;
 		if (thereIsCombinedBox) {
 			QRect rect = importantRects.at(indCombined);
 			combined = img.copy(rect);
 
 			Utilities::rotateImgToRight(&combined, howTheyShouldBeRotated);
-			Utilities::imgToBlackAndWhiteAllColors(&combined, 240);
+			Utilities::imgToBlackAndWhiteAllColors(combined, 240);
 			QString combinedStr = Utilities::imgWithStrToStr(&combined);
 			qDebug() << "combinedStr: " + combinedStr;
 		}
@@ -162,12 +162,12 @@ void ScreenAnalyzer::TEST_setPositionHealthImhs(QString pathToFolderWithDiffrent
 			manaShield = img.copy(rect);
 
 			Utilities::rotateImgToRight(&mana, howTheyShouldBeRotated);
-			Utilities::imgToBlackAndWhiteAllColors(&mana, 240);
+			Utilities::imgToBlackAndWhiteAllColors(mana, 240);
 			QString manaStr = Utilities::imgWithStrToStr(&mana);
 			qDebug() << "manaStr: " + manaStr;
 
 			Utilities::rotateImgToRight(&manaShield, howTheyShouldBeRotated);
-			Utilities::imgToBlackAndWhiteAllColors(&manaShield, 240);
+			Utilities::imgToBlackAndWhiteAllColors(manaShield, 240);
 			QString ManaShieldStr = Utilities::imgWithStrToStr(&manaShield);
 			qDebug() << "ManaShieldStr: " + ManaShieldStr;
 		}
@@ -176,7 +176,7 @@ void ScreenAnalyzer::TEST_setPositionHealthImhs(QString pathToFolderWithDiffrent
 			mana = img.copy(rect);
 
 			Utilities::rotateImgToRight(&mana, howTheyShouldBeRotated);
-			Utilities::imgToBlackAndWhiteAllColors(&mana, 240);
+			Utilities::imgToBlackAndWhiteAllColors(mana, 240);
 			QString manaStr = Utilities::imgWithStrToStr(&mana);
 			qDebug() << "manaStr: " + manaStr;
 		}

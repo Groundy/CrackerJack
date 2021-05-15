@@ -31,15 +31,15 @@ public:
 	static void saveImgToOutPutFolder(QImage* img, QString* extraName);
 	static LPCWSTR convert_StrToLPCWSTR(QString str);
 
-	static void cutBlackBordersOfImg(QImage* img);
-	static void imgToBlackAndWhiteOneColor(QImage* img, int threshold);
-	static void imgToBlackAndWhiteAllColors(QImage* img, int threshold);
-	static void imgToOneColor(QImage* img, QRgb minimalColorValues, QRgb maxColorValues, QRgb colorToSet, bool allOfThem);
-	static void imgAvoideOneColor(QImage* img, QRgb minimalColorValues, QRgb maxColorValues, bool allOfThem);
-	static void changeGreyPixelsToBlack(QImage* img, int min, int max);
+	static void cutBlackBordersOfImg(QImage& img);
+	static void imgToBlackAndWhiteOneColor(QImage& img, int threshold);
+	static void imgToBlackAndWhiteAllColors(QImage& img, int threshold);
+	static void imgToOneColor(QImage& img, QRgb minimalColorValues, QRgb maxColorValues, QRgb colorToSet, bool allOfThem);
+	static void imgAvoideOneColor(QImage& img, QRgb minimalColorValues, QRgb maxColorValues, bool allOfThem);
+	static void changeGreyPixelsToBlack(QImage& img, int minGreyVal, int maxGreyVal);
 	static QStringList TOOL_getCodesOfAllInFolder_regular(QString pathToInputFolder, QString pathToOutputFolder);
 	static QStringList TOOL_getCodesOfAllInFolder_bottom(QString pathToInputFolder);
-	static void cutImgWithLettersToSingleLettersImgList(QImage* img, QList<QImage>* list);
+	static void cutImgWithLettersToSingleLettersImgList(QImage& img, QList<QImage>& list);
 	static QString imgWithStrToStr(QImage* img);
 	static QString letterImgToLetterCodeStr(QImage* SingleLetterImg);
 	static QChar StrCodeToQChar(QString code);

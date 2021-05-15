@@ -37,65 +37,60 @@
         ;//errToDo
  }
  
- void Utilities::imgToBlackAndWhiteOneColor(QImage* img, int threshold) {
-	 int width = img->width();
-	 int height = img->height();
-	 uint pixelColor;
-	 bool redIsEnough, greenIsEnough, blueIsEnough;
+ void Utilities::imgToBlackAndWhiteOneColor(QImage& img, int threshold) {
+	 int width = img.width();
+	 int height = img.height();
 	 for (size_t x = 0; x < width; x++) {
 		 for (size_t y = 0; y < height; y++) {
-			 pixelColor = img->pixel(QPoint(x, y));
+			 uint pixelColor = img.pixel(x, y);
 			 RGBstruct rgb(pixelColor);
-			 redIsEnough = rgb.r >= threshold ? true : false;
-			 greenIsEnough = rgb.g >= threshold ? true : false;
-			 blueIsEnough = rgb.b >= threshold ? true : false;
+			 bool redIsEnough = rgb.r >= threshold;
+			 bool greenIsEnough = rgb.g >= threshold;
+			 bool blueIsEnough = rgb.b >= threshold;
 			 if (redIsEnough || greenIsEnough || blueIsEnough)
-				 img->setPixel(x, y, qRgb(255, 255, 255));
+				 img.setPixel(x, y, qRgb(255, 255, 255));
 			 else
-				 img->setPixel(x, y, qRgb(0, 0, 0));
+				 img.setPixel(x, y, qRgb(0, 0, 0));
 		 }
 	 }
  }
 
- void Utilities::imgToBlackAndWhiteAllColors(QImage* img, int threshold) {
-	 int width = img->width();
-	 int height = img->height();
-	 uint pixelColor;
-	 bool redIsEnough, greenIsEnough, blueIsEnough;
+ void Utilities::imgToBlackAndWhiteAllColors(QImage& img, int threshold) {
+	 int width = img.width();
+	 int height = img.height();
 	 for (size_t x = 0; x < width; x++) {
 		 for (size_t y = 0; y < height; y++) {
-			 pixelColor = img->pixel(x, y);
+			 uint pixelColor = img.pixel(x, y);
 			 RGBstruct rgb(pixelColor);
-			 redIsEnough = rgb.r >= threshold ? true : false;
-			 greenIsEnough = rgb.g >= threshold ? true : false;
-			 blueIsEnough = rgb.b >= threshold ? true : false;
+			 bool redIsEnough = rgb.r >= threshold ? true : false;
+			 bool greenIsEnough = rgb.g >= threshold ? true : false;
+			 bool blueIsEnough = rgb.b >= threshold ? true : false;
 			 if (redIsEnough && greenIsEnough && blueIsEnough)
-				 img->setPixel(x, y, qRgb(255, 255, 255));
+				 img.setPixel(x, y, qRgb(255, 255, 255));
 			 else
-				 img->setPixel(x, y, qRgb(0, 0, 0));
+				 img.setPixel(x, y, qRgb(0, 0, 0));
 		 }
 	 }
  }
 
- void Utilities::imgToOneColor(QImage* img, QRgb minimalColorValues, QRgb maxColorValues, QRgb colorToSet, bool allOfThem){
-	 int width = img->width();
-	 int height = img->height();
+ void Utilities::imgToOneColor(QImage& img, QRgb minimalColorValues, QRgb maxColorValues, QRgb colorToSet, bool allOfThem){
+	 int width = img.width();
+	 int height = img.height();
 	 auto black = qRgb(0, 0, 0);
 	 uint minValue = (uint)minimalColorValues;
 	 uint maxValue = (uint)maxColorValues;
 	 RGBstruct minV(minValue);
 	 RGBstruct maxV(maxValue);
-	 bool redIsEnough, greenIsEnough, blueIsEnough;
 	 bool setGiveColor;
 
 	 for (size_t x = 0; x < width; x++) {
 		 for (size_t y = 0; y < height; y++) {
-			 QRgb colorOfPixel = img->pixel(x, y);
+			 QRgb colorOfPixel = img.pixel(x, y);
 			 RGBstruct current(colorOfPixel);
 
-			 redIsEnough = (current.r >= minV.r) && (current.r <= maxV.r) ? true : false;
-			 greenIsEnough = (current.g >= minV.g) && (current.g <= maxV.g) ? true : false;
-			 blueIsEnough = (current.b >= minV.b) && (current.b <= maxV.b) ? true : false;
+			 bool redIsEnough = (current.r >= minV.r) && (current.r <= maxV.r);
+			 bool greenIsEnough = (current.g >= minV.g) && (current.g <= maxV.g);
+			 bool blueIsEnough = (current.b >= minV.b) && (current.b <= maxV.b);
 			 
 			 if (allOfThem)
 				 setGiveColor = (redIsEnough && greenIsEnough && blueIsEnough);
@@ -103,53 +98,46 @@
 				 setGiveColor = (redIsEnough || greenIsEnough || blueIsEnough);
 		 
 			 if (setGiveColor)
-				 img->setPixel(x, y, colorToSet);
+				 img.setPixel(x, y, colorToSet);
 			 else
-				 img->setPixel(x, y, black);
+				 img.setPixel(x, y, black);
 		 }
 	 }
  }
 
- void Utilities::imgAvoideOneColor(QImage* img, QRgb minimalColorValues, QRgb maxColorValues, bool allOfThem){
-	 int width = img->width();
-	 int height = img->height();
-	 auto black = qRgb(0, 0, 0);
-	 uint minValue = (uint)minimalColorValues;
-	 uint maxValue = (uint)maxColorValues;
-	 RGBstruct minV(minValue);
-	 RGBstruct maxV(maxValue);
-	 bool redIsEnough, greenIsEnough, blueIsEnough;
-	 bool setGiveColor;
+ void Utilities::imgAvoideOneColor(QImage& img, QRgb minimalColorValues, QRgb maxColorValues, bool allOfThem){
+	 int width = img.width();
+	 int height = img.height();
+	 RGBstruct minV((uint)minimalColorValues);
+	 RGBstruct maxV((uint)maxColorValues);
 
 	 for (size_t x = 0; x < width; x++) {
 		 for (size_t y = 0; y < height; y++) {
-			 QRgb colorOfPixel = img->pixel(x, y);
+			 QRgb colorOfPixel = img.pixel(x, y);
 			 RGBstruct current(colorOfPixel);
 
-			 redIsEnough = (current.r >= minV.r) && (current.r <= maxV.r) ? true : false;
-			 greenIsEnough = (current.g >= minV.g) && (current.g <= maxV.g) ? true : false;
-			 blueIsEnough = (current.b >= minV.b) && (current.b <= maxV.b) ? true : false;
+			 bool redIsEnough = (current.r >= minV.r) && (current.r <= maxV.r) ? true : false;
+			 bool greenIsEnough = (current.g >= minV.g) && (current.g <= maxV.g) ? true : false;
+			 bool blueIsEnough = (current.b >= minV.b) && (current.b <= maxV.b) ? true : false;
 
-			 if (allOfThem)
-				 setGiveColor = (redIsEnough && greenIsEnough && blueIsEnough);
-			 else
-				 setGiveColor = (redIsEnough || greenIsEnough || blueIsEnough);
+			 bool setGiveColor;
+			 allOfThem = allOfThem ? (redIsEnough && greenIsEnough && blueIsEnough) : (redIsEnough || greenIsEnough || blueIsEnough);
 
 			 if (setGiveColor)
-				 img->setPixel(x, y, black);
+				 img.setPixel(x, y, qRgb(0, 0, 0));
 		 }
 	 }
  }
 
- void Utilities::changeGreyPixelsToBlack(QImage* img, int minVal, int maxVal) {
-	 int width = img->size().width();
-	 int height = img->size().height();
+ void Utilities::changeGreyPixelsToBlack(QImage& img, int minGreyVal, int maxGreyVal) {
+	 int width = img.width();
+	 int height = img.height();
 	 for (size_t x = 0; x < width; x++) {
 		 for (size_t y = 0; y < height; y++) {
-			 uint pixVal = img->pixel(x,y);
-			 bool shouldBeBlacked = RGBstruct::isPixelInRangeOfGrey(pixVal, minVal, maxVal);
+			 uint pixVal = img.pixel(x,y);
+			 bool shouldBeBlacked = RGBstruct::isPixelInRangeOfGrey(pixVal, minGreyVal, maxGreyVal);
 			 if (shouldBeBlacked)
-				 img->setPixel(x, y, 0);
+				 img.setPixel(x, y, qRgb(0,0,0));
 		 }
 	 }
  }
@@ -160,11 +148,11 @@
 	 QList<QString> list;
 	 for (size_t i = 0; i < litOfFIles.size(); i++) {
 		 QString pathToFile = pathToInputFolder + "\\" + litOfFIles[i];
-		 QImage* img = new QImage(pathToFile);
+		 QImage img = QImage(pathToFile);
 		 Utilities::imgToBlackAndWhiteOneColor(img, 200);
 		 QString name = pathToOutputFolder + "\\" + litOfFIles[i];
-		 img->save(name);
-		 QString code = letterImgToLetterCodeStr(img);
+		 img.save(name);
+		 QString code = letterImgToLetterCodeStr(&img);
 
 		 //changing "slash.png" to "slash"
 		 QString tmp = litOfFIles[i].left(litOfFIles[i].size() - 4);
@@ -179,65 +167,50 @@
 	 return list;
  }
 
- void Utilities::cutBlackBordersOfImg(QImage* img) {
+ void Utilities::cutBlackBordersOfImg(QImage& img) {
 	 int linesOfBlackrows_TOP = 0, linesOfBlackrows_DOWN = 0, linesOfBlackrows_RIGHT = 0, linesOfBlackrows_LEFT = 0;
-	 int w = img->width();
-	 int h = img->height();
-	 auto black = qRgb(0, 0, 0);
-	 QPoint pt;
-	 bool isBlack;
+	 int w = img.width();
+	 int h = img.height();
 	 for (size_t x = 0; x < w; x++) {
 		 for (size_t y = 0; y < h; y++) {
-			 pt.setX(x);
-			 pt.setY(y);
-			 isBlack = img->pixel(pt) == black ? true : false;
+			 bool isBlack = img.pixel(x, y) == qRgb(0, 0, 0);
 			 if (!isBlack) {
 				 linesOfBlackrows_LEFT = x;
-				 //endOfLoop
-				 x = w;
-				 y = h;
+				 x = w; //endOfLoop
+				 y = h; //endOfLoop
 			 }
 		 }
 	 }
 
-	 for (int x = w - 1; x >= 0; x--) {
-		 for (int y = 0; y < h; y++) {
-			 pt.setX(x);
-			 pt.setY(y);
-			 isBlack = img->pixel(pt) == black ? true : false;
+	 for (size_t x = w - 1; x >= 0; x--) {
+		 for (size_t y = 0; y < h; y++) {
+			 bool isBlack = img.pixel(x, y) == qRgb(0, 0, 0);
 			 if (!isBlack) {
 				 linesOfBlackrows_RIGHT = w - x - 1;
-				 //endOfLoop
-				 x = -1;
-				 y = h;
+				 x = -1;//endOfLoop
+				 y = h;//endOfLoop
 			 }
 		 }
 	 }
 
 	 for (size_t y = 0; y < h; y++) {
 		 for (size_t x = 0; x < w; x++) {
-			 pt.setX(x);
-			 pt.setY(y);
-			 isBlack = img->pixel(pt) == black ? true : false;
+			 bool isBlack = img.pixel(x, y) == qRgb(0, 0, 0);
 			 if (!isBlack) {
 				 linesOfBlackrows_TOP = y;
-				 //endOfLoop
-				 x = w;
-				 y = h;
+				 x = w;//endOfLoop
+				 y = h;//endOfLoop
 			 }
 		 }
 	 }
 
 	 for (int y = h - 1; y >= 0; y--) {
 		 for (int x = 0; x < w; x++) {
-			 pt.setX(x);
-			 pt.setY(y);
-			 isBlack = img->pixel(pt) == black ? true : false;
+			 bool isBlack = img.pixel(x, y) == qRgb(0, 0, 0);
 			 if (!isBlack) {
 				 linesOfBlackrows_DOWN = h - y - 1;
-				 //endOfLoop
-				 x = w;
-				 y = -1;
+				 x = w;//endOfLoop
+				 y = -1;//endOfLoop
 			 }
 		 }
 	 }
@@ -247,27 +220,23 @@
 
 	 int widthToCut = anotherParametr_x >= 0 ? anotherParametr_x : 0;
 	 int heightToCut = anotherParametr_y >= 0 ? anotherParametr_y : 0;
-	 QImage imgToRet = img->copy(linesOfBlackrows_LEFT, linesOfBlackrows_TOP, widthToCut, heightToCut);
-	 *img = imgToRet;
+	 img = img.copy(linesOfBlackrows_LEFT, linesOfBlackrows_TOP, widthToCut, heightToCut);
  }
 
- void Utilities::cutImgWithLettersToSingleLettersImgList(QImage* img, QList<QImage>* letterImages) {
+ void Utilities::cutImgWithLettersToSingleLettersImgList(QImage& img, QList<QImage>& letterImages) {
 	 QList<int> colThatAreNotBlack;
-	 int w = img->width();
-	 int h = img->height();
-	 auto black = qRgb(0, 0, 0);
+	 int w = img.width();
+	 int h = img.height();
 	 for (int x = 0; x < w; x++) {
 		 for (int y = 0; y < h; y++) {
-			 if (img->pixel(x, y) != black) {
+			 if (img.pixel(x, y) != qRgb(0, 0, 0)) {
 				 y = h; //ending inner loop
 				 colThatAreNotBlack.push_back(x);
 			 }
 		 }
 	 }
 	 if (colThatAreNotBlack.size() == 0) {
-		 QList<QImage> toRet;
-		 toRet.push_back(*img);
-		 *letterImages = toRet;
+		 letterImages.push_back(img);
 		 return;
 	 }
 
@@ -290,21 +259,21 @@
 		 widths.push_back(indexesOfEndsOfLetters[i] - indexesOfStartOfLetter[i] + 1);
 
 	 for (size_t i = 0; i < indexesOfStartOfLetter.size(); i++) {
-		 QImage letter = img->copy(indexesOfStartOfLetter[i], 0, widths[i], img->height());
-		 letterImages->push_back(letter);
+		 QImage letter = img.copy(indexesOfStartOfLetter[i], 0, widths[i], img.height());
+		 letterImages.push_back(letter);
 	 }
  }
 
  QString Utilities::imgWithStrToStr(QImage* img) {
-	 imgToBlackAndWhiteAllColors(img, 240);
-	 cutBlackBordersOfImg(img);
+	 imgToBlackAndWhiteAllColors(*img, 240);
+	 cutBlackBordersOfImg(*img);
 	 QList<QImage>* imgs = new QList<QImage>;
-	 cutImgWithLettersToSingleLettersImgList(img, imgs);
+	 cutImgWithLettersToSingleLettersImgList(*img, *imgs);
 	 QString toRet;
 	 for (size_t i = 0; i < imgs->size(); i++) {
 		 QImage tmp = imgs->at(i);
 		 QImage* tmpPointer = &tmp;
-		 cutBlackBordersOfImg(tmpPointer);
+		 cutBlackBordersOfImg(*tmpPointer);
 		 QString letterCode = letterImgToLetterCodeStr(tmpPointer);
 		 QChar letter = StrCodeToQChar(letterCode);
 		 toRet.append(letter);
@@ -703,8 +672,6 @@ int Utilities::getNumberFromBottomBar(QImage* bottomBar){
 	 
 	return strToRe.toInt();
 }
-
-
 
 /*
 void Utilities::UNSUED_findBoredersOfFrames(QImage fullScreen){
