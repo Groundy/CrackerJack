@@ -32,6 +32,7 @@ public:
 	static QString letterImgToLetterCodeStr(QImage* SingleLetterImg);
 	static QChar StrCodeToQChar(QString code);
 	static QMap<QString, QChar> getQmapWithCodes();
+	static void getMapWithPotionsImgCodes(QMap<QString, QString>& name_code_light, QMap<QString, QString>& name_code_dark);
 	static QList<QPoint> findStartPositionInImg(QImage* imgToFind, QImage* imgToShareWithin);
 	static QList<QPoint> findStartPositionInImg_mulitpeImgs(QList<QImage*> imgsToFind, QImage* imgToShareWithin);
 	static QImage fromCharToImg(QChar CharToImg);
@@ -43,6 +44,10 @@ public:
 	static int getNumberFromBottomBar(QImage* bottomBar);
 	static QString readFromIniFile(QString nameOfField);
 	static void writeIniFile(QString nameOfField, QString value);
+	static bool findPotionsOnBottomBar(QStringList namesOfPotionsToFind, QStringList& namesOfPotionosFound, QList<QRect> rectsWithFoundPots, QImage& bottomBarImg);
+
+
+
 	class RestoreMethode {
 	public:
 		enum class TypeOfMethode{ POTION, SPELL };

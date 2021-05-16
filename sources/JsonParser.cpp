@@ -197,12 +197,15 @@ bool JsonParser::getPotionsForProf(QList<Utilities::Potion>& potions, Profile::P
         if (skipCauseHealthCondition || skipCauseManaCondition)
             continue;
 
-        bool isMage = *prof == Profile::PROFESSION::ED || *prof == Profile::PROFESSION::MS;
-        bool isRP = *prof == Profile::PROFESSION::RP;
-        bool isEK = *prof == Profile::PROFESSION::EK;
+        bool isMage, isRP, isEK;
+        if (prof != NULL) {
+            isMage = *prof == Profile::PROFESSION::ED || *prof == Profile::PROFESSION::MS;
+            isRP = *prof == Profile::PROFESSION::RP;
+            isEK = *prof == Profile::PROFESSION::EK;
+        }
 
         bool skipCauseProfCon = true;
-        if (*prof == NULL)
+        if (prof == NULL)
             skipCauseProfCon = false;
         else if(potionToAdd.forMage && isMage)
             skipCauseProfCon = false;
@@ -210,6 +213,7 @@ bool JsonParser::getPotionsForProf(QList<Utilities::Potion>& potions, Profile::P
             skipCauseProfCon = false;
         else if(potionToAdd.forRp && isRP)
             skipCauseProfCon = false;
+
 
         if (skipCauseProfCon)
             continue;

@@ -29,8 +29,28 @@ QString makeRandomProccessName() {
 }
 
 void test() {
-}
+    QStringList potions{ "Ultimate Spirit Potion",
+        "Great Health Potion",
+        "Ultimate Mana Potion",
+        "Ultimate Health Potion",
+        "Supreme Health Potion",
+        "Strong Mana Potion",
+        "Strong Health Potion",
+        "Mana Potion",
+        "Health Potion",
+        "Great Mana Potion",
+        "Great Spirit Potion" };
 
+
+
+    QString path = "C:\\Users\\ADMIN\\Desktop\\z1.png";
+    QString path2 = "C:\\Users\\ADMIN\\Desktop\\z2.png";
+    QImage img;
+    img.load(path);
+    QStringList potionFound;
+    QList<QRect> rects;
+    Utilities::findPotionsOnBottomBar(potions, potionFound, rects, img);
+}
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);

@@ -15,5 +15,11 @@ public:
 		bool sameG = this->g == rgb.g;
 		return sameR && sameG && sameB;
 	};
+	bool operator==(const RGBstruct& rgb) {
+		bool sameR = this->r == rgb.r;
+		bool sameB = this->b == rgb.b;
+		bool sameG = this->g == rgb.g;
+		return sameR && sameG && sameB;
+	};
 	~RGBstruct();
 };
