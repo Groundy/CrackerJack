@@ -1,5 +1,6 @@
 #include "Utilities.h"
 #include <QRgb>
+#include <QtCore/qsettings.h>
 
 int Utilities::showMessageBox(QString title = "CrackerJack", QString text = "", QFlags<QMessageBox::StandardButton> buttons = QMessageBox::Ok) {
 	QMessageBox box;
@@ -542,6 +543,17 @@ int Utilities::getNumberFromBottomBar(QImage* bottomBar){
 		strToRe.push_back(QString::number(anotherMap[key]));
 	 
 	return strToRe.toInt();
+}
+
+QString Utilities::readFromIniFile(QString nameOfField){
+	QSettings setttings("settings.ini", QSettings::IniFormat);
+	QString readVal = setttings.value(nameOfField).toString();
+	return readVal;
+}
+
+void Utilities::writeIniFile(QString nameOfField, QString value){
+	QSettings setttings("settings.ini", QSettings::IniFormat);
+	setttings.setValue(nameOfField, value);
 }
 
 void Utilities::saveImgToOutPutFolder(QImage* img, QString *extraName){

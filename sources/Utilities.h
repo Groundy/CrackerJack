@@ -41,7 +41,8 @@ public:
 	static QImage getImageFromAdvancedCode(QString codeOfImg);
 	static void getMapWithNumbersFromBottomBar(QMap<QString, int>& lightToRet, QMap<QString, int>& darkToRet);
 	static int getNumberFromBottomBar(QImage* bottomBar);
-
+	static QString readFromIniFile(QString nameOfField);
+	static void writeIniFile(QString nameOfField, QString value);
 	class RestoreMethode {
 	public:
 		enum class TypeOfMethode{ POTION, SPELL };

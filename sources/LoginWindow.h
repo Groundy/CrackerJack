@@ -6,23 +6,24 @@
 
 class LoginWindow : public QDialog
 {
-    Q_OBJECT
+	Q_OBJECT
 
 public:
-    LoginWindow(QWidget *parent = Q_NULLPTR);  
+	LoginWindow(QWidget *parent = Q_NULLPTR);  
 
 public slots:
-    void loginInserted();
-    void loginButtonPressed();
-    void passwordInserted();
-    void signUpButtonClicked();
-    
+	void loginInserted();
+	void loginButtonPressed();
+	void passwordInserted();
+	void signUpButtonClicked();
+	void languageChanged();
 private:
-    Ui::LoginWindowClass ui;
+	Ui::LoginWindowClass ui;
 
-    void checkLogInPossibility();
-    void getAndSetVersion();
-    void showThatPasswordFailed();
-    bool checkPasswordCorrectness();
+	void checkLogInPossibility();
+	QString getAndSetVersion();
+	void showThatPasswordFailed();
+	bool checkPasswordCorrectness();
+	void setUpGUI();
 
 };
