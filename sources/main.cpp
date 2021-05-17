@@ -5,6 +5,7 @@
 #include <memory.h>
 #include "JsonParser.h"
 #include "qsettings.h"
+
 /*This function is designed to make ranom name of Process to avoid giving the same name the name that could be easily detected*/
 QString makeRandomProccessName() {
     const QString possibleCharacters("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789 ");
@@ -29,18 +30,12 @@ QString makeRandomProccessName() {
 }
 
 void test() {
-    QStringList potions{ "Ultimate Spirit Potion",
-        "Great Health Potion",
-        "Ultimate Mana Potion",
-        "Ultimate Health Potion",
-        "Supreme Health Potion",
-        "Strong Mana Potion",
-        "Strong Health Potion",
-        "Mana Potion",
-        "Health Potion",
-        "Great Mana Potion",
-        "Great Spirit Potion" };
-
+    QString path1 = "C:\\Users\\ADMIN\\Desktop\\output\\1.png";
+    QString path2 = "C:\\Users\\ADMIN\\Desktop\\output\\2.png";
+    QImage img1(path1);
+    QImage img2(path2);
+    int int1 = Utilities::getNumberFromBottomBar(&img1);
+    int int2 = Utilities::getNumberFromBottomBar(&img2);
 }
 int main(int argc, char *argv[])
 {

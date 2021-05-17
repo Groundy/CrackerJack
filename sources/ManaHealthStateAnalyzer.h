@@ -64,5 +64,6 @@ private:
 	void setupRestorationMethodes(QStringList listOfRestorationMethode_Health, QStringList listOfRestorationMethode_Mana);
 	int getKeyThatShouldBeSendToKeySenderClass(Key& key1, Key& key2);
 	void sleepAppropirateTimeToNextAnalyze();
+	void getAmountsOfPotions();
 	VariablesClass* var;
 };

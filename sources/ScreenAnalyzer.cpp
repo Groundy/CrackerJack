@@ -1,8 +1,19 @@
 #include "ScreenAnalyzer.h"
 
-ScreenAnalyzer::ScreenAnalyzer(QObject *parent, VariablesClass *varClass)
+ScreenAnalyzer::ScreenAnalyzer(QObject *parent, VariablesClass *varClass, Profile* prof)
 	: QThread(parent){
 	var = varClass;
+
+	listOfPotionNamesToLookFor.clear();
+	QStringList nameOfAllMethodesFromProf;
+	nameOfAllMethodesFromProf.append(prof->healthRestoreMethodeNames);
+	nameOfAllMethodesFromProf.append(prof->manaRestoreMethodeNames);
+	for each (QString var in nameOfAllMethodesFromProf){
+		bool isPotionName = var.contains(QString(" Potion"));
+		if(isPotionName)
+			listOfPotionNamesToLookFor.push_back(var);
+	}
+
 }
 
 ScreenAnalyzer::~ScreenAnalyzer(){
@@ -61,6 +72,30 @@ QString ScreenAnalyzer::getNameOfLastTakenScreenShot(){
 		;//diag err
 
 	return litOfFIles[index];
+}
+
+int ScreenAnalyzer::findRectanglesWithPotionsPos(QImage& fullscreen){
+	QStringList foundPotions;
+	QList<QRect> rectsWithPotions;
+	Utilities::findPotionsOnBottomBar(listOfPotionNamesToLookFor, foundPotions, rectsWithPotions, fullscreen);
+
+	bool allPotionsFound = true;
+	for each (QString potNameThatShouldBeFound in listOfPotionNamesToLookFor){
+		bool found = foundPotions.contains(potNameThatShouldBeFound);
+		if (!found)
+			allPotionsFound = false;
+	}
+	if (!allPotionsFound)
+		return NOT_ALL_POTS_FOUND;
+
+	for (size_t i = 0; i < rectsWithPotions.size(); i++){
+		QRect rectToAdd = rectsWithPotions[i];
+		QString nameOfPot = foundPotions[i];
+		var->potionName_rectPosOnScreen_map[nameOfPot] = rectToAdd;
+	}
+
+	return OK;
+
 }
 
 int ScreenAnalyzer::getNameOfLastTakenScreenShotForSure(QString& toRet, int MaxTries) {
@@ -248,6 +283,7 @@ void ScreenAnalyzer::mainLoop(){
 			deleteScreenShotFolder();
 			notifyOtherProcessOfStateOfAnalyzer(true);
 			cutImportantImgsFromWholeScreenAndSendThemToVarClass(img);
+			var->wholeImg = img;
 			var->newData = true;
 		}
 		else
@@ -261,24 +297,29 @@ int ScreenAnalyzer::calibrate(){
 	ERROR_CODE res1 = (ERROR_CODE)loadScreen(fullScreen);
 
 	if (res1 != OK) {
-		qDebug() << "ScreenAnalyzer::calibrate() failed";
+		//qDebug() << "ScreenAnalyzer::calibrate() failed";
 		return res1;
 	}
+
 	QList<QRect> importantRectangles;
 	ERROR_CODE res2 = (ERROR_CODE)findWindowsOnScreen(fullScreen, importantRectangles);
 	if (res2 != OK) {
-		qDebug() << "ScreenAnalyzer::findMiniMapWindow(QImage fullScreen) failed";
+		//qDebug() << "ScreenAnalyzer::findMiniMapWindow(QImage fullScreen) failed";
 		return res2;
 	}
-	ERROR_CODE res3 = (ERROR_CODE)categorizeWindows(fullScreen, importantRectangles, frames);
-	if (res3 == OK) {
+
+	ERROR_CODE res3 = (ERROR_CODE)findRectanglesWithPotionsPos(fullScreen);
+	if (res3 != OK)
+		return res2;//TODO here fun shouldn't end, it should just notify that there are no enough pots found
+
+	ERROR_CODE res4 = (ERROR_CODE)categorizeWindows(fullScreen, importantRectangles, frames);
+	if (res4 == OK) 
 		var->caliState = var->CALIBRATED;
-		return OK;
-	}
 	else {
 		var->caliState = var->NOT_CALIBRATED;
 		return ERROR_CODE::NO_POSTION_ASSIGNED_TO_SLASHES;
 	}
+		return OK;
 }
 
 int ScreenAnalyzer::cutImportantImgsFromWholeScreenAndSendThemToVarClass(QImage& fullscreen){

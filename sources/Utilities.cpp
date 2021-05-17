@@ -78,8 +78,8 @@ void Utilities::cutBlackBordersOfImg(QImage& img) {
 	 int linesOfBlackrows_TOP = 0, linesOfBlackrows_DOWN = 0, linesOfBlackrows_RIGHT = 0, linesOfBlackrows_LEFT = 0;
 	 int w = img.width();
 	 int h = img.height();
-	 for (size_t x = 0; x < w; x++) {
-		 for (size_t y = 0; y < h; y++) {
+	 for (int x = 0; x < w; x++) {
+		 for (int y = 0; y < h; y++) {
 			 bool isBlack = img.pixel(x, y) == qRgb(0, 0, 0);
 			 if (!isBlack) {
 				 linesOfBlackrows_LEFT = x;
@@ -89,8 +89,8 @@ void Utilities::cutBlackBordersOfImg(QImage& img) {
 		 }
 	 }
 
-	 for (size_t x = w - 1; x >= 0; x--) {
-		 for (size_t y = 0; y < h; y++) {
+	 for (int x = w - 1; x >= 0; x--) {
+		 for (int y = 0; y < h; y++) {
 			 bool isBlack = img.pixel(x, y) == qRgb(0, 0, 0);
 			 if (!isBlack) {
 				 linesOfBlackrows_RIGHT = w - x - 1;
@@ -100,8 +100,8 @@ void Utilities::cutBlackBordersOfImg(QImage& img) {
 		 }
 	 }
 
-	 for (size_t y = 0; y < h; y++) {
-		 for (size_t x = 0; x < w; x++) {
+	 for (int y = 0; y < h; y++) {
+		 for (int x = 0; x < w; x++) {
 			 bool isBlack = img.pixel(x, y) == qRgb(0, 0, 0);
 			 if (!isBlack) {
 				 linesOfBlackrows_TOP = y;
@@ -586,7 +586,7 @@ void Utilities::writeIniFile(QString nameOfField, QString value){
 	setttings.setValue(nameOfField, value);
 }
 
-bool Utilities::findPotionsOnBottomBar(QStringList namesOfPotionsToFind, QStringList& namesOfPotionosFound, QList<QRect> rectsWithFoundPots, QImage& bottomBarImg){
+bool Utilities::findPotionsOnBottomBar(QStringList namesOfPotionsToFind, QStringList& namesOfPotionosFound, QList<QRect>& rectsWithFoundPots, QImage& bottomBarImg){
 	QMap<QString, QString> map_light, map_dark;
 	getMapWithPotionsImgCodes(map_light, map_dark);
 
@@ -656,7 +656,6 @@ bool Utilities::findPotionsOnBottomBar(QStringList namesOfPotionsToFind, QString
 					someWhereInPic.setY(y);
 					x = max_x;//break
 					y = max_y;//break
-				
 				}
 			}
 		}

@@ -92,7 +92,7 @@ void MainMenu::threadStarter(){
 	activityThread->start();
 	screenSaverThread = new ScreenSaver(this, &var);
 	screenSaverThread->start();
-	screenAnalyzer = new ScreenAnalyzer(this, &var);
+	screenAnalyzer = new ScreenAnalyzer(this, &var, prof);
 	screenAnalyzer->start();
 	healthManaStateAnalyzer = new ManaHealthStateAnalyzer(this, prof , &var);
 	healthManaStateAnalyzer->start();

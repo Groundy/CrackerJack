@@ -8,6 +8,7 @@
 #include "qdatetime.h"
 #include "qmap.h"
 #include "qdebug.h"
+#include "Profile.h"
 #include "Utilities.h"
 class ScreenAnalyzer : public QThread
 {
@@ -25,7 +26,8 @@ public:
 		NO_FRAMES_FOUND = 128,
 		NO_ENOUGH_FRAMES_FOUND = 256,
 		ERROR_IN_SETTING_POSITION_OF_INTERFACE = 512,
-		CALIBRATION_FAILED = 1024
+		CALIBRATION_FAILED = 1024,
+		NOT_ALL_POTS_FOUND = 2048,
 	};
 	struct Frames {
 		QRect gameFrame;
@@ -37,7 +39,7 @@ public:
 		int howTheyShouldBeRotated;
 	};
 
-	ScreenAnalyzer( QObject *parent, VariablesClass* var);
+	ScreenAnalyzer( QObject *parent, VariablesClass* var, Profile* prof);
 	~ScreenAnalyzer();
 	void run();
 	bool enableScreenAnalyzer = true;
@@ -52,6 +54,9 @@ private:
 	int timeBetweenNextCheckingsOfScrennShotFolder = 100;
 	bool isManaHealthClassEnabledToAnalyzeImgs = false;
 	Frames frames;
+	QStringList listOfPotionNamesToLookFor;
+
+
 	void mainLoop();
 	int calibrate();
 	int cutImportantImgsFromWholeScreenAndSendThemToVarClass(QImage& fullscreen);
@@ -63,9 +68,11 @@ private:
 	int loadScreen(QImage& img);
 	void deleteScreenShotFolder();
 	QString getNameOfLastTakenScreenShot();
+	int findRectanglesWithPotionsPos(QImage& fullscreen);
 	int getNameOfLastTakenScreenShotForSure(QString& toRet, int maxTries);
 	QString pathToScreenFolder = "C:\\Users\\ADMIN\\AppData\\Local\\Tibia\\packages\\Tibia\\screenshots";//TODO
 	int findIndexesOfRectangleThatContainsSlashes(QImage& fullScreen, QList<QRect> importantFrames, QList<int>& indexesOfFramesWithSlashesVert, QList<int>& indexesOfFramesWithSlashesHor, int& indexOfFrameCombined);
 	void TEST_setPositionHealthImhs(QString pathToFolderWithDiffrentPositionsStylesScreen, QString pathToOutPutFolder);
+
 	void notifyOtherProcessOfStateOfAnalyzer(bool worksGood);
 };

@@ -44,7 +44,7 @@ public:
 	static int getNumberFromBottomBar(QImage* bottomBar);
 	static QString readFromIniFile(QString nameOfField);
 	static void writeIniFile(QString nameOfField, QString value);
-	static bool findPotionsOnBottomBar(QStringList namesOfPotionsToFind, QStringList& namesOfPotionosFound, QList<QRect> rectsWithFoundPots, QImage& bottomBarImg);
+	static bool findPotionsOnBottomBar(QStringList namesOfPotionsToFind, QStringList& namesOfPotionosFound, QList<QRect>& rectsWithFoundPots, QImage& bottomBarImg);
 
 
 

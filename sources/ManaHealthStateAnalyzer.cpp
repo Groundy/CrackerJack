@@ -57,7 +57,7 @@ void ManaHealthStateAnalyzer::mainLoop(){
 		PreapareAndSendInfoToGuiInMainThread();
 		writeDataToVariableClass();
 		sleepAppropirateTimeToNextAnalyze();
-
+		getAmountsOfPotions();
 		Key healthKey, manaKey;
 		bool sucess = getKeyThatShouldBeSendToKeySenderClass(healthKey, manaKey) == OK;
 		bool thereIsHealthKey = (healthKey.number != -1) && sucess;
@@ -354,4 +354,22 @@ void ManaHealthStateAnalyzer::sleepAppropirateTimeToNextAnalyze(){
 	//qDebug() << QString::number(timeToSleep);
 	lastTimeAnalyzed = currentTime + timeToSleep;
 	Sleep(timeToSleep);
+}
+
+void ManaHealthStateAnalyzer::getAmountsOfPotions() {
+	auto map_copy = var->potionName_rectPosOnScreen_map;
+	QList<int> amountOfPots;
+	QStringList namesOfPots;
+	for each (QString nameOfPot in map_copy.keys()) {
+		QRect rect = map_copy[nameOfPot];
+		if (rect.isEmpty())
+			continue;
+		QImage img = var->wholeImg.copy(rect);
+		Utilities::saveImgToOutPutFolder(&img, NULL);
+		int amount = Utilities::getNumberFromBottomBar(&img);
+		amountOfPots.push_back(amount);
+		namesOfPots.push_back(nameOfPot);
+	}
+	qDebug() << namesOfPots;
+	qDebug() << amountOfPots;
 }

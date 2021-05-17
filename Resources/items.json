@@ -405,7 +405,7 @@
   "other": [],
   "potions": [
     {
-      "name": "Ultimate spirit potion",
+      "name": "Ultimate Spirit Potion",
       "health": 500,
       "mana": 200,
       "price": 438,
@@ -422,7 +422,7 @@
       "for_EK": false
     },
     {
-      "name": "Great health potion",
+      "name": "Great Health Potion",
       "health": 500,
       "mana": 0,
       "price": 225,
@@ -439,7 +439,7 @@
       "for_EK": true
     },
     {
-      "name": "Ultimate mana potion",
+      "name": "Ultimate Mana Potion",
       "health": 0,
       "mana": 500,
       "price": 438,
@@ -456,7 +456,7 @@
       "for_EK": false
     },
     {
-      "name": "Ultimate health potion",
+      "name": "Ultimate Health Potion",
       "health": 750,
       "mana": 0,
       "price": 379,
@@ -490,7 +490,7 @@
       "for_EK": true
     },
     {
-      "name": "Strong mana potion",
+      "name": "Strong Mana Potion",
       "health": 0,
       "mana": 150,
       "price": 93,
@@ -507,7 +507,7 @@
       "for_EK": true
     },
     {
-      "name": "Strong health potion",
+      "name": "Strong Health Potion",
       "health": 300,
       "mana": 0,
       "price": 115,
@@ -524,7 +524,7 @@
       "for_EK": true
     },
     {
-      "name": "Mana potion",
+      "name": "Mana Potion",
       "health": 0,
       "mana": 100,
       "price": 56,
@@ -541,7 +541,7 @@
       "for_EK": true
     },
     {
-      "name": "Health potion",
+      "name": "Health Potion",
       "health": 150,
       "mana": 0,
       "price": 50,
@@ -558,7 +558,7 @@
       "for_EK": true
     },
     {
-      "name": "Great mana potion",
+      "name": "Great Mana Potion",
       "health": 0,
       "mana": 200,
       "price": 144,
