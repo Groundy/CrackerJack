@@ -41,15 +41,6 @@ void test() {
         "Great Mana Potion",
         "Great Spirit Potion" };
 
-
-
-    QString path = "C:\\Users\\ADMIN\\Desktop\\z1.png";
-    QString path2 = "C:\\Users\\ADMIN\\Desktop\\z2.png";
-    QImage img;
-    img.load(path);
-    QStringList potionFound;
-    QList<QRect> rects;
-    Utilities::findPotionsOnBottomBar(potions, potionFound, rects, img);
 }
 int main(int argc, char *argv[])
 {
@@ -68,7 +59,9 @@ int main(int argc, char *argv[])
     if (result2 != QDialog::Accepted)
         return 0;
     MainMenu* mainMenu = new MainMenu(&prof, NULL);
-    mainMenu->exec();
+    int result3 = mainMenu->exec();
+    if (result3 != QDialog::Accepted)
+        return 0;
     //delete mainMenu;
     return a.exec();
 }

@@ -41,6 +41,7 @@ public:
 	~ScreenAnalyzer();
 	void run();
 	bool enableScreenAnalyzer = true;
+	typedef ERROR_CODE ERR;
 
 public slots:
 	int reCalibrate();
@@ -51,21 +52,20 @@ private:
 	int timeBetweenNextCheckingsOfScrennShotFolder = 100;
 	bool isManaHealthClassEnabledToAnalyzeImgs = false;
 	Frames frames;
-
 	void mainLoop();
 	int calibrate();
-	int cutImportantImgsFromWholeScreenAndSendThemToVarClass(QImage fullscreen);
-	int categorizeWindows(QImage fullscreen, QList<QRect>* importantRectangles, Frames* frames);
-	void sortByXAndYPoints(QList<QPoint>* points, QList<QPoint>* pointsSortedByX, QList<QPoint>* pointsSortedByY);
-	int sortByXAndYRects(QList<QRect> inputRects, QList<QRect>* rectsSortedByPosX, QList<QRect>* rectsSortedByPosY);
-	int findWindowsOnScreen(QImage fullScreen, QList<QRect>* importantRectangles);
-	int setPositionHealthImgs(QImage fullscreen, QList<QRect> listOfImportantRectangles, int* indexOfHealth, int* indexOfMana, int* indexOfManaShield, int* indexOfManaAndManaShieldCombined, int* howTheyShouldBeRotated);
-	int loadScreen(QImage* img);
+	int cutImportantImgsFromWholeScreenAndSendThemToVarClass(QImage& fullscreen);
+	int categorizeWindows(QImage& fullscreen, QList<QRect>& importantRectangles, Frames& frames);
+	void sortByXAndYPoints(QList<QPoint>& points, QList<QPoint>& pointsSortedByX, QList<QPoint>& pointsSortedByY);
+	int sortByXAndYRects(QList<QRect>& inputRects, QList<QRect>& rectsSortedByPosX, QList<QRect>& rectsSortedByPosY);
+	int findWindowsOnScreen(QImage& fullScreen, QList<QRect>& importantRectangles);
+	int setPositionHealthImgs(QImage& fullscreen, QList<QRect> listOfImportantRectangles, int& indexOfHealth, int& indexOfMana, int& indexOfManaShield, int& indexOfManaAndManaShieldCombined, int& howTheyShouldBeRotated);
+	int loadScreen(QImage& img);
 	void deleteScreenShotFolder();
 	QString getNameOfLastTakenScreenShot();
 	int getNameOfLastTakenScreenShotForSure(QString& toRet, int maxTries);
 	QString pathToScreenFolder = "C:\\Users\\ADMIN\\AppData\\Local\\Tibia\\packages\\Tibia\\screenshots";//TODO
-	int findIndexesOfRectangleThatContainsSlashes(QImage fullScreen, QList<QRect> importantFrames, QList<int>* indexesOfFramesWithSlashesVert, QList<int>* indexesOfFramesWithSlashesHor, int* indexOfFrameCombined);
+	int findIndexesOfRectangleThatContainsSlashes(QImage& fullScreen, QList<QRect> importantFrames, QList<int>& indexesOfFramesWithSlashesVert, QList<int>& indexesOfFramesWithSlashesHor, int& indexOfFrameCombined);
 	void TEST_setPositionHealthImhs(QString pathToFolderWithDiffrentPositionsStylesScreen, QString pathToOutPutFolder);
 	void notifyOtherProcessOfStateOfAnalyzer(bool worksGood);
 };
