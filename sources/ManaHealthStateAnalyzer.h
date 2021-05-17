@@ -30,6 +30,7 @@ public slots:
 signals:
 	void demandReCalibration();
 	void sendValueToMainThread(QString, QString, QString);
+	void sendInfoAboutPotAmountsToGUI(QStringList);
 private:
 	QImage healthImg, manaImg, manaShieldImg, combinedImg;
 	bool healthFound, manaFound, manaShieldFound, combinedFound;

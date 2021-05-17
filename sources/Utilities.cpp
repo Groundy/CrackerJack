@@ -23,7 +23,8 @@ bool Utilities::showMessageBox_NO_YES(QString title, QString text)
  }
 
 void Utilities::sendKeyStrokeToProcess(Key key, unsigned int PID, QString nameOfWindow) {
-    LPCWSTR nameOfWindowLPCWSTR = convert_StrToLPCWSTR(nameOfWindow);
+  
+	LPCWSTR nameOfWindowLPCWSTR = convert_StrToLPCWSTR(nameOfWindow);
     HWND handler = FindWindow(NULL, nameOfWindowLPCWSTR);
     if (handler == NULL)
         ;//diag err
@@ -563,11 +564,6 @@ int Utilities::getNumberFromBottomBar(QImage* bottomBar){
 		listWithLightAndDarkLetterImg.push_back(&lightLetter);
 
 		int digit = lightMap[lightCodes[i]];
-		//tmp
-		if (digit != 2);
-			//continue;
-		//Utilities::saveImgToOutPutFolder(&lightLetter, &QString::number(digit));
-		//
 		auto listOfStartingPoints = findStartPositionInImg_mulitpeImgs(listWithLightAndDarkLetterImg, bottomBar);
 		for each (QPoint var in listOfStartingPoints)
 			anotherMap.insert(var.x(), digit);

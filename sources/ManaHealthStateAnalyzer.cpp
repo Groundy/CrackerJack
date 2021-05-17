@@ -62,11 +62,11 @@ void ManaHealthStateAnalyzer::mainLoop(){
 		bool sucess = getKeyThatShouldBeSendToKeySenderClass(healthKey, manaKey) == OK;
 		bool thereIsHealthKey = (healthKey.number != -1) && sucess;
 		bool thereIsManaKey = (manaKey.number != -1) && sucess;
-		if(thereIsHealthKey)
-			Utilities::sendKeyStrokeToProcess(healthKey, var->var_pidOfGame, var->var_winTitleOfGame);
+		if (thereIsHealthKey)
+			;//Utilities::sendKeyStrokeToProcess(healthKey, var->var_pidOfGame, var->var_winTitleOfGame);	//tmp todo TODO
 		if (thereIsManaKey) {
 			Sleep(extraTimeToWaitBetweenManaPotUse);
-			Utilities::sendKeyStrokeToProcess(manaKey, var->var_pidOfGame, var->var_winTitleOfGame);
+			//Utilities::sendKeyStrokeToProcess(manaKey, var->var_pidOfGame, var->var_winTitleOfGame);	//tmp todo TODO
 		}
 	}
 }
@@ -360,16 +360,22 @@ void ManaHealthStateAnalyzer::getAmountsOfPotions() {
 	auto map_copy = var->potionName_rectPosOnScreen_map;
 	QList<int> amountOfPots;
 	QStringList namesOfPots;
+	QImage wholeImg = var->wholeImg;
 	for each (QString nameOfPot in map_copy.keys()) {
 		QRect rect = map_copy[nameOfPot];
 		if (rect.isEmpty())
 			continue;
-		QImage img = var->wholeImg.copy(rect);
+		QImage img = wholeImg.copy(rect);
 		Utilities::saveImgToOutPutFolder(&img, NULL);
 		int amount = Utilities::getNumberFromBottomBar(&img);
 		amountOfPots.push_back(amount);
 		namesOfPots.push_back(nameOfPot);
 	}
-	qDebug() << namesOfPots;
-	qDebug() << amountOfPots;
+
+	QStringList infoToSendToMainThread;
+	for (size_t i = 0; i < namesOfPots.size(); i++){
+		QString toAdd = namesOfPots[i] + ": " + QString::number(amountOfPots[i]);
+		infoToSendToMainThread.push_back(toAdd);
+	}
+	sendInfoAboutPotAmountsToGUI(infoToSendToMainThread);
 }

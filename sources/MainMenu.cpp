@@ -118,6 +118,12 @@ void MainMenu::signalSlotConnector(){
 	sig = SIGNAL(sendAllowenceToAnalyze(bool));
 	slot = SLOT(setThreadEnabilityToRun(bool));
 	bool connectionAccepted_3 = connect(sigSender, sig, slotRec, slot, Qt::UniqueConnection);
+
+	sigSender = this->healthManaStateAnalyzer;
+	slotRec = this;
+	sig = SIGNAL(sendInfoAboutPotAmountsToGUI(QStringList));
+	slot = SLOT(getAndDisplayPotionAmountInfo(QStringList));
+	bool connectionAccepted_4 = connect(sigSender, sig, slotRec, slot, Qt::UniqueConnection);
 }
 
 void MainMenu::helpButtonAction(){
@@ -139,4 +145,21 @@ void MainMenu::tradingAction(){
 }
 
 void MainMenu::skillingAction(){
+}
+
+void MainMenu::getAndDisplayPotionAmountInfo(QStringList list){
+	const int MAX_POSIBLE_LIST_LENGTH = 3;
+	QList<QLabel*> labels;
+	labels.push_back(ui->potion_label_1);
+	labels.push_back(ui->potion_label_2);
+	labels.push_back(ui->potion_label_3);
+
+	for (size_t i = 0; i < MAX_POSIBLE_LIST_LENGTH; i++){
+		QString textToSet;
+		bool shouldBeDisplayed = list.size() - 1 >= i;
+		textToSet = shouldBeDisplayed ? list[i] : "";
+		labels[i]->setVisible(shouldBeDisplayed);
+		labels[i]->setText(textToSet);
+		labels[i]->repaint();
+	}
 }

@@ -17,10 +17,7 @@ public:
 	KeySender(QObject* parent, Profile* profile, VariablesClass* variableClass);
 	~KeySender();
 	void run();
-public slots:
-	void getKeyToSend(Key key);
 private:
 	VariablesClass* var;
 	void mainLoop();
-	void sendKeyToGame(Key keyToSend);
 };

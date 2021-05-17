@@ -29,6 +29,7 @@ public slots:
 	void autoHuntAction();
 	void tradingAction();
 	void skillingAction();
+	void getAndDisplayPotionAmountInfo(QStringList);
 	//from threads
 	void onGameStateChanged(int state);
 	void changedValueOfCharHealthOrMana(QString healthPercentage, QString manaPercentage, QString manaShieldPercentage0);
