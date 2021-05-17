@@ -375,6 +375,7 @@ QList<QPoint> Utilities::findStartPositionInImg(QImage* imgToFind, QImage* imgTo
 QList<QPoint> Utilities::findStartPositionInImg_mulitpeImgs(QList<QImage*> imgsToFind, QImage* imgToShareWithin){
 	 // this fun return starting points from imgToSharePoints than consist pixels from one of imgsToFind
 
+
 	 bool properFormats = true;
 	 QImage::Format formatBig = imgToShareWithin->format();
 
@@ -398,7 +399,7 @@ QList<QPoint> Utilities::findStartPositionInImg_mulitpeImgs(QList<QImage*> imgsT
 			 break;//diag /err
 		 }
 	 }
-
+	 bool allGood = allPicAreInTheSameSize && properFormats;
 
 	 const int maxPixIndThatShoudldBeTested_X = imgToShareWithin->width() - widthOfFirst;
 	 const int maxPixIndThatShoudldBeTested_Y = imgToShareWithin->height() - heightOfFirst;
@@ -422,7 +423,6 @@ QList<QPoint> Utilities::findStartPositionInImg_mulitpeImgs(QList<QImage*> imgsT
 				 int wrongPixels = widthOfFirst * heightOfFirst;
 				 for (int x_TMP = 0; x_TMP < widthOfFirst; x_TMP++) {
 					 for (int y_TMP = 0; y_TMP < heightOfFirst; y_TMP++) {
-
 						 QRgb pixFromImg_big2 = imgToShareWithin->pixel(x + x_TMP, y + y_TMP);
 					     bool metReq = false;
 						 for each (QImage* var in imgsToFind) {
@@ -523,7 +523,7 @@ void Utilities::getMapWithNumbersFromBottomBar(QMap<QString, int>& lightToRet, Q
 	QMap<QString, int> lightVersion;
 	lightVersion.insert("4_6_#125#125#125_#223#223#223_#223#223#223_#223#223#223_#223#223#223_#180#180#180_#208#208#208_#83#83#83_#0#0#0_#0#0#0_#29#29#29_#223#223#223_#194#194#194_#125#125#125_#56#56#56_#56#56#56_#111#111#111_#223#223#223_#83#83#83_#223#223#223_#223#223#223_#223#223#223_#223#223#223_#111#111#111_", 0);
 	lightVersion.insert("2_6_#125#125#125_#223#223#223_#167#167#167_#167#167#167_#167#167#167_#223#223#223_#125#125#125_#167#167#167_#167#167#167_#167#167#167_#167#167#167_#223#223#223_", 1);
-	lightVersion.insert("4_6_#167#167#167_#111#111#111_#39#39#39_#4#4#4_#125#125#125_#223#223#223_#223#223#223_#56#56#56_#0#0#0_#83#83#83_#208#208#208_#223#223#223_#194#194#194_#153#153#153_#139#139#139_#223#223#223_#56#56#56_#223#223#223_#83#83#83_#223#223#223_#194#194#194_#69#69#69_#0#0#0_#223#223#223_", 2);
+	lightVersion.insert("2_4_#56#56#56_#0#0#0_#83#83#83_#208#208#208_#153#153#153_#139#139#139_#223#223#223_#56#56#56_", 2);
 	lightVersion.insert("2_4_#153#153#153_#194#194#194_#180#180#180_#139#139#139_#223#223#223_#111#111#111_#180#180#180_#223#223#223_", 3);
 	lightVersion.insert("3_4_#194#194#194_#83#83#83_#111#111#111_#167#167#167_#194#194#194_#167#167#167_#194#194#194_#208#208#208_#111#111#111_#111#111#111_#167#167#167_#194#194#194_", 4);
 	lightVersion.insert("4_6_#167#167#167_#223#223#223_#223#223#223_#83#83#83_#41#41#41_#223#223#223_#167#167#167_#97#97#97_#180#180#180_#56#56#56_#0#0#0_#223#223#223_#167#167#167_#56#56#56_#167#167#167_#167#167#167_#125#125#125_#223#223#223_#167#167#167_#56#56#56_#69#69#69_#223#223#223_#223#223#223_#111#111#111_", 5);
@@ -536,7 +536,7 @@ void Utilities::getMapWithNumbersFromBottomBar(QMap<QString, int>& lightToRet, Q
 	QMap<QString, int> darkVersion;
 	darkVersion.insert("4_6_#37#37#37_#66#66#66_#66#66#66_#66#66#66_#66#66#66_#54#54#54_#62#62#62_#25#25#25_#0#0#0_#0#0#0_#9#9#9_#66#66#66_#58#58#58_#37#37#37_#17#17#17_#17#17#17_#33#33#33_#66#66#66_#25#25#25_#66#66#66_#66#66#66_#66#66#66_#66#66#66_#33#33#33_",0);
 	darkVersion.insert("2_6_#37#37#37_#66#66#66_#50#50#50_#50#50#50_#50#50#50_#66#66#66_#37#37#37_#50#50#50_#50#50#50_#50#50#50_#50#50#50_#66#66#66_", 1);
-	darkVersion.insert("4_6_#50#50#50_#33#33#33_#0#0#0_#1#1#1_#37#37#37_#66#66#66_#66#66#66_#17#17#17_#0#0#0_#25#25#25_#62#62#62_#66#66#66_#58#58#58_#46#46#46_#41#41#41_#66#66#66_#17#17#17_#66#66#66_#25#25#25_#66#66#66_#58#58#58_#21#21#21_#0#0#0_#66#66#66_", 2);
+	darkVersion.insert("2_4_#17#17#17_#0#0#0_#25#25#25_#62#62#62_#46#46#46_#41#41#41_#66#66#66_#17#17#17_", 2);
 	darkVersion.insert("2_4_#46#46#46_#58#58#58_#54#54#54_#41#41#41_#66#66#66_#33#33#33_#54#54#54_#66#66#66_", 3);
 	darkVersion.insert("3_4_#58#58#58_#25#25#25_#33#33#33_#50#50#50_#58#58#58_#50#50#50_#58#58#58_#62#62#62_#33#33#33_#33#33#33_#50#50#50_#58#58#58_", 4);
 	darkVersion.insert("4_6_#50#50#50_#66#66#66_#66#66#66_#25#25#25_#12#12#12_#66#66#66_#50#50#50_#29#29#29_#54#54#54_#17#17#17_#0#0#0_#66#66#66_#50#50#50_#17#17#17_#50#50#50_#50#50#50_#37#37#37_#66#66#66_#50#50#50_#17#17#17_#21#21#21_#66#66#66_#66#66#66_#33#33#33_", 5);
@@ -563,6 +563,11 @@ int Utilities::getNumberFromBottomBar(QImage* bottomBar){
 		listWithLightAndDarkLetterImg.push_back(&lightLetter);
 
 		int digit = lightMap[lightCodes[i]];
+		//tmp
+		if (digit != 2);
+			//continue;
+		//Utilities::saveImgToOutPutFolder(&lightLetter, &QString::number(digit));
+		//
 		auto listOfStartingPoints = findStartPositionInImg_mulitpeImgs(listWithLightAndDarkLetterImg, bottomBar);
 		for each (QPoint var in listOfStartingPoints)
 			anotherMap.insert(var.x(), digit);
