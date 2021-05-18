@@ -177,3 +177,9 @@ QString StringResource::ProfileDataBaseManager_NewDBWillBeCreated(){
 	QString eng = "\nNew and empty database will be create.";
 	return languageIsPl() ? pl : eng;
 }
+
+QString StringResource::SelectProfileWindow_sureToDeleteProfile(){
+	QString pl = QString::fromLocal8Bit("Czy na pewno chcesz usun¹æ profil ");
+	QString eng = "Do you really want to delete profile ";
+	return languageIsPl() ? pl : eng;
+}

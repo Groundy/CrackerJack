@@ -26,5 +26,7 @@ public:
 
 	static QString ProfileDataBaseManager_DbDoesNotExist();
 	static QString ProfileDataBaseManager_NewDBWillBeCreated();
+
+	static QString SelectProfileWindow_sureToDeleteProfile();
 };
 

@@ -19,6 +19,42 @@
      <layout class="QVBoxLayout" name="verticalLayout">
       <item>
        <layout class="QGridLayout" name="gridLayout">
+        <item row="1" column="0">
+         <spacer name="verticalSpacer">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item row="0" column="0">
+         <widget class="QLabel" name="label">
+          <property name="text">
+           <string>Select Profile</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="0">
+         <spacer name="verticalSpacer_2">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
         <item row="3" column="0">
          <widget class="QListWidget" name="listOfProfs">
           <property name="sizePolicy">
@@ -48,8 +84,17 @@
           <property name="horizontalScrollBarPolicy">
            <enum>Qt::ScrollBarAsNeeded</enum>
           </property>
+          <property name="showDropIndicator" stdset="0">
+           <bool>false</bool>
+          </property>
           <property name="verticalScrollMode">
            <enum>QAbstractItemView::ScrollPerItem</enum>
+          </property>
+          <property name="gridSize">
+           <size>
+            <width>0</width>
+            <height>22</height>
+           </size>
           </property>
           <property name="viewMode">
            <enum>QListView::ListMode</enum>
@@ -61,42 +106,6 @@
            <bool>false</bool>
           </property>
          </widget>
-        </item>
-        <item row="0" column="0">
-         <widget class="QLabel" name="label">
-          <property name="text">
-           <string>Select Profile</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="0">
-         <spacer name="verticalSpacer">
-          <property name="orientation">
-           <enum>Qt::Vertical</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>20</width>
-            <height>40</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-        <item row="4" column="0">
-         <spacer name="verticalSpacer_2">
-          <property name="orientation">
-           <enum>Qt::Vertical</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>20</width>
-            <height>40</height>
-           </size>
-          </property>
-         </spacer>
         </item>
        </layout>
       </item>
@@ -110,16 +119,16 @@
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="deleteProfileButton">
+         <widget class="QPushButton" name="editProfileButton">
           <property name="text">
-           <string>Delete Profile</string>
+           <string>Edit Profile</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="editProfileButton">
+         <widget class="QPushButton" name="deleteProfileButton">
           <property name="text">
-           <string>Edit Profile</string>
+           <string>Delete Profile</string>
           </property>
          </widget>
         </item>
@@ -132,7 +141,9 @@
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <tabstops>
+  <tabstop>listOfProfs</tabstop>
   <tabstop>addProfileButton</tabstop>
+  <tabstop>editProfileButton</tabstop>
   <tabstop>deleteProfileButton</tabstop>
  </tabstops>
  <resources/>

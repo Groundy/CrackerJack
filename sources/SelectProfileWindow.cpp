@@ -5,6 +5,7 @@ SelectProfileWindow::SelectProfileWindow(QWidget *parent, Profile* prof) : QDial
 	ui = new Ui::SelectProfileWindow();
 	ui->setupUi(this);
 	setFixedSize(this->size());
+	setUpGui();
 	prepareProfiles();
 	ui->listOfProfs->setItemSelected(NULL, true);
 	selectListAction();
@@ -23,6 +24,34 @@ void SelectProfileWindow::prepareProfiles(){
 	for each (QString str in list)
 		ui->listOfProfs->addItem(str);
 	ui->listOfProfs->repaint();
+	isPl = StringResource::languageIsPl();
+}
+
+void SelectProfileWindow::setUpGui(){
+	QString addProfileButtonText = isPl ? QString::fromLocal8Bit("Dodaj profil") : "Add profile";
+	ui->addProfileButton->setText(addProfileButtonText);
+	ui->addProfileButton->repaint();
+
+
+	QString editProfileButtonText = isPl ? QString::fromLocal8Bit("Edytuj profil") : "Edit profile";
+	ui->editProfileButton->setText(editProfileButtonText);
+	ui->editProfileButton->repaint();
+
+
+	QString deleteProfileButtonText = isPl ? QString::fromLocal8Bit("Usuñ profil") : "Delete profile";
+	ui->deleteProfileButton->setText(deleteProfileButtonText);
+	ui->deleteProfileButton->repaint();
+
+
+	QString labelText = isPl ? QString::fromLocal8Bit("Wybierz profil.") : "Select Profile";
+	ui->label->setText(labelText);
+	ui->label->repaint();
+
+
+	QString windowTitleText = isPl ? QString::fromLocal8Bit("CrackerJack - Okno Wyboru Profilu") : "CrackerJack - Select Profile Window";
+	this->setWindowTitle(windowTitleText);
+	this->repaint();
+
 }
 
 void SelectProfileWindow::addNewProfileButtonAction(){
@@ -66,7 +95,7 @@ void SelectProfileWindow::deleteProfileButtonAction(){
 		;//err diag
 	QString onlyProfileName = choppedString[1];
 
-	QString msgText = "Do you really want to delete profile \"" + onlyProfileName + "\" ";
+	QString msgText = StringResource::SelectProfileWindow_sureToDeleteProfile() + onlyProfileName  + " ?";
 	auto buttons = QMessageBox::StandardButton::Yes | QMessageBox::StandardButton::No;
 	int shouldDelte = Utilities::showMessageBox("CrackerJack", msgText, buttons);
 	if (shouldDelte == QMessageBox::StandardButton::Yes) {
