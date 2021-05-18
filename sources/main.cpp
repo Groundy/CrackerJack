@@ -46,6 +46,11 @@ int main(int argc, char *argv[])
     QApplication a(argc, argv);
     a.setQuitOnLastWindowClosed(true);
     a.setStyle("fusion");
+    QApplication::setAttribute(Qt::AA_DisableWindowContextHelpButton);
+
+
+
+
     test();
     /*
     LoginWindow w;
