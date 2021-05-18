@@ -13,7 +13,7 @@ QString StringResource::WindowTitle_CrackerJackProblem()
 }
 
 QString StringResource::LoginWindow_WrongLoginPasword(){
-	QString pl = "Taka kombinacja loginu i has³a nie istnieje!";
+	QString pl = QString::fromLocal8Bit("Taka kombinacja loginu i has³a nie istnieje!");
 	QString eng = "That combination of login and password doesn't exist!";
 	return languageIsPl() ? pl : eng;
 }
@@ -25,25 +25,25 @@ QString StringResource::NewProfileConfigHelp(int page){
 		switch (page)
 		{
 		case 1:
-			toRet = "Wybierz nazwe profilu.";
+			toRet = QString::fromLocal8Bit("Wybierz nazwe profilu.");
 			break;
 		case 2:
-			toRet = "Wybierz profesie swojej postaci.";
+			toRet = QString::fromLocal8Bit("Wybierz profesie swojej postaci.");
 			break;
 		case 3:
-			toRet = "Wybierz ile metod leczenia checz u¿ywaæ, mo¿esz u¿ywaæ a¿ do 5 metod.";
-			toRet.append("Przesuwaj suwaki aby okreœliæ zakresy w jakich powinna byæ u¿ywana dana metoda leczenia.");
-			toRet.append("Pierwszy suwak powinnien byæ u¿yty dla najslabszej metody leczenia, ostatni dla najbardziej efektywnej.");
-			toRet.append("Program zdecduje która metoda leczenia jest odpowiednia i jej u¿yje.");
-			toRet.append("Do ka¿dej metody leczenia nale¿y przypisaæ klawisz który jest u¿yty w grze.");
-			toRet.append("Je¿eli najskuteczniejsza metoda leczenia nie jest dostêpna(brak many, brak mikstury) program u¿yje innej, s³abszej metody jaka jest dostêpna");
+			toRet = QString::fromLocal8Bit("Wybierz ile metod leczenia checz u¿ywaæ, mo¿esz u¿ywaæ a¿ do 5 metod.");
+			toRet.append(QString::fromLocal8Bit("Przesuwaj suwaki aby okreœliæ zakresy w jakich powinna byæ u¿ywana dana metoda leczenia."));
+			toRet.append(QString::fromLocal8Bit("Pierwszy suwak powinnien byæ u¿yty dla najslabszej metody leczenia, ostatni dla najbardziej efektywnej."));
+			toRet.append(QString::fromLocal8Bit("Program zdecduje która metoda leczenia jest odpowiednia i jej u¿yje."));
+			toRet.append(QString::fromLocal8Bit("Do ka¿dej metody leczenia nale¿y przypisaæ klawisz który jest u¿yty w grze."));
+			toRet.append(QString::fromLocal8Bit("Je¿eli najskuteczniejsza metoda leczenia nie jest dostêpna(brak many, brak mikstury) program u¿yje innej, s³abszej metody jaka jest dostêpna"));
 			break;
 		case 4:
-			toRet = "Wybierz ile metod odnawiania many checz u¿ywaæ, mo¿esz u¿ywaæ a¿ do 5 metod.";
-			toRet.append("Przesuwaj suwaki aby okreœliæ zakresy w jakich powinna byæ u¿ywana dana metoda odnawiania many.");
-			toRet.append("Pierwszy suwak powinnien byæ u¿yty dla najslabszej metody odnowienia many, ostatni dla najbardziej efektywnego.");
-			toRet.append("Do ka¿dej metody odnawiania many nale¿y przypisaæ klawisz który jest u¿yty w grze.");
-			toRet.append("Mikstury lecznicze maj¹ priorytet nad miksturami many.");
+			toRet = QString::fromLocal8Bit("Wybierz ile metod odnawiania many checz u¿ywaæ, mo¿esz u¿ywaæ a¿ do 5 metod.");
+			toRet.append(QString::fromLocal8Bit("Przesuwaj suwaki aby okreœliæ zakresy w jakich powinna byæ u¿ywana dana metoda odnawiania many."));
+			toRet.append(QString::fromLocal8Bit("Pierwszy suwak powinnien byæ u¿yty dla najslabszej metody odnowienia many, ostatni dla najbardziej efektywnego."));
+			toRet.append(QString::fromLocal8Bit("Do ka¿dej metody odnawiania many nale¿y przypisaæ klawisz który jest u¿yty w grze."));
+			toRet.append(QString::fromLocal8Bit("Mikstury lecznicze maj¹ priorytet nad miksturami many."));
 			break;
 		default:
 			break;
@@ -82,56 +82,56 @@ QString StringResource::NewProfileConfigHelp(int page){
 }
 
 QString StringResource::NewProfileConfig_1_TooLongName(){
-	QString pl = "Nazwa profilu nie mo¿e byæ d³u¿sza ni¿ 50 znaków!";
+	QString pl = QString::fromLocal8Bit("Nazwa profilu nie mo¿e byæ d³u¿sza ni¿ 50 znaków!");
 	QString eng = "Profile name can't be longer than 50 characters!";
 	return languageIsPl() ? pl : eng;
 }
 
 
 QString StringResource::NewProfileConfig_1_TooShortName(){
-	QString pl = "Nazwa profilu nie mo¿e byæ krótsza ni¿ 3 znaki!";
+	QString pl = QString::fromLocal8Bit("Nazwa profilu nie mo¿e byæ krótsza ni¿ 3 znaki!");
 	QString eng = "Profile name can't be shorter than 3 characters!";
 	return languageIsPl() ? pl : eng;
 }
 
 QString StringResource::NewProfileConfig_1_ForbiddenChars(){
-	QString pl = "Nazwa profilu nie mo¿e zawieraæ znaków specjalnych, nale¿y u¿ywaæ tylko liter, cyfr lub odstêpów.";
+	QString pl = QString::fromLocal8Bit("Nazwa profilu nie mo¿e zawieraæ znaków specjalnych, nale¿y u¿ywaæ tylko liter, cyfr lub odstêpów.");
 	QString eng = "Profile name can't have any special characters, please use only letters, numbers or spaces";
 	return languageIsPl() ? pl : eng;
 }
 
 QString StringResource::NewProfileConfig_2_anyProfIsChecked(){
-	QString pl = "Nale¿y wybraæ profesie. ";
+	QString pl = QString::fromLocal8Bit("Nale¿y wybraæ profesie. ");
 	QString eng = "You have to choose profession.";
 	return languageIsPl() ? pl : eng;
 }
 
 QString StringResource::NewProfileConfig_3_SlidersAreInTheSamePosition(){
-	QString pl = "Dwa suwaki nie mog¹ byæ w tym samym miejscu.";
+	QString pl = QString::fromLocal8Bit("Dwa suwaki nie mog¹ byæ w tym samym miejscu.");
 	QString eng = "Two sliders can't be in the same position.";
 	return languageIsPl() ? pl : eng;
 }
 
 QString StringResource::NewProfileConfig_3_SlidersAreInWrongOrder(){
-	QString pl = "Suwaki s¹ ustawione w z³ej kolejnoœci, nale¿y je ustawiæ od najwiêkszego do najmniejszego.";
+	QString pl = QString::fromLocal8Bit("Suwaki s¹ ustawione w z³ej kolejnoœci, nale¿y je ustawiæ od najwiêkszego do najmniejszego.");
 	QString eng = "Sliders are in wrong order, please set it from biggest value to lowest.";
 	return languageIsPl() ? pl : eng;
 }
 
 QString StringResource::NewProfileConfig_3_ShortcutNoValue(){
-	QString pl = "Jedno z pól klawiszowych nie jest wype³nione.";
+	QString pl = QString::fromLocal8Bit("Jedno z pól klawiszowych nie jest wype³nione.");
 	QString eng = "One of key field doesn't have hotkey assigned to itself.";
 	return languageIsPl() ? pl : eng;
 }
 
 QString StringResource::NewProfileConfig_3_ShortcutManyValue(){
-	QString pl = "Jedno z pól klawiszowych ma przypisane do siebie wiêcej ni¿ jedn¹ wartoœæ.";
+	QString pl = QString::fromLocal8Bit("Jedno z pól klawiszowych ma przypisane do siebie wiêcej ni¿ jedn¹ wartoœæ.");
 	QString eng = "One of key field has more than one hotkey assigned to itself.";
 	return languageIsPl() ? pl : eng;
 }
 
 QString StringResource::NewProfileConfig_3_LastSliderIsZero(){
-	QString pl = "Ostatni suwak musi mieæ wartoœæ wiêksz¹ ni¿ zero.";
+	QString pl = QString::fromLocal8Bit("Ostatni suwak musi mieæ wartoœæ wiêksz¹ ni¿ zero.");
 	QString eng = "Last slider has to have value above zero.";
 	return languageIsPl() ? pl : eng;
 }
@@ -140,7 +140,7 @@ QString StringResource::NewProfileConfig_3_ShortCutHasForbiddenChars(){
 	bool pl = languageIsPl();
 	QString toRet;
 	if(pl)
-		toRet = "Pola klawiszowe moga przyjmowac jedynie poni¿sze wartoœci: \n";
+		toRet = QString::fromLocal8Bit("Pola klawiszowe moga przyjmowac jedynie poni¿sze wartoœci: \n");
 	else
 		toRet = "Key fields can accpet only those values: \n";
 	toRet.append("\n");
@@ -155,25 +155,25 @@ QString StringResource::NewProfileConfig_3_ShortCutHasForbiddenChars(){
 }
 
 QString StringResource::NewProfileConfig_3_comboBoxNoValue(){
-	QString pl = "Pole wyboru metody nie mo¿e byæ puste.";
+	QString pl = QString::fromLocal8Bit("Pole wyboru metody nie mo¿e byæ puste.");
 	QString eng = "Methode field can't be empty.";
 	return languageIsPl() ? pl : eng;
 }
 
 QString StringResource::NewProfileConfig_3_comboBoxShareTheSameValue(){
-	QString pl = "Dwa pola klawiszowe nie moga miec przypisanego tego samego klawisza.";
+	QString pl = QString::fromLocal8Bit("Dwa pola klawiszowe nie moga miec przypisanego tego samego klawisza.");
 	QString eng = "Two key fields can't share the same key.";
 	return languageIsPl() ? pl : eng;
 }
 
 QString StringResource::ProfileDataBaseManager_DbDoesNotExist(){
-	QString pl = "Nie znaleziono bazy danych z profilami w ";
+	QString pl = QString::fromLocal8Bit("Nie znaleziono bazy danych z profilami w ");
 	QString eng = "Database with profiles not found in ";
 	return languageIsPl() ? pl : eng;
 }
 
 QString StringResource::ProfileDataBaseManager_NewDBWillBeCreated(){
-	QString pl = "\nNowa baza danych zostanie utworzona.";
+	QString pl = QString::fromLocal8Bit("\nNowa baza danych zostanie utworzona.");
 	QString eng = "\nNew and empty database will be create.";
 	return languageIsPl() ? pl : eng;
 }

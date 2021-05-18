@@ -22,21 +22,23 @@ bool Utilities::showMessageBox_NO_YES(QString title, QString text)
 		 return false;
  }
 
-void Utilities::sendKeyStrokeToProcess(Key key, unsigned int PID, QString nameOfWindow) {
+bool Utilities::sendKeyStrokeToProcess(Key key, unsigned int PID, QString nameOfWindow) {
   
 	LPCWSTR nameOfWindowLPCWSTR = convert_StrToLPCWSTR(nameOfWindow);
     HWND handler = FindWindow(NULL, nameOfWindowLPCWSTR);
     if (handler == NULL)
-        ;//diag err
+        return false;//diag err
     DWORD tmp = PID;
     DWORD hThread = GetWindowThreadProcessId(handler, &tmp);
     if (hThread != NULL) {
         int g =0x1470001;
         PostMessage(handler, WM_KEYDOWN, key.number, g);
         PostMessage(handler, WM_KEYUP, key.number, g);
+		return true;
     }
     else
-        ;//errToDo
+        return false;//errToDo
+
  }
 
 void Utilities::imgToBlackAndWhiteOneColor(QImage& img, int threshold) {

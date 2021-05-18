@@ -21,7 +21,7 @@ public:
 
 	static int showMessageBox(QString title, QString text, QFlags<QMessageBox::StandardButton> buttons);
 	static bool showMessageBox_NO_YES(QString title, QString text);
-	static void sendKeyStrokeToProcess(Key key, unsigned int PID, QString WindowName);
+	static bool sendKeyStrokeToProcess(Key key, unsigned int PID, QString WindowName);
 	static void saveImgToOutPutFolder(QImage* img, QString* extraName);
 	static LPCWSTR convert_StrToLPCWSTR(QString str);
 	static void cutBlackBordersOfImg(QImage& img);
