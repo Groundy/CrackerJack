@@ -40,8 +40,7 @@ bool NewProfileConfiguartor::finishAddingNewProfile(){
 		saveDataToProfile(profToEdit);
 		this->accept();
 	}
-	else
-		return false;
+	return false;
 }
 
 void NewProfileConfiguartor::additionalGuiSettings(){

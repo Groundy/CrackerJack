@@ -6,7 +6,7 @@
 
 class Key {
 public:
-	static enum KEYS { F1=0x70, F2, F3, F4, F5, F6, F7, F8, F9, F10, F11, F12,
+	enum KEYS { F1=0x70, F2, F3, F4, F5, F6, F7, F8, F9, F10, F11, F12,
 		n0=0x30, n1, n2, n3, n4, n5, n6, n7, n8, n9 ,
 		ESC = 0x1B,
 		INSERT = 0x2D,

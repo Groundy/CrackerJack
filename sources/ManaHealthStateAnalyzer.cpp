@@ -357,7 +357,7 @@ void ManaHealthStateAnalyzer::sleepAppropirateTimeToNextAnalyze(){
 }
 
 void ManaHealthStateAnalyzer::getAmountsOfPotions() {
-	auto map_copy = var->potionName_rectPosOnScreen_map;
+	QMap<QString,QRect> map_copy = var->potionName_rectPosOnScreen_map;
 	QList<int> amountOfPots;
 	QStringList namesOfPots;
 	QImage wholeImg = var->wholeImg;
