@@ -42,12 +42,17 @@ public:
 	static QImage getImageFromAdvancedCode(QString codeOfImg);
 	static void getMapWithNumbersFromBottomBar(QMap<QString, int>& lightToRet, QMap<QString, int>& darkToRet);
 	static int getNumberFromBottomBar(QImage* bottomBar);
-	static QString readFromIniFile(QString nameOfField);
-	static void writeIniFile(QString nameOfField, QString value);
 	static bool findPotionsOnBottomBar(QStringList namesOfPotionsToFind, QStringList& namesOfPotionosFound, QList<QRect>& rectsWithFoundPots, QImage& bottomBarImg);
-
-
-
+	//
+	enum class FieldsOfIniFile {
+		LANGUAGE,
+		LAST_USED_LOGIN
+	};
+	static QMap<FieldsOfIniFile, QString> get_Field_NamesFromIni_map();
+	//static QMap<FieldsOfIniFile, QString> Field_NamesFromIni_map;
+	static QString readFromIniFile(FieldsOfIniFile nameOfField);
+	static void writeIniFile(FieldsOfIniFile nameOfField, QString value);
+	//
 	class RestoreMethode {
 	public:
 		enum class TypeOfMethode{ POTION, SPELL };
@@ -100,7 +105,7 @@ public:
 		int manaReg, healthReg;
 		bool forMage, forRp, forEk;
 	};
-
+	//
 	static QStringList TOOL_getCodesOfAllInFolder_regular(QString pathToInputFolder, QString pathToOutputFolder);
 	static QStringList TOOL_getCodesOfAllInFolder_bottom(QString pathToInputFolder);
 	/*

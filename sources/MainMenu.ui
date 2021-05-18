@@ -2,6 +2,9 @@
 <ui version="4.0">
  <class>MainMenu</class>
  <widget class="QDialog" name="MainMenu">
+  <property name="enabled">
+   <bool>true</bool>
+  </property>
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -36,8 +39,8 @@
     <rect>
      <x>-1</x>
      <y>-1</y>
-     <width>566</width>
-     <height>509</height>
+     <width>701</width>
+     <height>581</height>
     </rect>
    </property>
    <layout class="QGridLayout" name="gridLayout">

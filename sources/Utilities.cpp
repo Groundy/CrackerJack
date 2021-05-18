@@ -578,16 +578,31 @@ int Utilities::getNumberFromBottomBar(QImage* bottomBar){
 	return strToRe.toInt();
 }
 
-QString Utilities::readFromIniFile(QString nameOfField){
+QMap<Utilities::FieldsOfIniFile, QString> Utilities::get_Field_NamesFromIni_map(){
+	typedef Utilities::FieldsOfIniFile Field;
+	QMap<Field, QString> toRet;
+
+	toRet.insert(Field::LANGUAGE, "language");
+	toRet.insert(Field::LAST_USED_LOGIN, "testLogin");
+
+	return toRet;
+}
+
+QString Utilities::readFromIniFile(FieldsOfIniFile nameOfField){
 	QSettings setttings("settings.ini", QSettings::IniFormat);
-	QString readVal = setttings.value(nameOfField).toString();
+	QMap<Utilities::FieldsOfIniFile, QString> map = get_Field_NamesFromIni_map();
+	QString nameOfFieldAsStr = map[nameOfField];
+	QString readVal = setttings.value(nameOfFieldAsStr).toString();
 	return readVal;
 }
 
-void Utilities::writeIniFile(QString nameOfField, QString value){
+void Utilities::writeIniFile(FieldsOfIniFile nameOfField, QString value){
 	QSettings setttings("settings.ini", QSettings::IniFormat);
-	setttings.setValue(nameOfField, value);
+	QMap<Utilities::FieldsOfIniFile, QString> map = get_Field_NamesFromIni_map();
+	QString nameOfFieldAsStr = map[nameOfField];
+	setttings.setValue(nameOfFieldAsStr, value);
 }
+
 
 bool Utilities::findPotionsOnBottomBar(QStringList namesOfPotionsToFind, QStringList& namesOfPotionosFound, QList<QRect>& rectsWithFoundPots, QImage& bottomBarImg){
 	QMap<QString, QString> map_light, map_dark;

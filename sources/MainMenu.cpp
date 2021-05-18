@@ -79,16 +79,18 @@ void MainMenu::onGameStateChanged(int state){
 
 void MainMenu::changedValueOfCharHealthOrMana(QString healthPercentage, QString manaPercentage, QString manaShieldPercentage){
 	QString tmpHealth = healthPercentage.rightJustified(3, ' ');
-	QString tmpMana = manaPercentage.rightJustified(3, ' ');
-	QString tmpManaShield = manaShieldPercentage.rightJustified(3, ' ');
 	QString healthFinal = ui->healthInfoLabel->text() + tmpHealth;
-	QString manaFinal= ui->manaInfoLabel->text() + tmpMana;
-	QString manaShieldFinal = ui->manaShieldLabel->text() + tmpManaShield;
 	ui->healthInfoLabel->setText(healthFinal);
-	ui->manaInfoLabel->setText(manaFinal);
-	ui->manaShieldLabel->setText(manaShieldFinal);
 	ui->healthInfoLabel->repaint();
+
+	QString tmpMana = manaPercentage.rightJustified(3, ' ');
+	QString manaFinal= ui->manaInfoLabel->text() + tmpMana;
+	ui->manaInfoLabel->setText(manaFinal);
 	ui->manaInfoLabel->repaint();
+
+	QString tmpManaShield = manaShieldPercentage.rightJustified(3, ' ');
+	QString manaShieldFinal = ui->manaShieldLabel->text() + tmpManaShield;
+	ui->manaShieldLabel->setText(manaShieldFinal);
 	ui->manaShieldLabel->repaint();
 
 }
@@ -140,6 +142,11 @@ void MainMenu::signalSlotConnector(){
 }
 
 void MainMenu::setUpGui(){
+
+	ui->potion_label_1->setVisible(false);
+	ui->potion_label_2->setVisible(false);
+	ui->potion_label_3->setVisible(false);
+
 	QString changeProfileButtomText = isPl ? QString::fromLocal8Bit("Zmieñ profil") : "Change Profile";
 	ui->changeProfileButton->setText(changeProfileButtomText);
 	ui->changeProfileButton->repaint();
@@ -185,6 +192,10 @@ void MainMenu::setUpGui(){
 	ui->manaInfoLabel->repaint();
 	
 	QString manaShieldLabel = isPl ? QString::fromLocal8Bit("Tarcza many: ") : "Mana shield: ";
+	ui->manaShieldLabel->setText(manaShieldLabel);
+	ui->manaShieldLabel->repaint();
+
+	QString windowTitle = isPl ? QString::fromLocal8Bit("CrackerJack - Okno g³ówne") : "CrackerJack - Main menu";
 	ui->manaShieldLabel->setText(manaShieldLabel);
 	ui->manaShieldLabel->repaint();
 	// = isPl ? QString::fromLocal8Bit("") : "";
