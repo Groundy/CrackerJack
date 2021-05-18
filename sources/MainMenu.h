@@ -49,7 +49,9 @@ private:
 	KeySender* keySender;
 	VariablesClass var;
 
+	bool isPl;
 	void setProblemsWindow(QStringList problemsToShow);
 	void threadStarter();
 	void signalSlotConnector();
+	void setUpGui();
 };

@@ -6,10 +6,12 @@ MainMenu::MainMenu(Profile* selectedProf, QWidget* parent)
 {
 	ui = new Ui::MainMenu();
 	ui->setupUi(this);
+	isPl = StringResource::languageIsPl();
 	prof = selectedProf;
 	ui->profileNameLabel->setText(prof->profileName);
 	threadStarter();
 	signalSlotConnector();
+	setUpGui();
 }
 
 MainMenu::~MainMenu(){
@@ -79,9 +81,9 @@ void MainMenu::changedValueOfCharHealthOrMana(QString healthPercentage, QString 
 	QString tmpHealth = healthPercentage.rightJustified(3, ' ');
 	QString tmpMana = manaPercentage.rightJustified(3, ' ');
 	QString tmpManaShield = manaShieldPercentage.rightJustified(3, ' ');
-	QString healthFinal = "health: " + tmpHealth;
-	QString manaFinal= "mana: " + tmpMana;
-	QString manaShieldFinal = "mana shield: " + tmpManaShield;
+	QString healthFinal = ui->healthInfoLabel->text() + tmpHealth;
+	QString manaFinal= ui->manaInfoLabel->text() + tmpMana;
+	QString manaShieldFinal = ui->manaShieldLabel->text() + tmpManaShield;
 	ui->healthInfoLabel->setText(healthFinal);
 	ui->manaInfoLabel->setText(manaFinal);
 	ui->manaShieldLabel->setText(manaShieldFinal);
@@ -135,6 +137,57 @@ void MainMenu::signalSlotConnector(){
 	sig = SIGNAL(sendInfoAboutPotAmountsToGUI(QStringList));
 	slot = SLOT(getAndDisplayPotionAmountInfo(QStringList));
 	bool connectionAccepted_4 = connect(sigSender, sig, slotRec, slot, Qt::UniqueConnection);
+}
+
+void MainMenu::setUpGui(){
+	QString changeProfileButtomText = isPl ? QString::fromLocal8Bit("Zmieñ profil") : "Change Profile";
+	ui->changeProfileButton->setText(changeProfileButtomText);
+	ui->changeProfileButton->repaint();
+	
+	QString editProfileButtomText = isPl ? QString::fromLocal8Bit("Edytuj profil") : "Edit Profile";
+	ui->editProfileButton->setText(editProfileButtomText);
+	ui->editProfileButton->repaint();
+	
+	QString helpButtomText = isPl ? QString::fromLocal8Bit("Pomoc") : "Help";
+	ui->helpButton ->setText(helpButtomText);
+	ui->helpButton->repaint();
+	
+	QString labelActionText = isPl ? QString::fromLocal8Bit("Co chcesz zrobiæ?") : "What do you want to do?";
+	ui->infoLabel->setText(labelActionText);
+	ui->infoLabel->repaint();
+	
+	QString hauntManuallyButtomText = isPl ? QString::fromLocal8Bit("Polowanie rêczne") : "Haunt manually";
+	ui->huntMannuallyButton->setText(hauntManuallyButtomText);
+	ui->huntMannuallyButton->repaint();
+	
+	QString hauntAutomaticalyButtomText = isPl ? QString::fromLocal8Bit("Polowanie automatyczne") : "Haunt automatically";
+	ui->huntAutomaticallyButton->setText(hauntAutomaticalyButtomText);
+	ui->huntAutomaticallyButton->repaint();
+	
+	QString tradingButtomText = isPl ? QString::fromLocal8Bit("Trading") : "Handel";
+	ui->tradingButton->setText(tradingButtomText);
+	ui->tradingButton->repaint();
+	
+	QString skillButtomText = isPl ? QString::fromLocal8Bit("Skillowanie") : "Skilling";
+	ui->skillingButton->setText(skillButtomText);
+	ui->skillingButton->repaint();
+	
+	QString autoHealAndManaChechBoxText = isPl ? QString::fromLocal8Bit("Odnawiaj ¿ycie i mane") : "Heal and mana";
+	ui->checkBox->setText(autoHealAndManaChechBoxText);
+	ui->checkBox->repaint();
+	
+	QString healthLabel = isPl ? QString::fromLocal8Bit("¯ycie: ") : "Health: ";
+	ui->healthInfoLabel->setText(healthLabel);
+	ui->healthInfoLabel->repaint();
+	
+	QString manaLabel = isPl ? QString::fromLocal8Bit("Mana: ") : "Mana: ";
+	ui->manaInfoLabel->setText(manaLabel);
+	ui->manaInfoLabel->repaint();
+	
+	QString manaShieldLabel = isPl ? QString::fromLocal8Bit("Tarcza many: ") : "Mana shield: ";
+	ui->manaShieldLabel->setText(manaShieldLabel);
+	ui->manaShieldLabel->repaint();
+	// = isPl ? QString::fromLocal8Bit("") : "";
 }
 
 void MainMenu::helpButtonAction(){

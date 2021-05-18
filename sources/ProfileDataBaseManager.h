@@ -36,6 +36,7 @@ public:
 	QMap <FieldsOfDB, QString> getMapOfDBFields();
 	QMap <FieldsOfDB, QString> field_exactNameInDb_map = getMapOfDBFields();
 	
+
 	QString getValueOfCell(FieldsOfDB atr, QString profileName);
 	QSqlDatabase dataBase;
 	const QString DATABASE_NAME = "Profiles.db";
