@@ -8,7 +8,7 @@ LoginWindow::LoginWindow(QWidget* parent) :
 	ui.laungageComboBox->addItem("eng");
 	ui.laungageComboBox->addItem("pl");
 
-	QString login = Utilities::readFromIniFile("login");
+	QString login = Utilities::readFromIniFile(Utilities::FieldsOfIniFile::LAST_USED_LOGIN);
 	ui.loginLine->setText(login);
 	ui.remeberLoginChecbox->repaint();
 	bool setChecked = login.size() > 0;
@@ -39,7 +39,7 @@ void LoginWindow::signUpButtonClicked() {
 void LoginWindow::languageChanged() {
 	//dodac to podczas wychodzenia z tej klasy
 	QString language = ui.laungageComboBox->currentText();
-	Utilities::writeIniFile("language", language);
+	Utilities::writeIniFile(Utilities::FieldsOfIniFile::LANGUAGE, language);
 	setUpGUI();
 }
 

@@ -28,5 +28,9 @@ public:
 	static QString ProfileDataBaseManager_NewDBWillBeCreated();
 
 	static QString SelectProfileWindow_sureToDeleteProfile();
+	static QString NewProfileConfig_finishCreatingNewProfile_WindowTitle();
+	static QString NewProfileConfig_finishCreatingNewProfile_BoxMsg();
+	static QString NewProfileConfig_cancelCreatingNewProfile_WindowTitle();
+	static QString NewProfileConfig_cancelCreatingNewProfile_BoxMsg();
 };
 

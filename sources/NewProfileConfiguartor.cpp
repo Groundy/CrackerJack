@@ -6,6 +6,7 @@ NewProfileConfiguartor::NewProfileConfiguartor(Profile* prof, QWidget *parent)	:
 	QDialog(parent) {
 	ui = new Ui::NewProfileConfiguartor();
 	ui->setupUi(this); 
+	isPl = StringResource::languageIsPl();
 	MAX_PAGE = ui->stackedWidget->count();
 	ui->stackedWidget->setCurrentIndex(0);
 	additionalGuiSettings();
@@ -18,24 +19,28 @@ NewProfileConfiguartor::~NewProfileConfiguartor(){
 }
 
 void NewProfileConfiguartor::refreshGUI(){
-	QString labelPageInfoText = "Page " + QString::number(pageNumber) + "/" + QString::number(MAX_PAGE);
+	QString page = isPl ? "Strona " : "Page ";
+	QString labelPageInfoText = page + QString::number(pageNumber) + "/" + QString::number(MAX_PAGE);
 	ui->pageLabel->setText(labelPageInfoText);
 	ui->pageLabel->repaint();
 
-	bool firstPage = pageNumber == 1 ? true : false;
+	bool firstPage = pageNumber == 1;
 	ui->previousButton->setEnabled(!firstPage);
 
-	bool lastPage = pageNumber == MAX_PAGE ? true : false; 
-	if (lastPage)
-		ui->nextButton->setText("finish");
-	else
-		ui->nextButton->setText("Next Page");
-
+	bool lastPage = pageNumber == MAX_PAGE;
+	QString strToSet;
+	if (lastPage) 
+		strToSet = isPl ? QString::fromLocal8Bit("Zakoñcz") : "Finish";
+	else 
+		strToSet = isPl ? QString::fromLocal8Bit("Dalej") : "Next page";
+	ui->nextButton->setText(strToSet);
 	ui->stackedWidget->repaint();
 }
 
 bool NewProfileConfiguartor::finishAddingNewProfile(){
-	bool accepted = Utilities::showMessageBox_NO_YES("finish creating new profile","Are you sure that you want finish creating new profile?");
+	QString titleOfWindow = StringResource::NewProfileConfig_finishCreatingNewProfile_WindowTitle();
+	QString msg = StringResource::NewProfileConfig_finishCreatingNewProfile_BoxMsg();
+	bool accepted = Utilities::showMessageBox_NO_YES(titleOfWindow, msg);
 	if (accepted) {
 		saveDataToProfile(profToEdit);
 		this->accept();
@@ -250,7 +255,7 @@ bool NewProfileConfiguartor::checkCorrectnessOfPage_2(){
 	if (oneOfButtonsIsChecked)
 		return true;
 	else {
-		Utilities::showMessageBox("CracerJack problem", StringResource::NewProfileConfig_2_anyProfIsChecked(), QMessageBox::Ok);
+		Utilities::showMessageBox(StringResource::WindowTitle_CrackerJackProblem(), StringResource::NewProfileConfig_2_anyProfIsChecked(), QMessageBox::Ok);
 		return false;
 	}
 
@@ -807,7 +812,9 @@ void NewProfileConfiguartor::previousPageButtonAction(){
 
 void NewProfileConfiguartor::cancelButtonAction() {
 	QFlags<QMessageBox::StandardButton> flags = {QMessageBox::StandardButton::Yes, QMessageBox::StandardButton::No};
-	int res = Utilities::showMessageBox("Cancel adding new profile", "Are you sure that you want cancel adding new profile?", flags);
+	QString winTitle = StringResource::NewProfileConfig_cancelCreatingNewProfile_WindowTitle();
+	QString msg = StringResource::NewProfileConfig_cancelCreatingNewProfile_BoxMsg();
+	int res = Utilities::showMessageBox(winTitle, msg, flags);
 	if(res == QMessageBox::StandardButton::Yes)
 		this->reject();
 }

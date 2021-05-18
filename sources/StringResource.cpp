@@ -183,3 +183,27 @@ QString StringResource::SelectProfileWindow_sureToDeleteProfile(){
 	QString eng = "Do you really want to delete profile ";
 	return languageIsPl() ? pl : eng;
 }
+
+QString StringResource::NewProfileConfig_finishCreatingNewProfile_WindowTitle(){
+	QString pl = QString::fromLocal8Bit("Zakoñcz tworzenie nowego profilu");
+	QString eng = "Finish creating new profile";
+	return languageIsPl() ? pl : eng;
+}
+
+QString StringResource::NewProfileConfig_finishCreatingNewProfile_BoxMsg(){
+	QString pl = QString::fromLocal8Bit("Czy na pewno chcesz zakoñczyæ tworzenie/edycje nowego profilu?");
+	QString eng = "Are you sure that you want finish creating new profile?";
+	return languageIsPl() ? pl : eng;
+}
+
+QString StringResource::NewProfileConfig_cancelCreatingNewProfile_WindowTitle(){
+	QString pl = QString::fromLocal8Bit("Anuluj dodawanie profilu");
+	QString eng = "Cancel adding new profile";
+	return languageIsPl() ? pl : eng;
+}
+
+QString StringResource::NewProfileConfig_cancelCreatingNewProfile_BoxMsg(){
+	QString pl = QString::fromLocal8Bit("Czy na pewno anulowaæ dodawanie nowego profilu?");
+	QString eng = "Are you sure that you want cancel adding new profile?";
+	return languageIsPl() ? pl : eng;
+}
