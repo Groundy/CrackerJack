@@ -11,6 +11,9 @@
 #include "ScreenAnalyzer.h"
 #include "KeySender.h"
 #include "memory"
+
+#include "StringResource.h"
+
 namespace Ui { class MainMenu; };
 
 class MainMenu : public QDialog

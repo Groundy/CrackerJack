@@ -13,7 +13,6 @@
 #include "qsqlfield.h"
 #include "NewProfileConfiguartor.h"
 #include "qdatetime.h"
-
 class ProfileDataBaseManager : public QObject
 {
 	Q_OBJECT

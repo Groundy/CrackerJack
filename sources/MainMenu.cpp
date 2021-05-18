@@ -21,47 +21,58 @@ MainMenu::~MainMenu(){
 }
 
 void MainMenu::onGameStateChanged(int state){
-	QString previousText = "game status: ";
+	bool isPl = StringResource::languageIsPl();
+	
+	QString previousText = isPl ? QString::fromLocal8Bit("Status gry: ") : "game status: ";
 	QString toWrite;
 	QLabel* label = ui->gameActiveLabel;
+	typedef activeGameThread::gameActivityStates Type;
 	switch (state)
 	{
-	case activeGameThread::gameActivityStates::ACTIVE: {
-		toWrite = "game active, Logged";
+	case Type::ACTIVE: {
+		QString pl = QString::fromLocal8Bit("Gra aktywna, zalogowano");
+		QString eng = "Game active, Logged";
+		toWrite = isPl ? pl : eng;
 		break; 
 	}
-	case activeGameThread::gameActivityStates::NO_ACTIVE: {
-		toWrite = "game not found";
+	case Type::NO_ACTIVE: {
+		QString pl = QString::fromLocal8Bit("Nie znaleziono okna gry");
+		QString eng = "Game not found";
+		toWrite = isPl ? pl : eng;
 		break;
 	}
-	case activeGameThread::gameActivityStates::NO_HANDLER: {
-		toWrite = "game found but no access";
+	case Type::NO_HANDLER: {
+		QString pl = QString::fromLocal8Bit("Okno gry wykryte, brak dostêpu");
+		QString eng = "Game found but no access";
+		toWrite = isPl ? pl : eng;
 		break;
 	}
-	case activeGameThread::gameActivityStates::NO_LOGGED: {
-		toWrite = "game active but no char logged";
+	case Type::NO_LOGGED: {
+		QString pl = QString::fromLocal8Bit("Gra aktywna, nie zalogowano");
+		QString eng = "Game active but no char logged";
+		toWrite = isPl ? pl : eng;
 		break;
 	}
-	case activeGameThread::gameActivityStates::NO_WINDOW: {
-		toWrite = "game is loading";
+	case Type::NO_WINDOW: {
+		QString pl = QString::fromLocal8Bit("Gra siê ³aduje");
+		QString eng = "Game is loading";
+		toWrite = isPl ? pl : eng;
 		break;
 	}
 	default: {
-		toWrite = "Error";
+		QString pl = QString::fromLocal8Bit("B³¹d");
+		QString eng = "Error";
+		toWrite = isPl ? pl : eng;
 		break;
 	}
 	}
 	label->setText(previousText + toWrite);
 	label->repaint();
 
-	if (state == activeGameThread::gameActivityStates::ACTIVE) {
-		this->screenAnalyzer->enableScreenAnalyzer = true;
-		this->screenSaverThread->enableScreenCapture = true;
-	}
-	else {
-		this->screenAnalyzer->enableScreenAnalyzer = false;
-		this->screenSaverThread->enableScreenCapture = false;
-	}
+	bool shouldBeActive = state == Type::ACTIVE;
+	this->screenAnalyzer->enableScreenAnalyzer = shouldBeActive;
+	this->screenSaverThread->enableScreenCapture = shouldBeActive;
+	
 }
 
 void MainMenu::changedValueOfCharHealthOrMana(QString healthPercentage, QString manaPercentage, QString manaShieldPercentage){
