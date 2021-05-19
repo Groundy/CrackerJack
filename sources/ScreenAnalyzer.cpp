@@ -30,7 +30,7 @@ void ScreenAnalyzer::run() {
 }
 
 int ScreenAnalyzer::reCalibrate(){
-	var->caliState = var->DURING_CALIBRATION;
+	var->caliState = VariablesClass::calibrationState::DURING_CALIBRATION;
 	notifyOtherProcessOfStateOfAnalyzer(false);
 	qDebug() << "Recalibration";
 	int res = calibrate();
@@ -273,7 +273,7 @@ void ScreenAnalyzer::mainLoop(){
 		msleep(timeBetweenNextCheckingsOfScrennShotFolder);
 		QImage img;
 		ERROR_CODE openCorrectly = (ERROR_CODE)loadScreen(img);
-		bool isCalibrated = var->caliState == var->CALIBRATED;
+		bool isCalibrated = var->caliState == VariablesClass::calibrationState::CALIBRATED;
 		if (!isCalibrated) {
 			reCalibrate();
 			continue;
@@ -312,9 +312,9 @@ int ScreenAnalyzer::calibrate(){
 
 	ERROR_CODE res4 = (ERROR_CODE)categorizeWindows(fullScreen, importantRectangles, frames);
 	if (res4 == OK) 
-		var->caliState = var->CALIBRATED;
+		var->caliState = VariablesClass::calibrationState::CALIBRATED;
 	else {
-		var->caliState = var->NOT_CALIBRATED;
+		var->caliState = VariablesClass::calibrationState::NOT_CALIBRATED;
 		return ERROR_CODE::NO_POSTION_ASSIGNED_TO_SLASHES;
 	}
 		return OK;

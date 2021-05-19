@@ -31,7 +31,13 @@ public:
 		MANA_RESTORE_ITEM,
 		HEALTH_RESTORE_ITEM,
 		LAST_LOGIN,
-		CREATION_TIME
+		CREATION_TIME,
+		POS_HP,		POS_SHP,		POS_GHP,		POS_UHP,		POS_SPHP,
+		POS_GSP,		POS_USP,
+		POS_MP,		POS_SMP,		POS_GMP,		POS_UMP,
+
+
+		END
 	};
 	QMap <FieldsOfDB, QString> getMapOfDBFields();
 	QMap <FieldsOfDB, QString> field_exactNameInDb_map = getMapOfDBFields();
@@ -47,16 +53,22 @@ public:
 	bool checkIfDbExist();
 	void addRecord(QString profileName);
 	void deleteRecord(QString name);
-	void modifyAtribute(QString profileName ,FieldsOfDB atr, QString newValue);
+	bool modifyAtribute(QString profileName ,FieldsOfDB atr, QString newValue);
 	QStringList getListOfAllRecords();
 	void saveProfileToDatabase(Profile* prof);
 	void readProfileFroDataBase(Profile* prof, QString profileName);
+	
 	QString DB_writer_ManaAndHealthRestorePercentages(QList<int> vect);
 	QList<int> DB_reader_ManaAndHealthRestorePercentages(QString str);
 
 	QString DB_writer_ManaAndHealthKeys(QList<Key> keylist);
 	QList<Key> DB_reader_ManaAndHealthKeys(QString str);
-	//are they even usefull?
-	QString DB_writer_ManaAndHealthRestoreMethhodesNames(QList<QString> keylist);
+
+	QString DB_writer_ManaAndHealthRestoreMethhodesNames(QStringList keylist);
 	QList<QString> DB_reader_ManaAndHealthRestoreMethhodesNames(QString str);
+
+	QString DB_writer_PosOfItem(QRect rect);
+	QRect DB_reader_PosOfItem(QString str);
+	static void writeItemPosToDb(QString profileName, FieldsOfDB dbField, QRect rectToSave);
+	static void readItemPosToDb(QString profileName, FieldsOfDB dbField, QRect& rectToRead);
 };

@@ -30,16 +30,9 @@ QString makeRandomProccessName() {
 }
 
 void test() {
-
-    //Utilities::TOOL_getCodesOfAllInFolder_bottom("C:\\Users\\ADMIN\\Desktop\\digitsFromBottomBar\\digitsFromBottomBar");
-    /*
-    QString path1 = "C:\\Users\\ADMIN\\Desktop\\output\\1.png";
-    QString path2 = "C:\\Users\\ADMIN\\Desktop\\output\\2.png";
-    QImage img1(path1);
-    QImage img2(path2);
-    int int1 = Utilities::getNumberFromBottomBar(&img1);
-   // int int2 = Utilities::getNumberFromBottomBar(&img2);
-   */
+    QRect testRect(1, 2, 3, 4);
+    ProfileDataBaseManager::writeItemPosToDb("Gome",ProfileDataBaseManager::FieldsOfDB::POS_GMP,testRect);
+    int tt = 4;
 }
 int main(int argc, char *argv[])
 {

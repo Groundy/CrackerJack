@@ -228,7 +228,7 @@ bool ManaHealthStateAnalyzer::checkIfEverythingIsCorrectToProcess(){
 		return false;
 	}
 
-	bool isNotCalibrated = var->caliState != var->CALIBRATED;
+	bool isNotCalibrated = var->caliState != VariablesClass::calibrationState::CALIBRATED;
 	if (isNotCalibrated) {
 		bool calibrationIsAvaible = var->lastTimeCalibrationUsed + 3000 <= Utilities::getCurrentTimeInMiliSeconds();
 		if (calibrationIsAvaible) {

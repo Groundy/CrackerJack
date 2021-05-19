@@ -48,11 +48,12 @@ void ProfileDataBaseManager::makeDataBase(){
 
 }
 
-void ProfileDataBaseManager::modifyAtribute(QString profileName,FieldsOfDB atr, QString newValue) {
+bool ProfileDataBaseManager::modifyAtribute(QString profileName,FieldsOfDB atr, QString newValue) {
 	//[DIAG] //[ERR]
 	QSqlQuery query;
 	QString createCommand = "UPDATE profiles set " + this->field_exactNameInDb_map[atr] + " = '" + newValue + "' where profileName = '" + profileName + "'";
-	query.exec(createCommand);
+	bool toRet = query.exec(createCommand);
+	return toRet;
 }
 
 void ProfileDataBaseManager::addRecord(QString profileName) {
@@ -99,6 +100,19 @@ QMap<ProfileDataBaseManager::FieldsOfDB, QString> ProfileDataBaseManager::getMap
 	toRet.insert(ProfileDataBaseManager::HEALTH_RESTORE_ITEM, "HealthItems");
 	toRet.insert(ProfileDataBaseManager::LAST_LOGIN, "lastLogin");
 	toRet.insert(ProfileDataBaseManager::CREATION_TIME, "creationTime");
+
+	toRet.insert(ProfileDataBaseManager::POS_HP, "POS_HP");
+	toRet.insert(ProfileDataBaseManager::POS_SHP, "POS_SHP");
+	toRet.insert(ProfileDataBaseManager::POS_GHP, "POS_GHP");
+	toRet.insert(ProfileDataBaseManager::POS_UHP, "POS_UHP");
+	toRet.insert(ProfileDataBaseManager::POS_SPHP, "POS_SPHP");
+	toRet.insert(ProfileDataBaseManager::POS_GSP, "POS_GSP");
+	toRet.insert(ProfileDataBaseManager::POS_USP, "POS_USP");
+	toRet.insert(ProfileDataBaseManager::POS_MP, "POS_MP");
+	toRet.insert(ProfileDataBaseManager::POS_SMP, "POS_SMP");
+	toRet.insert(ProfileDataBaseManager::POS_GMP, "POS_GMP");
+	toRet.insert(ProfileDataBaseManager::POS_UMP, "POS_UMP");
+
 	return toRet;
 }
 
@@ -175,6 +189,8 @@ void ProfileDataBaseManager::readProfileFroDataBase(Profile* prof, QString name)
 	prof->creationDate = getValueOfCell(FieldsOfDB::CREATION_TIME, name);
 }
 
+
+//writers
 QString ProfileDataBaseManager::DB_writer_ManaAndHealthRestorePercentages(QList<int> vect) {
 	//ERR //DIAG
 	int size = vect.size();
@@ -188,6 +204,26 @@ QString ProfileDataBaseManager::DB_writer_ManaAndHealthRestorePercentages(QList<
 	return toRet;
 }
 
+QString ProfileDataBaseManager::DB_writer_ManaAndHealthKeys(QList<Key> keylist) {
+	if (keylist.size() == 0)
+		return QString("#");
+
+	QString toRet = "#";
+	for each (Key key in keylist)
+		toRet.append(QString::number(key.number)+"#");
+
+	return toRet;
+}
+
+QString ProfileDataBaseManager::DB_writer_ManaAndHealthRestoreMethhodesNames(QStringList restorationMethodesNames) {
+	QString toRet = "";
+	for each (QString RestorationName in restorationMethodesNames)
+		toRet.append(RestorationName +"#");
+
+	return toRet;
+}
+
+//readers
 QList<int> ProfileDataBaseManager::DB_reader_ManaAndHealthRestorePercentages(QString str) {
 	QList<int> vectWithThreshold;
 
@@ -200,17 +236,6 @@ QList<int> ProfileDataBaseManager::DB_reader_ManaAndHealthRestorePercentages(QSt
 		vectWithThreshold.push_back(thresholds[i].toInt());
 
 	return vectWithThreshold;
-}
-
-QString ProfileDataBaseManager::DB_writer_ManaAndHealthKeys(QList<Key> keylist) {
-	if (keylist.size() == 0)
-		return QString("#");
-
-	QString toRet = "#";
-	for each (Key key in keylist)
-		toRet.append(QString::number(key.number)+"#");
-
-	return toRet;
 }
 
 QList<Key> ProfileDataBaseManager::DB_reader_ManaAndHealthKeys(QString str) {
@@ -227,14 +252,6 @@ QList<Key> ProfileDataBaseManager::DB_reader_ManaAndHealthKeys(QString str) {
 	return keyList;
 }
 
-QString ProfileDataBaseManager::DB_writer_ManaAndHealthRestoreMethhodesNames(QList<QString> restorationMethodesNames) {
-	QString toRet = "";
-	for each (QString RestorationName in restorationMethodesNames)
-		toRet.append(RestorationName +"#");
-
-	return toRet;
-}
-
 QList<QString> ProfileDataBaseManager::DB_reader_ManaAndHealthRestoreMethhodesNames(QString str){
 	QList<QString> listOfMethodes;
 
@@ -244,3 +261,47 @@ QList<QString> ProfileDataBaseManager::DB_reader_ManaAndHealthRestoreMethhodesNa
 
 	return listOfMethodes;
 }
+
+QString ProfileDataBaseManager::DB_writer_PosOfItem(QRect rect){
+	QString toRet = "";
+	if (rect.isEmpty())
+		return toRet;
+
+	QString start_y = QString::number(rect.y());
+	QString start_x = QString::number(rect.x());
+	QString width = QString::number(rect.width());
+	QString height = QString::number(rect.height());
+	QString mark = QString("_");
+	toRet = start_x + mark + start_y + mark + width + mark + height;
+	return toRet;
+}
+
+QRect ProfileDataBaseManager::DB_reader_PosOfItem(QString str){
+	QString mark = QString("_");
+	QStringList values = str.split(mark, Qt::SkipEmptyParts);
+	QRect toRet;
+
+	if (values.size() == 4) {
+		int start_y = values[0].toInt();
+		int start_x = values[1].toInt();
+		int width = values[2].toInt();
+		int height = values[3].toInt();
+		toRet = QRect(start_x, start_y, width, height);
+	}
+	
+	return toRet;
+}
+
+void ProfileDataBaseManager::writeItemPosToDb(QString profileName, FieldsOfDB dbField, QRect rectToSave){
+	ProfileDataBaseManager obj;
+	QString strToWrtie = obj.DB_writer_PosOfItem(rectToSave);
+	obj.modifyAtribute(profileName, dbField, strToWrtie);
+}
+
+void ProfileDataBaseManager::readItemPosToDb(QString profileName, FieldsOfDB dbField, QRect& rectToRead){
+	ProfileDataBaseManager obj;
+	QString rectAsStr = obj.getValueOfCell(dbField, profileName);
+	QRect rectToRet = obj.DB_reader_PosOfItem(rectAsStr);
+	rectToRead = rectToRet;
+}
+
