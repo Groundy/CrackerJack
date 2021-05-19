@@ -319,7 +319,7 @@ bool NewProfileConfiguartor::checkCorrectnessOfPage_3(){
 		if (activeSliders.size() > 0) {
 			int lastSliderIndex = activeSliders.size() - 1;
 			int valOfLastSlider = activeSliders[lastSliderIndex]->value();
-			lastSliderIsZero = valOfLastSlider <= 0 ? true : false;
+			lastSliderIsZero = valOfLastSlider <= 0;
 		}
 	}
 
@@ -653,6 +653,10 @@ Profile::PROFESSION NewProfileConfiguartor::getProfessionFromRadioButtonOnPage2(
 	return toRet;
 }
 
+void NewProfileConfiguartor::setUpGUI(){
+
+}
+
 void NewProfileConfiguartor::fillWidgetsWithDataFromProf(Profile* profToEdit) {
 	//1
 	{
@@ -825,7 +829,7 @@ void NewProfileConfiguartor::helpButtonAction() {
 }
 
 void NewProfileConfiguartor::_3_healingEnabledChanged(){
-	bool enabled = ui->_3_enableAutoHealing->isChecked() ? true : false;
+	bool enabled = ui->_3_enableAutoHealing->isChecked();
 	ui->_3_spinGetNumberOfMethodes->setEnabled(enabled);
 	if (!enabled) {
 		ui->_3_spinGetNumberOfMethodes->setValue(0);
@@ -924,7 +928,7 @@ void NewProfileConfiguartor::_3_slidersChanged() {
 }
 
 void NewProfileConfiguartor::_4_ManaEnabledChanged() {
-	bool enabled = ui->_4_enableManaRestore ? true : false;
+	bool enabled = ui->_4_enableManaRestore;
 	ui->_4_spinGetNumberOfMethodes->setEnabled(enabled);
 	if (!enabled) {
 		ui->_4_spinGetNumberOfMethodes->setValue(0);

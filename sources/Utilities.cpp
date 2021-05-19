@@ -66,9 +66,9 @@ void Utilities::imgToBlackAndWhiteAllColors(QImage& img, int threshold) {
 		 for (size_t y = 0; y < height; y++) {
 			 uint pixelColor = img.pixel(x, y);
 			 RGBstruct rgb(pixelColor);
-			 bool redIsEnough = rgb.r >= threshold ? true : false;
-			 bool greenIsEnough = rgb.g >= threshold ? true : false;
-			 bool blueIsEnough = rgb.b >= threshold ? true : false;
+			 bool redIsEnough = rgb.r >= threshold;
+			 bool greenIsEnough = rgb.g >= threshold;
+			 bool blueIsEnough = rgb.b >= threshold;
 			 if (redIsEnough && greenIsEnough && blueIsEnough)
 				 img.setPixel(x, y, qRgb(255, 255, 255));
 			 else
@@ -853,9 +853,9 @@ void Utilities::UNUSED_imgAvoideOneColor(QImage& img, QRgb minimalColorValues, Q
 			 QRgb colorOfPixel = img.pixel(x, y);
 			 RGBstruct current(colorOfPixel);
 
-			 bool redIsEnough = (current.r >= minV.r) && (current.r <= maxV.r) ? true : false;
-			 bool greenIsEnough = (current.g >= minV.g) && (current.g <= maxV.g) ? true : false;
-			 bool blueIsEnough = (current.b >= minV.b) && (current.b <= maxV.b) ? true : false;
+			 bool redIsEnough = (current.r >= minV.r) && (current.r <= maxV.r);
+			 bool greenIsEnough = (current.g >= minV.g) && (current.g <= maxV.g);
+			 bool blueIsEnough = (current.b >= minV.b) && (current.b <= maxV.b);
 
 			 bool setGiveColor;
 			 allOfThem = allOfThem ? (redIsEnough && greenIsEnough && blueIsEnough) : (redIsEnough || greenIsEnough || blueIsEnough);

@@ -45,7 +45,7 @@ void LoginWindow::languageChanged() {
 
 //fun
 void LoginWindow::checkLogInPossibility() {
-	bool canLogIn = ui.loginLine->text().size() != 0 && ui.passwordLine->text().size() != 0 ? true : false;
+	bool canLogIn = ui.loginLine->text().size() != 0 && ui.passwordLine->text().size() != 0;
 	ui.logInButton->setEnabled(canLogIn);
 }
 

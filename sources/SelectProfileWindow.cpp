@@ -106,7 +106,7 @@ void SelectProfileWindow::deleteProfileButtonAction(){
 }
 
 void SelectProfileWindow::selectListAction(){
-	bool oneItemIsSelected = ui->listOfProfs->selectedItems().size() == 1 ? true : false;
+	bool oneItemIsSelected = ui->listOfProfs->selectedItems().size() == 1;
 	ui->deleteProfileButton->setEnabled(oneItemIsSelected);
 	ui->editProfileButton->setEnabled(oneItemIsSelected);
 }
