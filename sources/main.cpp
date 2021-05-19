@@ -29,15 +29,15 @@ QString makeRandomProccessName() {
     return ProccessName;
 }
 
-void test() {
-    ProfileDataBaseManager obj;
-
-}
+void test();
+QIcon getIcon();
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
     a.setQuitOnLastWindowClosed(true);
-    a.setStyle("fusion");
+    a.setStyle("fusion"); 
+
+    a.setWindowIcon(getIcon());
     QApplication::setAttribute(Qt::AA_DisableWindowContextHelpButton);
     test();
     /*
@@ -59,5 +59,13 @@ int main(int argc, char *argv[])
     return a.exec();
 }
 
+QIcon getIcon() {
+    QDir dir = QDir::current();
+    dir.cd("Resources");
+    QString iconPath = dir.absoluteFilePath("logo.png");
+    return QIcon(iconPath);
+};
 
+void test() {
 
+};
