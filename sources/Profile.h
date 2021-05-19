@@ -20,17 +20,17 @@ public:
 	Profile();
 	~Profile();
 
-	QList<int> healthRestorePercentages;//done
-	QList<int> ManaRestoreMethodesPercentage;//done
-	QList<Key> healthKeys;//done
-	QList<Key> ManaKeys;//done
+	QList<int> healthRestorePercentages;//re
+	QList<int> ManaRestoreMethodesPercentage;//re
+	QList<Key> healthKeys;//re
+	QList<Key> ManaKeys;//re
 	QList<QString> healthRestoreMethodeNames;
 	QList<QString> manaRestoreMethodeNames;
 
-	PROFESSION profession;//done
+	PROFESSION profession;//re
 	AUTO_LOOT_KEY lootKey;
 	CONTROLS controls;
-	QString profileName;//done
+	QString profileName;//re
 	QString lastLoginDate;
 	QString creationDate;
 	QString secondsSpent;

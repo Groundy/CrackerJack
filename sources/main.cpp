@@ -30,9 +30,8 @@ QString makeRandomProccessName() {
 }
 
 void test() {
-    QRect testRect(1, 2, 3, 4);
-    ProfileDataBaseManager::writeItemPosToDb("Gome",ProfileDataBaseManager::FieldsOfDB::POS_GMP,testRect);
-    int tt = 4;
+    ProfileDataBaseManager obj;
+
 }
 int main(int argc, char *argv[])
 {
@@ -40,10 +39,6 @@ int main(int argc, char *argv[])
     a.setQuitOnLastWindowClosed(true);
     a.setStyle("fusion");
     QApplication::setAttribute(Qt::AA_DisableWindowContextHelpButton);
-
-
-
-
     test();
     /*
     LoginWindow w;

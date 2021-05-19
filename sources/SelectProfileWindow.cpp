@@ -4,6 +4,7 @@
 SelectProfileWindow::SelectProfileWindow(QWidget *parent, Profile* prof) : QDialog(parent){
 	ui = new Ui::SelectProfileWindow();
 	ui->setupUi(this);
+	isPl = StringResource::languageIsPl();
 	setFixedSize(this->size());
 	setUpGui();
 	prepareProfiles();
@@ -20,11 +21,12 @@ SelectProfileWindow::~SelectProfileWindow()
 
 void SelectProfileWindow::prepareProfiles(){
 	ui->listOfProfs->clear();
-	QStringList list = dbManager.getListOfAllRecords();
+	ProfileDataBaseManager dbManager;
+	QStringList list;
+	bool ok = dbManager.getNamesOfAllFilesInFormToDisplay(list);
 	for each (QString str in list)
 		ui->listOfProfs->addItem(str);
 	ui->listOfProfs->repaint();
-	isPl = StringResource::languageIsPl();
 }
 
 void SelectProfileWindow::setUpGui(){
@@ -55,12 +57,13 @@ void SelectProfileWindow::setUpGui(){
 }
 
 void SelectProfileWindow::addNewProfileButtonAction(){
-	Profile* prof = new Profile();
-	NewProfileConfiguartor newProfWind(prof,this);
+	Profile prof;
+	NewProfileConfiguartor newProfWind(&prof,this);
 	int result = newProfWind.exec();
-	if (result == QDialog::Accepted)
-		dbManager.saveProfileToDatabase(prof);
-	delete prof;
+	if (result == QDialog::Accepted) {
+		ProfileDataBaseManager dbManager;
+		dbManager.saveProfileToDataBase(prof);
+	}
 	Sleep(20);
 	prepareProfiles();
 }
@@ -71,19 +74,18 @@ void SelectProfileWindow::editProfileButtonAction(){
 	QStringList nameParts = nameOfProfToSplit.split("] ");
 	QString profileName = nameParts[1];
 
-	Profile* profToBeRead = new Profile();
-	dbManager.readProfileFroDataBase(profToBeRead, profileName);
-	NewProfileConfiguartor* newProfDialog = new NewProfileConfiguartor(profToBeRead, this);
-	newProfDialog->fillWidgetsWithDataFromProf(profToBeRead);
-	//profToBeRead->clearProfile();
+	Profile profToBeRead;
+	ProfileDataBaseManager dbManager;
+	bool readCompleted = dbManager.readProfileFromDataBase(profileName, profToBeRead);
+	//TODO obsluga w przypadku gdy profil zostal zle wczytany
+	NewProfileConfiguartor* newProfDialog = new NewProfileConfiguartor(&profToBeRead, this);
+	newProfDialog->fillWidgetsWithDataFromProf(&profToBeRead);
 	auto result = newProfDialog->exec();
 	if (result == QDialog::Accepted) {
-		dbManager.deleteRecord(profileName);
-		dbManager.saveProfileToDatabase(profToBeRead);
+		dbManager.deleteProfile(profileName);
+		dbManager.saveProfileToDataBase(profToBeRead);
 	}
 	delete newProfDialog;
-	delete profToBeRead;
-
 	prepareProfiles();
 }
 
@@ -91,15 +93,18 @@ void SelectProfileWindow::deleteProfileButtonAction(){
 	QString profileNameToDelete;
 	profileNameToDelete = ui->listOfProfs->selectedItems().first()->text();
 	QStringList choppedString = profileNameToDelete.split("] ");
+	QString onlyProfileName;
 	if (choppedString.size() != 2)
-		;//err diag
-	QString onlyProfileName = choppedString[1];
+		onlyProfileName = choppedString[1];//err diag
+	
 
 	QString msgText = StringResource::SelectProfileWindow_sureToDeleteProfile() + onlyProfileName  + " ?";
 	auto buttons = QMessageBox::StandardButton::Yes | QMessageBox::StandardButton::No;
-	int shouldDelte = Utilities::showMessageBox("CrackerJack", msgText, buttons);
-	if (shouldDelte == QMessageBox::StandardButton::Yes) {
-		dbManager.deleteRecord(onlyProfileName);
+	int retCode = Utilities::showMessageBox("CrackerJack", msgText, buttons);
+	bool shouldBeDeleted = retCode == QMessageBox::StandardButton::Yes;
+	if (shouldBeDeleted) {
+		ProfileDataBaseManager dbManager;
+		dbManager.deleteProfile(onlyProfileName);
 		prepareProfiles();
 		ui->listOfProfs->setItemSelected(NULL, true);
 	}
@@ -115,8 +120,12 @@ void SelectProfileWindow::profSelected(){
 	int row = ui->listOfProfs->currentRow();
 	QString nameOfProfToSplit = ui->listOfProfs->item(row)->text();
 	QStringList nameParts = nameOfProfToSplit.split("] ");
-	QString profileName = nameParts[1];
-	dbManager.readProfileFroDataBase(profToSelect, profileName);
+	QString profileName;
+	if(nameParts.size() >= 2)
+		profileName = nameParts[1];
+
+	ProfileDataBaseManager dbManager;
+	dbManager.readProfileFromDataBase(profileName, *profToSelect);
 	this->accept();
 }
 

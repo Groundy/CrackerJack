@@ -1,92 +1,17 @@
 #include "ProfileDataBaseManager.h"
 #include "StringResource.h"
 ProfileDataBaseManager::ProfileDataBaseManager(){
-	getPathToDB();
-	openDB();
+	QDir dir = QDir::current();//TODO sprawdzic czy po zainstwalowaniu w wersji finalnej jest to Ok i czy s¹ wszelkie prawa
+	bool foundFolderWithProfs = dir.cd("Profiles");
+	//TODO dodac obsluge gdy folder nie zostanie znaleziony
+	pathToFolderWithProfiles = dir.absolutePath();
+	
 }
 
-ProfileDataBaseManager::~ProfileDataBaseManager()
-{
-	if (dataBase.isOpen())
-		dataBase.close();
-}
-
-void ProfileDataBaseManager::openDB() {
-	//opens a DB from path, if not DB found user is informed that new DB will be created
-	dataBase = QSqlDatabase::addDatabase("QSQLITE");
-	dataBase.setDatabaseName(DATABASE_NAME);
-	bool DBExist = checkIfDbExist();
-	if (!DBExist) {
-		QString textToDisplay = StringResource::ProfileDataBaseManager_DbDoesNotExist() + pathToDB.absolutePath() + StringResource::ProfileDataBaseManager_NewDBWillBeCreated(); 
-		Utilities::showMessageBox(StringResource::WindowTitle_CrackerJackProblem(), textToDisplay,QMessageBox::Ok);  
-		dataBase.open(); 
-		makeDataBase(); 
-	}
-	else
-		dataBase.open();
-	//[DIAG]
-	//[ERR]
-}
-
-void ProfileDataBaseManager::makeDataBase(){
-	QSqlQuery query;
-	QString createCommand = "CREATE TABLE profiles ( ";
-
-	createCommand.append("profileName TEXT, ");
-	createCommand.append("profession INTEGER, ");
-	createCommand.append("manaString TEXT, ");
-	createCommand.append("healthKeys TEXT, ");
-	createCommand.append("manaKeys TEXT, ");
-	createCommand.append("healthString TEXT, ");
-	createCommand.append("ManaItems TEXT, ");
-	createCommand.append("HealthItems TEXT, ");
-	createCommand.append("lastLogin TEXT, ");
-	createCommand.append("creationTime TEXT ");
-
-	createCommand.append(")");
-	query.exec(createCommand);
+ProfileDataBaseManager::~ProfileDataBaseManager(){
 
 }
 
-bool ProfileDataBaseManager::modifyAtribute(QString profileName,FieldsOfDB atr, QString newValue) {
-	//[DIAG] //[ERR]
-	QSqlQuery query;
-	QString createCommand = "UPDATE profiles set " + this->field_exactNameInDb_map[atr] + " = '" + newValue + "' where profileName = '" + profileName + "'";
-	bool toRet = query.exec(createCommand);
-	return toRet;
-}
-
-void ProfileDataBaseManager::addRecord(QString profileName) {
-	//diag /err
-	QSqlQuery query;
-	QString profNameFieldTitle = this->field_exactNameInDb_map[FieldsOfDB::PROFILE_NAME];
-	QString createCommand = "INSERT INTO profiles (" + profNameFieldTitle + ") VALUES('"+profileName+"')";
-	query.exec(createCommand);
-}
-
-void ProfileDataBaseManager::getPathToDB() {
-	//[TMP]
-	pathToDB = QDir::current();
-}
-
-bool ProfileDataBaseManager::checkIfDbExist() {
-	QString fullPath = pathToDB.absolutePath() + "\\" + DATABASE_NAME;
-	QFileInfo info(fullPath);
-	if (info.exists() && info.isFile())
-		return true;
-	else
-		return false;
-}
-
-int ProfileDataBaseManager::getNumberOfRecords(){
-	//diag //err
-	int toRet = 0;
-	QSqlQuery query;
-	query.exec("SELECT COUNT(*) FROM profiles");
-	if (query.first())
-		toRet = query.value(0).toInt();
-	return toRet;
-}
 
 QMap<ProfileDataBaseManager::FieldsOfDB, QString> ProfileDataBaseManager::getMapOfDBFields(){
 	QMap<ProfileDataBaseManager::FieldsOfDB, QString> toRet;
@@ -116,78 +41,184 @@ QMap<ProfileDataBaseManager::FieldsOfDB, QString> ProfileDataBaseManager::getMap
 	return toRet;
 }
 
-QString ProfileDataBaseManager::getValueOfCell(FieldsOfDB atr, QString profileName) {
-	 
-	QString dataBaseColumn = this->field_exactNameInDb_map[atr];
-	QString createCommand = "SELECT " + dataBaseColumn + " FROM profiles WHERE profileName = " + "'" + profileName + "'";
-   
-	QSqlQuery query(createCommand);
-	int fieldNo = query.record().indexOf(dataBaseColumn);
-   
-	QString toRet = "";
-	while (query.next())
-	toRet = query.value(fieldNo).toString();
-   
-   return toRet;
-   
-  }
-
-void ProfileDataBaseManager::deleteRecord(QString name) {
-	QSqlQuery query;
-	QString queryCommand = "DELETE FROM profiles WHERE profileName = '" + name + "'";
-	query.exec(queryCommand);
+QStringList ProfileDataBaseManager::getAllNamesOfProfFiles(){
+	QDir directory(pathToFolderWithProfiles);
+	QStringList profileFilesNames = directory.entryList(QStringList() << "PROF___*.ini", QDir::Files);
+	return profileFilesNames;
 }
 
-QStringList ProfileDataBaseManager::getListOfAllRecords() {
-	QStringList list;
-	QString cmd = "SELECT profileName FROM profiles";
-	QSqlQuery query(cmd);
-	int i = 0;
-	while (query.next()) {
-		i++;
-		QString profName = query.value(0).toString();
-		QString nameOfItem = "[" + QString::number(i) + "] " + profName;
-		list.push_back(nameOfItem);
+bool ProfileDataBaseManager::getPathToProfileFile(QString profName, QString& path){
+	QStringList listOfFiles = getAllNamesOfProfFiles();
+	QString fileName;
+	for each (QString var in listOfFiles) {
+		QString strToCompare = "PROF___" + profName + ".ini";
+		bool thisIsThatFile = var == strToCompare;
+		if (thisIsThatFile) {
+			path = QDir(pathToFolderWithProfiles).absoluteFilePath(var);
+			return true;
+		}
 	}
-	return list;
+	return false;
 }
 
-void ProfileDataBaseManager::saveProfileToDatabase(Profile* prof){
-	if (prof == nullptr)
-		;//todo
-	QString name = prof->profileName;
-	addRecord(name);
-	modifyAtribute(name, ProfileDataBaseManager::PROFESION, QString::number(prof->profession));
-	modifyAtribute(name, ProfileDataBaseManager::MANA_RESTORE_STRING, DB_writer_ManaAndHealthRestorePercentages(prof->ManaRestoreMethodesPercentage));
-	modifyAtribute(name, ProfileDataBaseManager::HEALTH_RESTORE_STRING, DB_writer_ManaAndHealthRestorePercentages(prof->healthRestorePercentages));
-	modifyAtribute(name, ProfileDataBaseManager::MANA_RESTORE_KEY, DB_writer_ManaAndHealthKeys(prof->ManaKeys));
-	modifyAtribute(name, ProfileDataBaseManager::HEALTH_RESTORE_KEY, DB_writer_ManaAndHealthKeys(prof->healthKeys));
-	modifyAtribute(name, ProfileDataBaseManager::HEALTH_RESTORE_ITEM, DB_writer_ManaAndHealthRestoreMethhodesNames(prof->healthRestoreMethodeNames));
-	modifyAtribute(name, ProfileDataBaseManager::MANA_RESTORE_ITEM, DB_writer_ManaAndHealthRestoreMethhodesNames(prof->manaRestoreMethodeNames));
-	if (prof->creationDate.isEmpty()) {
-		QString creation = QDateTime::currentDateTime().toString("dd-MM-yyyy hh:mm");
-		modifyAtribute(name, ProfileDataBaseManager::CREATION_TIME, creation);
+bool ProfileDataBaseManager::modifyFieldValue(QString profName, FieldsOfDB field, QString newValue){
+	QString pathToFile;
+	bool fileExist = getPathToProfileFile(profName, pathToFile);
+	if (!fileExist)
+		return false;//TODO zastanowic sie czy powinno sie stworzyc pusty plik i go modyfikowac czy tylko zwrocic return
+	QSettings settings(pathToFile, QSettings::IniFormat);
+	bool isEableToWrite = settings.isWritable();
+	if (!isEableToWrite)
+		return false;//TODO poinformowac uzytkownika ze jest problem z plikiem profilu
+
+	QString nameOfFieldAsStr = field_exactNameInDb_map[field];
+	settings.setValue(nameOfFieldAsStr, newValue);
+
+	return true;
+}
+
+bool ProfileDataBaseManager::readFieldValue(QString profName, FieldsOfDB field, QString& readValue){
+	QString pathToFile;
+	bool fileExist = getPathToProfileFile(profName, pathToFile);
+	if (!fileExist)
+		return false;
+
+	QSettings settings(pathToFile, QSettings::IniFormat);
+	QString nameOfFieldAsStr = field_exactNameInDb_map[field];
+	readValue = settings.value(nameOfFieldAsStr).toString();
+
+	return true;
+}
+
+bool ProfileDataBaseManager::addNewProfileToFolder(QString profName){
+	QString nameOfFile = "PROF___" + profName + ".ini";
+	QFile fileToCreate(pathToFolderWithProfiles + "\\" + nameOfFile);
+
+	fileToCreate.open(QIODevice::ReadWrite);
+	fileToCreate.resize(0);
+	fileToCreate.close();
+
+	QMap<ProfileDataBaseManager::FieldsOfDB, QString> copy_map = field_exactNameInDb_map;
+	modifyFieldValue(profName, FieldsOfDB::PROFILE_NAME, profName);
+	copy_map.remove(FieldsOfDB::PROFILE_NAME);
+
+	for each (FieldsOfDB field in copy_map.keys())
+		modifyFieldValue(profName, field, "");
+	
+	return true;
+}
+
+bool ProfileDataBaseManager::deleteProfile(QString profName){
+	QString nameOfFile = "PROF___" + profName + ".ini";
+	bool result = QDir(pathToFolderWithProfiles).remove(nameOfFile);
+	return result;
+}
+
+bool ProfileDataBaseManager::getNamesOfAllFilesInFormToDisplay(QStringList& namesOfProfiles){
+	QStringList toRet;
+	QStringList namesOfFiles = getAllNamesOfProfFiles();
+
+	for each (QString var in namesOfFiles){
+		QStringList list_1 = var.split("___", Qt::SkipEmptyParts);
+		if (list_1.size() >= 2) {
+			QStringList list_2 = list_1[1].split(".ini", Qt::SkipEmptyParts);
+			if (!list_2.isEmpty()) {
+				QString profileName = list_2[0];
+				QString size = QString::number(toRet.size() + 1);
+				QString finalStr = QString("[") + size + QString("] ") + profileName;
+				toRet.push_back(finalStr);
+			}
+		}
 	}
+	namesOfProfiles = toRet;
+	return true;
 }
 
-void ProfileDataBaseManager::readProfileFroDataBase(Profile* prof, QString name) {
-	prof->profileName = getValueOfCell(FieldsOfDB::PROFILE_NAME, name);
-	QString profession = getValueOfCell(FieldsOfDB::PROFESION, name);
-	prof->profession = Profile::PROFESSION(profession.toInt());
-	QString healthPercentages = getValueOfCell(FieldsOfDB::HEALTH_RESTORE_STRING, name);
-	prof->healthRestorePercentages = DB_reader_ManaAndHealthRestorePercentages(healthPercentages);
-	QString manaPercentage = getValueOfCell(FieldsOfDB::MANA_RESTORE_STRING, name);
-	prof->ManaRestoreMethodesPercentage = DB_reader_ManaAndHealthRestorePercentages(manaPercentage);
-	QString healthKeys = getValueOfCell(FieldsOfDB::HEALTH_RESTORE_KEY, name);
-	prof->healthKeys = DB_reader_ManaAndHealthKeys(healthKeys);
-	QString manaKeys = getValueOfCell(FieldsOfDB::MANA_RESTORE_KEY, name);
-	prof->ManaKeys = DB_reader_ManaAndHealthKeys(manaKeys);
-	QString healthRestoreNames = getValueOfCell(FieldsOfDB::HEALTH_RESTORE_ITEM, name);
-	prof->healthRestoreMethodeNames = DB_reader_ManaAndHealthRestoreMethhodesNames(healthRestoreNames);
-	QString manaRestoreNames = getValueOfCell(FieldsOfDB::MANA_RESTORE_ITEM, name);
-	prof->manaRestoreMethodeNames = DB_reader_ManaAndHealthRestoreMethhodesNames(manaRestoreNames);
-	prof->creationDate = getValueOfCell(FieldsOfDB::CREATION_TIME, name);
+bool ProfileDataBaseManager::saveProfileToDataBase(Profile& profileToSave){
+	typedef ProfileDataBaseManager::FieldsOfDB Field;
+	addNewProfileToFolder(profileToSave.profileName);
+
+	QString profileName = profileToSave.profileName;
+	bool ok1 = modifyFieldValue(profileName, Field::PROFILE_NAME, profileName);
+
+	QString profesionToSet = QString::number(profileToSave.profession);
+	bool ok2 = modifyFieldValue(profileName, Field::PROFESION, profesionToSet);
+
+	QString health_Percentages = DB_writer_ManaAndHealthRestorePercentages(profileToSave.healthRestorePercentages);
+	bool ok3 = modifyFieldValue(profileName, Field::HEALTH_RESTORE_STRING, health_Percentages);
+
+	QString mana_Percentages = DB_writer_ManaAndHealthRestorePercentages(profileToSave.ManaRestoreMethodesPercentage);
+	bool ok4 = modifyFieldValue(profileName, Field::MANA_RESTORE_STRING, mana_Percentages);
+
+	QString health_Keys = DB_writer_ManaAndHealthKeys(profileToSave.healthKeys);
+	bool ok5 = modifyFieldValue(profileName, Field::HEALTH_RESTORE_KEY, health_Keys);
+	
+	QString mana_Keys = DB_writer_ManaAndHealthKeys(profileToSave.ManaKeys);
+	bool ok6 = modifyFieldValue(profileName, Field::MANA_RESTORE_KEY, mana_Keys);
+	
+	QString health_MethodesNames = DB_writer_ManaAndHealthRestoreMethhodesNames(profileToSave.healthRestoreMethodeNames);
+	bool ok7 = modifyFieldValue(profileName, Field::HEALTH_RESTORE_ITEM, health_MethodesNames);
+	
+	QString mana_MethodesNames = DB_writer_ManaAndHealthRestoreMethhodesNames(profileToSave.manaRestoreMethodeNames);
+	bool ok8 = modifyFieldValue(profileName, Field::MANA_RESTORE_ITEM, mana_MethodesNames);
+
+	bool toRet = ok1 && ok2 && ok3 && ok4 && ok5 && ok6 && ok7 && ok8;
+	return toRet;
 }
+
+bool ProfileDataBaseManager::readProfileFromDataBase(QString profileName, Profile& profileToBeRead){
+	typedef ProfileDataBaseManager::FieldsOfDB Field;
+	const QString NAME = profileName;
+	profileToBeRead.profileName = profileName;
+
+	QString profesionToSet;
+	bool ok2 = readFieldValue(NAME, Field::PROFESION, profesionToSet);
+	profileToBeRead.profession = Profile::PROFESSION(profesionToSet.toInt());
+
+	QString health_PercentageStr;
+	bool ok3 = readFieldValue(NAME, Field::HEALTH_RESTORE_STRING, health_PercentageStr);
+	QList<int> health_Percentages = DB_reader_ManaAndHealthRestorePercentages(health_PercentageStr);
+	profileToBeRead.healthRestorePercentages = health_Percentages;
+
+	QString mana_PercentageStr;
+	bool ok4 = readFieldValue(NAME, Field::MANA_RESTORE_STRING, mana_PercentageStr);
+	QList<int> Mana_Percentages = DB_reader_ManaAndHealthRestorePercentages(mana_PercentageStr);
+	profileToBeRead.ManaRestoreMethodesPercentage = Mana_Percentages;
+
+	QString health_keysStr;
+	bool ok5 = readFieldValue(NAME, Field::HEALTH_RESTORE_KEY, health_keysStr);
+	QList<Key> Health_keys = DB_reader_ManaAndHealthKeys(health_keysStr);
+	profileToBeRead.healthKeys = Health_keys;
+
+	QString mana_keysStr;
+	bool ok6 = readFieldValue(NAME, Field::MANA_RESTORE_KEY, mana_keysStr);
+	QList<Key> Mana_keys = DB_reader_ManaAndHealthKeys(mana_PercentageStr);
+	profileToBeRead.ManaKeys = Mana_keys;
+
+	QString health_MethodesStr;
+	bool ok7 = readFieldValue(NAME, Field::HEALTH_RESTORE_ITEM, health_MethodesStr);
+	QStringList healthMethodes = DB_reader_ManaAndHealthRestoreMethhodesNames(health_MethodesStr);
+	profileToBeRead.healthRestoreMethodeNames = healthMethodes;
+
+	QString mana_MethodesStr;
+	bool ok8 = readFieldValue(NAME, Field::MANA_RESTORE_ITEM, mana_MethodesStr);
+	QStringList mana_Methodes = DB_reader_ManaAndHealthRestoreMethhodesNames(mana_MethodesStr);
+	profileToBeRead.manaRestoreMethodeNames = mana_Methodes;
+
+	bool toRet = ok2 && ok3 && ok4 && ok5 && ok6 && ok7 && ok8;
+	return toRet;
+}
+
+
+
+
+
+
+
+
+
+
+
 
 
 //writers
@@ -295,13 +326,13 @@ QRect ProfileDataBaseManager::DB_reader_PosOfItem(QString str){
 void ProfileDataBaseManager::writeItemPosToDb(QString profileName, FieldsOfDB dbField, QRect rectToSave){
 	ProfileDataBaseManager obj;
 	QString strToWrtie = obj.DB_writer_PosOfItem(rectToSave);
-	obj.modifyAtribute(profileName, dbField, strToWrtie);
+	//obj.modifyAtribute(profileName, dbField, strToWrtie);
 }
 
 void ProfileDataBaseManager::readItemPosToDb(QString profileName, FieldsOfDB dbField, QRect& rectToRead){
 	ProfileDataBaseManager obj;
-	QString rectAsStr = obj.getValueOfCell(dbField, profileName);
-	QRect rectToRet = obj.DB_reader_PosOfItem(rectAsStr);
-	rectToRead = rectToRet;
+	//QString rectAsStr = obj.getValueOfCell(dbField, profileName);
+	//QRect rectToRet = obj.DB_reader_PosOfItem(rectAsStr);
+	//rectToRead = rectToRet;
 }
 
