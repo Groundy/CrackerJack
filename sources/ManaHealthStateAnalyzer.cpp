@@ -63,10 +63,10 @@ void ManaHealthStateAnalyzer::mainLoop(){
 		bool thereIsHealthKey = (healthKey.number != -1) && sucess;
 		bool thereIsManaKey = (manaKey.number != -1) && sucess;
 		if (thereIsHealthKey)
-			;//Utilities::sendKeyStrokeToProcess(healthKey, var->var_pidOfGame, var->var_winTitleOfGame);	//tmp todo TODO
+			//Utilities::sendKeyStrokeToProcess(healthKey, var->var_pidOfGame, var->var_winTitleOfGame);
 		if (thereIsManaKey) {
 			Sleep(extraTimeToWaitBetweenManaPotUse);
-			//Utilities::sendKeyStrokeToProcess(manaKey, var->var_pidOfGame, var->var_winTitleOfGame);	//tmp todo TODO
+			//Utilities::sendKeyStrokeToProcess(manaKey, var->var_pidOfGame, var->var_winTitleOfGame);
 		}
 	}
 }
@@ -225,14 +225,23 @@ int ManaHealthStateAnalyzer::findNearestThresholdIndex(int currentValue, QList<i
 bool ManaHealthStateAnalyzer::checkIfEverythingIsCorrectToProcess(){
 	if (!shouldThisThreadBeActive) {
 		msleep(miliSecBetweenCheckingForNewValuesImg * 5);
-		//qDebug() << "ManaHealthStateAnalyzer:: mainLoop skipped, it isn't enabled";
 		return false;
 	}
+
 	bool isNotCalibrated = var->caliState != var->CALIBRATED;
 	if (isNotCalibrated) {
-		//qDebug() << "ManaHealthStateAnalyzer:: mainLoop skipped, error lack of calibration";
-		emit sendValueToMainThread("Calibrating", "Calibrating", "Calibrating");
-		emit demandReCalibration();
+		bool calibrationIsAvaible = var->lastTimeCalibrationUsed + 3000 <= Utilities::getCurrentTimeInMiliSeconds();
+		if (calibrationIsAvaible) {
+			QString wordToSend = StringResource::languageIsPl() ? QString::fromLocal8Bit("Kalibracja") : "Calibrating";
+			emit sendValueToMainThread(wordToSend, wordToSend, wordToSend);
+			emit demandReCalibration();
+		}
+		msleep(miliSecBetweenCheckingForNewValuesImg * 5);
+		return false;
+	}
+
+	bool skip = !var->HealthAndManaRestorationShouldBeActive;
+	if(skip){
 		msleep(miliSecBetweenCheckingForNewValuesImg * 5);
 		return false;
 	}
@@ -241,9 +250,9 @@ bool ManaHealthStateAnalyzer::checkIfEverythingIsCorrectToProcess(){
 		return false;
 	int res = changeImgsToStrings();
 	if (res != OK) {
-		//qDebug() << "ManaHealthStateAnalyzer:: mainLoop skipped, error in changing img to strings";
 		emit demandReCalibration();
-		emit sendValueToMainThread("Calibrating", "Calibrating", "Calibrating");
+		QString wordToSend = StringResource::languageIsPl() ? QString::fromLocal8Bit("Kalibracja") : "Calibrating";
+		emit sendValueToMainThread(wordToSend, wordToSend, wordToSend);
 		msleep(miliSecBetweenCheckingForNewValuesImg*5);
 		return false;
 	}
@@ -351,7 +360,6 @@ void ManaHealthStateAnalyzer::sleepAppropirateTimeToNextAnalyze(){
 		timeToSleep = time;
 	if (timeToSleep < 0)
 		timeToSleep = 0;
-	//qDebug() << QString::number(timeToSleep);
 	lastTimeAnalyzed = currentTime + timeToSleep;
 	Sleep(timeToSleep);
 }

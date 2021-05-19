@@ -34,6 +34,7 @@ public slots:
 	void skillingAction();
 	void getAndDisplayPotionAmountInfo(QStringList);
 	//from threads
+	void autoHealAndManaRegCheckBoxChanged();
 	void onGameStateChanged(int state);
 	void changedValueOfCharHealthOrMana(QString healthPercentage, QString manaPercentage, QString manaShieldPercentage0);
 private:
@@ -54,4 +55,7 @@ private:
 	void threadStarter();
 	void signalSlotConnector();
 	void setUpGui();
+
+	const QString CALIBRATION_STRING_PL = QString::fromLocal8Bit("Kalibracja");
+	const QString CALIBRATION_STRING_ENG = "Calibrating";
 };

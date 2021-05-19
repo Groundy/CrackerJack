@@ -78,21 +78,36 @@ void MainMenu::onGameStateChanged(int state){
 }
 
 void MainMenu::changedValueOfCharHealthOrMana(QString healthPercentage, QString manaPercentage, QString manaShieldPercentage){
-	QString tmpHealth = healthPercentage.rightJustified(3, ' ');
-	QString healthFinal = ui->healthInfoLabel->text() + tmpHealth;
-	ui->healthInfoLabel->setText(healthFinal);
+	if(healthPercentage == CALIBRATION_STRING_ENG || healthPercentage == CALIBRATION_STRING_PL)
+		ui->healthInfoLabel->setText(healthPercentage);
+	else {
+		QString tmpHealth = healthPercentage.rightJustified(3, ' ');
+		QString healthPrefix = isPl ? QString::fromLocal8Bit("¯ycie: ") : "Health: ";
+		QString healthFinal = healthPrefix + tmpHealth;
+		ui->healthInfoLabel->setText(healthFinal);
+	}
+
+	if (manaPercentage == CALIBRATION_STRING_ENG || manaPercentage == CALIBRATION_STRING_PL)
+		ui->healthInfoLabel->setText(manaPercentage);
+	else {
+		QString tmpMana = manaPercentage.rightJustified(3, ' ');
+		QString manaPrefix = isPl ? QString::fromLocal8Bit("Mana: ") : "Mana: ";
+		QString manaFinal = manaPrefix + tmpMana;
+		ui->manaInfoLabel->setText(manaFinal);
+	}
+
+	if (manaShieldPercentage == CALIBRATION_STRING_ENG || manaShieldPercentage == CALIBRATION_STRING_PL)
+		ui->healthInfoLabel->setText(manaShieldPercentage);
+	else {
+		QString tmpManaShield = manaShieldPercentage.rightJustified(3, ' ');
+		QString manaShieldPrefix = isPl ? QString::fromLocal8Bit("Tarcza many: ") : "Mana shield: ";
+		QString manaShieldFinal = manaShieldPrefix + tmpManaShield;
+		ui->manaShieldLabel->setText(manaShieldFinal);
+	}
+
 	ui->healthInfoLabel->repaint();
-
-	QString tmpMana = manaPercentage.rightJustified(3, ' ');
-	QString manaFinal= ui->manaInfoLabel->text() + tmpMana;
-	ui->manaInfoLabel->setText(manaFinal);
 	ui->manaInfoLabel->repaint();
-
-	QString tmpManaShield = manaShieldPercentage.rightJustified(3, ' ');
-	QString manaShieldFinal = ui->manaShieldLabel->text() + tmpManaShield;
-	ui->manaShieldLabel->setText(manaShieldFinal);
 	ui->manaShieldLabel->repaint();
-
 }
 
 void MainMenu::setProblemsWindow(QStringList problemsToShow){
@@ -180,8 +195,8 @@ void MainMenu::setUpGui(){
 	ui->skillingButton->repaint();
 	
 	QString autoHealAndManaChechBoxText = isPl ? QString::fromLocal8Bit("Odnawiaj ¿ycie i mane") : "Heal and mana";
-	ui->checkBox->setText(autoHealAndManaChechBoxText);
-	ui->checkBox->repaint();
+	ui->autoManaHealChechBox->setText(autoHealAndManaChechBoxText);
+	ui->autoManaHealChechBox->repaint();
 	
 	QString healthLabel = isPl ? QString::fromLocal8Bit("¯ycie: ") : "Health: ";
 	ui->healthInfoLabel->setText(healthLabel);
@@ -199,6 +214,11 @@ void MainMenu::setUpGui(){
 	ui->manaShieldLabel->setText(manaShieldLabel);
 	ui->manaShieldLabel->repaint();
 	// = isPl ? QString::fromLocal8Bit("") : "";
+}
+
+void MainMenu::autoHealAndManaRegCheckBoxChanged() {
+	bool stateOfSwitch = ui->autoManaHealChechBox->isChecked();
+	var.HealthAndManaRestorationShouldBeActive = stateOfSwitch;
 }
 
 void MainMenu::helpButtonAction(){
@@ -231,10 +251,12 @@ void MainMenu::getAndDisplayPotionAmountInfo(QStringList list){
 
 	for (size_t i = 0; i < MAX_POSIBLE_LIST_LENGTH; i++){
 		QString textToSet;
-		bool shouldBeDisplayed = list.size() - 1 >= i;
-		textToSet = shouldBeDisplayed ? list[i] : "";
+		bool shouldBeDisplayed = i < list.size();
+		if (shouldBeDisplayed) {
+			textToSet = shouldBeDisplayed ? list[i] : "";
+			labels[i]->setText(textToSet);	
+		}
 		labels[i]->setVisible(shouldBeDisplayed);
-		labels[i]->setText(textToSet);
 		labels[i]->repaint();
 	}
 }

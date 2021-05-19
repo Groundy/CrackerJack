@@ -1,5 +1,5 @@
 #pragma once
-
+#include "StringResource.h"
 #include <QThread>
 #include "VariablesClass.h"
 #include "qimage.h"
@@ -23,7 +23,7 @@ public:
 
 	};
 	int miliSecBetweenCheckingForNewValuesImg = 80;
-	bool shouldThisThreadBeActive = false;
+	bool shouldThisThreadBeActive = true;
 	void run();
 public slots:
 	void setThreadEnabilityToRun(bool stateToSet);

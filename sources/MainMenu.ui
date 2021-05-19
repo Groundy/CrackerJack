@@ -255,7 +255,7 @@
     <item row="14" column="4">
      <layout class="QVBoxLayout" name="verticalLayout_2">
       <item>
-       <widget class="QCheckBox" name="checkBox">
+       <widget class="QCheckBox" name="autoManaHealChechBox">
         <property name="text">
          <string>Auto Heal and Mana</string>
         </property>
@@ -504,8 +504,8 @@ p, li { white-space: pre-wrap; }
    <slot>autoHuntAction()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>163</x>
-     <y>195</y>
+     <x>218</x>
+     <y>128</y>
     </hint>
     <hint type="destinationlabel">
      <x>354</x>
@@ -520,8 +520,8 @@ p, li { white-space: pre-wrap; }
    <slot>manualHuntAction()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>56</x>
-     <y>195</y>
+     <x>69</x>
+     <y>128</y>
     </hint>
     <hint type="destinationlabel">
      <x>354</x>
@@ -536,8 +536,8 @@ p, li { white-space: pre-wrap; }
    <slot>tradingAction()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>56</x>
-     <y>224</y>
+     <x>69</x>
+     <y>157</y>
     </hint>
     <hint type="destinationlabel">
      <x>354</x>
@@ -552,12 +552,28 @@ p, li { white-space: pre-wrap; }
    <slot>skillingAction()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>163</x>
-     <y>224</y>
+     <x>218</x>
+     <y>157</y>
     </hint>
     <hint type="destinationlabel">
      <x>354</x>
      <y>290</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>autoManaHealChechBox</sender>
+   <signal>stateChanged(int)</signal>
+   <receiver>MainMenu</receiver>
+   <slot>autoHealAndManaRegCheckBoxChanged()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>456</x>
+     <y>243</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>353</x>
+     <y>288</y>
     </hint>
    </hints>
   </connection>
@@ -570,5 +586,6 @@ p, li { white-space: pre-wrap; }
   <slot>autoHuntAction()</slot>
   <slot>tradingAction()</slot>
   <slot>skillingAction()</slot>
+  <slot>autoHealAndManaRegCheckBoxChanged()</slot>
  </slots>
 </ui>

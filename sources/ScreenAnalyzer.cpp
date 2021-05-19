@@ -95,7 +95,6 @@ int ScreenAnalyzer::findRectanglesWithPotionsPos(QImage& fullscreen){
 	}
 
 	return OK;
-
 }
 
 int ScreenAnalyzer::getNameOfLastTakenScreenShotForSure(QString& toRet, int MaxTries) {
@@ -292,14 +291,13 @@ void ScreenAnalyzer::mainLoop(){
 }
 
 int ScreenAnalyzer::calibrate(){
+	var->lastTimeCalibrationUsed = Utilities::getCurrentTimeInMiliSeconds();
 	qDebug() << "ScreenAnalyzer::calibrate()";
 	QImage fullScreen;
-	ERROR_CODE res1 = (ERROR_CODE)loadScreen(fullScreen);
 
-	if (res1 != OK) {
-		//qDebug() << "ScreenAnalyzer::calibrate() failed";
+	ERROR_CODE res1 = (ERROR_CODE)loadScreen(fullScreen);
+	if (res1 != OK) 
 		return res1;
-	}
 
 	QList<QRect> importantRectangles;
 	ERROR_CODE res2 = (ERROR_CODE)findWindowsOnScreen(fullScreen, importantRectangles);
@@ -309,8 +307,8 @@ int ScreenAnalyzer::calibrate(){
 	}
 
 	ERROR_CODE res3 = (ERROR_CODE)findRectanglesWithPotionsPos(fullScreen);
-	if (res3 != OK)
-		return res2;//TODO here fun shouldn't end, it should just notify that there are no enough pots found
+	//if (res3 != OK)
+		//return res2;//TODO here fun shouldn't end, it should just notify that there are no enough pots found
 
 	ERROR_CODE res4 = (ERROR_CODE)categorizeWindows(fullScreen, importantRectangles, frames);
 	if (res4 == OK) 

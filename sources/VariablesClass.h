@@ -10,8 +10,10 @@ public:
 	uint var_pidOfGame;
 	QString var_winTitleOfGame;
 
+	bool HealthAndManaRestorationShouldBeActive = false;
+
 	//Advaned health and mana shearch
-	enum calibrationState{NOT_CALIBRATED, CALIBRATED, DURING_CALIBRATION};
+	enum class calibrationState{NOT_CALIBRATED, CALIBRATED, DURING_CALIBRATION};
 	QImage wholeImg;
 	QImage var_healthPieceImg;
 	QImage var_manaPieceImg;
@@ -22,6 +24,7 @@ public:
 	bool manaFound, healthFound, manaShieldFound, combinedFound;
 	bool newData;
 	calibrationState caliState;
+	LONG64 lastTimeCalibrationUsed;
 
 	//
 	LONG64 lastTimeMethodeUsed_Healing[5];
