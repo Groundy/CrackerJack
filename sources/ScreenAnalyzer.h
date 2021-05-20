@@ -10,6 +10,7 @@
 #include "qdebug.h"
 #include "Profile.h"
 #include "Utilities.h"
+#include "ProfileDataBaseManager.h"
 class ScreenAnalyzer : public QThread
 {
 	Q_OBJECT

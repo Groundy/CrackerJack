@@ -39,7 +39,7 @@ int ScreenAnalyzer::reCalibrate(){
 
 int ScreenAnalyzer::loadScreen(QImage& img){
 	QString nameOfImgToCapture;
-	ERR code = (ERR)getNameOfLastTakenScreenShotForSure(nameOfImgToCapture, 55);
+	ERROR_CODE code = (ERROR_CODE)(nameOfImgToCapture, 55);
 	if (code != OK)
 		return code;
 	QString pathToImg = pathToScreenFolder + QString("\\") + nameOfImgToCapture;
@@ -301,10 +301,8 @@ int ScreenAnalyzer::calibrate(){
 
 	QList<QRect> importantRectangles;
 	ERROR_CODE res2 = (ERROR_CODE)findWindowsOnScreen(fullScreen, importantRectangles);
-	if (res2 != OK) {
-		//qDebug() << "ScreenAnalyzer::findMiniMapWindow(QImage fullScreen) failed";
+	if (res2 != OK)
 		return res2;
-	}
 
 	ERROR_CODE res3 = (ERROR_CODE)findRectanglesWithPotionsPos(fullScreen);
 	//if (res3 != OK)
@@ -313,11 +311,11 @@ int ScreenAnalyzer::calibrate(){
 	ERROR_CODE res4 = (ERROR_CODE)categorizeWindows(fullScreen, importantRectangles, frames);
 	if (res4 == OK) 
 		var->caliState = VariablesClass::calibrationState::CALIBRATED;
-	else {
+	else
 		var->caliState = VariablesClass::calibrationState::NOT_CALIBRATED;
-		return ERROR_CODE::NO_POSTION_ASSIGNED_TO_SLASHES;
-	}
-		return OK;
+	
+	int toRet = res1 | res2 | res3 | res4;
+	return toRet;
 }
 
 int ScreenAnalyzer::cutImportantImgsFromWholeScreenAndSendThemToVarClass(QImage& fullscreen){
@@ -556,40 +554,41 @@ int ScreenAnalyzer::sortByXAndYRects(QList<QRect>& inputRects, QList<QRect>& rec
 }
 
 int ScreenAnalyzer::findWindowsOnScreen(QImage& fullScreen, QList<QRect>& importantRectangles){
-	int width = fullScreen.width();
-	int height = fullScreen.height();
-	auto black = qRgb(0, 0, 0);
-	const uint minAcceptableValue = 17;
-	const uint maxAcceptableValue = 29;
+	const int WIDTH = fullScreen.width();
+	const int HEIGHT = fullScreen.height();
+	const auto BLACK_PIX_COL = qRgb(0, 0, 0);
+	const uint MIN_ACCEPTABLE_VAL = 17;
+	const uint MAX_ACCEPTABLE_VAL = 29;
 	QList<QPoint> startOfFrames;
-	bool isPixelOfFrame;
-	for (size_t x = 0; x < width-2; x++) {
-		for (size_t y = 0; y < height-2; y++) {
-			isPixelOfFrame = Utilities::isItPixelFromFrame(fullScreen.pixel(x, y), minAcceptableValue, maxAcceptableValue, true);
-			if (!isPixelOfFrame) continue;
+	for (size_t x = 0; x < WIDTH -2; x++) {
+		for (size_t y = 0; y < HEIGHT -2; y++) {
+			bool isPixelOfFrame = Utilities::isItPixelFromFrame(fullScreen.pixel(x, y), MIN_ACCEPTABLE_VAL, MAX_ACCEPTABLE_VAL, true);
+			if (!isPixelOfFrame) 
+				continue;
 			//next four pixel next shouldn't be frame pix
-			isPixelOfFrame = Utilities::isItPixelFromFrame(fullScreen.pixel(x+1, y+1), minAcceptableValue, maxAcceptableValue, false);
+
+			isPixelOfFrame = Utilities::isItPixelFromFrame(fullScreen.pixel(x+1, y+1), MIN_ACCEPTABLE_VAL, MAX_ACCEPTABLE_VAL, false);
 			if (isPixelOfFrame) continue;
 
-			isPixelOfFrame = Utilities::isItPixelFromFrame(fullScreen.pixel(x+1, y+2), minAcceptableValue, maxAcceptableValue, false);
+			isPixelOfFrame = Utilities::isItPixelFromFrame(fullScreen.pixel(x+1, y+2), MIN_ACCEPTABLE_VAL, MAX_ACCEPTABLE_VAL, false);
 			if (isPixelOfFrame) continue;
 
-			isPixelOfFrame = Utilities::isItPixelFromFrame(fullScreen.pixel(x+2, y+1), minAcceptableValue, maxAcceptableValue, false);
+			isPixelOfFrame = Utilities::isItPixelFromFrame(fullScreen.pixel(x+2, y+1), MIN_ACCEPTABLE_VAL, MAX_ACCEPTABLE_VAL, false);
 			if (isPixelOfFrame) continue;
 
-			isPixelOfFrame = Utilities::isItPixelFromFrame(fullScreen.pixel(x+2, y+2), minAcceptableValue, maxAcceptableValue, false);
+			isPixelOfFrame = Utilities::isItPixelFromFrame(fullScreen.pixel(x+2, y+2), MIN_ACCEPTABLE_VAL, MAX_ACCEPTABLE_VAL, false);
 			if (isPixelOfFrame) continue;
 
-			isPixelOfFrame = Utilities::isItPixelFromFrame(fullScreen.pixel(x+1, y), minAcceptableValue, maxAcceptableValue, true);
+			isPixelOfFrame = Utilities::isItPixelFromFrame(fullScreen.pixel(x+1, y), MIN_ACCEPTABLE_VAL, MAX_ACCEPTABLE_VAL, true);
 			if (!isPixelOfFrame) continue;
 
-			isPixelOfFrame = Utilities::isItPixelFromFrame(fullScreen.pixel(x+2, y), minAcceptableValue, maxAcceptableValue, true);
+			isPixelOfFrame = Utilities::isItPixelFromFrame(fullScreen.pixel(x+2, y), MIN_ACCEPTABLE_VAL, MAX_ACCEPTABLE_VAL, true);
 			if (!isPixelOfFrame) continue;
 
-			isPixelOfFrame = Utilities::isItPixelFromFrame(fullScreen.pixel(x, y+1), minAcceptableValue, maxAcceptableValue, true);
+			isPixelOfFrame = Utilities::isItPixelFromFrame(fullScreen.pixel(x, y+1), MIN_ACCEPTABLE_VAL, MAX_ACCEPTABLE_VAL, true);
 			if (!isPixelOfFrame) continue;
 
-			isPixelOfFrame = Utilities::isItPixelFromFrame(fullScreen.pixel(x, y+2), minAcceptableValue, maxAcceptableValue, true);
+			isPixelOfFrame = Utilities::isItPixelFromFrame(fullScreen.pixel(x, y+2), MIN_ACCEPTABLE_VAL, MAX_ACCEPTABLE_VAL, true);
 			if (!isPixelOfFrame) continue;
 
 			startOfFrames.push_back(QPoint(x, y));
@@ -600,29 +599,29 @@ int ScreenAnalyzer::findWindowsOnScreen(QImage& fullScreen, QList<QRect>& import
 	for each (QPoint startPoint in startOfFrames){
 		int currentWidth = 0;
 		int currentHeight = 0;
-		for (size_t x = startPoint.x(); x < width; x++){
+		for (size_t x = startPoint.x(); x < WIDTH; x++){
 			uint color = fullScreen.pixel(x, startPoint.y());
-			bool isPixOfFrame = Utilities::isItPixelFromFrame(color, minAcceptableValue, maxAcceptableValue, true);
+			bool isPixOfFrame = Utilities::isItPixelFromFrame(color, MIN_ACCEPTABLE_VAL, MAX_ACCEPTABLE_VAL, true);
 			if (isPixOfFrame)
 				currentWidth++;
 			else
 				break;
 		}
-		for (size_t y = startPoint.y(); y < height; y++) {
+		for (size_t y = startPoint.y(); y < HEIGHT; y++) {
 			uint color = fullScreen.pixel(startPoint.x(), y);
-			bool isPixOfFrame = Utilities::isItPixelFromFrame(color, minAcceptableValue, maxAcceptableValue, true);
+			bool isPixOfFrame = Utilities::isItPixelFromFrame(color, MIN_ACCEPTABLE_VAL, MAX_ACCEPTABLE_VAL, true);
 			if (isPixOfFrame)
 				currentHeight++;
 			else
 				break;
 		}
-		if (currentWidth > 0 && currentHeight > 0){
+		const int MIN_ACCEPTABLE_LENGTH = 4;
+		bool accept = currentWidth > MIN_ACCEPTABLE_LENGTH && currentHeight > MIN_ACCEPTABLE_LENGTH;
+		if (accept){
 			int x = startPoint.x();
 			int y = startPoint.y();
 			int w = currentWidth;
 			int h = currentHeight;
-			if (w < 5 || h < 5)//removing too small imgs
-				continue;
 			frameToRet.push_back(QRect(x+1,y+1,w-1,h-1));
 		}
 	}
