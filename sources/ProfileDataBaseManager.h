@@ -32,24 +32,12 @@ public:
 		HEALTH_RESTORE_ITEM,
 		LAST_LOGIN,
 		CREATION_TIME,
+		POS_HP,		POS_SHP,		POS_GHP,		POS_UHP,		POS_SPHP,
+		POS_GSP,		POS_USP,
+		POS_MP,		POS_SMP,		POS_GMP,		POS_UMP,
 
-		POS_HP,
-		POS_SHP,
-		POS_GHP,
-		POS_UHP,
-		POS_SPHP,
-		POS_GSP,
-		POS_USP,
-		POS_MP,
-		POS_SMP,
-		POS_GMP,
-		POS_UMP,
 
-		POS_LIFE_BAR,
-		POS_MANA_BAR,
-		POS_MANA_SHIELD_BAR,
-		POS_COMBO_BAR,
-
+		END
 	};
 	QMap <FieldsOfDB, QString> getMapOfDBFields();
 	QMap <FieldsOfDB, QString> field_exactNameInDb_map = getMapOfDBFields();

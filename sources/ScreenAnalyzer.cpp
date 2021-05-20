@@ -275,7 +275,7 @@ void ScreenAnalyzer::mainLoop(){
 		ERROR_CODE openCorrectly = (ERROR_CODE)loadScreen(img);
 		bool isCalibrated = var->caliState == VariablesClass::calibrationState::CALIBRATED;
 		if (!isCalibrated) {
-			calibrate();
+			reCalibrate();
 			continue;
 		}
 		if (openCorrectly == OK) {
