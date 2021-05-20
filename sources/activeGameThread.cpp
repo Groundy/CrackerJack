@@ -9,8 +9,8 @@ activeGameThread::activeGameThread(QObject *parent, VariablesClass* varClass)
 }
 
 activeGameThread::~activeGameThread(){
+    this->terminate();
     delete historyOfGameActivity;
-	qDebug() << "end";
 }
 
 void activeGameThread::run(){

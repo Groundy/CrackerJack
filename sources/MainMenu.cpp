@@ -126,17 +126,16 @@ void MainMenu::threadStarter(){
 	screenAnalyzer->start();
 	healthManaStateAnalyzer = new ManaHealthStateAnalyzer(this, prof , &var);
 	healthManaStateAnalyzer->start();
-	keySender = new KeySender(this, prof, &var);
-	keySender->start();
 }
 
 void MainMenu::signalSlotConnector(){
+	
 	QObject* sigSender = this->healthManaStateAnalyzer;
 	QObject* slotRec = this->screenAnalyzer;
 	const char* sig = SIGNAL(demandReCalibration());
 	const char* slot = SLOT(reCalibrate());
 	bool connectionAccepted_1 = connect(sigSender, sig, slotRec, slot, Qt::UniqueConnection);
-
+	
 	sigSender = healthManaStateAnalyzer;
 	slotRec = this;
 	sig = SIGNAL(sendValueToMainThread(QString, QString, QString));

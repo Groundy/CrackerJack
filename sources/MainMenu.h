@@ -9,9 +9,8 @@
 #include "Key.h"
 #include "ManaHealthStateAnalyzer.h"
 #include "ScreenAnalyzer.h"
-#include "KeySender.h"
 #include "memory"
-
+#include "Calibrator.h"
 #include "StringResource.h"
 
 namespace Ui { class MainMenu; };
@@ -47,7 +46,6 @@ private:
 	activeGameThread* activityThread;
 	ScreenAnalyzer* screenAnalyzer;
 	ManaHealthStateAnalyzer* healthManaStateAnalyzer;
-	KeySender* keySender;
 	VariablesClass var;
 
 	bool isPl;

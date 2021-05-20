@@ -12,7 +12,6 @@ ProfileDataBaseManager::~ProfileDataBaseManager(){
 
 }
 
-
 QMap<ProfileDataBaseManager::FieldsOfDB, QString> ProfileDataBaseManager::getMapOfDBFields(){
 	QMap<ProfileDataBaseManager::FieldsOfDB, QString> toRet;
 	toRet.insert(ProfileDataBaseManager::PROFILE_NAME, "profileName");
@@ -37,6 +36,13 @@ QMap<ProfileDataBaseManager::FieldsOfDB, QString> ProfileDataBaseManager::getMap
 	toRet.insert(ProfileDataBaseManager::POS_SMP, "POS_SMP");
 	toRet.insert(ProfileDataBaseManager::POS_GMP, "POS_GMP");
 	toRet.insert(ProfileDataBaseManager::POS_UMP, "POS_UMP");
+
+	toRet.insert(ProfileDataBaseManager::POS_LAST_GAME_FRAME, "POS_LAST_GAME_FRAME");
+	toRet.insert(ProfileDataBaseManager::POS_LAST_HEALTH_BAR, "POS_LAST_HEALTH_BAR");
+	toRet.insert(ProfileDataBaseManager::POS_LAST_MANA_BAR, "POS_LAST_MANA_BAR");
+	toRet.insert(ProfileDataBaseManager::POS_LAST_MANA_SHIELD_BAR, "POS_LAST_MANA_SHIELD_BAR");
+	toRet.insert(ProfileDataBaseManager::POS_LAST_MINIMAP, "POS_LAST_MINIMAP");
+	toRet.insert(ProfileDataBaseManager::ROTATION, "ROTATION");
 
 	return toRet;
 }
@@ -137,32 +143,48 @@ bool ProfileDataBaseManager::getNamesOfAllFilesInFormToDisplay(QStringList& name
 bool ProfileDataBaseManager::saveProfileToDataBase(Profile& profileToSave){
 	typedef ProfileDataBaseManager::FieldsOfDB Field;
 	addNewProfileToFolder(profileToSave.profileName);
+	QList<bool> allReadTries;
+	bool ok;
 
 	QString profileName = profileToSave.profileName;
-	bool ok1 = modifyFieldValue(profileName, Field::PROFILE_NAME, profileName);
+	ok = modifyFieldValue(profileName, Field::PROFILE_NAME, profileName);
+	allReadTries.push_back(ok);
 
 	QString profesionToSet = QString::number(profileToSave.profession);
-	bool ok2 = modifyFieldValue(profileName, Field::PROFESION, profesionToSet);
+	ok = modifyFieldValue(profileName, Field::PROFESION, profesionToSet);
+	allReadTries.push_back(ok);
 
 	QString health_Percentages = DB_writer_ManaAndHealthRestorePercentages(profileToSave.healthRestorePercentages);
-	bool ok3 = modifyFieldValue(profileName, Field::HEALTH_RESTORE_STRING, health_Percentages);
+	ok = modifyFieldValue(profileName, Field::HEALTH_RESTORE_STRING, health_Percentages);
+	allReadTries.push_back(ok);
 
 	QString mana_Percentages = DB_writer_ManaAndHealthRestorePercentages(profileToSave.ManaRestoreMethodesPercentage);
-	bool ok4 = modifyFieldValue(profileName, Field::MANA_RESTORE_STRING, mana_Percentages);
+	ok = modifyFieldValue(profileName, Field::MANA_RESTORE_STRING, mana_Percentages);
+	allReadTries.push_back(ok);
 
 	QString health_Keys = DB_writer_ManaAndHealthKeys(profileToSave.healthKeys);
-	bool ok5 = modifyFieldValue(profileName, Field::HEALTH_RESTORE_KEY, health_Keys);
-	
-	QString mana_Keys = DB_writer_ManaAndHealthKeys(profileToSave.ManaKeys);
-	bool ok6 = modifyFieldValue(profileName, Field::MANA_RESTORE_KEY, mana_Keys);
-	
-	QString health_MethodesNames = DB_writer_ManaAndHealthRestoreMethhodesNames(profileToSave.healthRestoreMethodeNames);
-	bool ok7 = modifyFieldValue(profileName, Field::HEALTH_RESTORE_ITEM, health_MethodesNames);
-	
-	QString mana_MethodesNames = DB_writer_ManaAndHealthRestoreMethhodesNames(profileToSave.manaRestoreMethodeNames);
-	bool ok8 = modifyFieldValue(profileName, Field::MANA_RESTORE_ITEM, mana_MethodesNames);
+	ok = modifyFieldValue(profileName, Field::HEALTH_RESTORE_KEY, health_Keys);
+	allReadTries.push_back(ok);
 
-	bool toRet = ok1 && ok2 && ok3 && ok4 && ok5 && ok6 && ok7 && ok8;
+	QString mana_Keys = DB_writer_ManaAndHealthKeys(profileToSave.ManaKeys);
+	ok = modifyFieldValue(profileName, Field::MANA_RESTORE_KEY, mana_Keys);
+	allReadTries.push_back(ok);
+
+	QString health_MethodesNames = DB_writer_ManaAndHealthRestoreMethhodesNames(profileToSave.healthRestoreMethodeNames);
+	ok = modifyFieldValue(profileName, Field::HEALTH_RESTORE_ITEM, health_MethodesNames);
+	allReadTries.push_back(ok);
+
+	QString mana_MethodesNames = DB_writer_ManaAndHealthRestoreMethhodesNames(profileToSave.manaRestoreMethodeNames);
+	ok = modifyFieldValue(profileName, Field::MANA_RESTORE_ITEM, mana_MethodesNames);
+	allReadTries.push_back(ok);
+
+	bool toRet = true;
+	for each (bool var in allReadTries){
+		if (!var) {
+			toRet = false;
+			break;
+		}
+	}
 	return toRet;
 }
 
@@ -216,11 +238,6 @@ bool ProfileDataBaseManager::readProfileFromDataBase(QString profileName, Profil
 
 
 
-
-
-
-
-
 //writers
 QString ProfileDataBaseManager::DB_writer_ManaAndHealthRestorePercentages(QList<int> vect) {
 	//ERR //DIAG
@@ -254,6 +271,19 @@ QString ProfileDataBaseManager::DB_writer_ManaAndHealthRestoreMethhodesNames(QSt
 	return toRet;
 }
 
+QString ProfileDataBaseManager::DB_writer_rectangleWithPositionInImg(QRect rect){
+	QString toRet = "";
+	if (rect.isEmpty())
+		return toRet;
+
+	QString start_y = QString::number(rect.y());
+	QString start_x = QString::number(rect.x());
+	QString width = QString::number(rect.width());
+	QString height = QString::number(rect.height());
+	QString mark = QString("_");
+	toRet = start_x + mark + start_y + mark + width + mark + height;
+	return toRet;
+}
 //readers
 QList<int> ProfileDataBaseManager::DB_reader_ManaAndHealthRestorePercentages(QString str) {
 	QList<int> vectWithThreshold;
@@ -283,7 +313,7 @@ QList<Key> ProfileDataBaseManager::DB_reader_ManaAndHealthKeys(QString str) {
 	return keyList;
 }
 
-QList<QString> ProfileDataBaseManager::DB_reader_ManaAndHealthRestoreMethhodesNames(QString str){
+QStringList ProfileDataBaseManager::DB_reader_ManaAndHealthRestoreMethhodesNames(QString str){
 	QList<QString> listOfMethodes;
 
 	QStringList list = str.split("#", Qt::SplitBehaviorFlags::SkipEmptyParts);
@@ -293,21 +323,7 @@ QList<QString> ProfileDataBaseManager::DB_reader_ManaAndHealthRestoreMethhodesNa
 	return listOfMethodes;
 }
 
-QString ProfileDataBaseManager::DB_writer_PosOfItem(QRect rect){
-	QString toRet = "";
-	if (rect.isEmpty())
-		return toRet;
-
-	QString start_y = QString::number(rect.y());
-	QString start_x = QString::number(rect.x());
-	QString width = QString::number(rect.width());
-	QString height = QString::number(rect.height());
-	QString mark = QString("_");
-	toRet = start_x + mark + start_y + mark + width + mark + height;
-	return toRet;
-}
-
-QRect ProfileDataBaseManager::DB_reader_PosOfItem(QString str){
+QRect ProfileDataBaseManager::DB_reader_rectangleWithPositionInImg(QString str){
 	QString mark = QString("_");
 	QStringList values = str.split(mark, Qt::SkipEmptyParts);
 	QRect toRet;
@@ -323,16 +339,38 @@ QRect ProfileDataBaseManager::DB_reader_PosOfItem(QString str){
 	return toRet;
 }
 
-void ProfileDataBaseManager::writeItemPosToDb(QString profileName, FieldsOfDB dbField, QRect rectToSave){
-	ProfileDataBaseManager obj;
-	QString strToWrtie = obj.DB_writer_PosOfItem(rectToSave);
-	//obj.modifyAtribute(profileName, dbField, strToWrtie);
+bool ProfileDataBaseManager::writeRectToDb(QString profileName, FieldsOfDB dbField, QRect rectToSave){
+	int nubmerOfFieldInEnum = dbField;
+	int stratPositionInEnum = POS_HP;
+	int endPositionInEnum = POS_LAST_MINIMAP;
+	bool isGoodField = dbField >= stratPositionInEnum && dbField <= endPositionInEnum;
+	if (!isGoodField)
+		return false;
+
+	QString noImportant;
+	bool profExist = getPathToProfileFile(profileName, noImportant);
+	bool allRight = (isGoodField) && profExist;
+	if (!allRight)
+		return false;
+
+	QString newValue = DB_writer_rectangleWithPositionInImg(rectToSave);
+	bool res = modifyFieldValue(profileName, dbField, newValue);
+	return res;
 }
 
-void ProfileDataBaseManager::readItemPosToDb(QString profileName, FieldsOfDB dbField, QRect& rectToRead){
-	ProfileDataBaseManager obj;
-	//QString rectAsStr = obj.getValueOfCell(dbField, profileName);
-	//QRect rectToRet = obj.DB_reader_PosOfItem(rectAsStr);
-	//rectToRead = rectToRet;
-}
+bool ProfileDataBaseManager::readRectFromDb(QString profileName, FieldsOfDB dbField, QRect& rectToRead){
+	int nubmerOfFieldInEnum = dbField;
+	int stratPositionInEnum = POS_HP;
+	int endPositionInEnum = POS_LAST_MINIMAP;
+	bool isGoodField = dbField >= stratPositionInEnum && dbField <= endPositionInEnum;
 
+	QString noImportant;
+	bool profExist = getPathToProfileFile(profileName, noImportant);
+	bool allRight = (isGoodField) && profExist;
+	if (!allRight)
+		return false;
+
+	QString toBeRead;
+	rectToRead = DB_reader_rectangleWithPositionInImg(toBeRead);
+	return true;
+}

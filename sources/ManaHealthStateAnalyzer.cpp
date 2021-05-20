@@ -21,6 +21,7 @@ ManaHealthStateAnalyzer::ManaHealthStateAnalyzer(QObject *parent, Profile* profi
 }
 
 ManaHealthStateAnalyzer::~ManaHealthStateAnalyzer(){
+	this->terminate();
 }
 
 void ManaHealthStateAnalyzer::run(){
@@ -228,18 +229,6 @@ bool ManaHealthStateAnalyzer::checkIfEverythingIsCorrectToProcess(){
 		return false;
 	}
 
-	bool isNotCalibrated = var->caliState != VariablesClass::calibrationState::CALIBRATED;
-	if (isNotCalibrated) {
-		bool calibrationIsAvaible = var->lastTimeCalibrationUsed + 3000 <= Utilities::getCurrentTimeInMiliSeconds();
-		if (calibrationIsAvaible) {
-			QString wordToSend = StringResource::languageIsPl() ? QString::fromLocal8Bit("Kalibracja") : "Calibrating";
-			emit sendValueToMainThread(wordToSend, wordToSend, wordToSend);
-			emit demandReCalibration();
-		}
-		msleep(miliSecBetweenCheckingForNewValuesImg * 5);
-		return false;
-	}
-
 	bool skip = !var->HealthAndManaRestorationShouldBeActive;
 	if(skip){
 		msleep(miliSecBetweenCheckingForNewValuesImg * 5);
@@ -374,8 +363,7 @@ void ManaHealthStateAnalyzer::getAmountsOfPotions() {
 		if (rect.isEmpty())
 			continue;
 		QImage img = wholeImg.copy(rect);
-		Utilities::saveImgToOutPutFolder(&img, NULL);
-		int amount = Utilities::getNumberFromBottomBar(&img);
+		int amount = Utilities::getNumberFromBottomBar(img);
 		amountOfPots.push_back(amount);
 		namesOfPots.push_back(nameOfPot);
 	}

@@ -15,7 +15,6 @@
 #include "VariablesClass.h"
 #include "qdatetime.h"
 #include "qrgb.h"
-
 class Utilities {
 public:
 
@@ -32,17 +31,13 @@ public:
 	static QString letterImgToLetterCodeStr(QImage* SingleLetterImg);
 	static QChar StrCodeToQChar(QString code);
 	static QMap<QString, QChar> getQmapWithCodes();
-	static void getMapWithPotionsImgCodes(QMap<QString, QString>& name_code_light, QMap<QString, QString>& name_code_dark);
-	static QList<QPoint> findStartPositionInImg(QImage* imgToFind, QImage* imgToShareWithin);
-	static QList<QPoint> findStartPositionInImg_mulitpeImgs(QList<QImage*> imgsToFind, QImage* imgToShareWithin);
 	static QImage fromCharToImg(QChar CharToImg);
 	static void rotateImgToRight(QImage* imgToRotate, int timesToRotateRight);
 	static bool isItPixelFromFrame(uint color, int minValueAcceptable, int maxValueAcceptable, bool requireSameValuesOfRGB);
 	static LONG64 getCurrentTimeInMiliSeconds();
 	static QImage getImageFromAdvancedCode(QString codeOfImg);
 	static void getMapWithNumbersFromBottomBar(QMap<QString, int>& lightToRet, QMap<QString, int>& darkToRet);
-	static int getNumberFromBottomBar(QImage* bottomBar);
-	static bool findPotionsOnBottomBar(QStringList namesOfPotionsToFind, QStringList& namesOfPotionosFound, QList<QRect>& rectsWithFoundPots, QImage& bottomBarImg);
+	static int getNumberFromBottomBar(QImage& bottomBar);
 	//
 	enum class FieldsOfIniFile {
 		LANGUAGE,

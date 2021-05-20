@@ -7,6 +7,7 @@ ScreenSaver::ScreenSaver(QObject* parent, VariablesClass* varClass)
 }
 
 ScreenSaver::~ScreenSaver(){
+	this->terminate();
 }
 
 void ScreenSaver::sendScreenRequestToGame(Key keyCodeForScreen){

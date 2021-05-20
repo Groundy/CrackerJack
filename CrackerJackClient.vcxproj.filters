@@ -82,10 +82,10 @@
     <ClCompile Include="sources\ManaHealthStateAnalyzer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="sources\KeySender.cpp">
+    <ClCompile Include="sources\JsonParser.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="sources\JsonParser.cpp">
+    <ClCompile Include="sources\Calibrator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -126,10 +126,10 @@
     <QtMoc Include="sources\ScreenAnalyzer.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="sources\KeySender.h">
+    <QtMoc Include="sources\JsonParser.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="sources\JsonParser.h">
+    <QtMoc Include="sources\Calibrator.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>

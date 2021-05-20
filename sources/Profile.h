@@ -27,6 +27,17 @@ public:
 	QList<QString> healthRestoreMethodeNames;
 	QList<QString> manaRestoreMethodeNames;
 
+	struct Frames {
+		QRect gameFrame;
+		QRect miniMapFrame;
+		QRect healthFrame;
+		QRect manaFrame;
+		QRect manaShieldFrame;
+		QRect combinedFrame;
+		int howTheyShouldBeRotated;
+	};
+	Frames frames;
+
 	PROFESSION profession;//re
 	AUTO_LOOT_KEY lootKey;
 	CONTROLS controls;
@@ -35,5 +46,6 @@ public:
 	QString creationDate;
 	QString secondsSpent;
 	void clearProfile();
+
 
 };

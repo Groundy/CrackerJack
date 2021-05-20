@@ -5,7 +5,8 @@
 #include <memory.h>
 #include "JsonParser.h"
 #include "qsettings.h"
-
+#include "VariablesClass.h"
+#include "Calibrator.h"
 /*This function is designed to make ranom name of Process to avoid giving the same name the name that could be easily detected*/
 QString makeRandomProccessName() {
     const QString possibleCharacters("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789 ");
@@ -53,9 +54,10 @@ int main(int argc, char *argv[])
         return 0;
     MainMenu* mainMenu = new MainMenu(&prof, NULL);
     int result3 = mainMenu->exec();
-    if (result3 != QDialog::Accepted)
+    if (result3 != QDialog::Accepted) {
+        delete mainMenu;
         return 0;
-    //delete mainMenu;
+    }
     return a.exec();
 }
 
@@ -67,5 +69,13 @@ QIcon getIcon() {
 };
 
 void test() {
-
+    VariablesClass var;
+    QImage img;
+    QString path = "C:\\Users\\ADMIN\\Desktop\\z.png";
+    img.load(path);
+    QString pr = "cycki";
+    Profile testProf;
+   // Calibrator cali(img, var, &pr);
+    //auto ret = cali.calibrateManaAndHealthBar();
+    int g = 5;
 };
