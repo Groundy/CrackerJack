@@ -16,7 +16,8 @@ public:
 	enum CONTROLS { CLSSIC_CONTROLS, REGULARCONTROLS, LEFT_SMART_CLICK };
 
 	Profile(QObject *parent);
-	Profile(const Profile&);
+	//Profile(Profile& prof);
+	Profile(bool testProf);
 	Profile();
 	~Profile();
 
@@ -45,7 +46,8 @@ public:
 	QString lastLoginDate;
 	QString creationDate;
 	QString secondsSpent;
+	bool testProf = false;
 	void clearProfile();
-
+	void getDataFromOtherProf(Profile& profToCopyFrom);
 
 };

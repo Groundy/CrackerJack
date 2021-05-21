@@ -207,3 +207,15 @@ QString StringResource::NewProfileConfig_cancelCreatingNewProfile_BoxMsg(){
 	QString eng = "Are you sure that you want cancel adding new profile?";
 	return languageIsPl() ? pl : eng;
 }
+
+QString StringResource::MainMenu_helpButton(){
+	QString pl = QString::fromLocal8Bit("//TODO");
+	QString eng = "//TODO";
+	return languageIsPl() ? pl : eng;
+}
+
+QString StringResource::MainMenu_helpTitle(){
+	QString pl = QString::fromLocal8Bit("CrackerJack - Okno pomocy");
+	QString eng = "CrackerJack - Help window";
+	return languageIsPl() ? pl : eng;
+}

@@ -32,5 +32,8 @@ public:
 	static QString NewProfileConfig_finishCreatingNewProfile_BoxMsg();
 	static QString NewProfileConfig_cancelCreatingNewProfile_WindowTitle();
 	static QString NewProfileConfig_cancelCreatingNewProfile_BoxMsg();
+
+	static QString MainMenu_helpButton();
+	static QString MainMenu_helpTitle();
 };
 

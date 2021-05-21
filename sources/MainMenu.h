@@ -12,7 +12,7 @@
 #include "memory"
 #include "Calibrator.h"
 #include "StringResource.h"
-
+#include "SelectProfileWindow.h"
 namespace Ui { class MainMenu; };
 
 class MainMenu : public QDialog
