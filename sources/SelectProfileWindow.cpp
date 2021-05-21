@@ -122,7 +122,7 @@ void SelectProfileWindow::profSelected(){
 	QStringList nameParts = nameOfProfToSplit.split("] ");
 	QString profileName;
 	if(nameParts.size() >= 2)
-		profileName = nameParts[1];
+		profileName = nameParts[1];//TODO obsluga przypadku gdy po splitowaniu nazwa profilu nie jest zapisana w nameParts[1]
 
 	ProfileDataBaseManager dbManager;
 	dbManager.readProfileFromDataBase(profileName, *profToSelect);

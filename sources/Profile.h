@@ -17,7 +17,6 @@ public:
 
 	Profile(QObject *parent);
 	//Profile(Profile& prof);
-	Profile(bool testProf);
 	Profile();
 	~Profile();
 
@@ -46,7 +45,6 @@ public:
 	QString lastLoginDate;
 	QString creationDate;
 	QString secondsSpent;
-	bool testProf = false;
 	void clearProfile();
 	void getDataFromOtherProf(Profile& profToCopyFrom);
 

@@ -210,8 +210,11 @@ bool ProfileDataBaseManager::saveProfileToDataBase(Profile& profileToSave){
 	allReadTries.push_back(ok);
 
 
-	QString RotationStr = QString::number(profileToSave.frames.howTheyShouldBeRotated);
-	ok = modifyFieldValue(profileName, Field::MANA_RESTORE_ITEM, RotationStr);
+	QString RotationStr;
+	int nr = profileToSave.frames.howTheyShouldBeRotated;
+	bool notDeifned = nr != 1 || nr != 0 || nr != 1;
+	RotationStr = notDeifned? QString::number(0) : QString::number(nr);
+	ok = modifyFieldValue(profileName, Field::ROTATION, RotationStr);
 	allReadTries.push_back(ok);
 	
 
@@ -258,7 +261,7 @@ bool ProfileDataBaseManager::readProfileFromDataBase(QString profileName, Profil
 
 	QString mana_keysStr;
 	ok = readFieldValue(NAME, Field::MANA_RESTORE_KEY, mana_keysStr);
-	QList<Key> Mana_keys = DB_reader_ManaAndHealthKeys(mana_PercentageStr);
+	QList<Key> Mana_keys = DB_reader_ManaAndHealthKeys(mana_keysStr);
 	profileToBeRead.ManaKeys = Mana_keys;
 	allRight.push_back(ok);
 

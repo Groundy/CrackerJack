@@ -229,23 +229,23 @@ void MainMenu::helpButtonAction(){
 void MainMenu::changeProfileButtonAction(){
 	ProfileDataBaseManager db;
 	db.saveProfileToDataBase(*this->prof);
-	Profile profThatShouldNotBeSaved(true);
-	SelectProfileWindow selectProfWin(this, &profThatShouldNotBeSaved);
+	Profile profTmp;
+	SelectProfileWindow selectProfWin(this, &profTmp);
 	int res = selectProfWin.exec();
 	if (res == QDialog::Accepted) {
-		this->prof->getDataFromOtherProf(profThatShouldNotBeSaved);
+		this->prof->getDataFromOtherProf(profTmp);
 		this->ui->profileNameLabel->setText(this->prof->profileName);
 		this->ui->profileNameLabel->repaint();
 	}
 }
 
 void MainMenu::editProfileButtonAction(){
-	Profile profThatShouldNotBeSaved(true);
-	NewProfileConfiguartor profConfig(&profThatShouldNotBeSaved,this);
+	Profile profTmp;
+	NewProfileConfiguartor profConfig(&profTmp,this);
 	profConfig.fillWidgetsWithDataFromProf(this->prof);
 	int res = profConfig.exec();
 	if (res == QDialog::Accepted) {
-		this->prof->getDataFromOtherProf(profThatShouldNotBeSaved);
+		this->prof->getDataFromOtherProf(profTmp);
 		this->ui->profileNameLabel->setText(this->prof->profileName);
 		this->ui->profileNameLabel->repaint();
 	}
