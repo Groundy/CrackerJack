@@ -362,7 +362,8 @@ bool NewProfileConfiguartor::checkCorrectnessOfPage_3(){
 		}
 		bool allWidgetsAreDiffrent = mapToDeleteReplicatedValues.size() == activeBoxes.size();
 		bool AtLeastOneIsActive = activeKeys.size() > 0;
-		theSameValueIsAssignedToMoreThanOneBox = AtLeastOneIsActive ? false : allWidgetsAreDiffrent;
+		if(AtLeastOneIsActive)
+			theSameValueIsAssignedToMoreThanOneBox = allWidgetsAreDiffrent;
 	}
 
 	if (!everySliderHasDiffrentValue) {
@@ -500,8 +501,11 @@ bool NewProfileConfiguartor::checkCorrectnessOfPage_4(){
 		}
 		bool allWidgetsAreDiffrent = mapToDeleteReplicatedValues.size() == activeBoxes.size();
 		bool AtLeastOneIsActive = activeKeys.size() > 0;
-		theSameValueIsAssignedToMoreThanOneBox = AtLeastOneIsActive ? false : allWidgetsAreDiffrent;
+		if (AtLeastOneIsActive)
+			theSameValueIsAssignedToMoreThanOneBox = allWidgetsAreDiffrent;
 	}
+
+
 	if (!everySliderHasDiffrentValue) {
 		Utilities::showMessageBox(StringResource::WindowTitle_CrackerJackProblem(), StringResource::NewProfileConfig_3_SlidersAreInTheSamePosition(), QMessageBox::Ok);
 		return false;
