@@ -70,8 +70,8 @@ bool ProfileDataBaseManager::getPathToProfileFile(QString profName, QString& pat
 bool ProfileDataBaseManager::modifyFieldValue(QString profName, FieldsOfDB field, QString newValue){
 	QString pathToFile;
 	bool fileExist = getPathToProfileFile(profName, pathToFile);
-	if (!fileExist)
-		return false;//TODO zastanowic sie czy powinno sie stworzyc pusty plik i go modyfikowac czy tylko zwrocic return
+	//if (!fileExist)
+	//	return false;//TODO zastanowic sie czy powinno sie stworzyc pusty plik i go modyfikowac czy tylko zwrocic return
 	QSettings settings(pathToFile, QSettings::IniFormat);
 	bool isEableToWrite = settings.isWritable();
 	if (!isEableToWrite)
@@ -178,6 +178,44 @@ bool ProfileDataBaseManager::saveProfileToDataBase(Profile& profileToSave){
 	ok = modifyFieldValue(profileName, Field::MANA_RESTORE_ITEM, mana_MethodesNames);
 	allReadTries.push_back(ok);
 
+
+
+	QString mainGameFrameStr = DB_writer_rectangleWithPositionInImg(profileToSave.frames.gameFrame);
+	ok = modifyFieldValue(profileName, Field::POS_LAST_GAME_FRAME, mainGameFrameStr);
+	allReadTries.push_back(ok);
+
+
+	QString miniMapFrameStr = DB_writer_rectangleWithPositionInImg(profileToSave.frames.gameFrame);
+	ok = modifyFieldValue(profileName, Field::POS_LAST_MINIMAP, miniMapFrameStr);
+	allReadTries.push_back(ok);
+
+
+	QString healthBarStr = DB_writer_rectangleWithPositionInImg(profileToSave.frames.gameFrame);
+	ok = modifyFieldValue(profileName, Field::POS_LAST_HEALTH_BAR, healthBarStr);
+	allReadTries.push_back(ok);
+
+
+	QString manaBarStr = DB_writer_rectangleWithPositionInImg(profileToSave.frames.gameFrame);
+	ok = modifyFieldValue(profileName, Field::POS_LAST_MANA_BAR, manaBarStr);
+	allReadTries.push_back(ok);
+
+
+	QString comboBoxBarStr = DB_writer_rectangleWithPositionInImg(profileToSave.frames.gameFrame);
+	ok = modifyFieldValue(profileName, Field::POS_LAST_COMBOBOX_BAR, comboBoxBarStr);
+	allReadTries.push_back(ok);
+
+
+	QString manaShieldBarStr = DB_writer_rectangleWithPositionInImg(profileToSave.frames.gameFrame);
+	ok = modifyFieldValue(profileName, Field::POS_LAST_MANA_SHIELD_BAR, manaShieldBarStr);
+	allReadTries.push_back(ok);
+
+
+	QString RotationStr = QString::number(profileToSave.frames.howTheyShouldBeRotated);
+	ok = modifyFieldValue(profileName, Field::MANA_RESTORE_ITEM, RotationStr);
+	allReadTries.push_back(ok);
+	
+
+
 	bool toRet = true;
 	for each (bool var in allReadTries){
 		if (!var) {
@@ -192,43 +230,93 @@ bool ProfileDataBaseManager::readProfileFromDataBase(QString profileName, Profil
 	typedef ProfileDataBaseManager::FieldsOfDB Field;
 	const QString NAME = profileName;
 	profileToBeRead.profileName = profileName;
+	bool ok;
+	QList<bool> allRight;
 
 	QString profesionToSet;
-	bool ok2 = readFieldValue(NAME, Field::PROFESION, profesionToSet);
+	ok = readFieldValue(NAME, Field::PROFESION, profesionToSet);
 	profileToBeRead.profession = Profile::PROFESSION(profesionToSet.toInt());
+	allRight.push_back(ok);
 
 	QString health_PercentageStr;
-	bool ok3 = readFieldValue(NAME, Field::HEALTH_RESTORE_STRING, health_PercentageStr);
+	ok = readFieldValue(NAME, Field::HEALTH_RESTORE_STRING, health_PercentageStr);
 	QList<int> health_Percentages = DB_reader_ManaAndHealthRestorePercentages(health_PercentageStr);
 	profileToBeRead.healthRestorePercentages = health_Percentages;
+	allRight.push_back(ok);
 
 	QString mana_PercentageStr;
-	bool ok4 = readFieldValue(NAME, Field::MANA_RESTORE_STRING, mana_PercentageStr);
+	ok = readFieldValue(NAME, Field::MANA_RESTORE_STRING, mana_PercentageStr);
 	QList<int> Mana_Percentages = DB_reader_ManaAndHealthRestorePercentages(mana_PercentageStr);
 	profileToBeRead.ManaRestoreMethodesPercentage = Mana_Percentages;
+	allRight.push_back(ok);
 
 	QString health_keysStr;
-	bool ok5 = readFieldValue(NAME, Field::HEALTH_RESTORE_KEY, health_keysStr);
+	ok = readFieldValue(NAME, Field::HEALTH_RESTORE_KEY, health_keysStr);
 	QList<Key> Health_keys = DB_reader_ManaAndHealthKeys(health_keysStr);
 	profileToBeRead.healthKeys = Health_keys;
+	allRight.push_back(ok);
 
 	QString mana_keysStr;
-	bool ok6 = readFieldValue(NAME, Field::MANA_RESTORE_KEY, mana_keysStr);
+	ok = readFieldValue(NAME, Field::MANA_RESTORE_KEY, mana_keysStr);
 	QList<Key> Mana_keys = DB_reader_ManaAndHealthKeys(mana_PercentageStr);
 	profileToBeRead.ManaKeys = Mana_keys;
+	allRight.push_back(ok);
 
 	QString health_MethodesStr;
-	bool ok7 = readFieldValue(NAME, Field::HEALTH_RESTORE_ITEM, health_MethodesStr);
+	ok = readFieldValue(NAME, Field::HEALTH_RESTORE_ITEM, health_MethodesStr);
 	QStringList healthMethodes = DB_reader_ManaAndHealthRestoreMethhodesNames(health_MethodesStr);
 	profileToBeRead.healthRestoreMethodeNames = healthMethodes;
+	allRight.push_back(ok);
 
 	QString mana_MethodesStr;
-	bool ok8 = readFieldValue(NAME, Field::MANA_RESTORE_ITEM, mana_MethodesStr);
+	ok = readFieldValue(NAME, Field::MANA_RESTORE_ITEM, mana_MethodesStr);
 	QStringList mana_Methodes = DB_reader_ManaAndHealthRestoreMethhodesNames(mana_MethodesStr);
 	profileToBeRead.manaRestoreMethodeNames = mana_Methodes;
+	allRight.push_back(ok);
 
-	bool toRet = ok2 && ok3 && ok4 && ok5 && ok6 && ok7 && ok8;
-	return toRet;
+	QString mainGameFrameStr, miniMapFrameStr, healthBarStr, manaBarStr, comboBoxBarStr, manaShieldBarStr, RotationStr;
+	QRect frame;
+
+	ok = readFieldValue(NAME, Field::POS_LAST_GAME_FRAME, mainGameFrameStr);
+	allRight.push_back(ok);
+	frame = DB_reader_rectangleWithPositionInImg(mainGameFrameStr);
+	profileToBeRead.frames.gameFrame = frame;
+
+	ok = readFieldValue(NAME, Field::POS_LAST_MINIMAP, miniMapFrameStr);
+	allRight.push_back(ok);
+	frame = DB_reader_rectangleWithPositionInImg(miniMapFrameStr);
+	profileToBeRead.frames.miniMapFrame = frame;
+
+	ok = readFieldValue(NAME, Field::POS_LAST_HEALTH_BAR, healthBarStr);
+	allRight.push_back(ok); 
+	frame = DB_reader_rectangleWithPositionInImg(healthBarStr);
+	profileToBeRead.frames.healthFrame = frame;
+
+	ok = readFieldValue(NAME, Field::POS_LAST_MANA_BAR, manaBarStr);
+	allRight.push_back(ok); 
+	frame = DB_reader_rectangleWithPositionInImg(manaBarStr);
+	profileToBeRead.frames.manaFrame = frame;
+
+	ok = readFieldValue(NAME, Field::POS_LAST_COMBOBOX_BAR, comboBoxBarStr);
+	allRight.push_back(ok); 
+	frame = DB_reader_rectangleWithPositionInImg(comboBoxBarStr);
+	profileToBeRead.frames.combinedFrame = frame;
+
+	ok = readFieldValue(NAME, Field::POS_LAST_MANA_SHIELD_BAR, manaShieldBarStr);
+	allRight.push_back(ok); 
+	frame = DB_reader_rectangleWithPositionInImg(manaShieldBarStr);
+	profileToBeRead.frames.manaShieldFrame = frame;
+
+	ok = readFieldValue(NAME, Field::ROTATION, RotationStr);
+	allRight.push_back(ok);
+	profileToBeRead.frames.howTheyShouldBeRotated = RotationStr.toInt();
+
+	for each (bool var in allRight) {
+		if (!var) {
+			return false;
+		}
+	}
+	return true;
 }
 
 

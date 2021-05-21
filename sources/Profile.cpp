@@ -1,8 +1,7 @@
 #include "Profile.h"
+#include "ProfileDataBaseManager.h"
+Profile::Profile(QObject *parent) : QObject(parent){
 
-Profile::Profile(QObject *parent) : QObject(parent)
-{
-	
 }
 
 Profile::Profile()
@@ -11,8 +10,9 @@ Profile::Profile()
 
 Profile::Profile(const Profile &profile){}
 
-Profile::~Profile()
-{
+Profile::~Profile(){
+	ProfileDataBaseManager db;
+	db.saveProfileToDataBase(*this);
 }
 
 void Profile::clearProfile(){

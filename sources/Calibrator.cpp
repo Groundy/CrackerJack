@@ -273,12 +273,12 @@ QList<QPoint> Calibrator::findStartPositionInImg(QImage& imgToFind, QImage& imgT
 
 int Calibrator::calibrateManaAndHealthBar(){
 	QList<QRect> importantRectangles;
-	bool sucessfullyRead = getMainFramesFromProfFile(importantRectangles, profile->profileName);
-	if (!sucessfullyRead) {
+	//bool sucessfullyRead = (importantRectangles, profile->profileName);//TODO tutatj zastpic to sprawdzeniem czy framy wczytane do profilu sie zgadzaja
+	//if (!sucessfullyRead) {
 		ERR res1 = (ERR)findWindowsOnScreen(*this->fullScreen, importantRectangles);
 		if (res1 != OK)
 			return res1;
-	}
+	//}
 
 	ERR res2 = (ERR)categorizeWindows(*fullScreen, importantRectangles);
 	if (res2 != OK)

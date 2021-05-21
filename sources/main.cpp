@@ -40,22 +40,23 @@ int main(int argc, char *argv[])
 
     a.setWindowIcon(getIcon());
     QApplication::setAttribute(Qt::AA_DisableWindowContextHelpButton);
-    test();
+    //test();
     /*
     LoginWindow w;
     int result = w.exec();
     if (result != QDialog::Accepted)
         return 0;
     */
-    Profile prof;
-    SelectProfileWindow win(NULL, &prof);
+    Profile* prof = new Profile();
+    SelectProfileWindow win(NULL, prof);
     int result2 = win.exec();
     if (result2 != QDialog::Accepted)
         return 0;
-    MainMenu* mainMenu = new MainMenu(&prof, NULL);
+    MainMenu* mainMenu = new MainMenu(prof, NULL);
     int result3 = mainMenu->exec();
     if (result3 != QDialog::Accepted) {
         delete mainMenu;
+        delete prof;
         return 0;
     }
     return a.exec();
