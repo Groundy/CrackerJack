@@ -94,8 +94,8 @@ void SelectProfileWindow::deleteProfileButtonAction(){
 	profileNameToDelete = ui->listOfProfs->selectedItems().first()->text();
 	QStringList choppedString = profileNameToDelete.split("] ");
 	QString onlyProfileName;
-	if (choppedString.size() != 2)
-		onlyProfileName = choppedString[1];//err diag
+	if (choppedString.size() >= 2)
+		onlyProfileName = choppedString[1];//TODO obsluga przypadku gdy po splitowaniu nazwa profilu nie jest zapisana w choppedString[1]
 	
 
 	QString msgText = StringResource::SelectProfileWindow_sureToDeleteProfile() + onlyProfileName  + " ?";
