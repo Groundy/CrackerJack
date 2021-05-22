@@ -58,4 +58,21 @@ private:
 	Profile::PROFESSION getProfessionFromRadioButtonOnPage2();
 	void setUpGUI();
 	bool isPl;
+	void fillGuiPtrs();
+
+	struct guiPointers {
+		QList<QAbstractSlider*> sliderOnPage_3;
+		QList<QLabel*> labelsOnPage_3;
+		QList<QComboBox*> boxesOnPage_3;
+		QList<QKeySequenceEdit*> keyShortCutsOnPage_3;
+		int activeElementsOnPage_3;
+
+		QList<QAbstractSlider*> sliderOnPage_4;
+		QList<QLabel*> labelsOnPage_4;
+		QList<QComboBox*> boxesOnPage_4;
+		QList<QKeySequenceEdit*> keyShortCutsOnPage_4;
+		int activeElementsOnPage_4;
+	};
+	guiPointers guiPtrs;
+	const int MAX_NUMBER_OF_ACTIVE_WIDGETS = 5;
 };

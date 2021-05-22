@@ -9,6 +9,7 @@ NewProfileConfiguartor::NewProfileConfiguartor(Profile* prof, QWidget *parent)	:
 	isPl = StringResource::languageIsPl();
 	MAX_PAGE = ui->stackedWidget->count();
 	ui->stackedWidget->setCurrentIndex(0);
+	fillGuiPtrs();
 	additionalGuiSettings();
 	profToEdit = prof;
 	refreshGUI();
@@ -52,21 +53,21 @@ void NewProfileConfiguartor::additionalGuiSettings(){
 	ui->_3_spinGetNumberOfMethodes->setMinimum(0);
 	ui->_3_spinGetNumberOfMethodes->setMaximum(5);
 
-	QList<QComboBox*> restoreMethodes; {
-		restoreMethodes.push_back(ui->_3_comboBox);
-		restoreMethodes.push_back(ui->_3_comboBox_2);
-		restoreMethodes.push_back(ui->_3_comboBox_3);
-		restoreMethodes.push_back(ui->_3_comboBox_4);
-		restoreMethodes.push_back(ui->_3_comboBox_5);
-		restoreMethodes.push_back(ui->_4_comboBox);
-		restoreMethodes.push_back(ui->_4_comboBox_2);
-		restoreMethodes.push_back(ui->_4_comboBox_3);
-		restoreMethodes.push_back(ui->_4_comboBox_4);
-		restoreMethodes.push_back(ui->_4_comboBox_5);
-	
+	for (size_t i = 0; i < MAX_NUMBER_OF_ACTIVE_WIDGETS; i++) {
+		guiPtrs.sliderOnPage_3[i]->setEnabled(false);
+		guiPtrs.labelsOnPage_3[i]->setEnabled(false);
+		guiPtrs.labelsOnPage_3[i]->setText("       ");
+		guiPtrs.boxesOnPage_3[i]->setEnabled(false);
+		guiPtrs.keyShortCutsOnPage_3[i]->setEnabled(false);
+		guiPtrs.boxesOnPage_3[i]->setCurrentIndex(-1);
+
+		guiPtrs.sliderOnPage_4[i]->setEnabled(false);
+		guiPtrs.labelsOnPage_4[i]->setText("       ");
+		guiPtrs.labelsOnPage_4[i]->setEnabled(false);
+		guiPtrs.boxesOnPage_4[i]->setEnabled(false);
+		guiPtrs.keyShortCutsOnPage_4[i]->setEnabled(false);
+		guiPtrs.boxesOnPage_4[i]->setCurrentIndex(-1);
 	}
-	for each (QComboBox * var in restoreMethodes)
-		var->setDisabled(true);
 
 	ui->_4_spinGetNumberOfMethodes->setMinimum(0);
 	ui->_4_spinGetNumberOfMethodes->setMaximum(5);
@@ -262,49 +263,13 @@ bool NewProfileConfiguartor::checkCorrectnessOfPage_2(){
 }
 
 bool NewProfileConfiguartor::checkCorrectnessOfPage_3(){	
-	QList<QAbstractSlider*> activeSliders;{
-		bool isActive1 = ui->_3_horizontalSlider_1->isEnabled();
-		bool isActice2 = ui->_3_horizontalSlider_2->isEnabled();
-		bool isActice3 = ui->_3_horizontalSlider_3->isEnabled();
-		bool isActice4 = ui->_3_horizontalSlider_4->isEnabled();
-		bool isActice5 = ui->_3_horizontalSlider_5->isEnabled();
-		if (isActive1)	activeSliders.push_back(ui->_3_horizontalSlider_1);
-		if (isActice2)	activeSliders.push_back(ui->_3_horizontalSlider_2);
-		if (isActice3)	activeSliders.push_back(ui->_3_horizontalSlider_3);
-		if (isActice4)	activeSliders.push_back(ui->_3_horizontalSlider_4);
-		if (isActice5)	activeSliders.push_back(ui->_3_horizontalSlider_5);
-	}
-	QList<QKeySequence> activeKeys;{
-		bool isActive1 = ui->_3_shortKey_1->isEnabled();
-		bool isActive2 = ui->_3_shortKey_2->isEnabled();
-		bool isActive3 = ui->_3_shortKey_3->isEnabled();
-		bool isActive4 = ui->_3_shortKey_4->isEnabled();
-		bool isActive5 = ui->_3_shortKey_5->isEnabled();
-		if (isActive1)	activeKeys.push_back(ui->_3_shortKey_1->keySequence());
-		if (isActive2)	activeKeys.push_back(ui->_3_shortKey_2->keySequence());
-		if (isActive3)	activeKeys.push_back(ui->_3_shortKey_3->keySequence());
-		if (isActive4)	activeKeys.push_back(ui->_3_shortKey_4->keySequence());
-		if (isActive5)	activeKeys.push_back(ui->_3_shortKey_5->keySequence());
-	}
-	QList<QComboBox*> activeBoxes;{
-		bool isActive1 = ui->_3_comboBox->isEnabled();
-		bool isActive2 = ui->_3_comboBox_2->isEnabled();
-		bool isActive3 = ui->_3_comboBox_3->isEnabled();
-		bool isActive4 = ui->_3_comboBox_4->isEnabled();
-		bool isActive5 = ui->_3_comboBox_5->isEnabled();
-		if (isActive1) activeBoxes.push_back(ui->_3_comboBox);
-		if (isActive2) activeBoxes.push_back(ui->_3_comboBox_2);
-		if (isActive3) activeBoxes.push_back(ui->_3_comboBox_3);
-		if (isActive4) activeBoxes.push_back(ui->_3_comboBox_4);
-		if (isActive5) activeBoxes.push_back(ui->_3_comboBox_5);
-	}
-
 
 	bool slidersAreInCorrectOrder = true;
 	bool everySliderHasDiffrentValue = true;
 	{
 		int biggestValue = 101;
-		for each (QAbstractSlider * slider in activeSliders) {
+		for (size_t i = 0; i < guiPtrs.activeElementsOnPage_3; i++){
+			QAbstractSlider* slider = guiPtrs.sliderOnPage_3[i];
 			if (slider->value() < biggestValue)
 				biggestValue = slider->value();
 			else if (slider->value() == biggestValue)
@@ -316,9 +281,10 @@ bool NewProfileConfiguartor::checkCorrectnessOfPage_3(){
 
 	bool lastSliderIsZero = false;
 	{
-		if (activeSliders.size() > 0) {
-			int lastSliderIndex = activeSliders.size() - 1;
-			int valOfLastSlider = activeSliders[lastSliderIndex]->value();
+		int activeElements = guiPtrs.activeElementsOnPage_3;
+		if (activeElements > 0) {
+			int lastSliderIndex = activeElements - 1;
+			int valOfLastSlider = guiPtrs.sliderOnPage_3[lastSliderIndex]->value();
 			lastSliderIsZero = valOfLastSlider <= 0;
 		}
 	}
@@ -327,8 +293,8 @@ bool NewProfileConfiguartor::checkCorrectnessOfPage_3(){
 	bool oneOfKeyFieldsHasNoValue = false;
 	bool oneOfKeyFieldsHasForbiddenChars = false;
 	{
-		for each (QKeySequence keySequence in activeKeys)
-		{
+		for (size_t i = 0; i < guiPtrs.activeElementsOnPage_3; i++){
+			QKeySequence keySequence = guiPtrs.keyShortCutsOnPage_3[i]->keySequence();
 			if (keySequence.count() == 0)
 				oneOfKeyFieldsHasNoValue = true;
 			else if (keySequence.count() > 1)
@@ -338,14 +304,16 @@ bool NewProfileConfiguartor::checkCorrectnessOfPage_3(){
 			bool isProperKey = Key::checkIfnumberIsAloowed(keyValueToCheck);
 			if (!isProperKey)
 				oneOfKeyFieldsHasForbiddenChars = true;
+		
 		}
 	}
 
 	bool comboBoxHasNotChoosenValue = false;
 	{
-		for each (QComboBox * var in activeBoxes) {
-			int maxIndex = var->count();
-			int currentIndex = var->currentIndex();
+		for (size_t i = 0; i < guiPtrs.activeElementsOnPage_3; i++){
+			QComboBox* comboBox = guiPtrs.boxesOnPage_3[i];
+			int maxIndex = comboBox->count();
+			int currentIndex = comboBox->currentIndex();
 			bool indexIsInProperRange = currentIndex >= 0 && currentIndex < maxIndex;
 			if (!indexIsInProperRange)
 				comboBoxHasNotChoosenValue = true;
@@ -355,15 +323,16 @@ bool NewProfileConfiguartor::checkCorrectnessOfPage_3(){
 	bool theSameValueIsAssignedToMoreThanOneBox = false;
 	{
 		QMap<int, int> mapToDeleteReplicatedValues;
-		for (size_t i = 0; i < activeKeys.size(); i++) {
-			QKeySequence keySeq = activeKeys[i];
+		int maxWidgetIndex = guiPtrs.activeElementsOnPage_3;
+		for (size_t i = 0; i < maxWidgetIndex; i++) {
+			QKeySequence keySeq = guiPtrs.keyShortCutsOnPage_3[i]->keySequence();
 			int valueOfKey = Key(keySeq).number;
 			mapToDeleteReplicatedValues.insert(valueOfKey, 0);
 		}
-		bool allWidgetsAreDiffrent = mapToDeleteReplicatedValues.size() == activeBoxes.size();
-		bool AtLeastOneIsActive = activeKeys.size() > 0;
+		bool allWidgetsAreDiffrent = mapToDeleteReplicatedValues.size() == maxWidgetIndex;
+		bool AtLeastOneIsActive = maxWidgetIndex;
 		if(AtLeastOneIsActive)
-			theSameValueIsAssignedToMoreThanOneBox = allWidgetsAreDiffrent;
+			theSameValueIsAssignedToMoreThanOneBox = !allWidgetsAreDiffrent;
 	}
 
 	if (!everySliderHasDiffrentValue) {
@@ -402,49 +371,12 @@ bool NewProfileConfiguartor::checkCorrectnessOfPage_3(){
 }
 
 bool NewProfileConfiguartor::checkCorrectnessOfPage_4(){
-	QList<QAbstractSlider*> activeSliders;{
-		bool isActice1 = ui->_4_horizontalSlider_1->isEnabled();
-		bool isActice2 = ui->_4_horizontalSlider_2->isEnabled();
-		bool isActice3 = ui->_4_horizontalSlider_3->isEnabled();
-		bool isActice4 = ui->_4_horizontalSlider_4->isEnabled();
-		bool isActice5 = ui->_4_horizontalSlider_5->isEnabled();
-		if (isActice1)	activeSliders.push_back(ui->_4_horizontalSlider_1);
-		if (isActice2)	activeSliders.push_back(ui->_4_horizontalSlider_2);
-		if (isActice3)	activeSliders.push_back(ui->_4_horizontalSlider_3);
-		if (isActice4)	activeSliders.push_back(ui->_4_horizontalSlider_4);
-		if (isActice5)  activeSliders.push_back(ui->_4_horizontalSlider_5);
-	}
-	QList<QComboBox*> activeBoxes;{
-		bool isActive1 = ui->_4_comboBox->isEnabled();
-		bool isActive2 = ui->_4_comboBox_2->isEnabled();
-		bool isActive3 = ui->_4_comboBox_3->isEnabled();
-		bool isActive4 = ui->_4_comboBox_4->isEnabled();
-		bool isActive5 = ui->_4_comboBox_5->isEnabled();
-		if (isActive1) activeBoxes.push_back(ui->_4_comboBox);
-		if (isActive2) activeBoxes.push_back(ui->_4_comboBox_2);
-		if (isActive3) activeBoxes.push_back(ui->_4_comboBox_3);
-		if (isActive4) activeBoxes.push_back(ui->_4_comboBox_4);
-		if (isActive5) activeBoxes.push_back(ui->_4_comboBox_5);
-	}
-	QList<QKeySequence> activeKeys; {
-		bool isActive1 = ui->_4_shortKey_1->isEnabled();
-		bool isActive2 = ui->_4_shortKey_2->isEnabled();
-		bool isActive3 = ui->_4_shortKey_3->isEnabled();
-		bool isActive4 = ui->_4_shortKey_4->isEnabled();
-		bool isActive5 = ui->_4_shortKey_5->isEnabled();
-		if (isActive1) activeKeys.push_back(ui->_4_shortKey_1->keySequence());
-		if (isActive2) activeKeys.push_back(ui->_4_shortKey_2->keySequence());
-		if (isActive3) activeKeys.push_back(ui->_4_shortKey_3->keySequence());
-		if (isActive4) activeKeys.push_back(ui->_4_shortKey_4->keySequence());
-		if (isActive5) activeKeys.push_back(ui->_4_shortKey_5->keySequence());
-	}
-
-
 	bool slidersAreInCorrectOrder = true;
 	bool everySliderHasDiffrentValue = true;
 	{
 		int biggestValue = 101;
-		for each (QAbstractSlider * slider in activeSliders) {
+		for (size_t i = 0; i < guiPtrs.activeElementsOnPage_4; i++) {
+			QAbstractSlider* slider = guiPtrs.sliderOnPage_4[i];
 			if (slider->value() < biggestValue)
 				biggestValue = slider->value();
 			else if (slider->value() == biggestValue)
@@ -456,35 +388,39 @@ bool NewProfileConfiguartor::checkCorrectnessOfPage_4(){
 
 	bool lastSliderIsZero = false;
 	{
-		if (activeSliders.size() > 0) {
-			int valueOfLastSlider = activeSliders[activeSliders.size() - 1]->value();
-			if (valueOfLastSlider == 0)
-				lastSliderIsZero = true;
+		int activeElements = guiPtrs.activeElementsOnPage_4;
+		if (activeElements > 0) {
+			int lastSliderIndex = activeElements - 1;
+			int valOfLastSlider = guiPtrs.sliderOnPage_4[lastSliderIndex]->value();
+			lastSliderIsZero = valOfLastSlider <= 0;
 		}
 	}
 
-	bool oneOfKeyFieldHasManyValues = false;
-	bool oneOfKeyFieldHasNoValue = false;
+	bool oneOfKeyFieldsHasManyValues = false;
+	bool oneOfKeyFieldsHasNoValue = false;
 	bool oneOfKeyFieldsHasForbiddenChars = false;
 	{
-		for (int i = 0; i < activeKeys.size(); i++) {
-			if (activeKeys[i].count() == 0)
-				oneOfKeyFieldHasNoValue = true;
-			else if (activeKeys[i].count() > 1)
-				oneOfKeyFieldHasManyValues = true;
+		for (size_t i = 0; i < guiPtrs.activeElementsOnPage_4; i++) {
+			QKeySequence keySequence = guiPtrs.keyShortCutsOnPage_4[i]->keySequence();
+			if (keySequence.count() == 0)
+				oneOfKeyFieldsHasNoValue = true;
+			else if (keySequence.count() > 1)
+				oneOfKeyFieldsHasManyValues = true;
 
-			int keyValurToCheck = Key(activeKeys[i]).number;
-			bool isProperKey = Key::checkIfnumberIsAloowed(keyValurToCheck);
+			int keyValueToCheck = Key(keySequence).number;
+			bool isProperKey = Key::checkIfnumberIsAloowed(keyValueToCheck);
 			if (!isProperKey)
 				oneOfKeyFieldsHasForbiddenChars = true;
+
 		}
 	}
-	
-	bool comboBoxHasNotChoosenValue = false; 
+
+	bool comboBoxHasNotChoosenValue = false;
 	{
-		for each (QComboBox * var in activeBoxes) {
-			int maxIndex = var->count();
-			int currentIndex = var->currentIndex();
+		for (size_t i = 0; i < guiPtrs.activeElementsOnPage_4; i++) {
+			QComboBox* comboBox = guiPtrs.boxesOnPage_4[i];
+			int maxIndex = comboBox->count();
+			int currentIndex = comboBox->currentIndex();
 			bool indexIsInProperRange = currentIndex >= 0 && currentIndex < maxIndex;
 			if (!indexIsInProperRange)
 				comboBoxHasNotChoosenValue = true;
@@ -494,15 +430,16 @@ bool NewProfileConfiguartor::checkCorrectnessOfPage_4(){
 	bool theSameValueIsAssignedToMoreThanOneBox = false;
 	{
 		QMap<int, int> mapToDeleteReplicatedValues;
-		for (size_t i = 0; i < activeKeys.size(); i++) {
-			QKeySequence keySeq = activeKeys[i];
+		int maxWidgetIndex = guiPtrs.activeElementsOnPage_4;
+		for (size_t i = 0; i < maxWidgetIndex; i++) {
+			QKeySequence keySeq = guiPtrs.keyShortCutsOnPage_4[i]->keySequence();
 			int valueOfKey = Key(keySeq).number;
 			mapToDeleteReplicatedValues.insert(valueOfKey, 0);
 		}
-		bool allWidgetsAreDiffrent = mapToDeleteReplicatedValues.size() == activeBoxes.size();
-		bool AtLeastOneIsActive = activeKeys.size() > 0;
+		bool allWidgetsAreDiffrent = mapToDeleteReplicatedValues.size() == maxWidgetIndex;
+		bool AtLeastOneIsActive = maxWidgetIndex;
 		if (AtLeastOneIsActive)
-			theSameValueIsAssignedToMoreThanOneBox = allWidgetsAreDiffrent;
+			theSameValueIsAssignedToMoreThanOneBox = !allWidgetsAreDiffrent;
 	}
 
 
@@ -514,7 +451,7 @@ bool NewProfileConfiguartor::checkCorrectnessOfPage_4(){
 		Utilities::showMessageBox(StringResource::WindowTitle_CrackerJackProblem(), StringResource::NewProfileConfig_3_SlidersAreInWrongOrder(), QMessageBox::Ok);
 		return false;
 	}
-	if (oneOfKeyFieldHasManyValues) {
+	if (oneOfKeyFieldsHasManyValues) {
 		Utilities::showMessageBox(StringResource::WindowTitle_CrackerJackProblem(), StringResource::NewProfileConfig_3_ShortcutManyValue(), QMessageBox::Ok);
 		return false;
 	}
@@ -522,7 +459,7 @@ bool NewProfileConfiguartor::checkCorrectnessOfPage_4(){
 		Utilities::showMessageBox(StringResource::WindowTitle_CrackerJackProblem(), StringResource::NewProfileConfig_3_LastSliderIsZero(), QMessageBox::Ok);
 		return false;
 	}
-	if (oneOfKeyFieldHasNoValue) {
+	if (oneOfKeyFieldsHasNoValue) {
 		Utilities::showMessageBox(StringResource::WindowTitle_CrackerJackProblem(), StringResource::NewProfileConfig_3_ShortcutNoValue(), QMessageBox::Ok);
 		return false;
 	}
@@ -585,14 +522,6 @@ QStringList NewProfileConfiguartor::getNamesOfManaRestoringMethodes(Profile::PRO
 }
 
 void NewProfileConfiguartor::fillGuiElementsWithNamesRestoreMethodes_Health(Profile::PROFESSION profession){
-	QList<QComboBox*> listOfWidgets;
-	listOfWidgets.push_back(ui->_3_comboBox);
-	listOfWidgets.push_back(ui->_3_comboBox_2);
-	listOfWidgets.push_back(ui->_3_comboBox_3);
-	listOfWidgets.push_back(ui->_3_comboBox_4);
-	listOfWidgets.push_back(ui->_3_comboBox_5);
-
-
 	QStringList listOfMethodesNamesFromProf = profToEdit->healthRestoreMethodeNames;
 	QStringList namesOfAllPosibleMethodes = getNamesOfHealthRestoringMethodes(profession);
 	QStringList incantationsThatShouldBeDeleted{"utura", "utura gran", "exura sio \"name\"",
@@ -604,8 +533,8 @@ void NewProfileConfiguartor::fillGuiElementsWithNamesRestoreMethodes_Health(Prof
 	namesOfAllPosibleMethodes.sort();
 
 	int numberOfComboBoxToSetActive = listOfMethodesNamesFromProf.size();
-	for (size_t i = 0; i < 5; i++){
-		QComboBox* box = listOfWidgets[i];
+	for (size_t i = 0; i < MAX_NUMBER_OF_ACTIVE_WIDGETS; i++){
+		QComboBox* box = guiPtrs.boxesOnPage_3[i];
 		box->clear();
 		box->insertItems(0, namesOfAllPosibleMethodes);
 		bool shouldBeActivated = i < numberOfComboBoxToSetActive;
@@ -618,21 +547,13 @@ void NewProfileConfiguartor::fillGuiElementsWithNamesRestoreMethodes_Health(Prof
 }
 
 void NewProfileConfiguartor::fillGuiElementsWithNamesRestoreMethodes_Mana(Profile::PROFESSION prof){
-	QList<QComboBox*> listOfWidgets;
-	listOfWidgets.push_back(ui->_4_comboBox);
-	listOfWidgets.push_back(ui->_4_comboBox_2);
-	listOfWidgets.push_back(ui->_4_comboBox_3);
-	listOfWidgets.push_back(ui->_4_comboBox_4);
-	listOfWidgets.push_back(ui->_4_comboBox_5);
-
-
 	QStringList listOfMethodesNamesFromProf = profToEdit->manaRestoreMethodeNames;
 	QStringList namesOfAllPosibleMethodes = getNamesOfManaRestoringMethodes(prof);
 	namesOfAllPosibleMethodes.sort();
 
 	int numberOfComboBoxToSetActive = listOfMethodesNamesFromProf.size();
-	for (size_t i = 0; i < 5; i++) {
-		QComboBox* box = listOfWidgets[i];
+	for (size_t i = 0; i < MAX_NUMBER_OF_ACTIVE_WIDGETS; i++) {
+		QComboBox* box = guiPtrs.boxesOnPage_4[i];
 		box->clear();
 		box->insertItems(0, namesOfAllPosibleMethodes);
 		bool shouldBeActivated = i < numberOfComboBoxToSetActive;
@@ -661,6 +582,84 @@ void NewProfileConfiguartor::setUpGUI(){
 
 }
 
+void NewProfileConfiguartor::fillGuiPtrs() {
+	int tmpNumberOfActiveWidgets = 0;
+	if (ui->_4_horizontalSlider_1->isEnabled())
+		tmpNumberOfActiveWidgets++;
+	if (ui->_4_horizontalSlider_2->isEnabled())
+		tmpNumberOfActiveWidgets++;
+	if (ui->_4_horizontalSlider_3->isEnabled())
+		tmpNumberOfActiveWidgets++;
+	if (ui->_4_horizontalSlider_4->isEnabled())
+		tmpNumberOfActiveWidgets++;
+	if (ui->_4_horizontalSlider_5->isEnabled())
+		tmpNumberOfActiveWidgets++;
+	this->guiPtrs.activeElementsOnPage_4 = tmpNumberOfActiveWidgets;
+
+	tmpNumberOfActiveWidgets = 0;
+	if (ui->_3_horizontalSlider_1->isEnabled())
+		tmpNumberOfActiveWidgets++;
+	if (ui->_3_horizontalSlider_2->isEnabled())
+		tmpNumberOfActiveWidgets++;
+	if (ui->_3_horizontalSlider_3->isEnabled())
+		tmpNumberOfActiveWidgets++;
+	if (ui->_3_horizontalSlider_4->isEnabled())
+		tmpNumberOfActiveWidgets++;
+	if (ui->_3_horizontalSlider_5->isEnabled())
+		tmpNumberOfActiveWidgets++;
+	this->guiPtrs.activeElementsOnPage_3 = tmpNumberOfActiveWidgets;
+
+
+	guiPtrs.sliderOnPage_3.push_back(ui->_3_horizontalSlider_1);
+	guiPtrs.sliderOnPage_3.push_back(ui->_3_horizontalSlider_2);
+	guiPtrs.sliderOnPage_3.push_back(ui->_3_horizontalSlider_3);
+	guiPtrs.sliderOnPage_3.push_back(ui->_3_horizontalSlider_4);
+	guiPtrs.sliderOnPage_3.push_back(ui->_3_horizontalSlider_5);
+
+	guiPtrs.sliderOnPage_4.push_back(ui->_4_horizontalSlider_1);
+	guiPtrs.sliderOnPage_4.push_back(ui->_4_horizontalSlider_2);
+	guiPtrs.sliderOnPage_4.push_back(ui->_4_horizontalSlider_3);
+	guiPtrs.sliderOnPage_4.push_back(ui->_4_horizontalSlider_4);
+	guiPtrs.sliderOnPage_4.push_back(ui->_4_horizontalSlider_5);
+
+	guiPtrs.labelsOnPage_3.push_back(ui->_3_label_1);
+	guiPtrs.labelsOnPage_3.push_back(ui->_3_label_2);
+	guiPtrs.labelsOnPage_3.push_back(ui->_3_label_3);
+	guiPtrs.labelsOnPage_3.push_back(ui->_3_label_4);
+	guiPtrs.labelsOnPage_3.push_back(ui->_3_label_5);
+
+	guiPtrs.labelsOnPage_4.push_back(ui->_4_label_1);
+	guiPtrs.labelsOnPage_4.push_back(ui->_4_label_2);
+	guiPtrs.labelsOnPage_4.push_back(ui->_4_label_3);
+	guiPtrs.labelsOnPage_4.push_back(ui->_4_label_4);
+	guiPtrs.labelsOnPage_4.push_back(ui->_4_label_5);
+
+	guiPtrs.boxesOnPage_3.push_back(ui->_3_comboBox);
+	guiPtrs.boxesOnPage_3.push_back(ui->_3_comboBox_2);
+	guiPtrs.boxesOnPage_3.push_back(ui->_3_comboBox_3);
+	guiPtrs.boxesOnPage_3.push_back(ui->_3_comboBox_4);
+	guiPtrs.boxesOnPage_3.push_back(ui->_3_comboBox_5);
+
+	guiPtrs.boxesOnPage_4.push_back(ui->_4_comboBox);
+	guiPtrs.boxesOnPage_4.push_back(ui->_4_comboBox_2);
+	guiPtrs.boxesOnPage_4.push_back(ui->_4_comboBox_3);
+	guiPtrs.boxesOnPage_4.push_back(ui->_4_comboBox_4);
+	guiPtrs.boxesOnPage_4.push_back(ui->_4_comboBox_5);
+
+
+	guiPtrs.keyShortCutsOnPage_3.push_back(ui->_3_shortKey_1);
+	guiPtrs.keyShortCutsOnPage_3.push_back(ui->_3_shortKey_2);
+	guiPtrs.keyShortCutsOnPage_3.push_back(ui->_3_shortKey_3);
+	guiPtrs.keyShortCutsOnPage_3.push_back(ui->_3_shortKey_4);
+	guiPtrs.keyShortCutsOnPage_3.push_back(ui->_3_shortKey_5);
+
+	guiPtrs.keyShortCutsOnPage_4.push_back(ui->_4_shortKey_1);
+	guiPtrs.keyShortCutsOnPage_4.push_back(ui->_4_shortKey_2);
+	guiPtrs.keyShortCutsOnPage_4.push_back(ui->_4_shortKey_3);
+	guiPtrs.keyShortCutsOnPage_4.push_back(ui->_4_shortKey_4);
+	guiPtrs.keyShortCutsOnPage_4.push_back(ui->_4_shortKey_5);
+}
+
 void NewProfileConfiguartor::fillWidgetsWithDataFromProf(Profile* profToEdit) {
 	//1
 	{
@@ -680,6 +679,7 @@ void NewProfileConfiguartor::fillWidgetsWithDataFromProf(Profile* profToEdit) {
 	//3
 	{
 		int numberOfHealthSliders = profToEdit->healthRestorePercentages.size();
+		const int MAX_NUMBER_OF_WIDGETS = 5;
 		QList<QAbstractSlider*> sliders;
 		QList<QComboBox*> boxes;
 		QList<QKeySequenceEdit*> keyEdit;
@@ -714,13 +714,19 @@ void NewProfileConfiguartor::fillWidgetsWithDataFromProf(Profile* profToEdit) {
 			ui->_3_spinGetNumberOfMethodes->setValue(numberOfHealthSliders);
 		}
 
-	
-		for (size_t i = 0; i < numberOfHealthSliders; i++) {
-			sliders[i]->setEnabled(true);
-			labels[i]->setEnabled(true);
-			keyEdit[i]->setEnabled(true);
-			boxes[i]->setEnabled(true);
 		
+		for (size_t i = 0; i < MAX_NUMBER_OF_WIDGETS; i++) {
+			bool shouldBeVisible = i < numberOfHealthSliders;
+
+			sliders[i]->setEnabled(shouldBeVisible);
+			labels[i]->setEnabled(shouldBeVisible);
+			keyEdit[i]->setEnabled(shouldBeVisible);
+			boxes[i]->setEnabled(shouldBeVisible);
+			sliders[i]->setVisible(shouldBeVisible);
+			labels[i]->setVisible(shouldBeVisible);
+			keyEdit[i]->setVisible(shouldBeVisible);
+			boxes[i]->setVisible(shouldBeVisible);
+
 			sliders[i]->setValue(profToEdit->healthRestorePercentages[i]);
 			int indexToSet = profToEdit->healthRestoreMethodeNames.indexOf(profToEdit->healthRestoreMethodeNames[i]);
 			boxes[i]->setCurrentIndex(indexToSet);
@@ -762,11 +768,18 @@ void NewProfileConfiguartor::fillWidgetsWithDataFromProf(Profile* profToEdit) {
 			ui->_4_spinGetNumberOfMethodes->setEnabled(true);
 			ui->_4_spinGetNumberOfMethodes->setValue(numberOfManaSliders);
 		}
-		for (size_t i = 0; i < numberOfManaSliders; i++) {
-			sliders[i]->setEnabled(true);
-			labels[i]->setEnabled(true);
-			keyEdit[i]->setEnabled(true);
-			boxes[i]->setEnabled(true);
+		const int MAX_NUMBER_OF_WIDGETS = 5;
+		for (size_t i = 0; i < MAX_NUMBER_OF_WIDGETS; i++) {
+			bool shouldBeVisible = i < numberOfManaSliders;
+
+			sliders[i]->setEnabled(shouldBeVisible);
+			labels[i]->setEnabled(shouldBeVisible);
+			keyEdit[i]->setEnabled(shouldBeVisible);
+			boxes[i]->setEnabled(shouldBeVisible);
+			sliders[i]->setVisible(shouldBeVisible);
+			labels[i]->setVisible(shouldBeVisible);
+			keyEdit[i]->setVisible(shouldBeVisible);
+			boxes[i]->setVisible(shouldBeVisible);
 
 			sliders[i]->setValue(profToEdit->ManaRestoreMethodesPercentage[i]);
 			int indexToSet = profToEdit->manaRestoreMethodeNames.indexOf(profToEdit->manaRestoreMethodeNames[i]);
@@ -843,72 +856,29 @@ void NewProfileConfiguartor::_3_healingEnabledChanged(){
 }
 
 void NewProfileConfiguartor::_3_spinChanged() {
-	QList<QSlider*> sliders;
-	QList<QLabel*> labels;
-	QList<QComboBox*> boxes;
-	QList<QKeySequenceEdit*> keys;
-	{
-		sliders.push_back(ui->_3_horizontalSlider_1);
-		sliders.push_back(ui->_3_horizontalSlider_2);
-		sliders.push_back(ui->_3_horizontalSlider_3);
-		sliders.push_back(ui->_3_horizontalSlider_4);
-		sliders.push_back(ui->_3_horizontalSlider_5);
-		labels.push_back(ui->_3_label_1);
-		labels.push_back(ui->_3_label_2);
-		labels.push_back(ui->_3_label_3);
-		labels.push_back(ui->_3_label_4);
-		labels.push_back(ui->_3_label_5);
-		keys.push_back(ui->_3_shortKey_1);
-		keys.push_back(ui->_3_shortKey_2);
-		keys.push_back(ui->_3_shortKey_3);
-		keys.push_back(ui->_3_shortKey_4);
-		keys.push_back(ui->_3_shortKey_5);
-		boxes.push_back(ui->_3_comboBox);
-		boxes.push_back(ui->_3_comboBox_2);
-		boxes.push_back(ui->_3_comboBox_3);
-		boxes.push_back(ui->_3_comboBox_4);
-		boxes.push_back(ui->_3_comboBox_5);
-	}
-
-
-	for (int i = 0; i < 5; i++) {
-		int valueOfSpin = ui->_3_spinGetNumberOfMethodes->value();
-		bool enable = i < valueOfSpin;
-		sliders[i]->setEnabled(enable);
-		labels[i]->setEnabled(enable);
-		boxes[i]->setEnabled(enable);
-		keys[i]->setEnabled(enable);
+	guiPtrs.activeElementsOnPage_3 = ui->_3_spinGetNumberOfMethodes->value();
+	for (int i = 0; i < MAX_NUMBER_OF_ACTIVE_WIDGETS; i++) {
+		bool enable = i < guiPtrs.activeElementsOnPage_3;
+		guiPtrs.boxesOnPage_3[i]->setEnabled(enable);
+		guiPtrs.keyShortCutsOnPage_3[i]->setEnabled(enable);
+		guiPtrs.labelsOnPage_3[i]->setEnabled(enable);
+		guiPtrs.sliderOnPage_3[i]->setEnabled(enable);
 		if (!enable) {
-			sliders[i]->setValue(0);
-			labels[i]->setText("");
-			boxes[i]->setCurrentIndex(-1);
-			keys[i]->clear();
+			guiPtrs.sliderOnPage_3[i]->setValue(0);
+			guiPtrs.labelsOnPage_3[i]->setText("");
+			guiPtrs.boxesOnPage_3[i]->setCurrentIndex(-1);
+			guiPtrs.keyShortCutsOnPage_3[i]->clear();
 		}
 	}
 }
 	
 void NewProfileConfiguartor::_3_slidersChanged() {
-	QList<QLabel*> labels;
-	QList<QAbstractSlider*> sliders;
-	{
-		labels.push_back(ui->_3_label_1);
-		labels.push_back(ui->_3_label_2);
-		labels.push_back(ui->_3_label_3);
-		labels.push_back(ui->_3_label_4);
-		labels.push_back(ui->_3_label_5);
-		sliders.push_back(ui->_3_horizontalSlider_1);
-		sliders.push_back(ui->_3_horizontalSlider_2);
-		sliders.push_back(ui->_3_horizontalSlider_3);
-		sliders.push_back(ui->_3_horizontalSlider_4);
-		sliders.push_back(ui->_3_horizontalSlider_5);
-	}
-
-	int valueOfSpin = ui->_3_spinGetNumberOfMethodes->value();
 	QStringList rangesOfSlidersValue;
-	for (int i = 0; i < valueOfSpin; i++){
-
-		bool isBottomSlider = i == labels.size() - 1;
-		int valueOfSlider = sliders[i]->value();
+	for (int i = 0; i < MAX_NUMBER_OF_ACTIVE_WIDGETS; i++){
+		bool isEnabled = i < guiPtrs.activeElementsOnPage_3;
+		if (!isEnabled) continue;
+		bool isBottomSlider = i == guiPtrs.activeElementsOnPage_3 - 1;
+		int valueOfSlider = guiPtrs.sliderOnPage_3[i]->value();
 		QString txtToSet;
 		if (isBottomSlider) {
 			txtToSet = QString::number(0) + "% - " + QString::number(valueOfSlider) + "%";
@@ -916,18 +886,18 @@ void NewProfileConfiguartor::_3_slidersChanged() {
 			continue;
 		}
 		else {
-			int valueOfPreviousSlider = sliders[i + 1]->value();
+			int valueOfPreviousSlider = guiPtrs.sliderOnPage_3[i + 1]->value();
 			txtToSet = QString::number(valueOfPreviousSlider) + "% - " + QString::number(valueOfSlider) + "%";
 			rangesOfSlidersValue.push_back(txtToSet);
 			continue;
 		}
 	}
-	int MAX_NUMBER_OF_SLIDERS = 5;
-	for (size_t i = 0; i < MAX_NUMBER_OF_SLIDERS; i++) {
-		bool isEnabled = labels[i]->isEnabled();
+
+	for (size_t i = 0; i < MAX_NUMBER_OF_ACTIVE_WIDGETS; i++) {
+		bool isEnabled = guiPtrs.labelsOnPage_3[i]->isEnabled();
 		bool sliderExist = rangesOfSlidersValue.size() > i;
 		QString strToSet = (isEnabled && sliderExist) ? rangesOfSlidersValue[i] : QString("");
-		labels[i]->setText(strToSet);
+		guiPtrs.labelsOnPage_3[i]->setText(strToSet);
 	}
 }
 
@@ -942,89 +912,47 @@ void NewProfileConfiguartor::_4_ManaEnabledChanged() {
 }
 
 void NewProfileConfiguartor::_4_spinChanged() {
-	QList<QSlider*> sliders;
-	QList<QLabel*> labels;
-	QList<QComboBox*> boxes;
-	QList<QKeySequenceEdit*> keys;
-	{
-		sliders.push_back(ui->_4_horizontalSlider_1);
-		sliders.push_back(ui->_4_horizontalSlider_2);
-		sliders.push_back(ui->_4_horizontalSlider_3);
-		sliders.push_back(ui->_4_horizontalSlider_4);
-		sliders.push_back(ui->_4_horizontalSlider_5);
-		labels.push_back(ui->_4_label_1);
-		labels.push_back(ui->_4_label_2);
-		labels.push_back(ui->_4_label_3);
-		labels.push_back(ui->_4_label_4);
-		labels.push_back(ui->_4_label_5);
-		keys.push_back(ui->_4_shortKey_1);
-		keys.push_back(ui->_4_shortKey_2);
-		keys.push_back(ui->_4_shortKey_3);
-		keys.push_back(ui->_4_shortKey_4);
-		keys.push_back(ui->_4_shortKey_5);
-		boxes.push_back(ui->_4_comboBox);
-		boxes.push_back(ui->_4_comboBox_2);
-		boxes.push_back(ui->_4_comboBox_3);
-		boxes.push_back(ui->_4_comboBox_4);
-		boxes.push_back(ui->_4_comboBox_5);
-	}
-
-	const int MAX_NUMBER_OF_SLIDERS = 5;
-	for (int i = 0; i < MAX_NUMBER_OF_SLIDERS; i++) {
-		int valueOfSpin = ui->_4_spinGetNumberOfMethodes->value();
-		bool enable = i < valueOfSpin;
-		sliders[i]->setEnabled(enable);
-		labels[i]->setEnabled(enable);
-		boxes[i]->setEnabled(enable);
-		keys[i]->setEnabled(enable);
+	guiPtrs.activeElementsOnPage_4 = ui->_4_spinGetNumberOfMethodes->value();
+	for (int i = 0; i < MAX_NUMBER_OF_ACTIVE_WIDGETS; i++) {
+		bool enable = i < guiPtrs.activeElementsOnPage_4;
+		guiPtrs.boxesOnPage_4[i]->setEnabled(enable);
+		guiPtrs.keyShortCutsOnPage_4[i]->setEnabled(enable);
+		guiPtrs.labelsOnPage_4[i]->setEnabled(enable);
+		guiPtrs.sliderOnPage_4[i]->setEnabled(enable);
 		if (!enable) {
-			sliders[i]->setValue(0);
-			labels[i]->setText("");
-			boxes[i]->setCurrentIndex(-1);
-			keys[i]->clear();
+			guiPtrs.sliderOnPage_4[i]->setValue(0);
+			guiPtrs.labelsOnPage_4[i]->setText("");
+			guiPtrs.boxesOnPage_4[i]->setCurrentIndex(-1);
+			guiPtrs.keyShortCutsOnPage_4[i]->clear();
 		}
 	}
 }
 
 void NewProfileConfiguartor::_4_slidersChanged() {
-	QList<QLabel*> labels;
-	QList<QAbstractSlider*> sliders;
-	{
-		labels.push_back(ui->_4_label_1);
-		labels.push_back(ui->_4_label_2);
-		labels.push_back(ui->_4_label_3);
-		labels.push_back(ui->_4_label_4);
-		labels.push_back(ui->_4_label_5);
-		sliders.push_back(ui->_4_horizontalSlider_1);
-		sliders.push_back(ui->_4_horizontalSlider_2);
-		sliders.push_back(ui->_4_horizontalSlider_3);
-		sliders.push_back(ui->_4_horizontalSlider_4);
-		sliders.push_back(ui->_4_horizontalSlider_5);
-	}
-
-	int valueOfSpin = ui->_4_spinGetNumberOfMethodes->value();
 	QStringList rangesOfSlidersValue;
-	for (int i = 0; i < valueOfSpin; i++) {
-
-		bool isBottomSlider = i == labels.size() - 1;
-		int valueOfSlider = sliders[i]->value();
+	for (int i = 0; i < MAX_NUMBER_OF_ACTIVE_WIDGETS; i++) {
+		bool isEnabled = i < guiPtrs.activeElementsOnPage_4;
+		bool isBottomSlider = i == guiPtrs.activeElementsOnPage_4 - 1;
+		int valueOfSlider = guiPtrs.sliderOnPage_4[i]->value();
+		QString txtToSet;
 		if (isBottomSlider) {
-			QString txtToSet = QString::number(0) + "% - " + QString::number(valueOfSlider) + "%";
+			txtToSet = QString::number(0) + "% - " + QString::number(valueOfSlider) + "%";
 			rangesOfSlidersValue.push_back(txtToSet);
 			continue;
 		}
 		else {
-			int valueOfPreviousSlider = sliders[i + 1]->value();
-			QString txtToSet = QString::number(valueOfPreviousSlider) + "% - " + QString::number(valueOfSlider) + "%";
+			int valueOfPreviousSlider = guiPtrs.sliderOnPage_4[i + 1]->value();
+			txtToSet = QString::number(valueOfPreviousSlider) + "% - " + QString::number(valueOfSlider) + "%";
 			rangesOfSlidersValue.push_back(txtToSet);
 			continue;
 		}
 	}
-	int MAX_NUMBER_OF_SLIDERS = 5;
-	for (size_t i = 0; i < MAX_NUMBER_OF_SLIDERS; i++) {
-		bool isEnabled = labels[i]->isEnabled();
-		QString strToSet = isEnabled ? rangesOfSlidersValue[i] : QString("");
-		labels[i]->setText(strToSet);
+
+	for (size_t i = 0; i < MAX_NUMBER_OF_ACTIVE_WIDGETS; i++) {
+		bool isEnabled = guiPtrs.labelsOnPage_4[i]->isEnabled();
+		bool sliderExist = rangesOfSlidersValue.size() > i;
+		QString strToSet = (isEnabled && sliderExist) ? rangesOfSlidersValue[i] : QString("");
+		guiPtrs.labelsOnPage_4[i]->setText(strToSet);
 	}
 }
 
