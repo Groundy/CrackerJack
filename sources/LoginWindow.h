@@ -10,6 +10,7 @@ class LoginWindow : public QDialog
 
 public:
 	LoginWindow(QWidget *parent = Q_NULLPTR);  
+	~LoginWindow();
 
 public slots:
 	void loginInserted();

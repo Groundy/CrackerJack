@@ -9,15 +9,27 @@ LoginWindow::LoginWindow(QWidget* parent) :
 	ui.laungageComboBox->addItem("pl");
 
 	QString login = Utilities::readFromIniFile(Utilities::FieldsOfIniFile::LAST_USED_LOGIN);
-	ui.loginLine->setText(login);
-	ui.remeberLoginChecbox->repaint();
 	bool setChecked = login.size() > 0;
+	ui.loginLine->setText(login);
 	ui.remeberLoginChecbox->setChecked(setChecked);
+	ui.loginLine->repaint();
+	ui.remeberLoginChecbox->repaint();
+
 	int index = StringResource::languageIsPl() ? 1 : 0;
 	ui.laungageComboBox->setCurrentIndex(index);
 	ui.laungageComboBox->repaint();
 
 	setUpGUI();
+}
+
+LoginWindow::~LoginWindow(){
+	int index = ui.laungageComboBox->currentIndex();
+	QString strFromBox = ui.laungageComboBox->itemText(index);
+	bool checked = ui.remeberLoginChecbox->isChecked();
+	QString strWithLaungage = checked ? strFromBox : "";
+	QString strWithLogin = ui.loginLine->text();
+	Utilities::writeIniFile(Utilities::FieldsOfIniFile::LAST_USED_LOGIN, strWithLogin);
+	Utilities::writeIniFile(Utilities::FieldsOfIniFile::LANGUAGE, strWithLaungage);
 }
 //slots
 void LoginWindow::loginInserted() {
