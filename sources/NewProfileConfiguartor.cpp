@@ -9,6 +9,7 @@ NewProfileConfiguartor::NewProfileConfiguartor(Profile* prof, QWidget *parent)	:
 	isPl = StringResource::languageIsPl();
 	MAX_PAGE = ui->stackedWidget->count();
 	ui->stackedWidget->setCurrentIndex(0);
+	setUpGUITranslation();
 	fillGuiPtrs();
 	additionalGuiSettings();
 	profToEdit = prof;
@@ -578,8 +579,49 @@ Profile::PROFESSION NewProfileConfiguartor::getProfessionFromRadioButtonOnPage2(
 	return toRet;
 }
 
-void NewProfileConfiguartor::setUpGUI(){
+void NewProfileConfiguartor::setUpGUITranslation(){
+	// = isPl ? QString::fromLocal8Bit("") : "";
+	QString previousPageButtonText = isPl ? QString::fromLocal8Bit("Wstecz") : "Back";
+	QString nextPageButtonText = isPl ? QString::fromLocal8Bit("Dalej") : "Next page";
+	QString helpButtonText = isPl ? QString::fromLocal8Bit("Pomoc") : "Help";
+	QString skipPageButtonText = isPl ? QString::fromLocal8Bit("Pomiñ reszte stron") : "Skip other pages";
+	QString cancelButtonText = isPl ? QString::fromLocal8Bit("Anuluj") : "Cancel";
+	QString _1_labelInfo = isPl ? QString::fromLocal8Bit("Wybierz nazwê dla profilu.") : "Choose name for your profile.";
+	QString _2_labelInfo = isPl ? QString::fromLocal8Bit("Wybierz profesie.") : "Choose vocation.";
+	QString _3_labelInfo= isPl ? QString::fromLocal8Bit("Automatyczne leczenie") : "Automatic healing";
+	QString _4_labelInfo= isPl ? QString::fromLocal8Bit("Automatyczna regeneracja many") : "Automatic mana regeneration";
+	QString _5_automaticLootLabel = isPl ? QString::fromLocal8Bit("Auto loot") : "Auto loot";
+	QString _5_leftBarsLabel = isPl ? QString::fromLocal8Bit("Dodatkowe lewe paski") : "Additional left bars";
+	QString _5_rightBarsLabel = isPl ? QString::fromLocal8Bit("Dodatkowe prawe paski") : "Additional right bars";
+	QString windowTitle = isPl ? QString::fromLocal8Bit("CrackerJack - Kreator profilu") : "CrackerJack - profile creator";
 
+	this->ui->previousButton->setText(previousPageButtonText);
+	this->ui->nextButton->setText(nextPageButtonText);
+	this->ui->helpButton->setText(helpButtonText);
+	this->ui->pushButton->setText(skipPageButtonText);
+	this->ui->cancelButton->setText(cancelButtonText);
+	this->ui->_1_namePageInfoLabel->setText(_1_labelInfo);
+	this->ui->_2_infoLabel->setText(_2_labelInfo);
+	this->ui->_3_enableAutoHealing->setText(_3_labelInfo);
+	this->ui->_4_enableManaRestore->setText(_4_labelInfo);
+	this->ui->autoLootLabel->setText(_5_automaticLootLabel);
+	this->ui->addedLeftBarsLeft->setText(_5_leftBarsLabel);
+	this->ui->addedLeftBarsRight->setText(_5_rightBarsLabel);
+	this->setWindowTitle(windowTitle);
+
+	this->ui->previousButton->repaint();
+	this->ui->nextButton->repaint();
+	this->ui->helpButton->repaint();
+	this->ui->pushButton->repaint();
+	this->ui->cancelButton->repaint();
+	this->ui->_1_namePageInfoLabel->repaint();
+	this->ui->_2_infoLabel->repaint();
+	this->ui->_3_enableAutoHealing->repaint();
+	this->ui->_4_enableManaRestore->repaint();
+	this->ui->autoLootLabel->repaint();
+	this->ui->addedLeftBarsLeft->repaint();
+	this->ui->addedLeftBarsRight->repaint();
+	this->repaint();
 }
 
 void NewProfileConfiguartor::fillGuiPtrs() {
@@ -876,7 +918,7 @@ void NewProfileConfiguartor::_3_slidersChanged() {
 	QStringList rangesOfSlidersValue;
 	for (int i = 0; i < MAX_NUMBER_OF_ACTIVE_WIDGETS; i++){
 		bool isEnabled = i < guiPtrs.activeElementsOnPage_3;
-		if (!isEnabled) continue;
+		if (!isEnabled) break;
 		bool isBottomSlider = i == guiPtrs.activeElementsOnPage_3 - 1;
 		int valueOfSlider = guiPtrs.sliderOnPage_3[i]->value();
 		QString txtToSet;
@@ -932,6 +974,7 @@ void NewProfileConfiguartor::_4_slidersChanged() {
 	QStringList rangesOfSlidersValue;
 	for (int i = 0; i < MAX_NUMBER_OF_ACTIVE_WIDGETS; i++) {
 		bool isEnabled = i < guiPtrs.activeElementsOnPage_4;
+		if (!isEnabled) break;
 		bool isBottomSlider = i == guiPtrs.activeElementsOnPage_4 - 1;
 		int valueOfSlider = guiPtrs.sliderOnPage_4[i]->value();
 		QString txtToSet;

@@ -56,7 +56,7 @@ private:
 	void fillGuiElementsWithNamesRestoreMethodes_Health(Profile::PROFESSION prof);
 	void fillGuiElementsWithNamesRestoreMethodes_Mana(Profile::PROFESSION prof);
 	Profile::PROFESSION getProfessionFromRadioButtonOnPage2();
-	void setUpGUI();
+	void setUpGUITranslation();
 	bool isPl;
 	void fillGuiPtrs();
 
