@@ -148,13 +148,14 @@ void SelectProfileWindow::profSelected(){
 	QStringList nameParts = nameOfProfToSplit.split("] ");
 	QString profileName;
 	ProfileDataBaseManager dbManager;
+	bool profFound = true;
 	if (nameParts.size() >= 2)
 		profileName = nameParts[1];
 	else
-		return;
+		profFound = false;
 
 	bool ok = dbManager.readProfileFromDataBase(profileName, *profToSelect);
-	if (ok) {
+	if (ok && profFound) {
 		Utilities::writeIniFile(Utilities::FieldsOfIniFile::LAST_USED_PROFILE_NAME, profileName);
 		this->accept();
 	}
