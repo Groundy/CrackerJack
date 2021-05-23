@@ -720,114 +720,63 @@ void NewProfileConfiguartor::fillWidgetsWithDataFromProf(Profile* profToEdit) {
 	}
 	//3
 	{
-		int numberOfHealthSliders = profToEdit->healthRestorePercentages.size();
-		const int MAX_NUMBER_OF_WIDGETS = 5;
-		QList<QAbstractSlider*> sliders;
-		QList<QComboBox*> boxes;
-		QList<QKeySequenceEdit*> keyEdit;
-		QList<QLabel*> labels;
-		{
-			sliders.push_back(ui->_3_horizontalSlider_1);
-			sliders.push_back(ui->_3_horizontalSlider_2);
-			sliders.push_back(ui->_3_horizontalSlider_3);
-			sliders.push_back(ui->_3_horizontalSlider_4);
-			sliders.push_back(ui->_3_horizontalSlider_5);
-			boxes.push_back(ui->_3_comboBox);
-			boxes.push_back(ui->_3_comboBox_2);
-			boxes.push_back(ui->_3_comboBox_3);
-			boxes.push_back(ui->_3_comboBox_4);
-			boxes.push_back(ui->_3_comboBox_5);
-			keyEdit.push_back(ui->_3_shortKey_1);
-			keyEdit.push_back(ui->_3_shortKey_2);
-			keyEdit.push_back(ui->_3_shortKey_3);
-			keyEdit.push_back(ui->_3_shortKey_4);
-			keyEdit.push_back(ui->_3_shortKey_5);
-			labels.push_back(ui->_3_label_1);
-			labels.push_back(ui->_3_label_2);
-			labels.push_back(ui->_3_label_3);
-			labels.push_back(ui->_3_label_4);
-			labels.push_back(ui->_3_label_5);
-		}
-
-		if (numberOfHealthSliders >= 1) {
+		int methodesUsedByProfile = profToEdit->healthRestorePercentages.size();
+		if (methodesUsedByProfile >= 1) {
 			ui->_3_enableAutoHealing->setEnabled(true);
 			ui->_3_enableAutoHealing->setChecked(true);
 			ui->_3_spinGetNumberOfMethodes->setEnabled(true);
-			ui->_3_spinGetNumberOfMethodes->setValue(numberOfHealthSliders);
+			ui->_3_spinGetNumberOfMethodes->setValue(guiPtrs.activeElementsOnPage_3);
 		}
-
 		
-		for (size_t i = 0; i < MAX_NUMBER_OF_WIDGETS; i++) {
-			bool shouldBeVisible = i < numberOfHealthSliders;
+		for (size_t i = 0; i < MAX_NUMBER_OF_ACTIVE_WIDGETS; i++) {
+			bool shouldBeVisible = i < methodesUsedByProfile;
 
-			sliders[i]->setEnabled(shouldBeVisible);
-			labels[i]->setEnabled(shouldBeVisible);
-			keyEdit[i]->setEnabled(shouldBeVisible);
-			boxes[i]->setEnabled(shouldBeVisible);
-			sliders[i]->setVisible(shouldBeVisible);
-			labels[i]->setVisible(shouldBeVisible);
-			keyEdit[i]->setVisible(shouldBeVisible);
-			boxes[i]->setVisible(shouldBeVisible);
-
-			sliders[i]->setValue(profToEdit->healthRestorePercentages[i]);
-			int indexToSet = profToEdit->healthRestoreMethodeNames.indexOf(profToEdit->healthRestoreMethodeNames[i]);
-			boxes[i]->setCurrentIndex(indexToSet);
-			QKeySequence toSet(profToEdit->healthKeys[i].toQKeySequence(profToEdit->healthKeys[i]));
-			keyEdit[i]->setKeySequence(toSet);
+			guiPtrs.sliderOnPage_3[i]->setEnabled(shouldBeVisible);
+			guiPtrs.labelsOnPage_3[i]->setEnabled(shouldBeVisible);
+			guiPtrs.keyShortCutsOnPage_3[i]->setEnabled(shouldBeVisible);
+			guiPtrs.boxesOnPage_3[i]->setEnabled(shouldBeVisible);
+			
+			if (shouldBeVisible) {
+				guiPtrs.sliderOnPage_3[i]->setVisible(shouldBeVisible);
+				guiPtrs.labelsOnPage_3[i] ->setVisible(shouldBeVisible);
+				guiPtrs.keyShortCutsOnPage_3[i]->setVisible(shouldBeVisible);
+				guiPtrs.boxesOnPage_3[i]->setVisible(shouldBeVisible);
+				guiPtrs.sliderOnPage_3[i]->setValue(profToEdit->healthRestorePercentages[i]);
+				int indexToSet = profToEdit->healthRestoreMethodeNames.indexOf(profToEdit->healthRestoreMethodeNames[i]);
+				guiPtrs.boxesOnPage_3[i]->setCurrentIndex(indexToSet);
+				QKeySequence toSet(profToEdit->healthKeys[i].toQKeySequence(profToEdit->healthKeys[i]));
+				guiPtrs.keyShortCutsOnPage_3[i]->setKeySequence(toSet);
+			}
 		}
 		_3_slidersChanged();//setting proper text on labels;
 	}
 	//4
 	{
-		int numberOfManaSliders = profToEdit->ManaRestoreMethodesPercentage.size();
-		QList<QAbstractSlider*> sliders;
-		QList<QComboBox*> boxes;
-		QList<QKeySequenceEdit*> keyEdit;
-		QList<QLabel*> labels;
-		sliders.push_back(ui->_4_horizontalSlider_1);
-		sliders.push_back(ui->_4_horizontalSlider_2);
-		sliders.push_back(ui->_4_horizontalSlider_3);
-		sliders.push_back(ui->_4_horizontalSlider_4);
-		sliders.push_back(ui->_4_horizontalSlider_5);
-		boxes.push_back(ui->_4_comboBox);
-		boxes.push_back(ui->_4_comboBox_2);
-		boxes.push_back(ui->_4_comboBox_3);
-		boxes.push_back(ui->_4_comboBox_4);
-		boxes.push_back(ui->_4_comboBox_5);
-		keyEdit.push_back(ui->_4_shortKey_1);
-		keyEdit.push_back(ui->_4_shortKey_2);
-		keyEdit.push_back(ui->_4_shortKey_3);
-		keyEdit.push_back(ui->_4_shortKey_4);
-		keyEdit.push_back(ui->_4_shortKey_5);
-		labels.push_back(ui->_4_label_1);
-		labels.push_back(ui->_4_label_2);
-		labels.push_back(ui->_4_label_3);
-		labels.push_back(ui->_4_label_4);
-		labels.push_back(ui->_4_label_5);
-		if (numberOfManaSliders >= 1) {
+		int methodesUsedByProfile = profToEdit->manaRestoreMethodeNames.size();
+		if (methodesUsedByProfile >= 1) {
 			ui->_4_enableManaRestore->setEnabled(true);
 			ui->_4_enableManaRestore->setChecked(true);
 			ui->_4_spinGetNumberOfMethodes->setEnabled(true);
-			ui->_4_spinGetNumberOfMethodes->setValue(numberOfManaSliders);
+			ui->_4_spinGetNumberOfMethodes->setValue(guiPtrs.activeElementsOnPage_4);
 		}
-		const int MAX_NUMBER_OF_WIDGETS = 5;
-		for (size_t i = 0; i < MAX_NUMBER_OF_WIDGETS; i++) {
-			bool shouldBeVisible = i < numberOfManaSliders;
+		for (size_t i = 0; i < MAX_NUMBER_OF_ACTIVE_WIDGETS; i++) {
+			bool shouldBeVisible = i < methodesUsedByProfile;
 
-			sliders[i]->setEnabled(shouldBeVisible);
-			labels[i]->setEnabled(shouldBeVisible);
-			keyEdit[i]->setEnabled(shouldBeVisible);
-			boxes[i]->setEnabled(shouldBeVisible);
-			sliders[i]->setVisible(shouldBeVisible);
-			labels[i]->setVisible(shouldBeVisible);
-			keyEdit[i]->setVisible(shouldBeVisible);
-			boxes[i]->setVisible(shouldBeVisible);
-
-			sliders[i]->setValue(profToEdit->ManaRestoreMethodesPercentage[i]);
-			int indexToSet = profToEdit->manaRestoreMethodeNames.indexOf(profToEdit->manaRestoreMethodeNames[i]);
-			boxes[i]->setCurrentIndex(indexToSet);
-			QKeySequence toSet(profToEdit->ManaKeys[i].toQKeySequence(profToEdit->ManaKeys[i]));
-			keyEdit[i]->setKeySequence(toSet);
+			guiPtrs.sliderOnPage_4[i]->setEnabled(shouldBeVisible);
+			guiPtrs.labelsOnPage_4[i]->setEnabled(shouldBeVisible);
+			guiPtrs.keyShortCutsOnPage_4[i]->setEnabled(shouldBeVisible);
+			guiPtrs.boxesOnPage_4[i]->setEnabled(shouldBeVisible);
+			if (shouldBeVisible) {
+				guiPtrs.sliderOnPage_4[i]->setVisible(shouldBeVisible);
+				guiPtrs.labelsOnPage_4[i]->setVisible(shouldBeVisible);
+				guiPtrs.keyShortCutsOnPage_4[i]->setVisible(shouldBeVisible);
+				guiPtrs.boxesOnPage_4[i]->setVisible(shouldBeVisible);
+				guiPtrs.sliderOnPage_4[i]->setValue(profToEdit->healthRestorePercentages[i]);
+				int indexToSet = profToEdit->healthRestoreMethodeNames.indexOf(profToEdit->healthRestoreMethodeNames[i]);
+				guiPtrs.boxesOnPage_4[i]->setCurrentIndex(indexToSet);
+				QKeySequence toSet(profToEdit->healthKeys[i].toQKeySequence(profToEdit->healthKeys[i]));
+				guiPtrs.keyShortCutsOnPage_4[i]->setKeySequence(toSet);
+			}
 		}
 		_4_slidersChanged();//set proper text on labels;
 	}
