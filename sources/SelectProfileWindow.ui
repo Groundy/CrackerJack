@@ -214,22 +214,6 @@
   </connection>
   <connection>
    <sender>listOfProfs</sender>
-   <signal>doubleClicked(QModelIndex)</signal>
-   <receiver>SelectProfileWindow</receiver>
-   <slot>profSelected()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>272</x>
-     <y>126</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>320</x>
-     <y>40</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>listOfProfs</sender>
    <signal>activated(QModelIndex)</signal>
    <receiver>SelectProfileWindow</receiver>
    <slot>profSelected()</slot>

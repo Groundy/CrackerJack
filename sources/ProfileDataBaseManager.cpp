@@ -14,16 +14,17 @@ ProfileDataBaseManager::~ProfileDataBaseManager(){
 
 QMap<ProfileDataBaseManager::FieldsOfDB, QString> ProfileDataBaseManager::getMapOfDBFields(){
 	QMap<ProfileDataBaseManager::FieldsOfDB, QString> toRet;
-	toRet.insert(ProfileDataBaseManager::PROFILE_NAME, "profileName");
-	toRet.insert(ProfileDataBaseManager::PROFESION, "profession");
-	toRet.insert(ProfileDataBaseManager::MANA_RESTORE_STRING, "manaString");
-	toRet.insert(ProfileDataBaseManager::HEALTH_RESTORE_STRING, "healthString");
-	toRet.insert(ProfileDataBaseManager::MANA_RESTORE_KEY, "manaKeys");
-	toRet.insert(ProfileDataBaseManager::HEALTH_RESTORE_KEY, "healthKeys");
-	toRet.insert(ProfileDataBaseManager::MANA_RESTORE_ITEM, "ManaItems");
-	toRet.insert(ProfileDataBaseManager::HEALTH_RESTORE_ITEM, "HealthItems");
-	toRet.insert(ProfileDataBaseManager::LAST_LOGIN, "lastLogin");
-	toRet.insert(ProfileDataBaseManager::CREATION_TIME, "creationTime");
+	toRet.insert(ProfileDataBaseManager::PROFILE_NAME, "PROFILE_NAME");
+	toRet.insert(ProfileDataBaseManager::PROFESION, "PROFESION");
+	toRet.insert(ProfileDataBaseManager::MANA_RESTORE_STRING, "MANA_RESTORE_STRING");
+	toRet.insert(ProfileDataBaseManager::HEALTH_RESTORE_STRING, "HEALTH_RESTORE_STRING");
+	toRet.insert(ProfileDataBaseManager::MANA_RESTORE_KEY, "MANA_RESTORE_KEY");
+	toRet.insert(ProfileDataBaseManager::HEALTH_RESTORE_KEY, "HEALTH_RESTORE_KEY");
+	toRet.insert(ProfileDataBaseManager::MANA_RESTORE_ITEM, "MANA_RESTORE_ITEM");
+	toRet.insert(ProfileDataBaseManager::HEALTH_RESTORE_ITEM, "HEALTH_RESTORE_ITEM");
+	toRet.insert(ProfileDataBaseManager::LAST_LOGIN, "LAST_LOGIN");
+	toRet.insert(ProfileDataBaseManager::CREATION_TIME, "CREATION_TIME");
+	toRet.insert(ProfileDataBaseManager::SECONDS_SPENT, "SECONDS_SPENT");
 
 	toRet.insert(ProfileDataBaseManager::POS_HP, "POS_HP");
 	toRet.insert(ProfileDataBaseManager::POS_SHP, "POS_SHP");
@@ -99,11 +100,18 @@ bool ProfileDataBaseManager::readFieldValue(QString profName, FieldsOfDB field, 
 bool ProfileDataBaseManager::addNewProfileToFolder(QString profName){
 	QString nameOfFile = "PROF___" + profName + ".ini";
 	QFile fileToCreate(pathToFolderWithProfiles + "\\" + nameOfFile);
+	QStringList namesOfAllFiles = getAllNamesOfProfFiles();
+	for each (QString var in namesOfAllFiles){
+		bool fileAlreadyExist = var == nameOfFile;
+		if (fileAlreadyExist)
+			return true;
+
+	}
 
 	fileToCreate.open(QIODevice::ReadWrite);
 	fileToCreate.resize(0);
 	fileToCreate.close();
-
+	
 	QMap<ProfileDataBaseManager::FieldsOfDB, QString> copy_map = field_exactNameInDb_map;
 	modifyFieldValue(profName, FieldsOfDB::PROFILE_NAME, profName);
 	copy_map.remove(FieldsOfDB::PROFILE_NAME);
@@ -178,8 +186,6 @@ bool ProfileDataBaseManager::saveProfileToDataBase(Profile& profileToSave){
 	ok = modifyFieldValue(profileName, Field::MANA_RESTORE_ITEM, mana_MethodesNames);
 	allReadTries.push_back(ok);
 
-
-
 	QString mainGameFrameStr = DB_writer_rectangleWithPositionInImg(profileToSave.frames.gameFrame);
 	ok = modifyFieldValue(profileName, Field::POS_LAST_GAME_FRAME, mainGameFrameStr);
 	allReadTries.push_back(ok);
@@ -212,12 +218,28 @@ bool ProfileDataBaseManager::saveProfileToDataBase(Profile& profileToSave){
 
 	QString RotationStr;
 	int nr = profileToSave.frames.howTheyShouldBeRotated;
-	bool notDeifned = nr != 1 || nr != 0 || nr != 1;
-	RotationStr = notDeifned? QString::number(0) : QString::number(nr);
+	bool notDeifned = nr < -1 || nr > 1;
+	RotationStr = notDeifned ? QString::number(0) : QString::number(nr);
 	ok = modifyFieldValue(profileName, Field::ROTATION, RotationStr);
 	allReadTries.push_back(ok);
 	
+	if (profileToSave.lastLoginSeconds > 0) {
+		LONG64 currentTime = (Utilities::getCurrentTimeInMiliSeconds() / 1000);
+		LONG64 secondsSpentOdThisSession = currentTime - profileToSave.lastLoginSeconds;
+		LONG64 allSecondsSpentOnThisProf = profileToSave.secondsSpentSeconds + secondsSpentOdThisSession;
+		QString secondsSpendStr = QString::number(allSecondsSpentOnThisProf);
+		ok = modifyFieldValue(profileName, Field::SECONDS_SPENT, secondsSpendStr);
+		allReadTries.push_back(ok);
+	}
 
+	if (profileToSave.creationTimeSeconds < 1) {
+		LONG64 currentTime = Utilities::getCurrentTimeInMiliSeconds() / 1000;
+		QString creationTimeStrToSet = QString::number(currentTime);
+		ok = modifyFieldValue(profileName, Field::CREATION_TIME, creationTimeStrToSet);
+		allReadTries.push_back(ok);
+	}
+
+	//Last login time is saved during reading profile from file
 
 	bool toRet = true;
 	for each (bool var in allReadTries){
@@ -313,6 +335,21 @@ bool ProfileDataBaseManager::readProfileFromDataBase(QString profileName, Profil
 	ok = readFieldValue(NAME, Field::ROTATION, RotationStr);
 	allRight.push_back(ok);
 	profileToBeRead.frames.howTheyShouldBeRotated = RotationStr.toInt();
+
+	QString secondsSpendStr;
+	ok = readFieldValue(NAME, Field::SECONDS_SPENT, secondsSpendStr);
+	allRight.push_back(ok);
+	profileToBeRead.secondsSpentSeconds = secondsSpendStr.toLongLong();
+
+	QString creationTimeStrToSet;
+	ok = readFieldValue(profileName, Field::CREATION_TIME, creationTimeStrToSet);
+	allRight.push_back(ok);
+	profileToBeRead.creationTimeSeconds = creationTimeStrToSet.toLongLong();
+
+	QString lasLoginTimeStrToSet;
+	ok = readFieldValue(profileName, Field::LAST_LOGIN, lasLoginTimeStrToSet);
+	allRight.push_back(ok);
+	profileToBeRead.lastLoginSeconds = lasLoginTimeStrToSet.toLongLong();
 
 	for each (bool var in allRight) {
 		if (!var) {

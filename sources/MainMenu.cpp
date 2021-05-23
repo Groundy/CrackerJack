@@ -20,6 +20,8 @@ MainMenu::~MainMenu(){
 	delete screenAnalyzer;
 	delete healthManaStateAnalyzer;
 	delete ui;
+	ProfileDataBaseManager db;
+	db.saveProfileToDataBase(*this->prof);
 }
 
 void MainMenu::onGameStateChanged(int state){

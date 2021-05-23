@@ -42,9 +42,9 @@ public:
 	AUTO_LOOT_KEY lootKey;
 	CONTROLS controls;
 	QString profileName;//re
-	QString lastLoginDate;
-	QString creationDate;
-	QString secondsSpent;
+	long long lastLoginSeconds;
+	long long creationTimeSeconds;//TODO tu powinny byæ LONG64 ale nie wiem jak header daæ
+	long long secondsSpentSeconds;
 	void clearProfile();
 	void getDataFromOtherProf(Profile& profToCopyFrom);
 

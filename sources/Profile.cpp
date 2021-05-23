@@ -36,7 +36,7 @@ void Profile::getDataFromOtherProf(Profile& profileToCopyFrom){
 	this->lootKey = profileToCopyFrom.lootKey;
 	this->controls = profileToCopyFrom.controls;
 	this->profileName = profileToCopyFrom.profileName;
-	this->lastLoginDate = profileToCopyFrom.lastLoginDate;
-	this->creationDate = profileToCopyFrom.creationDate;
-	this->secondsSpent = profileToCopyFrom.secondsSpent;
+	this->lastLoginSeconds = profileToCopyFrom.lastLoginSeconds;
+	this->creationTimeSeconds = profileToCopyFrom.creationTimeSeconds;
+	this->secondsSpentSeconds = profileToCopyFrom.secondsSpentSeconds;
 }

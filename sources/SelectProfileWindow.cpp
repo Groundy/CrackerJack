@@ -157,6 +157,8 @@ void SelectProfileWindow::profSelected(){
 	bool ok = dbManager.readProfileFromDataBase(profileName, *profToSelect);
 	if (ok && profFound) {
 		Utilities::writeIniFile(Utilities::FieldsOfIniFile::LAST_USED_PROFILE_NAME, profileName);
+		QString lastLoginInSec = QString::number(Utilities::getCurrentTimeInMiliSeconds() / 1000);
+		dbManager.modifyFieldValue(profileName, ProfileDataBaseManager::LAST_LOGIN, lastLoginInSec);
 		this->accept();
 	}
 	else {
