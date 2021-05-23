@@ -5,6 +5,7 @@ LoginWindow::LoginWindow(QWidget* parent) :
 	QDialog(parent) {
 	ui.setupUi(this);
 	getAndSetVersion();
+	bool isPl = StringResource::languageIsPl();
 	ui.laungageComboBox->addItem("eng");
 	ui.laungageComboBox->addItem("pl");
 
@@ -15,10 +16,11 @@ LoginWindow::LoginWindow(QWidget* parent) :
 	ui.loginLine->repaint();
 	ui.remeberLoginChecbox->repaint();
 
-	int index = StringResource::languageIsPl() ? 1 : 0;
+	int index = isPl ? 1 : 0;
 	ui.laungageComboBox->setCurrentIndex(index);
 	ui.laungageComboBox->repaint();
-
+	QString strToSave = ui.laungageComboBox->itemText(index);
+	Utilities::writeIniFile(Utilities::FieldsOfIniFile::LANGUAGE, strToSave);
 	setUpGUI();
 }
 
