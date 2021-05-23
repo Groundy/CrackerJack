@@ -147,12 +147,20 @@ void SelectProfileWindow::profSelected(){
 	QString nameOfProfToSplit = ui->listOfProfs->item(row)->text();
 	QStringList nameParts = nameOfProfToSplit.split("] ");
 	QString profileName;
-	if(nameParts.size() >= 2)
-		profileName = nameParts[1];//TODO obsluga przypadku gdy po splitowaniu nazwa profilu nie jest zapisana w nameParts[1]
-
 	ProfileDataBaseManager dbManager;
-	dbManager.readProfileFromDataBase(profileName, *profToSelect);
-	Utilities::writeIniFile(Utilities::FieldsOfIniFile::LAST_USED_PROFILE_NAME, profileName);
-	this->accept();
+	if (nameParts.size() >= 2)
+		profileName = nameParts[1];
+	else
+		return;
+
+	bool ok = dbManager.readProfileFromDataBase(profileName, *profToSelect);
+	if (ok) {
+		Utilities::writeIniFile(Utilities::FieldsOfIniFile::LAST_USED_PROFILE_NAME, profileName);
+		this->accept();
+	}
+	else {
+		//TODO poinformowac uzytkownika ze tutatj jest cos nie tak;
+		prepareProfiles();
+	}
 }
 

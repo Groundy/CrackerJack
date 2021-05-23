@@ -171,8 +171,8 @@
    <slot>editProfileButtonAction()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>259</x>
-     <y>315</y>
+     <x>207</x>
+     <y>326</y>
     </hint>
     <hint type="destinationlabel">
      <x>161</x>
@@ -187,8 +187,8 @@
    <slot>deleteProfileButtonAction()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>161</x>
-     <y>315</y>
+     <x>304</x>
+     <y>326</y>
     </hint>
     <hint type="destinationlabel">
      <x>161</x>
@@ -225,6 +225,22 @@
     <hint type="destinationlabel">
      <x>320</x>
      <y>40</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>listOfProfs</sender>
+   <signal>activated(QModelIndex)</signal>
+   <receiver>SelectProfileWindow</receiver>
+   <slot>profSelected()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>161</x>
+     <y>166</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>161</x>
+     <y>172</y>
     </hint>
    </hints>
   </connection>
