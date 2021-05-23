@@ -434,6 +434,7 @@ QMap<Utilities::FieldsOfIniFile, QString> Utilities::get_Field_NamesFromIni_map(
 
 	toRet.insert(Field::LANGUAGE, "language");
 	toRet.insert(Field::LAST_USED_LOGIN, "lastLogin");
+	toRet.insert(Field::LAST_USED_PROFILE_NAME, "lastProfile");
 
 	return toRet;
 }

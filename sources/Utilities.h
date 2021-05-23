@@ -41,7 +41,8 @@ public:
 	//
 	enum class FieldsOfIniFile {
 		LANGUAGE,
-		LAST_USED_LOGIN
+		LAST_USED_LOGIN,
+		LAST_USED_PROFILE_NAME
 	};
 	static QMap<FieldsOfIniFile, QString> get_Field_NamesFromIni_map();
 	//static QMap<FieldsOfIniFile, QString> Field_NamesFromIni_map;

@@ -11,10 +11,10 @@ SelectProfileWindow::SelectProfileWindow(QWidget *parent, Profile* prof) : QDial
 	ui->listOfProfs->setItemSelected(NULL, true);
 	selectListAction();
 	profToSelect = prof;
+	readAndSetLastUsedProFromINI();
 }
 
-SelectProfileWindow::~SelectProfileWindow()
-{
+SelectProfileWindow::~SelectProfileWindow(){
 	delete ui;
 	this->reject();
 }
@@ -54,6 +54,32 @@ void SelectProfileWindow::setUpGui(){
 	this->setWindowTitle(windowTitleText);
 	this->repaint();
 
+}
+
+void SelectProfileWindow::readAndSetLastUsedProFromINI(){
+	QString lastUsedProfName = Utilities::readFromIniFile(Utilities::FieldsOfIniFile::LAST_USED_PROFILE_NAME);
+	if (lastUsedProfName.size() == 0)
+		return;
+	QStringList listOfDisplayNames;
+	ProfileDataBaseManager dbManager;
+	bool ok = dbManager.getNamesOfAllFilesInFormToDisplay(listOfDisplayNames);
+	if (!ok)
+		return;
+	int indexToSet = 0;
+	for (size_t i = 0; i < listOfDisplayNames.size(); i++){
+		QString nameToSplit = listOfDisplayNames[i];
+		QStringList partOfName = nameToSplit.split("] ",Qt::SkipEmptyParts);
+		if (partOfName.size() >= 2) {
+			QString exactProfName = partOfName[1];
+			bool matched = exactProfName == lastUsedProfName;
+			if (matched) {
+				indexToSet = i;
+				break;
+			}
+		}
+	}
+	ui->listOfProfs->setCurrentRow(indexToSet);
+	ui->listOfProfs->repaint();
 }
 
 void SelectProfileWindow::addNewProfileButtonAction(){
@@ -126,6 +152,7 @@ void SelectProfileWindow::profSelected(){
 
 	ProfileDataBaseManager dbManager;
 	dbManager.readProfileFromDataBase(profileName, *profToSelect);
+	Utilities::writeIniFile(Utilities::FieldsOfIniFile::LAST_USED_PROFILE_NAME, profileName);
 	this->accept();
 }
 

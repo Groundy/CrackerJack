@@ -24,5 +24,5 @@ private:
 	void prepareProfiles();
 	void setUpGui();
 	Profile* profToSelect;
-
+	void readAndSetLastUsedProFromINI();
 };

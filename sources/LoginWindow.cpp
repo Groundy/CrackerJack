@@ -51,15 +51,16 @@ void LoginWindow::signUpButtonClicked() {
 }
 
 void LoginWindow::languageChanged() {
-	//dodac to podczas wychodzenia z tej klasy
 	QString language = ui.laungageComboBox->currentText();
 	Utilities::writeIniFile(Utilities::FieldsOfIniFile::LANGUAGE, language);
 	setUpGUI();
 }
 
-//fun
+
 void LoginWindow::checkLogInPossibility() {
-	bool canLogIn = ui.loginLine->text().size() != 0 && ui.passwordLine->text().size() != 0;
+	bool logIsNotEmpty = !ui.loginLine->text().isEmpty();
+	bool passIsNotEmpty = !ui.passwordLine->text().isEmpty();
+	bool canLogIn = logIsNotEmpty && passIsNotEmpty;
 	ui.logInButton->setEnabled(canLogIn);
 }
 

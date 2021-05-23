@@ -4,12 +4,12 @@ Profile::Profile(QObject *parent) : QObject(parent){
 
 }
 
-Profile::Profile()
-{
+Profile::Profile(){
+	qDebug() << "New profile created";
 }
 
 Profile::~Profile(){
-	qDebug() << "Profile: " + profileName + "freed from memory";
+	qDebug() << "Profile: " + profileName + " freed from memory";
 }
 
 void Profile::clearProfile(){
