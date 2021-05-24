@@ -283,7 +283,8 @@ int Calibrator::calibrateManaAndHealthBar(){
 		else
 			readValuesAreWrong = true;
 	}
-	if(readValuesAreWrong){
+	bool scan = !sucessfullyRead || readValuesAreWrong;
+	if(scan){
 		ERR res = (ERR)findWindowsOnScreen(*this->fullScreen, importantRectangles);
 		if (res == OK) {
 			ERR res2 = (ERR)categorizeWindows(*fullScreen, importantRectangles);
