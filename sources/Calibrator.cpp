@@ -295,7 +295,6 @@ int Calibrator::calibrateManaAndHealthBar(){
 	return UNDEFINED_ERR;
 }
 
-
 int Calibrator::findIndexesOfRectangleThatContainsSlashes(QImage& fullScreen, QList<QRect> importantFrames, QList<int>& indexesOfFramesWithSlashesVert, QList<int>& indexesOfFramesWithSlashesHor, int& indexOfFrameCombined) {
 	QImage vertSlashes = Utilities::fromCharToImg(QChar(47));
 	QImage horSlashes = Utilities::fromCharToImg(QChar(92));
@@ -647,62 +646,79 @@ int Calibrator::categorizeWindows(QImage& fullscreen, QList<QRect>& importantRec
 	if (importantRectangles.size() < 4)
 		return NO_ENOUGH_FRAMES_FOUND;
 
-	QList<int> surphacesOfFrames;
-	for each (QRect var in importantRectangles) {
-		int surf = var.width() * var.height();
-		surphacesOfFrames.push_back(surf);
-	}
-	int indexOfBiggestValue = 0;
-	int previousBiggestValue = 0;
-	for (size_t i = 0; i < surphacesOfFrames.size(); i++) {
-		if (surphacesOfFrames[i] > previousBiggestValue) {
-			previousBiggestValue = surphacesOfFrames[i];
-			indexOfBiggestValue = i;
+	//game Frame
+	{
+		QList<int> surphacesOfFrames;
+		for each (QRect var in importantRectangles) {
+			int surf = var.width() * var.height();
+			surphacesOfFrames.push_back(surf);
 		}
-	}
-	profile->frames.gameFrame = importantRectangles.at(indexOfBiggestValue);
-	importantRectangles.removeAt(indexOfBiggestValue);
-
-	int indexOfHealth, indexOfMana, indexOfManaShield, howTheyShouldBeRotated, indexOfCombinedBox;
-	setPositionHealthImgs(fullscreen, importantRectangles, indexOfHealth, indexOfMana, indexOfManaShield, indexOfCombinedBox, howTheyShouldBeRotated);
-	profile->frames.howTheyShouldBeRotated = howTheyShouldBeRotated;
-
-	bool healthFound = indexOfHealth != -1 && indexOfHealth >= 0 && indexOfHealth <= importantRectangles.size();
-	bool manaFound = indexOfMana != -1 && indexOfMana >= 0 && indexOfMana <= importantRectangles.size();
-	bool manaShieldFound = indexOfManaShield != -1 && indexOfManaShield >= 0 && indexOfManaShield <= importantRectangles.size();
-	bool combinedBoxFound = indexOfCombinedBox != -1 && indexOfCombinedBox >= 0 && indexOfCombinedBox <= importantRectangles.size();
-
-	bool enoughFramesFound = healthFound && (manaFound || combinedBoxFound);
-	if (!enoughFramesFound)
-		return ERROR_IN_SETTING_POSITION_OF_INTERFACE;
-
-	bool deleteHelath = false, deleteMana = false, deleteManaShield = false, deleteCombined = false;
-	if (healthFound) {
-		profile->frames.healthFrame = importantRectangles[indexOfHealth];
-		deleteHelath = true;
+		int indexOfBiggestValue = 0;
+		int previousBiggestValue = 0;
+		for (size_t i = 0; i < surphacesOfFrames.size(); i++) {
+			if (surphacesOfFrames[i] > previousBiggestValue) {
+				previousBiggestValue = surphacesOfFrames[i];
+				indexOfBiggestValue = i;
+			}
+		}
+		profile->frames.gameFrame = importantRectangles[indexOfBiggestValue];
+		importantRectangles.removeAt(indexOfBiggestValue);
 	}
 
-	if (manaFound) {
-		profile->frames.manaFrame = importantRectangles[indexOfMana];
-		deleteHelath = true;
+	//indexOfHealth, indexOfMana, indexOfManaShield, howTheyShouldBeRotated, indexOfCombinedBox;
+	{
+		int indexOfHealth, indexOfMana, indexOfManaShield, howTheyShouldBeRotated, indexOfCombinedBox;
+		setPositionHealthImgs(fullscreen, importantRectangles, indexOfHealth, indexOfMana, indexOfManaShield, indexOfCombinedBox, howTheyShouldBeRotated);
+		profile->frames.howTheyShouldBeRotated = howTheyShouldBeRotated;
+
+		bool healthFound = indexOfHealth != -1 && indexOfHealth >= 0 && indexOfHealth <= importantRectangles.size();
+		bool manaFound = indexOfMana != -1 && indexOfMana >= 0 && indexOfMana <= importantRectangles.size();
+		bool manaShieldFound = indexOfManaShield != -1 && indexOfManaShield >= 0 && indexOfManaShield <= importantRectangles.size();
+		bool combinedBoxFound = indexOfCombinedBox != -1 && indexOfCombinedBox >= 0 && indexOfCombinedBox <= importantRectangles.size();
+
+		bool enoughFramesFound = healthFound && (manaFound || combinedBoxFound);
+		if (!enoughFramesFound)
+			return ERROR_IN_SETTING_POSITION_OF_INTERFACE;
+
+		bool deleteHelath = false, deleteMana = false, deleteManaShield = false, deleteCombined = false;
+		if (healthFound) {
+			profile->frames.healthFrame = importantRectangles[indexOfHealth];
+			deleteHelath = true;
+		}
+
+		if (manaFound) {
+			profile->frames.manaFrame = importantRectangles[indexOfMana];
+			deleteHelath = true;
+		}
+
+		if (manaShieldFound) {
+			profile->frames.manaShieldFrame = importantRectangles[indexOfManaShield];
+			deleteManaShield = true;
+		}
+
+		if (combinedBoxFound) {
+			profile->frames.combinedFrame = importantRectangles[indexOfCombinedBox];
+			deleteCombined = true;
+		}
+		QList<QRect> rectsToDelete;
+		if (deleteHelath) rectsToDelete.push_back(importantRectangles[indexOfHealth]);
+		if (deleteMana) rectsToDelete.push_back(importantRectangles[indexOfMana]);
+		if (deleteManaShield) rectsToDelete.push_back(importantRectangles[indexOfManaShield]);
+		if (deleteCombined) rectsToDelete.push_back(importantRectangles[indexOfCombinedBox]);
+		for each (QRect var in rectsToDelete)
+			importantRectangles.removeOne(var);
 	}
 
-	if (manaShieldFound) {
-		profile->frames.manaShieldFrame = importantRectangles[indexOfManaShield];
-		deleteManaShield = true;
+	//miniMap Frame
+	{
+		QMap<int, QRect> startX_Rect_map;
+		for each (QRect var in importantRectangles)
+			startX_Rect_map.insert(var.x(), var);
+		QRect miniMapRect = startX_Rect_map.last();
+		profile->frames.miniMapFrame = miniMapRect;
+		importantRectangles.removeOne(miniMapRect);
 	}
 
-	if (combinedBoxFound) {
-		profile->frames.combinedFrame = importantRectangles[indexOfCombinedBox];
-		deleteCombined = true;
-	}
-	QList<QRect> rectsToDelete;
-	if (deleteHelath) rectsToDelete.push_back(importantRectangles[indexOfHealth]);
-	if (deleteMana) rectsToDelete.push_back(importantRectangles[indexOfMana]);
-	if (deleteManaShield) rectsToDelete.push_back(importantRectangles[indexOfManaShield]);
-	if (deleteCombined) rectsToDelete.push_back(importantRectangles[indexOfCombinedBox]);
-	for each (QRect var in rectsToDelete)
-		importantRectangles.removeOne(var);
 	return OK;
 }
 
@@ -716,9 +732,7 @@ int Calibrator::findWindowsOnScreen(QImage& fullScreen, QList<QRect>& importantR
 	for (size_t x = 0; x < WIDTH - 2; x++) {
 		for (size_t y = 0; y < HEIGHT - 2; y++) {
 			bool isPixelOfFrame = Utilities::isItPixelFromFrame(fullScreen.pixel(x, y), MIN_ACCEPTABLE_VAL, MAX_ACCEPTABLE_VAL, true);
-			if (!isPixelOfFrame)
-				continue;
-
+			if (!isPixelOfFrame) continue;
 
 			isPixelOfFrame = Utilities::isItPixelFromFrame(fullScreen.pixel(x + 1, y + 1), MIN_ACCEPTABLE_VAL, MAX_ACCEPTABLE_VAL, false);
 			if (isPixelOfFrame) continue;
@@ -758,27 +772,25 @@ int Calibrator::findWindowsOnScreen(QImage& fullScreen, QList<QRect>& importantR
 			bool isPixOfFrame = Utilities::isItPixelFromFrame(color, MIN_ACCEPTABLE_VAL, MAX_ACCEPTABLE_VAL, true);
 			if (isPixOfFrame)
 				currentWidth++;
-			else {
-				if (currentWidth < MIN_WIDTH)
-					continue;
-			}
+			else
+				break;
 		}
 		for (size_t y = startPoint.y(); y < HEIGHT; y++) {
 			uint color = fullScreen.pixel(startPoint.x(), y);
 			bool isPixOfFrame = Utilities::isItPixelFromFrame(color, MIN_ACCEPTABLE_VAL, MAX_ACCEPTABLE_VAL, true);
 			if (isPixOfFrame)
 				currentHeight++;
-			else {
-				if (currentHeight < MIN_HEIGHT)
-					continue;
-			}
+			else
+				break;
 		}
-
-		int x = startPoint.x();
-		int y = startPoint.y();
-		int w = currentWidth;
-		int h = currentHeight;
-		frameToRet.push_back(QRect(x + 1, y + 1, w - 1, h - 1));
+		bool accept = currentHeight > MIN_HEIGHT && currentWidth > MIN_WIDTH;
+		if (accept) {
+			int x = startPoint.x();
+			int y = startPoint.y();
+			int w = currentWidth;
+			int h = currentHeight;
+			frameToRet.push_back(QRect(x + 1, y + 1, w - 1, h - 1));
+		}
 	}
 
 	importantRectangles = frameToRet;
