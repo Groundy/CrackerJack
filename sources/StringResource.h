@@ -18,6 +18,7 @@ public:
 	static QString NewProfileConfig_3_SlidersAreInTheSamePosition();
 	static QString NewProfileConfig_3_SlidersAreInWrongOrder();
 	static QString NewProfileConfig_3_LastSliderIsZero();
+	static QString NewProfileConfig_3_TwoShortKeysShareSameValue();
 	static QString NewProfileConfig_3_ShortcutNoValue();
 	static QString NewProfileConfig_3_ShortcutManyValue();
 	static QString NewProfileConfig_3_ShortCutHasForbiddenChars();

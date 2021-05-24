@@ -136,6 +136,12 @@ QString StringResource::NewProfileConfig_3_LastSliderIsZero(){
 	return languageIsPl() ? pl : eng;
 }
 
+QString StringResource::NewProfileConfig_3_TwoShortKeysShareSameValue(){
+	QString pl = QString::fromLocal8Bit("Dwa pola klawiszowe nie mog¹ mieæ przypisanego tego samego klawisza.");
+	QString eng = "Two key fields can't share the same key.";
+	return languageIsPl() ? pl : eng;
+}
+
 QString StringResource::NewProfileConfig_3_ShortCutHasForbiddenChars(){	
 	bool pl = languageIsPl();
 	QString toRet;

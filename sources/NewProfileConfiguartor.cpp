@@ -336,6 +336,17 @@ bool NewProfileConfiguartor::checkCorrectnessOfPage_3(){
 			theSameValueIsAssignedToMoreThanOneBox = !allWidgetsAreDiffrent;
 	}
 
+	bool theSameKeyIsAssignedToMoreThanOneKeyShortCut = false;
+	{
+		QMap<int, int> keyNumber_noImportnat_map;
+		for (size_t i = 0; i < guiPtrs.activeElementsOnPage_3; i++){
+			int keyNumber = Key(guiPtrs.keyShortCutsOnPage_3[i]->keySequence()).number;
+			keyNumber_noImportnat_map.insert(keyNumber,0);
+		}
+		bool allKeysAreDiffrent = keyNumber_noImportnat_map.size() == guiPtrs.activeElementsOnPage_3;
+		theSameKeyIsAssignedToMoreThanOneKeyShortCut = allKeysAreDiffrent;
+	}
+
 	if (!everySliderHasDiffrentValue) {
 		Utilities::showMessageBox(StringResource::WindowTitle_CrackerJackProblem(), StringResource::NewProfileConfig_3_SlidersAreInTheSamePosition(), QMessageBox::Ok);
 		return false;
@@ -366,6 +377,10 @@ bool NewProfileConfiguartor::checkCorrectnessOfPage_3(){
 	}
 	if (theSameValueIsAssignedToMoreThanOneBox) {
 		Utilities::showMessageBox(StringResource::WindowTitle_CrackerJackProblem(), StringResource::NewProfileConfig_3_comboBoxShareTheSameValue(), QMessageBox::Ok);
+		return false;
+	}
+	if (theSameKeyIsAssignedToMoreThanOneKeyShortCut) {
+		Utilities::showMessageBox(StringResource::WindowTitle_CrackerJackProblem(), StringResource::NewProfileConfig_3_TwoShortKeysShareSameValue(), QMessageBox::Ok);
 		return false;
 	}
 	return true;
@@ -443,6 +458,16 @@ bool NewProfileConfiguartor::checkCorrectnessOfPage_4(){
 			theSameValueIsAssignedToMoreThanOneBox = !allWidgetsAreDiffrent;
 	}
 
+	bool theSameKeyIsAssignedToMoreThanOneKeyShortCut = false;
+	{
+		QMap<int, int> keyNumber_noImportnat_map;
+		for (size_t i = 0; i < guiPtrs.activeElementsOnPage_4; i++) {
+			int keyNumber = Key(guiPtrs.keyShortCutsOnPage_4[i]->keySequence()).number;
+			keyNumber_noImportnat_map.insert(keyNumber, 0);
+		}
+		bool allKeysAreDiffrent = keyNumber_noImportnat_map.size() == guiPtrs.activeElementsOnPage_4;
+		theSameKeyIsAssignedToMoreThanOneKeyShortCut = allKeysAreDiffrent;
+	}
 
 	if (!everySliderHasDiffrentValue) {
 		Utilities::showMessageBox(StringResource::WindowTitle_CrackerJackProblem(), StringResource::NewProfileConfig_3_SlidersAreInTheSamePosition(), QMessageBox::Ok);
@@ -476,7 +501,10 @@ bool NewProfileConfiguartor::checkCorrectnessOfPage_4(){
 		Utilities::showMessageBox(StringResource::WindowTitle_CrackerJackProblem(), StringResource::NewProfileConfig_3_comboBoxShareTheSameValue(), QMessageBox::Ok);
 		return false;
 	}
-
+	if (theSameKeyIsAssignedToMoreThanOneKeyShortCut) {
+		Utilities::showMessageBox(StringResource::WindowTitle_CrackerJackProblem(), StringResource::NewProfileConfig_3_TwoShortKeysShareSameValue(), QMessageBox::Ok);
+		return false;
+	}
 	return true;
 }
 
