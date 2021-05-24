@@ -24,8 +24,6 @@ public:
 	static QList<QPoint> findStartPositionInImg_mulitpeImgs(QList<QImage*> imgsToFind, QImage& imgToShareWithin);
 	static QList<QPoint> findStartPositionInImg(QImage& imgToFind, QImage& imgToShareWithin);
 	int calibrateManaAndHealthBar();
-	//bool getMainFramesFromProfFile(QList<QRect>& rectsWithValues, QString profileName);
-	//bool saveMainFramesToProfileFile(QString profileName);
 
 private:
 	int fillRectWithPotsInVarClass(QImage& fullscreen, QStringList nameOfPotionsToLookFor);
@@ -38,7 +36,7 @@ private:
 	int categorizeWindows(QImage& fullscreen, QList<QRect>& importantRectangles);
 	int findWindowsOnScreen(QImage& fullScreen, QList<QRect>& importantRectangles);
 	void TEST_setPositionHealthImhs(QString pathToFolderWithDiffrentPositionsStylesScreen, QString pathToOutPutFolder);
-	
+	bool getRectsFromProfile(QList<QRect>& importRectsFromProf);
 	QImage* fullScreen;
 	VariablesClass* var;
 	Profile* profile;

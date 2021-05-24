@@ -24,18 +24,24 @@ ScreenAnalyzer::~ScreenAnalyzer(){
 }
 
 void ScreenAnalyzer::run() {	
-	while (true) {
-		if (!enableScreenAnalyzer) {
-			msleep(6 * timeBetweenNextCheckingsOfScrennShotFolder);
+	while (true) {//loop waiting for
+		//msleep(10 * timeBetweenNextCheckingsOfScrennShotFolder);
+		Sleep(1000);
+		QImage img;
+		ERROR_CODE openCorrectly = (ERROR_CODE)loadScreen(img);
+		if (openCorrectly != OK)
 			continue;
-		}
+		Calibrator calibrator(img, *var, profile);
+		int retCode = calibrator.calibrateManaAndHealthBar();
+		if (retCode != OK)
+			continue;
 		mainLoop();
 	}
 }
 
 int ScreenAnalyzer::loadScreen(QImage& img){
 	QString nameOfImgToCapture;
-	ERROR_CODE code = (ERROR_CODE)(nameOfImgToCapture, 55);
+	ERROR_CODE code = (ERROR_CODE)getNameOfLastTakenScreenShotForSure(nameOfImgToCapture, 55);
 	if (code != OK)
 		return code;
 	QString pathToImg = pathToScreenFolder + QString("\\") + nameOfImgToCapture;
@@ -108,7 +114,6 @@ void ScreenAnalyzer::deleteScreenShotFolder(){
 }
 
 void ScreenAnalyzer::mainLoop(){
-	Sleep(1000);
 	while (enableScreenAnalyzer){
 		msleep(timeBetweenNextCheckingsOfScrennShotFolder);
 		QImage img;

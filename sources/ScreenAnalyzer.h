@@ -8,6 +8,7 @@
 #include "qdatetime.h"
 #include "qmap.h"
 #include "qdebug.h"
+#include "Calibrator.h"
 #include "Profile.h"
 #include "Utilities.h"
 #include "ProfileDataBaseManager.h"

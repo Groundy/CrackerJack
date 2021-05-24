@@ -191,27 +191,27 @@ bool ProfileDataBaseManager::saveProfileToDataBase(Profile& profileToSave){
 	allReadTries.push_back(ok);
 
 
-	QString miniMapFrameStr = DB_writer_rectangleWithPositionInImg(profileToSave.frames.gameFrame);
+	QString miniMapFrameStr = DB_writer_rectangleWithPositionInImg(profileToSave.frames.miniMapFrame);
 	ok = modifyFieldValue(profileName, Field::POS_LAST_MINIMAP, miniMapFrameStr);
 	allReadTries.push_back(ok);
 
 
-	QString healthBarStr = DB_writer_rectangleWithPositionInImg(profileToSave.frames.gameFrame);
+	QString healthBarStr = DB_writer_rectangleWithPositionInImg(profileToSave.frames.healthFrame);
 	ok = modifyFieldValue(profileName, Field::POS_LAST_HEALTH_BAR, healthBarStr);
 	allReadTries.push_back(ok);
 
 
-	QString manaBarStr = DB_writer_rectangleWithPositionInImg(profileToSave.frames.gameFrame);
+	QString manaBarStr = DB_writer_rectangleWithPositionInImg(profileToSave.frames.manaFrame);
 	ok = modifyFieldValue(profileName, Field::POS_LAST_MANA_BAR, manaBarStr);
 	allReadTries.push_back(ok);
 
 
-	QString comboBoxBarStr = DB_writer_rectangleWithPositionInImg(profileToSave.frames.gameFrame);
+	QString comboBoxBarStr = DB_writer_rectangleWithPositionInImg(profileToSave.frames.combinedFrame);
 	ok = modifyFieldValue(profileName, Field::POS_LAST_COMBOBOX_BAR, comboBoxBarStr);
 	allReadTries.push_back(ok);
 
 
-	QString manaShieldBarStr = DB_writer_rectangleWithPositionInImg(profileToSave.frames.gameFrame);
+	QString manaShieldBarStr = DB_writer_rectangleWithPositionInImg(profileToSave.frames.manaShieldFrame);
 	ok = modifyFieldValue(profileName, Field::POS_LAST_MANA_SHIELD_BAR, manaShieldBarStr);
 	allReadTries.push_back(ok);
 

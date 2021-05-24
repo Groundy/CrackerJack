@@ -212,7 +212,7 @@ bool Calibrator::findPotionsOnBottomBar(QStringList namesOfPotionsToFind, QStrin
 		int start_x = someWhereInPic.x() + 1;
 		int start_y = someWhereInPic.y() - WIDTH_HEIGHT_PIC + 2 * height + 1;
 
-		bool err = start_x < 0 || (start_x + width) > WIDTH || start_y < 0 || (start_y + height) > HEIGHT;
+		bool err = start_x < 0 || (start_x + width) > WIDTH || start_y < 0 || (start_y + height) > HEIGHT;//TODO
 		QRect toAdd(start_x, start_y, width, height);
 		rectToRet.push_back(toAdd);
 	}
@@ -273,20 +273,27 @@ QList<QPoint> Calibrator::findStartPositionInImg(QImage& imgToFind, QImage& imgT
 
 int Calibrator::calibrateManaAndHealthBar(){
 	QList<QRect> importantRectangles;
-	//bool sucessfullyRead = (importantRectangles, profile->profileName);//TODO tutatj zastpic to sprawdzeniem czy framy wczytane do profilu sie zgadzaja
-	//if (!sucessfullyRead) {
-		ERR res1 = (ERR)findWindowsOnScreen(*this->fullScreen, importantRectangles);
-		if (res1 != OK)
-			return res1;
-	//}
+	bool sucessfullyRead = getRectsFromProfile(importantRectangles);
+	bool readValuesAreWrong = false;
 
-	ERR res2 = (ERR)categorizeWindows(*fullScreen, importantRectangles);
-	if (res2 != OK)
-		return res2;
-
-	int toRet = res2;
-	return toRet;
+	if(sucessfullyRead) {
+		ERR res = (ERR)categorizeWindows(*fullScreen, importantRectangles);
+		if (res == OK)
+			return OK;
+		else
+			readValuesAreWrong = true;
+	}
+	if(readValuesAreWrong){
+		ERR res = (ERR)findWindowsOnScreen(*this->fullScreen, importantRectangles);
+		if (res == OK) {
+			ERR res2 = (ERR)categorizeWindows(*fullScreen, importantRectangles);
+			ERR toRet = res2 == OK ? OK : res;
+			return toRet;
+		}
+	}
+	return UNDEFINED_ERR;
 }
+
 
 int Calibrator::findIndexesOfRectangleThatContainsSlashes(QImage& fullScreen, QList<QRect> importantFrames, QList<int>& indexesOfFramesWithSlashesVert, QList<int>& indexesOfFramesWithSlashesHor, int& indexOfFrameCombined) {
 	QImage vertSlashes = Utilities::fromCharToImg(QChar(47));
@@ -635,8 +642,8 @@ int Calibrator::setPositionHealthImgs(QImage& fullscreen, QList<QRect> listOfImp
 }
 
 int Calibrator::categorizeWindows(QImage& fullscreen, QList<QRect>& importantRectangles) {
-	//5 cause 1-minimap 2-gameScreen 3-text input 4-health 5-mana, those 5 have to be found
-	if (importantRectangles.size() < 5)
+	//4 cause 1-minimap 2-gameScreen 3-health 4-mana, those 4 have to be found
+	if (importantRectangles.size() < 4)
 		return NO_ENOUGH_FRAMES_FOUND;
 
 	QList<int> surphacesOfFrames;
@@ -741,6 +748,7 @@ int Calibrator::findWindowsOnScreen(QImage& fullScreen, QList<QRect>& importantR
 	}
 	//looking for rectangles from start points of frames
 	QList<QRect> frameToRet;
+	const int MIN_WIDTH = 5, MIN_HEIGHT = 5;
 	for each (QPoint startPoint in startOfFrames) {
 		int currentWidth = 0;
 		int currentHeight = 0;
@@ -749,81 +757,34 @@ int Calibrator::findWindowsOnScreen(QImage& fullScreen, QList<QRect>& importantR
 			bool isPixOfFrame = Utilities::isItPixelFromFrame(color, MIN_ACCEPTABLE_VAL, MAX_ACCEPTABLE_VAL, true);
 			if (isPixOfFrame)
 				currentWidth++;
-			else
-				break;
+			else {
+				if (currentWidth < MIN_WIDTH)
+					continue;
+			}
 		}
 		for (size_t y = startPoint.y(); y < HEIGHT; y++) {
 			uint color = fullScreen.pixel(startPoint.x(), y);
 			bool isPixOfFrame = Utilities::isItPixelFromFrame(color, MIN_ACCEPTABLE_VAL, MAX_ACCEPTABLE_VAL, true);
 			if (isPixOfFrame)
 				currentHeight++;
-			else
-				break;
+			else {
+				if (currentHeight < MIN_HEIGHT)
+					continue;
+			}
 		}
-		const int MIN_ACCEPTABLE_LENGTH = 4;
-		bool accept = currentWidth > MIN_ACCEPTABLE_LENGTH && currentHeight > MIN_ACCEPTABLE_LENGTH;
-		if (accept) {
-			int x = startPoint.x();
-			int y = startPoint.y();
-			int w = currentWidth;
-			int h = currentHeight;
-			frameToRet.push_back(QRect(x + 1, y + 1, w - 1, h - 1));
-		}
+
+		int x = startPoint.x();
+		int y = startPoint.y();
+		int w = currentWidth;
+		int h = currentHeight;
+		frameToRet.push_back(QRect(x + 1, y + 1, w - 1, h - 1));
 	}
 
 	importantRectangles = frameToRet;
 
-	ERR toRet = frameToRet.size() > 0 ? OK : NO_FRAMES_FOUND;
+	ERR toRet = frameToRet.size() >= 4 ? OK : NO_FRAMES_FOUND;
 	return toRet;
 }
-
-/*
-bool Calibrator::getMainFramesFromProfFile(QList<QRect>& rectsWithValues, QString profileName){
-	typedef ProfileDataBaseManager::FieldsOfDB Field;
-	QList<Field> fieldWithRects;
-	fieldWithRects.push_back(Field::POS_LAST_GAME_FRAME);
-	fieldWithRects.push_back(Field::POS_LAST_HEALTH_BAR);
-	fieldWithRects.push_back(Field::POS_LAST_MANA_BAR);
-	fieldWithRects.push_back(Field::POS_LAST_COMBOBOX_BAR);
-	fieldWithRects.push_back(Field::POS_LAST_MANA_SHIELD_BAR);
-	fieldWithRects.push_back(Field::POS_LAST_MINIMAP);
-
-	QList<QRect> rectsToReturn;
-	ProfileDataBaseManager db;
-	for each (Field var in fieldWithRects) {
-		QRect rectToAdd;
-		bool sucesRead = db.readRectFromDb(profileName, var, rectToAdd);
-		bool ok = (!rectToAdd.isEmpty()) && sucesRead;
-		if(ok)
-			rectsToReturn.push_back(rectToAdd);
-	}
-	QString rotationAsStr;
-	db.readFieldValue(profileName, Field::ROTATION, rotationAsStr);
-	var->rotationNeededForPointsAbove = rotationAsStr.toInt();
-	rectsWithValues = rectsToReturn;
-	bool allFramesRead = rectsToReturn.size() == fieldWithRects.size();
-	return allFramesRead;
-}
-
-bool Calibrator::saveMainFramesToProfileFile(QString profileName){
-	typedef ProfileDataBaseManager::FieldsOfDB Field;
-
-	ProfileDataBaseManager db;
-	bool ok1 = db.writeRectToDb(profileName, Field::POS_LAST_GAME_FRAME, profile->frames.gameFrame);
-	bool ok2 = db.writeRectToDb(profileName, Field::POS_LAST_HEALTH_BAR, profile->frames.healthFrame);
-	bool ok3 = db.writeRectToDb(profileName, Field::POS_LAST_MANA_BAR, profile->frames.manaFrame);
-	bool ok4 = db.writeRectToDb(profileName, Field::POS_LAST_MANA_SHIELD_BAR, profile->frames.manaShieldFrame);
-	bool ok5 = db.writeRectToDb(profileName, Field::POS_LAST_MINIMAP, profile->frames.miniMapFrame);
-	bool ok6 = db.writeRectToDb(profileName, Field::POS_LAST_COMBOBOX_BAR, profile->frames.combinedFrame);
-	QString rotationAsStr;
-	bool ok7 = db.modifyFieldValue(profileName, Field::ROTATION, rotationAsStr);
-
-	bool toRet = ok1 && ok2 && ok3 && ok4 && ok5 && ok6 && ok7;
-	return toRet;
-}
-*/
-
-
 
 void Calibrator::TEST_setPositionHealthImhs(QString pathToFolderWithDiffrentPositionsStylesScreen, QString pathToOutPutFolder) {
 	QImage combined, health, mana, manaShield;
@@ -917,5 +878,41 @@ void Calibrator::TEST_setPositionHealthImhs(QString pathToFolderWithDiffrentPosi
 		else
 			return;
 	}
+}
+
+bool Calibrator::getRectsFromProfile(QList<QRect>& importRectsFromProf) {
+	importRectsFromProf.clear();
+
+	//they have to be;
+	bool isEmpty2 = profile->frames.gameFrame.isEmpty();
+	bool isEmpty3 = profile->frames.healthFrame.isEmpty();
+	bool isEmpty4 = profile->frames.miniMapFrame.isEmpty();
+
+	if (isEmpty2 || isEmpty3 || isEmpty4)
+		return false;
+
+	//one of them have to be;
+	bool isEmpty5 = profile->frames.manaFrame.isEmpty();
+	bool isEmpty6 = profile->frames.combinedFrame.isEmpty();
+
+	if (isEmpty5 && isEmpty6)
+		return false;
+
+	//one that can be
+	bool isEmpty1 = profile->frames.manaShieldFrame.isEmpty();
+
+	importRectsFromProf.push_back(profile->frames.gameFrame);
+	importRectsFromProf.push_back(profile->frames.healthFrame);
+	importRectsFromProf.push_back(profile->frames.miniMapFrame);
+
+	if (!isEmpty5)
+		importRectsFromProf.push_back(profile->frames.manaFrame);
+	if (!isEmpty6)
+		importRectsFromProf.push_back(profile->frames.combinedFrame);
+	if (!isEmpty1)
+		importRectsFromProf.push_back(profile->frames.manaShieldFrame);
+
+
+	return true;
 }
 
