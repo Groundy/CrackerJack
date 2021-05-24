@@ -322,7 +322,7 @@ bool NewProfileConfiguartor::checkCorrectnessOfPage_3(){
 	}
 
 	bool theSameValueIsAssignedToMoreThanOneBox = false;
-	{
+	if (guiPtrs.activeElementsOnPage_3 > 0) {
 		QMap<int, int> mapToDeleteReplicatedValues;
 		int maxWidgetIndex = guiPtrs.activeElementsOnPage_3;
 		for (size_t i = 0; i < maxWidgetIndex; i++) {
@@ -337,7 +337,7 @@ bool NewProfileConfiguartor::checkCorrectnessOfPage_3(){
 	}
 
 	bool theSameKeyIsAssignedToMoreThanOneKeyShortCut = false;
-	{
+	if(guiPtrs.activeElementsOnPage_3 > 0){
 		QMap<int, int> keyNumber_noImportnat_map;
 		for (size_t i = 0; i < guiPtrs.activeElementsOnPage_3; i++){
 			int keyNumber = Key(guiPtrs.keyShortCutsOnPage_3[i]->keySequence()).number;
@@ -444,7 +444,7 @@ bool NewProfileConfiguartor::checkCorrectnessOfPage_4(){
 	}
 
 	bool theSameValueIsAssignedToMoreThanOneBox = false;
-	{
+	if (guiPtrs.activeElementsOnPage_4 > 0) {
 		QMap<int, int> mapToDeleteReplicatedValues;
 		int maxWidgetIndex = guiPtrs.activeElementsOnPage_4;
 		for (size_t i = 0; i < maxWidgetIndex; i++) {
@@ -459,7 +459,7 @@ bool NewProfileConfiguartor::checkCorrectnessOfPage_4(){
 	}
 
 	bool theSameKeyIsAssignedToMoreThanOneKeyShortCut = false;
-	{
+	if(guiPtrs.activeElementsOnPage_4 > 0){
 		QMap<int, int> keyNumber_noImportnat_map;
 		for (size_t i = 0; i < guiPtrs.activeElementsOnPage_4; i++) {
 			int keyNumber = Key(guiPtrs.keyShortCutsOnPage_4[i]->keySequence()).number;
