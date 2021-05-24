@@ -48,7 +48,7 @@ public:
 	//static QMap<FieldsOfIniFile, QString> Field_NamesFromIni_map;
 	static QString readFromIniFile(FieldsOfIniFile nameOfField);
 	static void writeIniFile(FieldsOfIniFile nameOfField, QString value);
-	//
+	
 	class RestoreMethode {
 	public:
 		enum class TypeOfMethode{ POTION, SPELL };
