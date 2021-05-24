@@ -671,10 +671,11 @@ int Calibrator::categorizeWindows(QImage& fullscreen, QList<QRect>& importantRec
 		setPositionHealthImgs(fullscreen, importantRectangles, indexOfHealth, indexOfMana, indexOfManaShield, indexOfCombinedBox, howTheyShouldBeRotated);
 		profile->frames.howTheyShouldBeRotated = howTheyShouldBeRotated;
 
-		bool healthFound = indexOfHealth != -1 && indexOfHealth >= 0 && indexOfHealth <= importantRectangles.size();
-		bool manaFound = indexOfMana != -1 && indexOfMana >= 0 && indexOfMana <= importantRectangles.size();
-		bool manaShieldFound = indexOfManaShield != -1 && indexOfManaShield >= 0 && indexOfManaShield <= importantRectangles.size();
-		bool combinedBoxFound = indexOfCombinedBox != -1 && indexOfCombinedBox >= 0 && indexOfCombinedBox <= importantRectangles.size();
+		int size = importantRectangles.size();
+		bool healthFound = indexOfHealth != -1 && indexOfHealth >= 0 && indexOfHealth <= size;
+		bool manaFound = indexOfMana != -1 && indexOfMana >= 0 && indexOfMana <= size;
+		bool manaShieldFound = indexOfManaShield != -1 && indexOfManaShield >= 0 && indexOfManaShield <= size;
+		bool combinedBoxFound = indexOfCombinedBox != -1 && indexOfCombinedBox >= 0 && indexOfCombinedBox <= size;
 
 		bool enoughFramesFound = healthFound && (manaFound || combinedBoxFound);
 		if (!enoughFramesFound)

@@ -17,10 +17,8 @@ bool Utilities::showMessageBox_NO_YES(QString title, QString text)
  {
 	 QFlags<QMessageBox::StandardButton> flags = { QMessageBox::StandardButton::Yes, QMessageBox::StandardButton::No };
 	 int res = Utilities::showMessageBox(title, text, flags);
-	 if (res == QMessageBox::StandardButton::Yes)
-		 return true;
-	 else
-		 return false;
+	 bool toRet = res == QMessageBox::StandardButton::Yes;
+	 return toRet;
  }
 
 bool Utilities::sendKeyStrokeToProcess(Key key, unsigned int PID, QString nameOfWindow) {
@@ -194,20 +192,18 @@ QString Utilities::imgWithStrToStr(QImage* img) {
  }
 
 QString Utilities::letterImgToLetterCodeStr(QImage* SingleLetterImg) {
-	 int width = SingleLetterImg->width();
-	 int height = SingleLetterImg->height();
-	 uint pixelColor;
-	 QString toRet = QString::number(width) + QString("_") + QString::number(height) + QString("_");
-	 int sum;
-	 for (size_t x = 0; x < width; x++) {
-		 for (size_t y = 0; y < height; y++) {
-			 pixelColor = SingleLetterImg->pixel(x, y);
+	 const int WIDTH = SingleLetterImg->width();
+	 const int HEIGHT = SingleLetterImg->height();
+	 const QString floor = QString("_");
+	 const QString ZERO = QString("0"), ONE = QString("1");
+	 QString toRet = QString::number(WIDTH) + floor + QString::number(HEIGHT) + floor;
+	 for (size_t x = 0; x < WIDTH; x++) {
+		 for (size_t y = 0; y < HEIGHT; y++) {
+			 uint pixelColor = SingleLetterImg->pixel(x, y);
 			 RGBstruct rgb(pixelColor);
-			 sum = rgb.b + rgb.r + rgb.g;
-			 if (sum == 0)
-				 toRet.append(QString("0"));
-			 else
-				 toRet.append(QString("1"));
+			 int sum = rgb.b + rgb.r + rgb.g;
+			 QString toAppend = sum == 0 ? ZERO : ONE;
+			 toRet.append(toAppend);
 		 }
 	 }
 	 return toRet;
@@ -338,10 +334,8 @@ bool Utilities::isItPixelFromFrame(uint color, int minValueAcceptable, int maxVa
 		if (maxValueFound - minValueFound > 1)
 			return false;
 	}
-	if (minValueFound >= minValueAcceptable && maxValueFound <= maxValueAcceptable)
-		return true;
-	else
-		return false;
+	bool isPixOfFrame = minValueFound >= minValueAcceptable && maxValueFound <= maxValueAcceptable;
+	return isPixOfFrame;
 }
 
 long long Utilities::getCurrentTimeInMiliSeconds() {
