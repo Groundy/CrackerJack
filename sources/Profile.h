@@ -6,6 +6,8 @@
 #include "qvector.h"
 #include "qkeysequence.h"
 #include "Key.h"
+#include "Windows.h"
+
 
 class Profile : public QObject{
 	Q_OBJECT
@@ -14,7 +16,7 @@ public:
 	enum PROFESSION { RP, EK, ED, MS};
 	enum AUTO_LOOT_KEY { RIGHT_MOUSE_BUTTON, SHIFT_RIGHT, LEFT_MOUSE_BUTTON };//enable only if controls
 	enum CONTROLS { CLSSIC_CONTROLS, REGULARCONTROLS, LEFT_SMART_CLICK };
-
+	//enum STATES {HASTE, BATTLE, PROTECTOR_ZONE, POISONED, PARALYZED, UPGRADED}
 	Profile(QObject *parent);
 	//Profile(Profile& prof);
 	Profile();
@@ -42,9 +44,9 @@ public:
 	AUTO_LOOT_KEY lootKey;
 	CONTROLS controls;
 	QString profileName;//re
-	long long lastLoginSeconds;
-	long long creationTimeSeconds;//TODO tu powinny byæ LONG64 ale nie wiem jak header daæ
-	long long secondsSpentSeconds;
+	LONG64 lastLoginSeconds;
+	LONG64 creationTimeSeconds;
+	LONG64 secondsSpentSeconds;
 	void clearProfile();
 	void getDataFromOtherProf(Profile& profToCopyFrom);
 
