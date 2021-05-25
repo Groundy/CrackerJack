@@ -20,7 +20,7 @@ int main(int argc, char *argv[])
 
     a.setWindowIcon(getIcon());
     QApplication::setAttribute(Qt::AA_DisableWindowContextHelpButton);
-    //test();
+    test();
     /*
     LoginWindow w;
     int result = w.exec();
@@ -50,15 +50,10 @@ QIcon getIcon() {
 };
 
 void test() {
-    VariablesClass var;
-    QImage img;
-    QString path = "C:\\Users\\ADMIN\\Desktop\\z.png";
-    img.load(path);
-    QString pr = "cycki";
-    Profile testProf;
-   // Calibrator cali(img, var, &pr);
-    //auto ret = cali.calibrateManaAndHealthBar();
-    int g = 5;
+    QString path = "C:\\Users\\ADMIN\\Desktop\\maps";
+    Utilities::TOOL_generateMapAsText(path);
+
+    int brea = 3;
 };
 
 QString makeRandomProccessName() {

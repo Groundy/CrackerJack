@@ -38,6 +38,9 @@ public:
 	static QImage getImageFromAdvancedCode(QString codeOfImg);
 	static void getMapWithNumbersFromBottomBar(QMap<QString, int>& lightToRet, QMap<QString, int>& darkToRet);
 	static int getNumberFromBottomBar(QImage& bottomBar);
+
+	static void TOOL_convertMapsFromOrgNameToSqrName(QString inputFolder);
+	static void TOOL_generateMapAsText(QString inputFolder);
 	//
 	enum class FieldsOfIniFile {
 		LANGUAGE,
