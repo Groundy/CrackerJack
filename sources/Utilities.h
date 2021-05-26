@@ -39,16 +39,13 @@ public:
 	static void getMapWithNumbersFromBottomBar(QMap<QString, int>& lightToRet, QMap<QString, int>& darkToRet);
 	static int getNumberFromBottomBar(QImage& bottomBar);
 
-	static void TOOL_convertMapsFromOrgNameToSqrName(QString inputFolder);
-	static void TOOL_generateMapAsText(QString inputFolder);
-	//
 	enum class FieldsOfIniFile {
 		LANGUAGE,
 		LAST_USED_LOGIN,
-		LAST_USED_PROFILE_NAME
+		LAST_USED_PROFILE_NAME,
+		PATH_TO_TIBIA_FOLDER
 	};
 	static QMap<FieldsOfIniFile, QString> get_Field_NamesFromIni_map();
-	//static QMap<FieldsOfIniFile, QString> Field_NamesFromIni_map;
 	static QString readFromIniFile(FieldsOfIniFile nameOfField);
 	static void writeIniFile(FieldsOfIniFile nameOfField, QString value);
 	
@@ -104,7 +101,10 @@ public:
 		int manaReg, healthReg;
 		bool forMage, forRp, forEk;
 	};
-	//
+	
+
+	static void TOOL_convertMapsFromOrgNameToSqrName(QString inputFolder);
+	static void TOOL_generateMapAsText(QString inputFolder);
 	static QStringList TOOL_getCodesOfAllInFolder_regular(QString pathToInputFolder, QString pathToOutputFolder);
 	static QStringList TOOL_getCodesOfAllInFolder_bottom(QString pathToInputFolder);
 	/*

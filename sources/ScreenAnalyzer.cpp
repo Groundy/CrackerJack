@@ -24,8 +24,7 @@ ScreenAnalyzer::~ScreenAnalyzer(){
 }
 
 void ScreenAnalyzer::run() {	
-	while (true) {//loop waiting for
-		//msleep(10 * timeBetweenNextCheckingsOfScrennShotFolder);
+	while (true) {
 		Sleep(1000);
 		QImage img;
 		ERROR_CODE openCorrectly = (ERROR_CODE)loadScreen(img);
@@ -53,7 +52,7 @@ int ScreenAnalyzer::loadScreen(QImage& img){
 QString ScreenAnalyzer::getNameOfLastTakenScreenShot(){
 	QDir directory(pathToScreenFolder);
 	QStringList litOfFIles = directory.entryList(QStringList() << "*.png", QDir::Files);
-	if (litOfFIles.size() == 0) 
+	if (litOfFIles.isEmpty()) 
 		return QString(); //diag err
 
 	QList<long long> listOfOnlyDatesAndTimes;

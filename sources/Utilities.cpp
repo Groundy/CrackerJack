@@ -41,91 +41,94 @@ bool Utilities::sendKeyStrokeToProcess(Key key, unsigned int PID, QString nameOf
  }
 
 void Utilities::imgToBlackAndWhiteOneColor(QImage& img, int threshold) {
-	 int width = img.width();
-	 int height = img.height();
-	 for (size_t x = 0; x < width; x++) {
-		 for (size_t y = 0; y < height; y++) {
-			 uint pixelColor = img.pixel(x, y);
-			 RGBstruct rgb(pixelColor);
-			 bool redIsEnough = rgb.r >= threshold;
-			 bool greenIsEnough = rgb.g >= threshold;
-			 bool blueIsEnough = rgb.b >= threshold;
-			 if (redIsEnough || greenIsEnough || blueIsEnough)
-				 img.setPixel(x, y, qRgb(255, 255, 255));
-			 else
-				 img.setPixel(x, y, qRgb(0, 0, 0));
-		 }
-	 }
- }
+	const int WIDTH = img.width();
+	const int HEIGHT = img.height();
+	const uint BLACK = qRgb(0, 0, 0);
+	const uint WHITE = qRgb(255, 255, 255);
+	for (size_t x = 0; x < WIDTH; x++) {
+		for (size_t y = 0; y < HEIGHT; y++) {
+			uint pixelColor = img.pixel(x, y);
+			RGBstruct rgb(pixelColor);
+			bool redIsEnough = rgb.r >= threshold;
+			bool greenIsEnough = rgb.g >= threshold;
+			bool blueIsEnough = rgb.b >= threshold;
+			bool setWhite = redIsEnough || greenIsEnough || blueIsEnough;
+			uint toSet = setWhite ? WHITE : BLACK;
+			img.setPixel(x, y, toSet);
+		}
+	}
+}
 
 void Utilities::imgToBlackAndWhiteAllColors(QImage& img, int threshold) {
-	 int width = img.width();
-	 int height = img.height();
-	 for (size_t x = 0; x < width; x++) {
-		 for (size_t y = 0; y < height; y++) {
-			 uint pixelColor = img.pixel(x, y);
-			 RGBstruct rgb(pixelColor);
-			 bool redIsEnough = rgb.r >= threshold;
-			 bool greenIsEnough = rgb.g >= threshold;
-			 bool blueIsEnough = rgb.b >= threshold;
-			 if (redIsEnough && greenIsEnough && blueIsEnough)
-				 img.setPixel(x, y, qRgb(255, 255, 255));
-			 else
-				 img.setPixel(x, y, qRgb(0, 0, 0));
-		 }
-	 }
+	const int WIDTH = img.width();
+	const int HEIGHT = img.height();
+	const uint BLACK = qRgb(0, 0, 0);
+	const uint WHITE = qRgb(255, 255, 255);
+	for (size_t x = 0; x < WIDTH; x++) {
+		for (size_t y = 0; y < HEIGHT; y++) {
+			uint pixelColor = img.pixel(x, y);
+			RGBstruct rgb(pixelColor);
+			bool redIsEnough = rgb.r >= threshold;
+			bool greenIsEnough = rgb.g >= threshold;
+			bool blueIsEnough = rgb.b >= threshold;
+			bool setWhite = redIsEnough && greenIsEnough && blueIsEnough;
+			uint pixToSet = setWhite ? WHITE : BLACK;
+			img.setPixel(x, y, pixToSet);
+		}
+	}
  }
 
 void Utilities::cutBlackBordersOfImg(QImage& img) {
 	 int linesOfBlackrows_TOP = 0, linesOfBlackrows_DOWN = 0, linesOfBlackrows_RIGHT = 0, linesOfBlackrows_LEFT = 0;
-	 int w = img.width();
-	 int h = img.height();
-	 for (int x = 0; x < w; x++) {
-		 for (int y = 0; y < h; y++) {
-			 bool isBlack = img.pixel(x, y) == qRgb(0, 0, 0);
+	 const int WIDTH = img.width();
+	 const int HEIGHT = img.height();
+	 const uint BLACK = qRgb(0, 0, 0);
+	 for (int x = 0; x < WIDTH; x++) {
+		 for (int y = 0; y < HEIGHT; y++) {
+			 bool isBlack = img.pixel(x, y) == BLACK;
 			 if (!isBlack) {
 				 linesOfBlackrows_LEFT = x;
-				 x = w; //endOfLoop
-				 y = h; //endOfLoop
+				 x = WIDTH; //endOfLoop
+				 y = WIDTH; //endOfLoop
 			 }
 		 }
 	 }
 
-	 for (int x = w - 1; x >= 0; x--) {
-		 for (int y = 0; y < h; y++) {
-			 bool isBlack = img.pixel(x, y) == qRgb(0, 0, 0);
+	 for (int x = WIDTH - 1; x >= 0; x--) {
+		 for (int y = 0; y < HEIGHT; y++) {
+			 bool isBlack = img.pixel(x, y) == BLACK;
 			 if (!isBlack) {
-				 linesOfBlackrows_RIGHT = w - x - 1;
+				 linesOfBlackrows_RIGHT = WIDTH - x - 1;
 				 x = -1;//endOfLoop
-				 y = h;//endOfLoop
+				 y = HEIGHT;//endOfLoop
 			 }
 		 }
 	 }
 
-	 for (int y = 0; y < h; y++) {
-		 for (int x = 0; x < w; x++) {
-			 bool isBlack = img.pixel(x, y) == qRgb(0, 0, 0);
+	 for (int y = 0; y < HEIGHT; y++) {
+		 for (int x = 0; x < WIDTH; x++) {
+			 bool isBlack = img.pixel(x, y) == BLACK;
 			 if (!isBlack) {
 				 linesOfBlackrows_TOP = y;
-				 x = w;//endOfLoop
-				 y = h;//endOfLoop
+				 x = WIDTH;//endOfLoop
+				 y = HEIGHT;//endOfLoop
 			 }
 		 }
 	 }
 
-	 for (int y = h - 1; y >= 0; y--) {
-		 for (int x = 0; x < w; x++) {
-			 bool isBlack = img.pixel(x, y) == qRgb(0, 0, 0);
+	 for (int y = HEIGHT - 1; y >= 0; y--) {
+		 for (int x = 0; x < WIDTH; x++) {
+			 bool isBlack = img.pixel(x, y) == BLACK;
 			 if (!isBlack) {
-				 linesOfBlackrows_DOWN = h - y - 1;
-				 x = w;//endOfLoop
+				 linesOfBlackrows_DOWN = HEIGHT - y - 1;
+				 x = WIDTH;//endOfLoop
 				 y = -1;//endOfLoop
 			 }
 		 }
 	 }
 
-	 int anotherParametr_x = w - linesOfBlackrows_RIGHT - linesOfBlackrows_LEFT;
-	 int anotherParametr_y = h - linesOfBlackrows_TOP - linesOfBlackrows_DOWN;
+	 int anotherParametr_x = WIDTH - linesOfBlackrows_RIGHT - linesOfBlackrows_LEFT;
+	 int anotherParametr_y = HEIGHT - linesOfBlackrows_TOP - linesOfBlackrows_DOWN;
 
 	 int widthToCut = anotherParametr_x >= 0 ? anotherParametr_x : 0;
 	 int heightToCut = anotherParametr_y >= 0 ? anotherParametr_y : 0;
@@ -134,17 +137,18 @@ void Utilities::cutBlackBordersOfImg(QImage& img) {
 
 void Utilities::cutImgWithLettersToSingleLettersImgList(QImage& img, QList<QImage>& letterImages) {
 	 QList<int> colThatAreNotBlack;
-	 int w = img.width();
-	 int h = img.height();
-	 for (int x = 0; x < w; x++) {
-		 for (int y = 0; y < h; y++) {
-			 if (img.pixel(x, y) != qRgb(0, 0, 0)) {
-				 y = h; //ending inner loop
+	 const int WIDTH = img.width();
+	 const int HEIGHT = img.height();
+	 const int BLACK = qRgb(0, 0, 0);
+	 for (int x = 0; x < HEIGHT; x++) {
+		 for (int y = 0; y < HEIGHT; y++) {
+			 if (img.pixel(x, y) != BLACK) {
+				 y = HEIGHT; //ending inner loop
 				 colThatAreNotBlack.push_back(x);
 			 }
 		 }
 	 }
-	 if (colThatAreNotBlack.size() == 0) {
+	 if (colThatAreNotBlack.isEmpty()) {
 		 letterImages.push_back(img);
 		 return;
 	 }
@@ -194,9 +198,9 @@ QString Utilities::imgWithStrToStr(QImage* img) {
 QString Utilities::letterImgToLetterCodeStr(QImage* SingleLetterImg) {
 	 const int WIDTH = SingleLetterImg->width();
 	 const int HEIGHT = SingleLetterImg->height();
-	 const QString floor = QString("_");
+	 const QString FLOOR = QString("_");
 	 const QString ZERO = QString("0"), ONE = QString("1");
-	 QString toRet = QString::number(WIDTH) + floor + QString::number(HEIGHT) + floor;
+	 QString toRet = QString::number(WIDTH) + FLOOR + QString::number(HEIGHT) + FLOOR;
 	 for (size_t x = 0; x < WIDTH; x++) {
 		 for (size_t y = 0; y < HEIGHT; y++) {
 			 uint pixelColor = SingleLetterImg->pixel(x, y);
@@ -298,24 +302,27 @@ QImage Utilities::fromCharToImg(QChar CharToImg){
 	QString keyCode = mapWithCodes.key(CharToImg);
 	QStringList parts;
 	parts = keyCode.split("_");
-	int widthOfLetter = parts[0].toInt();
-	int heightOfLetter = parts[1].toInt();
-	QString code = parts[2];
-	QImage imgToRet(widthOfLetter, heightOfLetter, QImage::Format::Format_ARGB32);
-	int i = 0;
-	int sizeOfStr = code.size();
-	for (size_t x = 0; x < widthOfLetter; x++) {
-		for (size_t y = 0; y < heightOfLetter; y++) {
-			if (code[i] == '1')
-				imgToRet.setPixel(x, y, qRgba(255,255,255,255));
-			else if (code[i] == '0')
-				imgToRet.setPixel(x, y, qRgba(0, 0, 0, 255));
-			else
-				;//diag err
-			i++;
+	if (parts.size() >= 3) {
+		const int WIDTH = parts[0].toInt();
+		const int HEIGHT = parts[1].toInt();
+		QString code = parts[2];
+
+		const uint BLACK = qRgb(0, 0, 0);
+		const uint WHITE = qRgb(255, 255, 255);
+		int i = 0;
+		QImage imgToRet(WIDTH, HEIGHT, QImage::Format::Format_ARGB32);
+		for (size_t x = 0; x < WIDTH; x++) {
+			for (size_t y = 0; y < HEIGHT; y++) {
+				bool setWhite = code[i] == '1';
+				uint toSet = setWhite ? WHITE : BLACK;
+				imgToRet.setPixel(x, y, toSet);
+				i++;
+			}
 		}
+		return imgToRet;
 	}
-	return imgToRet;
+	else
+		return QImage();//diag //err
 }
 
 void Utilities::rotateImgToRight(QImage* imgToRotate, int timesToRotateRight){
@@ -359,7 +366,7 @@ QImage Utilities::getImageFromAdvancedCode(QString codeOfImg){
 			int r = rgb[0].toInt();
 			int g = rgb[1].toInt();
 			int b = rgb[2].toInt();
-			auto pixToSet = qRgb(r, g, b);
+			uint pixToSet = qRgb(r, g, b);
 			imgToCreate.setPixel(x, y, pixToSet);
 		}
 	}
@@ -421,6 +428,50 @@ int Utilities::getNumberFromBottomBar(QImage& imgToShearchWithin){
 	 
 	return strToRe.toInt();
 }
+
+QMap<Utilities::FieldsOfIniFile, QString> Utilities::get_Field_NamesFromIni_map(){
+	typedef Utilities::FieldsOfIniFile Field;
+	QMap<Field, QString> toRet;
+
+	toRet.insert(Field::LANGUAGE, "language");
+	toRet.insert(Field::LAST_USED_LOGIN, "lastLogin");
+	toRet.insert(Field::LAST_USED_PROFILE_NAME, "lastProfile");
+	toRet.insert(Field::PATH_TO_TIBIA_FOLDER, "pathToGameFolder");
+
+	return toRet;
+}
+
+QString Utilities::readFromIniFile(FieldsOfIniFile nameOfField){
+	QSettings setttings("settings.ini", QSettings::IniFormat);
+	QMap<Utilities::FieldsOfIniFile, QString> map = get_Field_NamesFromIni_map();
+	QString nameOfFieldAsStr = map[nameOfField];
+	QString readVal = setttings.value(nameOfFieldAsStr).toString();
+	return readVal;
+}
+
+void Utilities::writeIniFile(FieldsOfIniFile nameOfField, QString value){
+	QSettings setttings("settings.ini", QSettings::IniFormat);
+	QMap<Utilities::FieldsOfIniFile, QString> map = get_Field_NamesFromIni_map();
+	QString nameOfFieldAsStr = map[nameOfField];
+	setttings.setValue(nameOfFieldAsStr, value);
+}
+
+void Utilities::saveImgToOutPutFolder(QImage* img, QString *extraName){
+	QString prefixOfName;
+	if (extraName == NULL)
+		prefixOfName = QDateTime::currentDateTime().toString("mm_ss_zzz");
+	else
+		prefixOfName = *extraName;
+	QString fullname = "C:\\Users\\ADMIN\\Desktop\\output\\_" + prefixOfName + ".png";
+	img->save(fullname);
+}
+
+LPCWSTR Utilities::convert_StrToLPCWSTR(QString str){
+     return (const wchar_t*)str.utf16();
+ }
+
+
+
 
 void Utilities::TOOL_convertMapsFromOrgNameToSqrName(QString inputFolder) {
 	for (size_t i = 0; i < 16; i++) {
@@ -492,46 +543,6 @@ void Utilities::TOOL_generateMapAsText(QString inputFolder){
 	
 	int endLoop = 4;
 }
-
-QMap<Utilities::FieldsOfIniFile, QString> Utilities::get_Field_NamesFromIni_map(){
-	typedef Utilities::FieldsOfIniFile Field;
-	QMap<Field, QString> toRet;
-
-	toRet.insert(Field::LANGUAGE, "language");
-	toRet.insert(Field::LAST_USED_LOGIN, "lastLogin");
-	toRet.insert(Field::LAST_USED_PROFILE_NAME, "lastProfile");
-
-	return toRet;
-}
-
-QString Utilities::readFromIniFile(FieldsOfIniFile nameOfField){
-	QSettings setttings("settings.ini", QSettings::IniFormat);
-	QMap<Utilities::FieldsOfIniFile, QString> map = get_Field_NamesFromIni_map();
-	QString nameOfFieldAsStr = map[nameOfField];
-	QString readVal = setttings.value(nameOfFieldAsStr).toString();
-	return readVal;
-}
-
-void Utilities::writeIniFile(FieldsOfIniFile nameOfField, QString value){
-	QSettings setttings("settings.ini", QSettings::IniFormat);
-	QMap<Utilities::FieldsOfIniFile, QString> map = get_Field_NamesFromIni_map();
-	QString nameOfFieldAsStr = map[nameOfField];
-	setttings.setValue(nameOfFieldAsStr, value);
-}
-
-void Utilities::saveImgToOutPutFolder(QImage* img, QString *extraName){
-	QString prefixOfName;
-	if (extraName == NULL)
-		prefixOfName = QDateTime::currentDateTime().toString("mm_ss_zzz");
-	else
-		prefixOfName = *extraName;
-	QString fullname = "C:\\Users\\ADMIN\\Desktop\\output\\_" + prefixOfName + ".png";
-	img->save(fullname);
-}
-
-LPCWSTR Utilities::convert_StrToLPCWSTR(QString str){
-     return (const wchar_t*)str.utf16();
- }
 
 QStringList Utilities::TOOL_getCodesOfAllInFolder_bottom(QString pathToInputFolder) {
 	QDir directory(pathToInputFolder);

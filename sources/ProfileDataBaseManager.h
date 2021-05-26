@@ -1,16 +1,12 @@
 #pragma once
 #include <QObject>
-#include "qsqldatabase.h"
-#include "qsqlquery.h"
 #include "qfile.h"
 #include <QDir>
 #include "Utilities.h"
 #include <qstring.h>
 #include "Profile.h"
 #include "qvariant.h"
-#include "qsqlrecord.h"
 #include "qlistwidget.h"
-#include "qsqlfield.h"
 #include "NewProfileConfiguartor.h"
 #include "qdatetime.h"
 #include "qstring.h"

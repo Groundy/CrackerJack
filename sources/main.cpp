@@ -50,10 +50,6 @@ QIcon getIcon() {
 };
 
 void test() {
-    QString path = "C:\\Users\\ADMIN\\Desktop\\maps";
-    Utilities::TOOL_generateMapAsText(path);
-
-    int brea = 3;
 };
 
 QString makeRandomProccessName() {
@@ -63,11 +59,9 @@ QString makeRandomProccessName() {
     const int randomWordsNumber = (qrand() % 3) + 1;
     QString ProccessName = "";
     QString wordTmp;
-    for (int i = 0; i < randomWordsNumber; i++)
-    {
+    for (int i = 0; i < randomWordsNumber; i++){
         int wordLength = (qrand() % 10) + 1;
-        for (int t = 0; t < wordLength; ++t)
-        {
+        for (int t = 0; t < wordLength; ++t){
             int index = qrand() % charactersAmount;
             QChar nextChar = possibleCharacters.at(index);
             wordTmp.append(nextChar);
