@@ -13,8 +13,11 @@ ScreenSaver::~ScreenSaver(){
 void ScreenSaver::sendScreenRequestToGame(Key keyCodeForScreen){
 	uint pid = var->var_pidOfGame;
 	QString winTitle = var->var_winTitleOfGame;
-	if (pid == 0 || winTitle.isEmpty())
-		return;//diag err
+	bool wrongParameters = pid == 0 || winTitle.isEmpty();
+	if (wrongParameters) {
+		Logger::logPotenialBug("Wrong parameters of game(pid or game window title", "ScreenSaver", "sendScreenRequestToGame");
+		return;
+	}
 	Key key(keyCodeForScreen);
 	Utilities::sendKeyStrokeToProcess(key, pid, winTitle);
 }

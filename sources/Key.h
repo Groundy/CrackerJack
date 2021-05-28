@@ -3,7 +3,7 @@
 #include <qstring.h>
 #include "qsplitter.h"
 #include "qmap.h"
-
+#include "Logger.h"
 class Key {
 public:
 	enum KEYS { F1=0x70, F2, F3, F4, F5, F6, F7, F8, F9, F10, F11, F12,

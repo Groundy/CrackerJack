@@ -52,8 +52,10 @@ int ScreenAnalyzer::loadScreen(QImage& img){
 QString ScreenAnalyzer::getNameOfLastTakenScreenShot(){
 	QDir directory(pathToScreenFolder);
 	QStringList litOfFIles = directory.entryList(QStringList() << "*.png", QDir::Files);
-	if (litOfFIles.isEmpty()) 
-		return QString(); //diag err
+	if (litOfFIles.isEmpty()) {
+		Logger::logPotenialBug("No files In screenshot folder", "ScreenAnalyzer", "getNameOfLastTakenScreenShot");
+		return QString();
+	}
 
 	QList<long long> listOfOnlyDatesAndTimes;
 	//geting QStrin with last digit of year, 2 digits of month, 2 digits of day
@@ -61,7 +63,7 @@ QString ScreenAnalyzer::getNameOfLastTakenScreenShot(){
 	for each (QString var in litOfFIles)
 		listOfOnlyDatesAndTimes << var.remove("-").remove("_").mid(3,14).toLongLong();
 
-	int index = 0;
+	int index = -1;
 	long long biggestValue = 0;
 	for (int i = 0; i < listOfOnlyDatesAndTimes.size(); i++) {
 		if (listOfOnlyDatesAndTimes[i] > biggestValue) {
@@ -69,14 +71,13 @@ QString ScreenAnalyzer::getNameOfLastTakenScreenShot(){
 			index = i;
 		}
 	}
-	if (litOfFIles.size() - 1 < index)
-		;//diag err
 
-	return litOfFIles[index];
+	bool indexIsOutOfRange = litOfFIles.size() - 1 < index || index < 0;
+	QString toRet = !indexIsOutOfRange ? litOfFIles[index] : "";
+	return toRet;
 }
 
 int ScreenAnalyzer::getNameOfLastTakenScreenShotForSure(QString& toRet, int MaxTries) {
-	toRet = "";
 	for (int tries = 0; tries < MaxTries; tries++) {
 		toRet = getNameOfLastTakenScreenShot();
 		if (!toRet.isEmpty())

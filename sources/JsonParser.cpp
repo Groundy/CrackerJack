@@ -336,37 +336,42 @@ bool JsonParser::readItemJson(QList<Utilities::Item>* items){
 }
 
 bool JsonParser::getHealthRestoreMethodes(QStringList incantationsAndSpellsList, QList<Utilities::RestoreMethode>& spellsAndPotionsObjects) {
-	QList<Utilities::Item> potions;
-	QList<Utilities::Spell> spells;
+	typedef Utilities::Item Item;
+	typedef Utilities::Spell Spell;
+	typedef Utilities::RestoreMethode RestoreMethode;
+	QList<Item> potions;
+	QList<Spell> spells;
 	bool sucess = readSpellsJson(spells);
-	Utilities::Spell::TYPE_OF_SPELL typeToFiltr = Utilities::Spell::TYPE_OF_SPELL::HEALING;
+	Spell::TYPE_OF_SPELL typeToFiltr = Spell::TYPE_OF_SPELL::HEALING;
 	bool sucess2 = filtrSpells(spells, NULL, &typeToFiltr);
-	getItemsFromCategory(potions, Utilities::Item::TYPE_OF_ITEM::POTIONS);
+	getItemsFromCategory(potions, Item::TYPE_OF_ITEM::POTIONS);
 
-	bool sucess3 = potions.size() != 0 && spells.size() != 0;
+	bool sucess3 = !potions.isEmpty() && !spells.isEmpty();
 	bool failure = !(sucess && sucess2 && sucess3);
-	if (failure)
+	if (failure) {
+		Logger::logPotenialBug("Problem in obtaining health spells and pots", "JsonParser", "getHealthRestoreMethodes");
 		return false;
+	}
 
-	QList<Utilities::RestoreMethode> restoreMethodesToRet;
+	QList<RestoreMethode> restoreMethodesToRet;
 	for each(QString nameOfMethodes in incantationsAndSpellsList){
 
 		bool skipLookingInPotions = false;
-		for each (Utilities::Spell spell in spells){
+		for each (Spell spell in spells){
 			bool isProperSpellToReturn = spell.incantations == nameOfMethodes;
 			if (isProperSpellToReturn) {
 				skipLookingInPotions = true;
-				Utilities::RestoreMethode toAdd = spell.toRestoreMethode();
+				RestoreMethode toAdd = spell.toRestoreMethode();
 				restoreMethodesToRet.push_back(toAdd);
 				break;
 			}
 		}
 		if (skipLookingInPotions)
 			continue;
-		for each (Utilities::Item item in potions){
+		for each (Item item in potions){
 			bool isProperPotionToReturn = item.name == nameOfMethodes;
 			if (isProperPotionToReturn) {
-				Utilities::RestoreMethode toAdd = item.toRestoreMethode();
+				RestoreMethode toAdd = item.toRestoreMethode();
 				restoreMethodesToRet.push_back(toAdd);
 				break;
 			}
@@ -377,26 +382,26 @@ bool JsonParser::getHealthRestoreMethodes(QStringList incantationsAndSpellsList,
 	return allWentGood;
 }
 
-bool JsonParser::getManaRestoreMethodes(QStringList potionNameList, QList<Utilities::Item>& potionToReturn){
-	QList<Utilities::Item> potions;
-	getItemsFromCategory(potions, Utilities::Item::TYPE_OF_ITEM::POTIONS);
+bool JsonParser::getManaRestoreMethodes(QStringList potionNameToBeFound, QList<Utilities::Item>& potionToReturn){
+	typedef Utilities::Item Item;
+	QList<Item> allExistingPotions;
+	getItemsFromCategory(allExistingPotions, Item::TYPE_OF_ITEM::POTIONS);
 
-	bool failure = potions.size() == 0;
-	if (failure)
+	if (allExistingPotions.isEmpty())
 		return false;
 
-	QList<Utilities::Item> filtredpotions;
-	for each (QString nameOfMethodes in potionNameList) {
-		for each (Utilities::Item item in potions) {
+	QList<Item> foundPotions;
+	for each (QString nameOfMethodes in potionNameToBeFound) {
+		for each (Item item in allExistingPotions) {
 			bool isProperPotionToReturn = item.name == nameOfMethodes;
 			if (isProperPotionToReturn) {
-				filtredpotions.push_back(item);
+				foundPotions.push_back(item);
 				break;
 			}
 		}
 	}
-	potionToReturn = filtredpotions;
-	bool allWentGood = filtredpotions.size() == potionNameList.size();
+	potionToReturn = foundPotions;
+	bool allWentGood = foundPotions.size() == potionNameToBeFound.size();
 	return allWentGood;
 }
 

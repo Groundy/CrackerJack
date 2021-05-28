@@ -9,18 +9,15 @@ bool Key::checkIfnumberIsAloowed(int keyNumber){
 }
 
 Key::Key(){
-	number =endOfEnum;
+	number = endOfEnum;
 }
 
 Key::Key(int numberToSet){
 	bool isAllowed = checkIfnumberIsAloowed(numberToSet);
-	if (isAllowed) {
-		this->number = numberToSet;
-	}
-	else{
-		this->number = -1;
-		//diag err
-	}
+	numberToSet = isAllowed ? numberToSet : -1;
+	this->number = numberToSet;
+	if (this->number == -1)
+		Logger::logPotenialBug("Empty key was created", "Key", "Key(constructor)");
 }
 
 Key::Key(QKeySequence qsec){
@@ -95,6 +92,6 @@ QKeySequence Key::toQKeySequence(Key key){
 	else if (keyValue == MINUS) toRetStr = "-";
 	else if (keyValue == PLUS) toRetStr =  "+";
 	else toRetStr = "";
-	QKeySequence seq(toRetStr);
-	return seq;
+
+	return QKeySequence(toRetStr);
 }

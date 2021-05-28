@@ -22,11 +22,12 @@ bool Utilities::showMessageBox_NO_YES(QString title, QString text)
  }
 
 bool Utilities::sendKeyStrokeToProcess(Key key, unsigned int PID, QString nameOfWindow) {
-  
 	LPCWSTR nameOfWindowLPCWSTR = convert_StrToLPCWSTR(nameOfWindow);
     HWND handler = FindWindow(NULL, nameOfWindowLPCWSTR);
-    if (handler == NULL)
-        return false;//diag err
+	if (handler == NULL) {
+		Logger::logPotenialBug("Can't get handler to window: " + nameOfWindow, "Utilities", "sendKeyStrokeToProcess");
+        return false;
+	}
     DWORD tmp = PID;
     DWORD hThread = GetWindowThreadProcessId(handler, &tmp);
     if (hThread != NULL) {
@@ -35,9 +36,10 @@ bool Utilities::sendKeyStrokeToProcess(Key key, unsigned int PID, QString nameOf
         PostMessage(handler, WM_KEYUP, key.number, g);
 		return true;
     }
-    else
-        return false;//errToDo
-
+	else{
+		Logger::logPotenialBug("Can't get thread PID for used handler", "Utilities", "sendKeyStrokeToProcess");
+		return false;
+	}
  }
 
 void Utilities::imgToBlackAndWhiteOneColor(QImage& img, int threshold) {
@@ -302,15 +304,15 @@ QImage Utilities::fromCharToImg(QChar CharToImg){
 	QString keyCode = mapWithCodes.key(CharToImg);
 	QStringList parts;
 	parts = keyCode.split("_");
-	if (parts.size() >= 3) {
+	if (parts.size() == 3) {
 		const int WIDTH = parts[0].toInt();
 		const int HEIGHT = parts[1].toInt();
 		QString code = parts[2];
 
 		const uint BLACK = qRgb(0, 0, 0);
 		const uint WHITE = qRgb(255, 255, 255);
-		int i = 0;
 		QImage imgToRet(WIDTH, HEIGHT, QImage::Format::Format_ARGB32);
+		int i = 0;
 		for (size_t x = 0; x < WIDTH; x++) {
 			for (size_t y = 0; y < HEIGHT; y++) {
 				bool setWhite = code[i] == '1';
@@ -321,8 +323,10 @@ QImage Utilities::fromCharToImg(QChar CharToImg){
 		}
 		return imgToRet;
 	}
-	else
-		return QImage();//diag //err
+	else {
+		Logger::logPotenialBug("Wrong structure of char code for char: " + QString(CharToImg), "Utilities", "fromCharToImg");
+		return QImage();
+	}
 }
 
 void Utilities::rotateImgToRight(QImage* imgToRotate, int timesToRotateRight){
