@@ -64,38 +64,32 @@ int Calibrator::fillRectWithPotsInVarClass(QImage& fullscreen, QStringList nameO
 QList<QPoint> Calibrator::findStartPositionInImg_mulitpeImgs(QList<QImage*> imgsToFind, QImage& imgToShareWithin) {
 	// this fun return starting points from imgToSharePoints than consist pixels from one of imgsToFind
 
-
-	bool properFormats = true;
 	QImage::Format formatBig = imgToShareWithin.format();
-
 	for each (QImage * var in imgsToFind) {
 		if (formatBig != var->format()) {
-			properFormats = false;
-			break;
+			Logger::logPotenialBug("Not all imgs have the same format!","Calibrator","findStartPositionInImg_mulitpeImgs");
+			return QList<QPoint>();//[TO DO zamienic ta funkcje zeby zwracala error code]
 		}
 	}
-	if (!properFormats)
-		;//diag /err
 
-	bool allPicAreInTheSameSize = true;
-	int widthOfFirst = imgsToFind[0]->width();
-	int heightOfFirst = imgsToFind[0]->height();
+	const int WIDTH_OF_FIRST_IMG = imgsToFind[0]->width();
+	const int HEIGHT_OF_FIRST_IMG = imgsToFind[0]->height();
 	for each (QImage * var in imgsToFind) {
-		bool widthIsGood = var->width() == widthOfFirst;
-		bool heightIsGood = var->height() == heightOfFirst;
-		if (!(widthIsGood && heightIsGood)) {
-			allPicAreInTheSameSize = false;
-			break;//diag /err
+		bool widthIsGood = var->width() == WIDTH_OF_FIRST_IMG;
+		bool heightIsGood = var->height() == HEIGHT_OF_FIRST_IMG;
+		bool isAllRight = widthIsGood && heightIsGood;
+		if (!isAllRight) {
+			Logger::logPotenialBug("Not all imgs have the same size!", "Calibrator", "findStartPositionInImg_mulitpeImgs");
+			return QList<QPoint>();//[TO DO zamienic ta funkcje zeby zwracala error code]
 		}
 	}
-	bool allGood = allPicAreInTheSameSize && properFormats;
 
-	const int maxPixIndThatShoudldBeTested_X = imgToShareWithin.width() - widthOfFirst;
-	const int maxPixIndThatShoudldBeTested_Y = imgToShareWithin.height() - heightOfFirst;
+	const int MAX_WIDTH_VAL_TO_SHEARCH = imgToShareWithin.width() - WIDTH_OF_FIRST_IMG;
+	const int MAX_HEIGHT_VAL_TO_SHEARCH = imgToShareWithin.height() - HEIGHT_OF_FIRST_IMG;
 
 	QList<QPoint> startPointsListToRet;
-	for (int x = 0; x <= maxPixIndThatShoudldBeTested_X; x++) {
-		for (int y = 0; y <= maxPixIndThatShoudldBeTested_Y; y++) {
+	for (int x = 0; x <= MAX_WIDTH_VAL_TO_SHEARCH; x++) {
+		for (int y = 0; y <= MAX_HEIGHT_VAL_TO_SHEARCH; y++) {
 			bool atLeastOnePixIsMatched = false;
 			QRgb pixFromImg_big = imgToShareWithin.pixel(x, y);
 
@@ -109,9 +103,9 @@ QList<QPoint> Calibrator::findStartPositionInImg_mulitpeImgs(QList<QImage*> imgs
 
 			if (atLeastOnePixIsMatched) {
 				//first pix matched, looking for more
-				int wrongPixels = widthOfFirst * heightOfFirst;
-				for (int x_TMP = 0; x_TMP < widthOfFirst; x_TMP++) {
-					for (int y_TMP = 0; y_TMP < heightOfFirst; y_TMP++) {
+				int wrongPixels = WIDTH_OF_FIRST_IMG * HEIGHT_OF_FIRST_IMG;
+				for (int x_TMP = 0; x_TMP < WIDTH_OF_FIRST_IMG; x_TMP++) {
+					for (int y_TMP = 0; y_TMP < HEIGHT_OF_FIRST_IMG; y_TMP++) {
 						QRgb pixFromImg_big2 = imgToShareWithin.pixel(x + x_TMP, y + y_TMP);
 						bool metReq = false;
 						for each (QImage * var in imgsToFind) {
@@ -135,20 +129,23 @@ QList<QPoint> Calibrator::findStartPositionInImg_mulitpeImgs(QList<QImage*> imgs
 }
 
 bool Calibrator::findPotionsOnBottomBar(QStringList namesOfPotionsToFind, QStringList& namesOfPotionosFound, QList<QRect>& rectsWithFoundPots, QImage& bottomBarImg) {
+	bool wrongInput = namesOfPotionsToFind.size() == 0 || bottomBarImg.width() <= 0 || bottomBarImg.height() <= 0;
+	if (wrongInput) {
+		Logger::logPotenialBug("Wrong(empty) input", "Calibrator", "findPotionsOnBottomBar");
+		return false;
+	}
+
 	QMap<QString, QString> map_light, map_dark;
 	getMapWithPotionsImgCodes(map_light, map_dark);
 
 	QStringList allPotionsNames = map_light.keys();
 	for each (QString var in allPotionsNames) {
-		bool shouldBeOnListToFind = namesOfPotionsToFind.contains(var);
-		if (!shouldBeOnListToFind) {
+		bool shouldBeRemoved = !namesOfPotionsToFind.contains(var);
+		if (shouldBeRemoved) {
 			map_light.remove(var);
 			map_dark.remove(var);
 		}
 	}
-	bool err = (map_light.size() != map_dark.size()) || (map_dark.size() < 0);
-	if (err)
-		return false;
 
 	QList<QImage> potionsImg_light, potionsImg_dark;
 	for each (QString potName in map_light.keys()) {
@@ -172,8 +169,8 @@ bool Calibrator::findPotionsOnBottomBar(QStringList namesOfPotionsToFind, QStrin
 			potionsOfStartingPotions.push_back(pointsOfStart.first());
 			namesOfFoundPotions.push_back(map_dark.keys()[i]);
 		}
-		else
-			;//diag err
+		else if(pointsOfStart.size() > 1)
+			Logger::logPotenialBug("More than one occurance of Potion in Image", "Calibrator", "findPotionsOnBottomBar");
 	}
 
 	const int WIDTH_HEIGHT_PIC = 32;
@@ -212,7 +209,10 @@ bool Calibrator::findPotionsOnBottomBar(QStringList namesOfPotionsToFind, QStrin
 		int start_x = someWhereInPic.x() + 1;
 		int start_y = someWhereInPic.y() - WIDTH_HEIGHT_PIC + 2 * height + 1;
 
-		bool err = start_x < 0 || (start_x + width) > WIDTH || start_y < 0 || (start_y + height) > HEIGHT;//TODO
+		bool err = start_x < 0 || (start_x + width) > WIDTH || start_y < 0 || (start_y + height) > HEIGHT;
+		if(err)
+			Logger::logPotenialBug("Out of range cordinates of rect to cut, only part of it will be cut", "Calibrator", "findPotionsOnBottomBar");
+
 		QRect toAdd(start_x, start_y, width, height);
 		rectToRet.push_back(toAdd);
 	}
@@ -225,27 +225,27 @@ bool Calibrator::findPotionsOnBottomBar(QStringList namesOfPotionsToFind, QStrin
 
 QList<QPoint> Calibrator::findStartPositionInImg(QImage& imgToFind, QImage& imgToSearchWithin) {
 	//fun return list of start positions of imgToFind, position is lef down corner
-	QImage::Format format1 = imgToFind.format();
-	QImage::Format format2 = imgToSearchWithin.format();
-
 	const int WIDTH_SMALL_PIC = imgToFind.width();
 	const int HEIGHT_SMALL_PIC = imgToFind.height();
 	const int WIDTH_BIG_PIC = imgToSearchWithin.width();
 	const int HEIGHT_BIG_PIC = imgToSearchWithin.height();
 
-
+	bool errEmpty = WIDTH_SMALL_PIC <= 0 || HEIGHT_SMALL_PIC <= 0 || WIDTH_BIG_PIC <= 0 || HEIGHT_BIG_PIC <= 0;
 	bool errWidth = WIDTH_SMALL_PIC >= WIDTH_BIG_PIC;
 	bool errHeight = HEIGHT_SMALL_PIC >= HEIGHT_BIG_PIC;
-	bool errFormat = format1 != format2;
-	bool anyErr = errWidth || errHeight || errFormat;
-	if (anyErr);//diag /err
+	bool errFormat = imgToFind.format() != imgToSearchWithin.format();
+	bool anyErr = errWidth || errHeight || errFormat || errEmpty;
+	if (anyErr) {
+		Logger::logPotenialBug("Wrong input of two img", "Calibrator", "findStartPositionInImg");
+		return QList<QPoint>();//todo zamienic na error code;
+	}
 
-	const int maxPixIndThatShoudldBeTested_X = WIDTH_BIG_PIC - WIDTH_SMALL_PIC;
-	const int maxPixIndThatShoudldBeTested_Y = HEIGHT_BIG_PIC - HEIGHT_SMALL_PIC;
+	const int MAX_X_INDEX_TO_CHECK = WIDTH_BIG_PIC - WIDTH_SMALL_PIC;
+	const int MAX_Y_INDEX_TO_CHECK = HEIGHT_BIG_PIC - HEIGHT_SMALL_PIC;
 
 	QList<QPoint> startPointsListToRet;
-	for (int x = 0; x <= maxPixIndThatShoudldBeTested_X; x++) {
-		for (int y = 0; y <= maxPixIndThatShoudldBeTested_Y; y++) {
+	for (int x = 0; x <= MAX_X_INDEX_TO_CHECK; x++) {
+		for (int y = 0; y <= MAX_Y_INDEX_TO_CHECK; y++) {
 			QRgb pixSmallImg = imgToFind.pixel(0, 0);
 			QRgb pixBigImg = imgToSearchWithin.pixel(x, y);
 			bool firstPixelMatched = pixSmallImg == pixBigImg;

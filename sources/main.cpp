@@ -42,16 +42,14 @@ int main(int argc, char *argv[])
     return a.exec();
 }
 
+void test() {
+};
+
 QIcon getIcon() {
     QDir dir = QDir::current();
     dir.cd("Resources");
     QString iconPath = dir.absoluteFilePath("logo.png");
     return QIcon(iconPath);
-};
-
-void test() {
-    Logger::logPotenialBug("kutas3");
-    int g = 5;
 };
 
 QString makeRandomProccessName() {

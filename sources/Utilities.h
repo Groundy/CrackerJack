@@ -15,6 +15,7 @@
 #include "VariablesClass.h"
 #include "qdatetime.h"
 #include "qrgb.h"
+#include "Logger.h"
 class Utilities {
 public:
 
@@ -92,8 +93,10 @@ public:
 				toRet.type = RestoreMethode::TypeOfMethode::POTION;
 				return toRet;
 			}
-			else
-				return RestoreMethode();//diag err
+			else {
+				Logger::logPotenialBug("Tried to convert object _Item_ to _RestoreMethode_ but it's not a potion!, returning empty _RestoreMethode_","Utilites/Item","toRestoreMethode()");
+				return RestoreMethode();
+			}
 		}
 	};
 	class Potion : public Item {
