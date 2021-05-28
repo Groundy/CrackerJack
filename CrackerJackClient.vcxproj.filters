@@ -88,6 +88,9 @@
     <ClCompile Include="sources\Calibrator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Logger.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="sources\LoginWindow.h">
@@ -130,6 +133,9 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="sources\Calibrator.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="Logger.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>

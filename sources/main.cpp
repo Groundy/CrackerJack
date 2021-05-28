@@ -7,7 +7,7 @@
 #include "qsettings.h"
 #include "VariablesClass.h"
 #include "Calibrator.h"
-
+#include "Logger.h"
 QString makeRandomProccessName();
 void test();
 QIcon getIcon();
@@ -50,6 +50,8 @@ QIcon getIcon() {
 };
 
 void test() {
+    Logger::logPotenialBug("kutas3");
+    int g = 5;
 };
 
 QString makeRandomProccessName() {
