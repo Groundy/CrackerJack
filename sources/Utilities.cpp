@@ -141,7 +141,7 @@ void Utilities::cutImgWithLettersToSingleLettersImgList(QImage& img, QList<QImag
 	 QList<int> colThatAreNotBlack;
 	 const int WIDTH = img.width();
 	 const int HEIGHT = img.height();
-	 const int BLACK = qRgb(0, 0, 0);
+	 const uint BLACK = qRgb(0, 0, 0);
 	 for (int x = 0; x < HEIGHT; x++) {
 		 for (int y = 0; y < HEIGHT; y++) {
 			 if (img.pixel(x, y) != BLACK) {

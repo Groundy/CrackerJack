@@ -368,26 +368,17 @@ bool ProfileDataBaseManager::readProfileFromDataBase(QString profileName, Profil
 
 //writers
 QString ProfileDataBaseManager::DB_writer_ManaAndHealthRestorePercentages(QList<int> vect) {
-	//ERR //DIAG
-	int size = vect.size();
-	if (size == 0)
-		return QString("#");
-
-	QString toRet =QString("#");
-	for (int i = 0; i < size; i++)
+	QString toRet = "";
+	for (int i = 0; i < vect.size(); i++)
 		toRet.append(QString::number(vect[i]) + "-");
 
 	return toRet;
 }
 
 QString ProfileDataBaseManager::DB_writer_ManaAndHealthKeys(QList<Key> keylist) {
-	if (keylist.size() == 0)
-		return QString("#");
-
-	QString toRet = "#";
+	QString toRet = "";
 	for each (Key key in keylist)
 		toRet.append(QString::number(key.number)+"#");
-
 	return toRet;
 }
 
@@ -415,29 +406,24 @@ QString ProfileDataBaseManager::DB_writer_rectangleWithPositionInImg(QRect rect)
 //readers
 QList<int> ProfileDataBaseManager::DB_reader_ManaAndHealthRestorePercentages(QString str) {
 	QList<int> vectWithThreshold;
-
 	QStringList list = str.split("#",Qt::SplitBehaviorFlags::SkipEmptyParts);
-	if (list.size() != 1)
-		return vectWithThreshold;        //DIAG //ERROR
-	QStringList thresholds = list[0].split("-",Qt::SplitBehaviorFlags::SkipEmptyParts);
+	if (list.size() < 1)
+		return vectWithThreshold;
 
+	QStringList thresholds = list[0].split("-", Qt::SplitBehaviorFlags::SkipEmptyParts);
 	for (int i = 0; i < thresholds.size(); i++)
 		vectWithThreshold.push_back(thresholds[i].toInt());
-
 	return vectWithThreshold;
 }
 
 QList<Key> ProfileDataBaseManager::DB_reader_ManaAndHealthKeys(QString str) {
 	QList<Key> keyList;
-	QString tmp = str.remove(0, 1);
-	if(tmp.size() == 0)
+	if(str.isEmpty())
 		return keyList;
-	str = tmp;
 
 	QStringList list = str.split("#", Qt::SplitBehaviorFlags::SkipEmptyParts);
 	for (int i = 0; i < list.size(); i++)
 		keyList.push_back(Key(list[i].toInt()));
-
 	return keyList;
 }
 

@@ -91,10 +91,10 @@ QList<QPoint> Calibrator::findStartPositionInImg_mulitpeImgs(QList<QImage*> imgs
 	for (int x = 0; x <= MAX_WIDTH_VAL_TO_SHEARCH; x++) {
 		for (int y = 0; y <= MAX_HEIGHT_VAL_TO_SHEARCH; y++) {
 			bool atLeastOnePixIsMatched = false;
-			QRgb pixFromImg_big = imgToShareWithin.pixel(x, y);
+			uint pixFromImg_big = imgToShareWithin.pixel(x, y);
 
 			for each (QImage * var in imgsToFind) {
-				QRgb pixFromImg_small = var->pixel(0, 0);
+				uint pixFromImg_small = var->pixel(0, 0);
 				if (pixFromImg_big == pixFromImg_small) {
 					atLeastOnePixIsMatched = true;
 					break;
@@ -106,10 +106,10 @@ QList<QPoint> Calibrator::findStartPositionInImg_mulitpeImgs(QList<QImage*> imgs
 				int wrongPixels = WIDTH_OF_FIRST_IMG * HEIGHT_OF_FIRST_IMG;
 				for (int x_TMP = 0; x_TMP < WIDTH_OF_FIRST_IMG; x_TMP++) {
 					for (int y_TMP = 0; y_TMP < HEIGHT_OF_FIRST_IMG; y_TMP++) {
-						QRgb pixFromImg_big2 = imgToShareWithin.pixel(x + x_TMP, y + y_TMP);
+						uint pixFromImg_big2 = imgToShareWithin.pixel(x + x_TMP, y + y_TMP);
 						bool metReq = false;
 						for each (QImage * var in imgsToFind) {
-							QRgb pixFromImg_small2 = var->pixel(x_TMP, y_TMP);
+							uint pixFromImg_small2 = var->pixel(x_TMP, y_TMP);
 							bool pixMatched = pixFromImg_big2 == pixFromImg_small2;
 							if (pixMatched) {
 								metReq = true;
@@ -246,8 +246,8 @@ QList<QPoint> Calibrator::findStartPositionInImg(QImage& imgToFind, QImage& imgT
 	QList<QPoint> startPointsListToRet;
 	for (int x = 0; x <= MAX_X_INDEX_TO_CHECK; x++) {
 		for (int y = 0; y <= MAX_Y_INDEX_TO_CHECK; y++) {
-			QRgb pixSmallImg = imgToFind.pixel(0, 0);
-			QRgb pixBigImg = imgToSearchWithin.pixel(x, y);
+			uint pixSmallImg = imgToFind.pixel(0, 0);
+			uint pixBigImg = imgToSearchWithin.pixel(x, y);
 			bool firstPixelMatched = pixSmallImg == pixBigImg;
 			if (firstPixelMatched) {
 				bool foundPosition = true;
@@ -726,7 +726,7 @@ int Calibrator::categorizeWindows(QImage& fullscreen, QList<QRect>& importantRec
 int Calibrator::findWindowsOnScreen(QImage& fullScreen, QList<QRect>& importantRectangles) {
 	const int WIDTH = fullScreen.width();
 	const int HEIGHT = fullScreen.height();
-	const auto BLACK_PIX_COL = qRgb(0, 0, 0);
+	const uint BLACK_PIX_COL = qRgb(0, 0, 0);
 	const uint MIN_ACCEPTABLE_VAL = 17;
 	const uint MAX_ACCEPTABLE_VAL = 29;
 	QList<QPoint> startOfFrames;
