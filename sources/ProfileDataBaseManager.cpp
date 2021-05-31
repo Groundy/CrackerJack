@@ -405,12 +405,8 @@ QString ProfileDataBaseManager::DB_writer_rectangleWithPositionInImg(QRect rect)
 }
 //readers
 QList<int> ProfileDataBaseManager::DB_reader_ManaAndHealthRestorePercentages(QString str) {
+	QStringList thresholds = str.split("-", Qt::SplitBehaviorFlags::SkipEmptyParts);
 	QList<int> vectWithThreshold;
-	QStringList list = str.split("#",Qt::SplitBehaviorFlags::SkipEmptyParts);
-	if (list.size() < 1)
-		return vectWithThreshold;
-
-	QStringList thresholds = list[0].split("-", Qt::SplitBehaviorFlags::SkipEmptyParts);
 	for (int i = 0; i < thresholds.size(); i++)
 		vectWithThreshold.push_back(thresholds[i].toInt());
 	return vectWithThreshold;
@@ -418,9 +414,6 @@ QList<int> ProfileDataBaseManager::DB_reader_ManaAndHealthRestorePercentages(QSt
 
 QList<Key> ProfileDataBaseManager::DB_reader_ManaAndHealthKeys(QString str) {
 	QList<Key> keyList;
-	if(str.isEmpty())
-		return keyList;
-
 	QStringList list = str.split("#", Qt::SplitBehaviorFlags::SkipEmptyParts);
 	for (int i = 0; i < list.size(); i++)
 		keyList.push_back(Key(list[i].toInt()));
@@ -454,17 +447,15 @@ QRect ProfileDataBaseManager::DB_reader_rectangleWithPositionInImg(QString str){
 }
 
 bool ProfileDataBaseManager::writeRectToDb(QString profileName, FieldsOfDB dbField, QRect rectToSave){
-	int nubmerOfFieldInEnum = dbField;
-	int stratPositionInEnum = POS_HP;
-	int endPositionInEnum = POS_LAST_MINIMAP;
-	bool isGoodField = dbField >= stratPositionInEnum && dbField <= endPositionInEnum;
-	if (!isGoodField)
+	bool moreThanMin = dbField >= POS_HP;
+	bool lessThanMax = dbField <= POS_LAST_MINIMAP;
+	bool outOfRange = !(moreThanMin && lessThanMax);
+	if (outOfRange)
 		return false;
 
 	QString noImportant;
 	bool profExist = getPathToProfileFile(profileName, noImportant);
-	bool allRight = (isGoodField) && profExist;
-	if (!allRight)
+	if (!profExist)
 		return false;
 
 	QString newValue = DB_writer_rectangleWithPositionInImg(rectToSave);
@@ -473,15 +464,15 @@ bool ProfileDataBaseManager::writeRectToDb(QString profileName, FieldsOfDB dbFie
 }
 
 bool ProfileDataBaseManager::readRectFromDb(QString profileName, FieldsOfDB dbField, QRect& rectToRead){
-	int nubmerOfFieldInEnum = dbField;
-	int stratPositionInEnum = POS_HP;
-	int endPositionInEnum = POS_LAST_MINIMAP;
-	bool isGoodField = dbField >= stratPositionInEnum && dbField <= endPositionInEnum;
+	bool moreThanMin = dbField >= POS_HP;
+	bool lessThanMax = dbField <= POS_LAST_MINIMAP;
+	bool outOfRange = !(moreThanMin && lessThanMax);
+	if (outOfRange)
+		return false;
 
 	QString noImportant;
 	bool profExist = getPathToProfileFile(profileName, noImportant);
-	bool allRight = (isGoodField) && profExist;
-	if (!allRight)
+	if (!profExist)
 		return false;
 
 	QString toBeRead;
