@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -102,7 +102,7 @@
     <ResourceCompile Include="CrackerJackClient.rc" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Logger.cpp" />
+    <ClCompile Include="sources\Logger.cpp" />
     <ClCompile Include="sources\activeGameThread.cpp" />
     <ClCompile Include="sources\Calibrator.cpp" />
     <ClCompile Include="sources\JsonParser.cpp" />
@@ -141,7 +141,7 @@
     <QtMoc Include="sources\RGBstruct.h" />
     <QtMoc Include="sources\JsonParser.h" />
     <QtMoc Include="sources\Calibrator.h" />
-    <QtMoc Include="Logger.h" />
+    <QtMoc Include="sources\Logger.h" />
     <ClInclude Include="sources\StringResource.h" />
     <QtMoc Include="sources\NewProfileConfiguartor.h" />
     <ClInclude Include="sources\Key.h" />
