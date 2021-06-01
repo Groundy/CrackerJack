@@ -121,9 +121,12 @@ void SelectProfileWindow::deleteProfileButtonAction(){
 	QStringList choppedString = profileNameToDelete.split("] ");
 	QString onlyProfileName;
 	if (choppedString.size() >= 2)
-		onlyProfileName = choppedString[1];//TODO obsluga przypadku gdy po splitowaniu nazwa profilu nie jest zapisana w choppedString[1]
+		onlyProfileName = choppedString[1];
+	else {
+		Logger::logPotenialBug("Name of profile to delete is diffrent from profile file name.","SelectProfileWindow","deleteProfileButtonAction");
+		return;
+	}
 	
-
 	QString msgText = StringResource::SelectProfileWindow_sureToDeleteProfile() + onlyProfileName  + " ?";
 	auto buttons = QMessageBox::StandardButton::Yes | QMessageBox::StandardButton::No;
 	int retCode = Utilities::showMessageBox("CrackerJack", msgText, buttons);
@@ -148,22 +151,26 @@ void SelectProfileWindow::profSelected(){
 	QStringList nameParts = nameOfProfToSplit.split("] ");
 	QString profileName;
 	ProfileDataBaseManager dbManager;
-	bool profFound = true;
-	if (nameParts.size() >= 2)
+	if (nameParts.size() >= 2) 
 		profileName = nameParts[1];
-	else
-		profFound = false;
-
-	bool ok = dbManager.readProfileFromDataBase(profileName, *profToSelect);
-	if (ok && profFound) {
-		Utilities::writeIniFile(Utilities::FieldsOfIniFile::LAST_USED_PROFILE_NAME, profileName);
-		QString lastLoginInSec = QString::number(Utilities::getCurrentTimeInMiliSeconds() / 1000);
-		dbManager.modifyFieldValue(profileName, ProfileDataBaseManager::LAST_LOGIN, lastLoginInSec);
-		this->accept();
-	}
 	else {
-		//TODO poinformowac uzytkownika ze tutatj jest cos nie tak;
+		Logger::logPotenialBug("Name of profile to choose is diffrent from profile file name.", "SelectProfileWindow", "profSelected");
 		prepareProfiles();
+		return;
 	}
+
+	bool error = !dbManager.readProfileFromDataBase(profileName, *profToSelect);
+	if (error) {
+		Logger::logPotenialBug("Profile can't be read", "SelectProfileWindow", "profSelected");
+		prepareProfiles();
+		return;
+	}
+
+	Utilities::writeIniFile(Utilities::FieldsOfIniFile::LAST_USED_PROFILE_NAME, profileName);
+	LONG64 currentTimeInSec = Utilities::getCurrentTimeInMiliSeconds() / 1000;
+	QString lastLoginInSecToSet = QString::number(currentTimeInSec);
+	dbManager.modifyFieldValue(profileName, ProfileDataBaseManager::LAST_LOGIN, lastLoginInSecToSet);
+	this->accept();
+
 }
 

@@ -1,11 +1,9 @@
 #include "ProfileDataBaseManager.h"
 #include "StringResource.h"
 ProfileDataBaseManager::ProfileDataBaseManager(){
-	QDir dir = QDir::current();//TODO sprawdzic czy po zainstwalowaniu w wersji finalnej jest to Ok i czy s¹ wszelkie prawa
+	QDir dir = QDir::current();
 	bool foundFolderWithProfs = dir.cd("Profiles");
-	//TODO dodac obsluge gdy folder nie zostanie znaleziony
 	pathToFolderWithProfiles = dir.absolutePath();
-	
 }
 
 ProfileDataBaseManager::~ProfileDataBaseManager(){
@@ -71,13 +69,17 @@ bool ProfileDataBaseManager::getPathToProfileFile(QString profName, QString& pat
 bool ProfileDataBaseManager::modifyFieldValue(QString profName, FieldsOfDB field, QString newValue){
 	QString pathToFile;
 	bool fileExist = getPathToProfileFile(profName, pathToFile);
-	//if (!fileExist)
-	//	return false;//TODO zastanowic sie czy powinno sie stworzyc pusty plik i go modyfikowac czy tylko zwrocic return
+	if (!fileExist) {
+		addNewProfileToFolder(profName);
+		Logger::logPotenialBug("Attempt to write to profile file, which does not exist!", "ProfileDataBaseManager", "modifyFieldValue");
+	}
 	QSettings settings(pathToFile, QSettings::IniFormat);
-	bool isEableToWrite = settings.isWritable();
-	if (!isEableToWrite)
-		return false;//TODO poinformowac uzytkownika ze jest problem z plikiem profilu
 
+	if (!settings.isWritable()) {
+		addNewProfileToFolder(profName);
+		Logger::logPotenialBug("Attempt to write to profile file, which are protected", "ProfileDataBaseManager", "modifyFieldValue");
+		return false;
+	}
 	QString nameOfFieldAsStr = field_exactNameInDb_map[field];
 	settings.setValue(nameOfFieldAsStr, newValue);
 
@@ -450,8 +452,9 @@ bool ProfileDataBaseManager::writeRectToDb(QString profileName, FieldsOfDB dbFie
 	bool moreThanMin = dbField >= POS_HP;
 	bool lessThanMax = dbField <= POS_LAST_MINIMAP;
 	bool outOfRange = !(moreThanMin && lessThanMax);
-	if (outOfRange)
+	if (outOfRange) 
 		return false;
+
 
 	QString noImportant;
 	bool profExist = getPathToProfileFile(profileName, noImportant);

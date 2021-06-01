@@ -237,7 +237,7 @@ QList<QPoint> Calibrator::findStartPositionInImg(QImage& imgToFind, QImage& imgT
 	bool anyErr = errWidth || errHeight || errFormat || errEmpty;
 	if (anyErr) {
 		Logger::logPotenialBug("Wrong input of two img", "Calibrator", "findStartPositionInImg");
-		return QList<QPoint>();//todo zamienic na error code;
+		return QList<QPoint>();
 	}
 
 	const int MAX_X_INDEX_TO_CHECK = WIDTH_BIG_PIC - WIDTH_SMALL_PIC;

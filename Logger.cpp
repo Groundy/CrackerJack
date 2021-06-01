@@ -10,8 +10,6 @@ Logger::~Logger(){
 }
 
 void Logger::logPotenialBug(const QString textToSave, const QString className, const QString functionName){
-	//TODO dodac jakas sensowna sciezka do patha a nie pliki projeku
-	//TODO dodac wykoanie tej funkcji jedynie dla trybu debug
 	QString onlyDate = QDateTime::currentDateTime().toString("dd_MM_yyyy");
 	QString pathToFile = QDir::current().absoluteFilePath(onlyDate + ".txt");
 	QFile file(pathToFile);
