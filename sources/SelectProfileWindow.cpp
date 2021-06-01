@@ -106,8 +106,9 @@ void SelectProfileWindow::editProfileButtonAction(){
 	//TODO obsluga w przypadku gdy profil zostal zle wczytany
 	NewProfileConfiguartor* newProfDialog = new NewProfileConfiguartor(&profToBeRead, this);
 	newProfDialog->fillWidgetsWithDataFromProf(&profToBeRead);
-	auto result = newProfDialog->exec();
-	if (result == QDialog::Accepted) {
+	int result = newProfDialog->exec();
+	bool accepted = result == QDialog::Accepted;
+	if (accepted) {
 		dbManager.deleteProfile(profileName);
 		dbManager.saveProfileToDataBase(profToBeRead);
 	}

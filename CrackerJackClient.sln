@@ -5,22 +5,42 @@ VisualStudioVersion = 16.0.30709.132
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CrackerJackClient", "CrackerJackClient.vcxproj", "{F9338802-AA39-4ECF-A29E-5370179C0F11}"
 EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "CrackerJack", "..\CrackerJack\CrackerJack.vdproj", "{F494241B-BEDF-49FD-98C6-CDC53586675C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
+		Debug|x64 = Debug|x64
 		Debug|x86 = Debug|x86
 		Release|Win32 = Release|Win32
+		Release|x64 = Release|x64
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{F9338802-AA39-4ECF-A29E-5370179C0F11}.Debug|Win32.ActiveCfg = Debug|Win32
 		{F9338802-AA39-4ECF-A29E-5370179C0F11}.Debug|Win32.Build.0 = Debug|Win32
+		{F9338802-AA39-4ECF-A29E-5370179C0F11}.Debug|x64.ActiveCfg = Debug|x64
+		{F9338802-AA39-4ECF-A29E-5370179C0F11}.Debug|x64.Build.0 = Debug|x64
 		{F9338802-AA39-4ECF-A29E-5370179C0F11}.Debug|x86.ActiveCfg = Debug|Win32
 		{F9338802-AA39-4ECF-A29E-5370179C0F11}.Debug|x86.Build.0 = Debug|Win32
 		{F9338802-AA39-4ECF-A29E-5370179C0F11}.Release|Win32.ActiveCfg = Release|Win32
 		{F9338802-AA39-4ECF-A29E-5370179C0F11}.Release|Win32.Build.0 = Release|Win32
+		{F9338802-AA39-4ECF-A29E-5370179C0F11}.Release|x64.ActiveCfg = Release|x64
+		{F9338802-AA39-4ECF-A29E-5370179C0F11}.Release|x64.Build.0 = Release|x64
 		{F9338802-AA39-4ECF-A29E-5370179C0F11}.Release|x86.ActiveCfg = Release|Win32
 		{F9338802-AA39-4ECF-A29E-5370179C0F11}.Release|x86.Build.0 = Release|Win32
+		{F494241B-BEDF-49FD-98C6-CDC53586675C}.Debug|Win32.ActiveCfg = Debug
+		{F494241B-BEDF-49FD-98C6-CDC53586675C}.Debug|Win32.Build.0 = Debug
+		{F494241B-BEDF-49FD-98C6-CDC53586675C}.Debug|x64.ActiveCfg = Debug
+		{F494241B-BEDF-49FD-98C6-CDC53586675C}.Debug|x64.Build.0 = Debug
+		{F494241B-BEDF-49FD-98C6-CDC53586675C}.Debug|x86.ActiveCfg = Debug
+		{F494241B-BEDF-49FD-98C6-CDC53586675C}.Debug|x86.Build.0 = Debug
+		{F494241B-BEDF-49FD-98C6-CDC53586675C}.Release|Win32.ActiveCfg = Release
+		{F494241B-BEDF-49FD-98C6-CDC53586675C}.Release|Win32.Build.0 = Release
+		{F494241B-BEDF-49FD-98C6-CDC53586675C}.Release|x64.ActiveCfg = Release
+		{F494241B-BEDF-49FD-98C6-CDC53586675C}.Release|x64.Build.0 = Release
+		{F494241B-BEDF-49FD-98C6-CDC53586675C}.Release|x86.ActiveCfg = Release
+		{F494241B-BEDF-49FD-98C6-CDC53586675C}.Release|x86.Build.0 = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

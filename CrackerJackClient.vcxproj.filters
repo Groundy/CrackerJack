@@ -88,7 +88,7 @@
     <ClCompile Include="sources\Calibrator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Logger.cpp">
+    <ClCompile Include="sources\Logger.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -135,7 +135,7 @@
     <QtMoc Include="sources\Calibrator.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="Logger.h">
+    <QtMoc Include="sources\Logger.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>
