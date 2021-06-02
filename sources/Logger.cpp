@@ -26,7 +26,7 @@ void Logger::logPotenialBug(const QString textToSave, const QString className, c
 	}
 	if (openCorrectly) {
 		QString firstPart = getTimeStamp() + "[" + className + "] [" + functionName + "] ";
-		QString toWrite = firstPart + textToSave + "\n";
+		QString toWrite = firstPart + textToSave + "\n\n";
 		QTextStream stream(&file);
 		stream << toWrite;
 		file.close();

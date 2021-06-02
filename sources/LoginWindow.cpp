@@ -39,7 +39,8 @@ void LoginWindow::loginInserted() {
 }
 
 void LoginWindow::loginButtonPressed() {
-	// TODO 
+	
+	this->accept();// TODO 
 }
 
 void LoginWindow::passwordInserted() {

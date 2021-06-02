@@ -2,7 +2,6 @@
 
 ScreenSaver::ScreenSaver(QObject* parent, VariablesClass* varClass)
 	: QThread(parent){
-	setPriority(QThread::Priority::HighestPriority);
 	var = varClass;
 }
 
@@ -15,7 +14,7 @@ void ScreenSaver::sendScreenRequestToGame(Key keyCodeForScreen){
 	QString winTitle = var->var_winTitleOfGame;
 	bool wrongParameters = pid == 0 || winTitle.isEmpty();
 	if (wrongParameters) {
-		Logger::logPotenialBug("Wrong parameters of game(pid or game window title", "ScreenSaver", "sendScreenRequestToGame");
+		Logger::logPotenialBug("Wrong parameters of game(pid or game window title)", "ScreenSaver", "sendScreenRequestToGame");
 		return;
 	}
 	Key key(keyCodeForScreen);
@@ -34,5 +33,6 @@ void ScreenSaver::screenLoop(){
 }
 
 void ScreenSaver::run(){
+	setPriority(QThread::Priority::HighestPriority);
 	screenLoop();
 }

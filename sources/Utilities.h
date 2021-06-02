@@ -84,19 +84,17 @@ public:
 		SELLER seller;
 		RestoreMethode toRestoreMethode() {
 			bool isPotion = this->type == TYPE_OF_ITEM::POTIONS;
+			RestoreMethode toRet;
 			if (isPotion) {
-				RestoreMethode toRet;
 				toRet.name = this->name;
 				toRet.mana = 0;//manaNeededToUsePotion
 				toRet.cd = 1;//potions have 1 sec cooldown, for all potions
 				toRet.cdGroup = 1;
 				toRet.type = RestoreMethode::TypeOfMethode::POTION;
-				return toRet;
 			}
-			else {
+			else
 				Logger::logPotenialBug("Tried to convert object _Item_ to _RestoreMethode_ but it's not a potion!, returning empty _RestoreMethode_","Utilites/Item","toRestoreMethode()");
-				return RestoreMethode();
-			}
+			return toRet;
 		}
 	};
 	class Potion : public Item {

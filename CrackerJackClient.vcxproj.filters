@@ -166,6 +166,9 @@
     <ClInclude Include="sources\StringResource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="version.h">
+      <Filter>Resource Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="cpp.hint" />

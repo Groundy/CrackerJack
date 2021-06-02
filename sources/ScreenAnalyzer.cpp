@@ -52,10 +52,9 @@ int ScreenAnalyzer::loadScreen(QImage& img){
 QString ScreenAnalyzer::getNameOfLastTakenScreenShot(){
 	QDir directory(pathToScreenFolder);
 	QStringList litOfFIles = directory.entryList(QStringList() << "*.png", QDir::Files);
-	if (litOfFIles.isEmpty()) {
-		Logger::logPotenialBug("No files In screenshot folder", "ScreenAnalyzer", "getNameOfLastTakenScreenShot");
+	if (litOfFIles.isEmpty())
 		return QString();
-	}
+
 
 	QList<long long> listOfOnlyDatesAndTimes;
 	//geting QStrin with last digit of year, 2 digits of month, 2 digits of day
@@ -85,6 +84,7 @@ int ScreenAnalyzer::getNameOfLastTakenScreenShotForSure(QString& toRet, int MaxT
 		else 
 			msleep(100);
 	}
+	Logger::logPotenialBug("No files In screenshot folder", "ScreenAnalyzer", "getNameOfLastTakenScreenShot");
 	return CANT_LOAD_SCREEN_FROM_SCREENSHOT_FOLDER;
 }
 

@@ -2,7 +2,7 @@
 // Microsoft Visual C++ generated include file.
 // Used by CrackerJackClient.rc
 //
-#define Version                         1
+#define Version                         1.2.3
 #define IDR_MENU1                       101
 
 // Next default values for new objects
