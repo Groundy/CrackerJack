@@ -10,8 +10,8 @@ Logger::~Logger(){
 }
 
 void Logger::logPotenialBug(const QString textToSave, const QString className, const QString functionName){
-	#ifndef DEBUG
-	return;
+	#ifndef _DEBUG
+		return;
 	#endif
 
 	QString fileName = QDateTime::currentDateTime().toString("dd_MM_yyyy") + ".txt";
@@ -38,19 +38,28 @@ void Logger::logPotenialBug(const QString textToSave, const QString className, c
 }
 
 QString Logger::getPathToLogFolder(){
+	const QString CURRENT_PATH = QDir::currentPath();
 	QDir dir = QDir::tempPath();
 	dir.cdUp();
 	QString pathToTmpFolder = dir.path();
 
 	QString pathToCrackerJackFolder = pathToTmpFolder + "/CrackerJack";
 	bool crackerJackFolderExist = QDir(pathToCrackerJackFolder).exists();
-	if (!crackerJackFolderExist)
-		QDir(pathToTmpFolder).mkpath(pathToCrackerJackFolder);
+	if (!crackerJackFolderExist) {
+		bool sucess = QDir(pathToTmpFolder).mkpath(pathToCrackerJackFolder);
+		if (!sucess)
+			return CURRENT_PATH;
+	}
+
 
 	QString pathToLogFolder = pathToCrackerJackFolder + "/Logs";
 	bool LogDirExist = QDir(pathToLogFolder).exists();
-	QString toRet = LogDirExist ? pathToLogFolder : QDir::currentPath();
-	return toRet;
+	if (!LogDirExist){
+		bool sucess = QDir(pathToTmpFolder).mkpath(pathToLogFolder);
+		if (!sucess)
+			return CURRENT_PATH;
+	}
+	return pathToLogFolder;
 }
 
 void Logger::logPotenialBug(const QString textToSave){

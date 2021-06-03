@@ -4,7 +4,7 @@ ScreenAnalyzer::ScreenAnalyzer(QObject *parent, VariablesClass *varClass, Profil
 	: QThread(parent){
 	var = varClass;
 	profile = profToSet;
-	setUpScreenFolder()
+	setUpScreenFolder();
 	/*
 	[CHANGE]
 	QStringList listOfPotionNamesToLookFor;
