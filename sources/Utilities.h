@@ -44,7 +44,6 @@ public:
 		LANGUAGE,
 		LAST_USED_LOGIN,
 		LAST_USED_PROFILE_NAME,
-		PATH_TO_TIBIA_FOLDER
 	};
 	static QMap<FieldsOfIniFile, QString> get_Field_NamesFromIni_map();
 	static QString readFromIniFile(FieldsOfIniFile nameOfField);

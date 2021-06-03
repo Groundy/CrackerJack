@@ -31,6 +31,8 @@ public:
 
 signals:
 	void sendAllowenceToAnalyze(bool state);
+
+
 private:
 	VariablesClass* var;
 	Profile* profile;
@@ -44,7 +46,7 @@ private:
 	void deleteScreenShotFolder();
 	QString getNameOfLastTakenScreenShot();
 	int getNameOfLastTakenScreenShotForSure(QString& toRet, int maxTries);
-	QString pathToScreenFolder = "C:\\Users\\ADMIN\\AppData\\Local\\Tibia\\packages\\Tibia\\screenshots";
-
+	QString pathToScreenFolder;
+	void setUpScreenFolder();
 	void notifyOtherProcessOfStateOfAnalyzer(bool worksGood);
 };

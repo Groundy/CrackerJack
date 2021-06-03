@@ -10,8 +10,12 @@ Logger::~Logger(){
 }
 
 void Logger::logPotenialBug(const QString textToSave, const QString className, const QString functionName){
-	QString onlyDate = QDateTime::currentDateTime().toString("dd_MM_yyyy");
-	QString pathToFile = QDir::current().absoluteFilePath(onlyDate + ".txt");
+	#ifndef DEBUG
+	return;
+	#endif
+
+	QString fileName = QDateTime::currentDateTime().toString("dd_MM_yyyy") + ".txt";
+	QString pathToFile = getPathToLogFolder() + "/" + fileName;
 	QFile file(pathToFile);
 	bool openCorrectly = file.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Append);
 	if (!openCorrectly) {//waiting for acess to file
@@ -31,6 +35,22 @@ void Logger::logPotenialBug(const QString textToSave, const QString className, c
 		stream << toWrite;
 		file.close();
 	}
+}
+
+QString Logger::getPathToLogFolder(){
+	QDir dir = QDir::tempPath();
+	dir.cdUp();
+	QString pathToTmpFolder = dir.path();
+
+	QString pathToCrackerJackFolder = pathToTmpFolder + "/CrackerJack";
+	bool crackerJackFolderExist = QDir(pathToCrackerJackFolder).exists();
+	if (!crackerJackFolderExist)
+		QDir(pathToTmpFolder).mkpath(pathToCrackerJackFolder);
+
+	QString pathToLogFolder = pathToCrackerJackFolder + "/Logs";
+	bool LogDirExist = QDir(pathToLogFolder).exists();
+	QString toRet = LogDirExist ? pathToLogFolder : QDir::currentPath();
+	return toRet;
 }
 
 void Logger::logPotenialBug(const QString textToSave){

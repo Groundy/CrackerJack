@@ -361,6 +361,7 @@ bool ProfileDataBaseManager::readProfileFromDataBase(QString profileName, Profil
 
 void ProfileDataBaseManager::setProfFolder(){
 	QDir dir = QDir::tempPath();
+	dir.cdUp();
 	QString pathToTmpFolder = dir.path();
 
 	QString pathToCrackerJackFolder = pathToTmpFolder + "/CrackerJack";

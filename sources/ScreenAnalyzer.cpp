@@ -4,7 +4,7 @@ ScreenAnalyzer::ScreenAnalyzer(QObject *parent, VariablesClass *varClass, Profil
 	: QThread(parent){
 	var = varClass;
 	profile = profToSet;
-	
+	setUpScreenFolder()
 	/*
 	[CHANGE]
 	QStringList listOfPotionNamesToLookFor;
@@ -86,6 +86,28 @@ int ScreenAnalyzer::getNameOfLastTakenScreenShotForSure(QString& toRet, int MaxT
 	}
 	Logger::logPotenialBug("No files In screenshot folder", "ScreenAnalyzer", "getNameOfLastTakenScreenShot");
 	return CANT_LOAD_SCREEN_FROM_SCREENSHOT_FOLDER;
+}
+
+void ScreenAnalyzer::setUpScreenFolder(){
+	QDir dir = QDir::tempPath();
+	dir.cdUp();
+	QString pathToTmpFolder = dir.path();
+
+	QString pathToTibiaDir = pathToTmpFolder + "/Tibia";
+	bool TibiaDirExist = QDir(pathToTibiaDir).exists();
+	if (!TibiaDirExist) {
+		//TODO tu jest fatal error
+		Logger::logPotenialBug("Can't find game instalation directory", "ScreenAnalyzer", "setUpScreenFolder");
+		return;
+	}
+	QString wholePathToScreenFolder = pathToTibiaDir + "/packages/Tibia/screenshots";
+	bool screenFolderExist = QDir(wholePathToScreenFolder).exists();
+	if (!screenFolderExist) {
+		//TODO tu jest fatal error
+		Logger::logPotenialBug("Screenshot folder inside game directory does not exist", "ScreenAnalyzer", "setUpScreenFolder");
+		return;
+	}
+	pathToScreenFolder = wholePathToScreenFolder;
 }
 
 void ScreenAnalyzer::notifyOtherProcessOfStateOfAnalyzer(bool worksGood){

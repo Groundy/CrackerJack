@@ -1,9 +1,4 @@
-32. zastapic hard coded path do folderu ze screenami w ScreenAnalyzer wczytywanym z .ini
-31. dodac scie¿kê w których powinny byæ tworzone logów
-30. Tworzenie logów z buggami powinno sie odbywac tylko w trybie debug
-29. Dodaæ sprawdzenie czy po zainstalowaniu CrackerJacka folder roboczy ma prawo do tworzenia pilków, w tym plików settings i profiles, dodaæ obs³ugê przypadku gdy tych praw nie ma
 28. Seconds spent zle sie zapisuja
-27. Zrobiæ system Logów;
 25. dodatkowy cooldown miêdzy mana potami{
 	25.0 mo¿liwoœæ wprowadzenia przez uzytkownika
 	25.1 saveowanie 
@@ -11,12 +6,6 @@
 	25.3 przekazywanie do odpowiedniej klasy
 }
 19. W NewProfConfigurator zrobiæ tak ¿eby przedzia³y wartoœci nie by³y widoczne gdy slider jest wy³¹czony
-18. W LoginWindow dodaæ mo¿liwoœæ wyboru folderu z profilami i screenami{
-	18.0 dodaæ okno QFileWindow
-	18.1 sprawdziæ uprawnienia lokacji do bycia zapisywalnymi
-	18.2 zrobiæ zapis patha do QSettings.ini
-	18.3 zrobiæ wczytywanie i sprawdzanie patha z QSettings.ini
-}
 12. Algorytm rozpoznawania liczby potow czasami przy uzywaniu pota myli cyfre "2" z "3"
 11. ??Przerobic czas proszenia o nowy screen z hard-codowanego czasu do algorytmu który bierze pod uwage czas analzi
 10. dodatnie do kalibracji poczatkowych pozycji potow
@@ -24,3 +13,14 @@
 
 
 //DONE
+32. zastapic hard coded path do folderu ze screenami w ScreenAnalyzer wczytywanym z .ini 32.correct path jest teraz samoczynie znajdowany
+31. dodac scie¿kê w których powinny byæ tworzone logów
+30. Tworzenie logów z buggami powinno sie odbywac tylko w trybie debug
+29. Dodaæ sprawdzenie czy po zainstalowaniu CrackerJacka folder roboczy ma prawo do tworzenia pilków, w tym plików settings i profiles, dodaæ obs³ugê przypadku gdy tych praw nie ma
+27. Zrobiæ system Logów;
+18. W LoginWindow dodaæ mo¿liwoœæ wyboru folderu z screenami{ //To by³o chujowe, zosta³o zmienione
+	18.0 dodaæ okno QFileWindow
+	18.1 sprawdziæ uprawnienia lokacji do bycia zapisywalnymi
+	18.2 zrobiæ zapis patha do QSettings.ini
+	18.3 zrobiæ wczytywanie i sprawdzanie patha z QSettings.ini
+}

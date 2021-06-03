@@ -81,7 +81,7 @@ void Utilities::imgToBlackAndWhiteAllColors(QImage& img, int threshold) {
  }
 
 void Utilities::cutBlackBordersOfImg(QImage& img) {
-	 int linesOfBlackrows_TOP = 0, linesOfBlackrows_DOWN = 0, linesOfBlackrows_RIGHT = 0, linesOfBlackrows_LEFT = 0;
+	 int linesOfBlackRows_TOP = 0, linesOfBlackRows_DOWN = 0, linesOfBlackRows_RIGHT = 0, linesOfBlackRows_LEFT = 0;
 	 const int WIDTH = img.width();
 	 const int HEIGHT = img.height();
 	 const uint BLACK = qRgb(0, 0, 0);
@@ -89,7 +89,7 @@ void Utilities::cutBlackBordersOfImg(QImage& img) {
 		 for (int y = 0; y < HEIGHT; y++) {
 			 bool isBlack = img.pixel(x, y) == BLACK;
 			 if (!isBlack) {
-				 linesOfBlackrows_LEFT = x;
+				 linesOfBlackRows_LEFT = x;
 				 x = WIDTH; //endOfLoop
 				 y = WIDTH; //endOfLoop
 			 }
@@ -100,7 +100,7 @@ void Utilities::cutBlackBordersOfImg(QImage& img) {
 		 for (int y = 0; y < HEIGHT; y++) {
 			 bool isBlack = img.pixel(x, y) == BLACK;
 			 if (!isBlack) {
-				 linesOfBlackrows_RIGHT = WIDTH - x - 1;
+				 linesOfBlackRows_RIGHT = WIDTH - x - 1;
 				 x = -1;//endOfLoop
 				 y = HEIGHT;//endOfLoop
 			 }
@@ -111,7 +111,7 @@ void Utilities::cutBlackBordersOfImg(QImage& img) {
 		 for (int x = 0; x < WIDTH; x++) {
 			 bool isBlack = img.pixel(x, y) == BLACK;
 			 if (!isBlack) {
-				 linesOfBlackrows_TOP = y;
+				 linesOfBlackRows_TOP = y;
 				 x = WIDTH;//endOfLoop
 				 y = HEIGHT;//endOfLoop
 			 }
@@ -122,19 +122,19 @@ void Utilities::cutBlackBordersOfImg(QImage& img) {
 		 for (int x = 0; x < WIDTH; x++) {
 			 bool isBlack = img.pixel(x, y) == BLACK;
 			 if (!isBlack) {
-				 linesOfBlackrows_DOWN = HEIGHT - y - 1;
+				 linesOfBlackRows_DOWN = HEIGHT - y - 1;
 				 x = WIDTH;//endOfLoop
 				 y = -1;//endOfLoop
 			 }
 		 }
 	 }
 
-	 int anotherParametr_x = WIDTH - linesOfBlackrows_RIGHT - linesOfBlackrows_LEFT;
-	 int anotherParametr_y = HEIGHT - linesOfBlackrows_TOP - linesOfBlackrows_DOWN;
+	 int anotherParametr_x = WIDTH - linesOfBlackRows_RIGHT - linesOfBlackRows_LEFT;
+	 int anotherParametr_y = HEIGHT - linesOfBlackRows_TOP - linesOfBlackRows_DOWN;
 
 	 int widthToCut = anotherParametr_x >= 0 ? anotherParametr_x : 0;
 	 int heightToCut = anotherParametr_y >= 0 ? anotherParametr_y : 0;
-	 img = img.copy(linesOfBlackrows_LEFT, linesOfBlackrows_TOP, widthToCut, heightToCut);
+	 img = img.copy(linesOfBlackRows_LEFT, linesOfBlackRows_TOP, widthToCut, heightToCut);
  }
 
 void Utilities::cutImgWithLettersToSingleLettersImgList(QImage& img, QList<QImage>& letterImages) {
@@ -144,9 +144,10 @@ void Utilities::cutImgWithLettersToSingleLettersImgList(QImage& img, QList<QImag
 	 const uint BLACK = qRgb(0, 0, 0);
 	 for (int x = 0; x < HEIGHT; x++) {
 		 for (int y = 0; y < HEIGHT; y++) {
-			 if (img.pixel(x, y) != BLACK) {
-				 y = HEIGHT; //ending inner loop
+			 bool isNotEmptyLine = img.pixel(x, y) != BLACK;
+			 if (isNotEmptyLine) {
 				 colThatAreNotBlack.push_back(x);
+				 break;
 			 }
 		 }
 	 }
@@ -356,7 +357,7 @@ long long Utilities::getCurrentTimeInMiliSeconds() {
 }
 
 QImage Utilities::getImageFromAdvancedCode(QString codeOfImg){
-	QStringList partsOfCode = codeOfImg.split(QString("_"),Qt::SkipEmptyParts);
+	QStringList partsOfCode = codeOfImg.split(QString("_"), Qt::SkipEmptyParts);
 	int width = partsOfCode[0].toInt();
 	int height = partsOfCode[1].toInt();
 	partsOfCode.removeFirst();
@@ -440,7 +441,6 @@ QMap<Utilities::FieldsOfIniFile, QString> Utilities::get_Field_NamesFromIni_map(
 	toRet.insert(Field::LANGUAGE, "language");
 	toRet.insert(Field::LAST_USED_LOGIN, "lastLogin");
 	toRet.insert(Field::LAST_USED_PROFILE_NAME, "lastProfile");
-	toRet.insert(Field::PATH_TO_TIBIA_FOLDER, "pathToGameFolder");
 
 	return toRet;
 }
