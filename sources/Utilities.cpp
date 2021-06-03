@@ -96,6 +96,51 @@ void Utilities::cutBlackBordersOfImg(QImage& img) {
 		 }
 	 }
 
+	 for (int x = WIDTH - 1; x >= linesOfBlackRows_LEFT; x--) {
+		 for (int y = 0; y < HEIGHT; y++) {
+			 bool isBlack = img.pixel(x, y) == BLACK;
+			 if (!isBlack) {
+				 linesOfBlackRows_RIGHT = WIDTH - x - 1;
+				 x = -1;//endOfLoop
+				 y = HEIGHT;//endOfLoop
+			 }
+		 }
+	 }
+
+	 for (int y = 0; y < HEIGHT; y++) {
+		 for (int x = linesOfBlackRows_LEFT; x < linesOfBlackRows_RIGHT; x++) {
+			 bool isBlack = img.pixel(x, y) == BLACK;
+			 if (!isBlack) {
+				 linesOfBlackRows_TOP = y;
+				 x = WIDTH;//endOfLoop
+				 y = HEIGHT;//endOfLoop
+			 }
+		 }
+	 }
+
+	 for (int y = HEIGHT - 1; y >= linesOfBlackRows_TOP; y--) {
+		 for (int x = linesOfBlackRows_LEFT; x < linesOfBlackRows_RIGHT; x++) {
+			 bool isBlack = img.pixel(x, y) == BLACK;
+			 if (!isBlack) {
+				 linesOfBlackRows_DOWN = HEIGHT - y - 1;
+				 x = WIDTH;//endOfLoop
+				 y = -1;//endOfLoop
+			 }
+		 }
+	 }
+	 //tmp to return if modifed algorithm was working wrong
+	 /*
+	 * 	 for (int x = 0; x < WIDTH; x++) {
+		 for (int y = 0; y < HEIGHT; y++) {
+			 bool isBlack = img.pixel(x, y) == BLACK;
+			 if (!isBlack) {
+				 linesOfBlackRows_LEFT = x;
+				 x = WIDTH; //endOfLoop
+				 y = WIDTH; //endOfLoop
+			 }
+		 }
+	 }
+
 	 for (int x = WIDTH - 1; x >= 0; x--) {
 		 for (int y = 0; y < HEIGHT; y++) {
 			 bool isBlack = img.pixel(x, y) == BLACK;
@@ -128,6 +173,7 @@ void Utilities::cutBlackBordersOfImg(QImage& img) {
 			 }
 		 }
 	 }
+	 */
 
 	 int anotherParametr_x = WIDTH - linesOfBlackRows_RIGHT - linesOfBlackRows_LEFT;
 	 int anotherParametr_y = HEIGHT - linesOfBlackRows_TOP - linesOfBlackRows_DOWN;
