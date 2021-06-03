@@ -58,7 +58,6 @@ public:
 	bool saveProfileToDataBase(Profile& profileToSave);
 	bool readProfileFromDataBase(QString profileName, Profile& profileToSave);
 
-
 	QString DB_writer_ManaAndHealthRestorePercentages(QList<int> vect);
 	QList<int> DB_reader_ManaAndHealthRestorePercentages(QString str);
 	QString DB_writer_ManaAndHealthKeys(QList<Key> keylist);
@@ -69,5 +68,6 @@ public:
 	QRect DB_reader_rectangleWithPositionInImg(QString str);
 	bool writeRectToDb(QString profileName, FieldsOfDB dbField, QRect rectToSave);
 	bool readRectFromDb(QString profileName, FieldsOfDB dbField, QRect& rectToRead);
-
+private:
+	void setProfFolder();
 };

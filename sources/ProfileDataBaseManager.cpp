@@ -1,9 +1,7 @@
 #include "ProfileDataBaseManager.h"
 #include "StringResource.h"
 ProfileDataBaseManager::ProfileDataBaseManager(){
-	QDir dir = QDir::current();
-	bool foundFolderWithProfs = dir.cd("Profiles");
-	pathToFolderWithProfiles = dir.absolutePath();
+	setProfFolder();
 }
 
 ProfileDataBaseManager::~ProfileDataBaseManager(){
@@ -359,6 +357,33 @@ bool ProfileDataBaseManager::readProfileFromDataBase(QString profileName, Profil
 		}
 	}
 	return true;
+}
+
+void ProfileDataBaseManager::setProfFolder(){
+	QDir dir = QDir::tempPath();
+	QString pathToTmpFolder = dir.path();
+
+	QString pathToCrackerJackFolder = pathToTmpFolder + "/CrackerJack";
+	bool crackerJackFolderExist = QDir(pathToCrackerJackFolder).exists();
+	if (!crackerJackFolderExist) {
+		bool sucess1 = QDir(pathToTmpFolder).mkpath(pathToCrackerJackFolder);
+		if (!sucess1) {
+			Logger::logPotenialBug("Can't create CrackerJack dir in temp folder", "ProfileDataBaseManager", "Constructor");
+			return;
+		}
+	}
+
+	QString pathToProfFolder = pathToCrackerJackFolder + "/Profiles";
+	bool ProfileFolderExist = QDir(pathToProfFolder).exists();
+	if (!ProfileFolderExist) {
+		bool sucess1 = QDir(pathToCrackerJackFolder).mkpath(pathToProfFolder);
+		if (!sucess1) {
+			Logger::logPotenialBug("Can't create Profiles dir in CrakerJack tmp folder", "ProfileDataBaseManager", "Constructor");
+			return;
+		}
+	}
+
+	pathToFolderWithProfiles = pathToProfFolder;
 }
 
 
