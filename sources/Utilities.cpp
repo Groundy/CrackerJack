@@ -270,10 +270,6 @@ QChar Utilities::StrCodeToQChar(QString code){
 
 QMap<QString, QChar>  Utilities::getQmapWithCodes() {
 	 QMap<QString, QChar> letters;
-	 //char 200 it's some weird char but here it's symbol of healthIcon
-	 letters.insert("9_9_101110000011111000111111100111111110011111111111111110111111100111111000011110000",QChar(200));
-	 //char 201 it's some weird char but here it's symbol of manaIcon
-	 letters.insert("10_9_000100001001100111001111111111111110111111100111111100111110000111110000100100000100000000", QChar(201));
 	 letters.insert("6_8_011111101111111110000001100000011111111101111110", '0');
 	 letters.insert("4_8_01000001111111111111111100000001", '1');
 	 letters.insert("6_8_010000111100011110001101100110011111000101100001", '2');
@@ -342,6 +338,10 @@ QMap<QString, QChar>  Utilities::getQmapWithCodes() {
 	 letters.insert("4_11_00011111000011111111101110000011110000000001", QChar(40));
 	 //closing bracket
 	 letters.insert("4_11_10000000001111000001110111111111000011111000", QChar(41));
+	 //char 200 it's some weird char but here it's symbol of healthIcon
+	 letters.insert("9_9_101110000011111000111111100111111110011111111111111110111111100111111000011110000",QChar(200));
+	 //char 201 it's some weird char but here it's symbol of manaIcon
+	 letters.insert("10_9_000100001001100111001111111111111110111111100111111100111110000111110000100100000100000000", QChar(201));
 	 
 	 return letters;
  }
@@ -492,28 +492,20 @@ QMap<Utilities::FieldsOfIniFile, QString> Utilities::get_Field_NamesFromIni_map(
 }
 
 QString Utilities::readFromIniFile(FieldsOfIniFile nameOfField){
-	QSettings setttings("settings.ini", QSettings::IniFormat);
-	QMap<Utilities::FieldsOfIniFile, QString> map = get_Field_NamesFromIni_map();
+	QString filePath = getPathToSettingsFile();
+	QSettings setttings(filePath, QSettings::IniFormat);
+	auto map = get_Field_NamesFromIni_map();
 	QString nameOfFieldAsStr = map[nameOfField];
 	QString readVal = setttings.value(nameOfFieldAsStr).toString();
 	return readVal;
 }
 
 void Utilities::writeIniFile(FieldsOfIniFile nameOfField, QString value){
-	QSettings setttings("settings.ini", QSettings::IniFormat);
-	QMap<Utilities::FieldsOfIniFile, QString> map = get_Field_NamesFromIni_map();
+	QString filePath = getPathToSettingsFile();
+	QSettings setttings(filePath, QSettings::IniFormat);
+	auto map = get_Field_NamesFromIni_map();
 	QString nameOfFieldAsStr = map[nameOfField];
 	setttings.setValue(nameOfFieldAsStr, value);
-}
-
-void Utilities::saveImgToOutPutFolder(QImage* img, QString *extraName){
-	QString prefixOfName;
-	if (extraName == NULL)
-		prefixOfName = QDateTime::currentDateTime().toString("mm_ss_zzz");
-	else
-		prefixOfName = *extraName;
-	QString fullname = "C:\\Users\\ADMIN\\Desktop\\output\\_" + prefixOfName + ".png";
-	img->save(fullname);
 }
 
 LPCWSTR Utilities::convert_StrToLPCWSTR(QString str){
@@ -522,6 +514,17 @@ LPCWSTR Utilities::convert_StrToLPCWSTR(QString str){
 
 
 
+
+
+void Utilities::TOOL_saveImgToOutPutFolder(QImage* img, QString *extraName){
+	QString prefixOfName;
+	if (extraName == NULL)
+		prefixOfName = QDateTime::currentDateTime().toString("mm_ss_zzz");
+	else
+		prefixOfName = *extraName;
+	QString fullname = "C:\\Users\\ADMIN\\Desktop\\output\\_" + prefixOfName + ".png";
+	img->save(fullname);
+}
 
 void Utilities::TOOL_convertMapsFromOrgNameToSqrName(QString inputFolder) {
 	for (size_t i = 0; i < 16; i++) {
@@ -627,6 +630,21 @@ QStringList Utilities::TOOL_getCodesOfAllInFolder_bottom(QString pathToInputFold
 
 	
 	return list;
+}
+
+QString Utilities::getPathToSettingsFile() {
+	QDir dir = QDir::temp();
+	QString pathToCrackerJackTmpFolder = dir.tempPath() + "/CrakerJack";
+	bool crackerJackDirExist = QDir(pathToCrackerJackTmpFolder).exists();
+	if (!crackerJackDirExist) {
+		bool sucess = dir.rmpath(pathToCrackerJackTmpFolder);
+		if (!sucess) {
+			Logger::logPotenialBug("Can't make path to crackerJack main tmp folder","Utilities","getPathToSettingsFile");
+			;//TODO fatal error
+		}
+	}
+	pathToCrackerJackTmpFolder.append("/settings.ini");
+	return pathToCrackerJackTmpFolder;
 }
 
 QStringList Utilities::TOOL_getCodesOfAllInFolder_regular(QString pathToInputFolder, QString pathToOutputFolder) {

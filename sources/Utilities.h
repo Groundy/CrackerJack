@@ -22,7 +22,6 @@ public:
 	static int showMessageBox(QString title, QString text, QFlags<QMessageBox::StandardButton> buttons);
 	static bool showMessageBox_NO_YES(QString title, QString text);
 	static bool sendKeyStrokeToProcess(Key key, unsigned int PID, QString WindowName);
-	static void saveImgToOutPutFolder(QImage* img, QString* extraName);
 	static LPCWSTR convert_StrToLPCWSTR(QString str);
 	static void cutBlackBordersOfImg(QImage& img);
 	static void imgToBlackAndWhiteOneColor(QImage& img, int threshold);
@@ -107,6 +106,10 @@ public:
 	static void TOOL_generateMapAsText(QString inputFolder);
 	static QStringList TOOL_getCodesOfAllInFolder_regular(QString pathToInputFolder, QString pathToOutputFolder);
 	static QStringList TOOL_getCodesOfAllInFolder_bottom(QString pathToInputFolder);
+	static void TOOL_saveImgToOutPutFolder(QImage* img, QString* extraName);
+
+private:
+	static QString getPathToSettingsFile();
 	/*
 	static void UNSUED_findBoredersOfFrames(QImage fullScreen);
 	static void UNUSED_imgToOneColor(QImage& img, QRgb minimalColorValues, QRgb maxColorValues, QRgb colorToSet, bool allOfThem);
