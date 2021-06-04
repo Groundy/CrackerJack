@@ -8,6 +8,7 @@
 #include "VariablesClass.h"
 #include "Calibrator.h"
 #include "Logger.h"
+
 QString makeRandomProccessName();
 void test();
 QIcon getIcon();

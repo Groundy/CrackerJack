@@ -1,4 +1,3 @@
-28. Seconds spent zle sie zapisuja
 25. dodatkowy cooldown miêdzy mana potami{
 	25.0 mo¿liwoœæ wprowadzenia przez uzytkownika
 	25.1 saveowanie 
@@ -24,3 +23,6 @@
 	18.2 zrobiæ zapis patha do QSettings.ini
 	18.3 zrobiæ wczytywanie i sprawdzanie patha z QSettings.ini
 }
+
+//unkown status
+28. Seconds spent zle sie zapisuja

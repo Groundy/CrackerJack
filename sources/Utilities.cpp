@@ -634,7 +634,8 @@ QStringList Utilities::TOOL_getCodesOfAllInFolder_bottom(QString pathToInputFold
 
 QString Utilities::getPathToSettingsFile() {
 	QDir dir = QDir::temp();
-	QString pathToCrackerJackTmpFolder = dir.tempPath() + "/CrakerJack";
+	dir.cdUp();
+	QString pathToCrackerJackTmpFolder = dir.path() + "/CrackerJack";
 	bool crackerJackDirExist = QDir(pathToCrackerJackTmpFolder).exists();
 	if (!crackerJackDirExist) {
 		bool sucess = dir.rmpath(pathToCrackerJackTmpFolder);

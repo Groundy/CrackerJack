@@ -224,7 +224,7 @@ bool ProfileDataBaseManager::saveProfileToDataBase(Profile& profileToSave){
 	allReadTries.push_back(ok);
 	
 	if (profileToSave.lastLoginSeconds > 0) {
-		LONG64 currentTime = (Utilities::getCurrentTimeInMiliSeconds() / 1000);
+		LONG64 currentTime = Utilities::getCurrentTimeInMiliSeconds() / 1000;
 		LONG64 secondsSpentOdThisSession = currentTime - profileToSave.lastLoginSeconds;
 		LONG64 allSecondsSpentOnThisProf = profileToSave.secondsSpentSeconds + secondsSpentOdThisSession;
 		QString secondsSpendStr = QString::number(allSecondsSpentOnThisProf);
@@ -470,7 +470,8 @@ QRect ProfileDataBaseManager::DB_reader_rectangleWithPositionInImg(QString str){
 		int height = values[3].toInt();
 		toRet = QRect(start_x, start_y, width, height);
 	}
-	
+	else
+		Logger::logPotenialBug("Wrong structure of rectangle, input= " + str,"ProfileDataBaseManager","DB_reader_rectangleWithPositionInImg");
 	return toRet;
 }
 
@@ -504,7 +505,7 @@ bool ProfileDataBaseManager::readRectFromDb(QString profileName, FieldsOfDB dbFi
 	if (!profExist)
 		return false;
 
-	QString toBeRead;
-	rectToRead = DB_reader_rectangleWithPositionInImg(toBeRead);
+	QString qRectToBeReadAsStr;
+	rectToRead = DB_reader_rectangleWithPositionInImg(qRectToBeReadAsStr);
 	return true;
 }

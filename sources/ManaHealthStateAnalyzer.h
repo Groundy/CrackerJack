@@ -31,6 +31,7 @@ signals:
 	void demandReCalibration();
 	void sendValueToMainThread(QString, QString, QString);
 	void sendInfoAboutPotAmountsToGUI(QStringList);
+
 private:
 	QImage healthImg, manaImg, manaShieldImg, combinedImg;
 	bool healthFound, manaFound, manaShieldFound, combinedFound;
@@ -66,5 +67,6 @@ private:
 	int getKeyThatShouldBeSendToKeySenderClass(Key& key1, Key& key2);
 	void sleepAppropirateTimeToNextAnalyze();
 	void getAmountsOfPotions();
+//	void readManaBreak();
 	VariablesClass* var;
 };
