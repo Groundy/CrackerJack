@@ -91,6 +91,9 @@
     <ClCompile Include="sources\Logger.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="sources\RsaKeyManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="sources\LoginWindow.h">
@@ -168,6 +171,9 @@
     </ClInclude>
     <ClInclude Include="version.h">
       <Filter>Resource Files</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\RsaKeyManager.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
