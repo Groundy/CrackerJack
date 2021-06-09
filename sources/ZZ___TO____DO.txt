@@ -1,3 +1,4 @@
+26. Dodaæ pliki .dll do budowy w trybie Debug i Release, teraz s¹ dodane rêcznie 
 25. dodatkowy cooldown miêdzy mana potami{
 	25.0 mo¿liwoœæ wprowadzenia przez uzytkownika
 	25.1 saveowanie 

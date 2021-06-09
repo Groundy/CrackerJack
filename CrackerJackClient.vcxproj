@@ -180,7 +180,7 @@
     <ResourceCompile Include="CrackerJackClient.rc" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="sources\RsaKeyManager.cpp" />
+    <ClCompile Include="sources\Cryptography.cpp" />
     <ClCompile Include="sources\Logger.cpp" />
     <ClCompile Include="sources\activeGameThread.cpp" />
     <ClCompile Include="sources\Calibrator.cpp" />
@@ -211,7 +211,7 @@
     <QtUic Include="sources\SelectProfileWindow.ui" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="sources\RsaKeyManager.h" />
+    <QtMoc Include="sources\Cryptography.h" />
     <ClInclude Include="version.h" />
     <QtMoc Include="sources\VariablesClass.h" />
     <QtMoc Include="sources\ScreenSaver.h" />

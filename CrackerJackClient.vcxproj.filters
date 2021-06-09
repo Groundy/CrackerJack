@@ -91,7 +91,7 @@
     <ClCompile Include="sources\Logger.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="sources\RsaKeyManager.cpp">
+    <ClCompile Include="sources\Cryptography.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -141,6 +141,9 @@
     <QtMoc Include="sources\Logger.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <QtMoc Include="sources\Cryptography.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="sources\LoginWindow.ui">
@@ -171,9 +174,6 @@
     </ClInclude>
     <ClInclude Include="version.h">
       <Filter>Resource Files</Filter>
-    </ClInclude>
-    <ClInclude Include="sources\RsaKeyManager.h">
-      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

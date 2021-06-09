@@ -8,7 +8,7 @@
 #include "VariablesClass.h"
 #include "Calibrator.h"
 #include "Logger.h"
-#include "RsaKeyManager.h"
+#include "Cryptography.h"
 
 QString makeRandomProccessName();
 void test();
@@ -45,7 +45,9 @@ int main(int argc, char *argv[])
     return a.exec();
 }
 
-void test() {
+void test(){
+    Cryptography rsa;
+    exit(0);
 };
 
 QIcon getIcon() {
