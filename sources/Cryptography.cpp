@@ -73,7 +73,7 @@ bool Cryptography::decryptKey_Public(std::string publicKey , QString& out_decryp
 	BIO* keybio = BIO_new_mem_buf(pubKeyData, -1);
 	RSA* rsa = RSA_new();
 
-    //rsa = PEM_read_bio_RSAPublicKey(keybio, &rsa, NULL, NULL);
+	//rsa = PEM_read_bio_RSAPublicKey(keybio, &rsa, NULL, NULL);
 	rsa = PEM_read_bio_RSA_PUBKEY(keybio, &rsa, NULL, NULL);
 	if (!rsa){
 		BIO_free_all(keybio);
@@ -96,7 +96,7 @@ bool Cryptography::decryptKey_Public(std::string publicKey , QString& out_decryp
 		int ret = RSA_public_decrypt(sub_str.length(), start, end, rsa, RSA_PKCS1_PADDING);
 		if (ret >= 0) {
 			std::string partOfDncryptedText = std::string(sub_text, ret);
-			QString toAdd = partOfDncryptedText.c_str();
+			QString toAdd = QString::fromStdString(partOfDncryptedText);
 			out_decryptedData.append(toAdd);
 			printf("pos:%d, sub: %s\n", pos, sub_text);
 			pos += len;
@@ -116,12 +116,103 @@ bool Cryptography::decryptKey_Public(std::string publicKey , QString& out_decryp
 	RSA_free(rsa);
 	return true;
 }
-bool Cryptography::encryptKey_Public(std::string publicKey, QString in_dataToEncrypt, std::string& out_encryptedTextAsHex)
-{
-	return false;
+bool Cryptography::encryptKey_Public(std::string publicKey, QString in_dataToEncrypt, std::string& out_encryptedText){
+	unsigned char* pubKeyData = (unsigned char*)publicKey.c_str();
+	BIO* keybio = BIO_new_mem_buf(pubKeyData, -1);
+	RSA* rsa = RSA_new();
+
+	//rsa = PEM_read_bio_RSAPublicKey(keybio, &rsa, NULL, NULL);
+	rsa = PEM_read_bio_RSA_PUBKEY(keybio, &rsa, NULL, NULL);
+
+	// Get the maximum length of the data block that RSA can process at a time
+	int key_len = RSA_size(rsa);
+	int block_len = key_len - 11; // Because the filling method is RSA_PKCS1_PADDING, so you need to subtract 11 from the key_len
+
+	// Apply for memory: store encrypted ciphertext data
+	char* sub_text = new char[key_len + 1];
+	memset(sub_text, 0, key_len + 1);
+	int pos = 0;
+	// Encrypt the data in segments (the return value is the length of the encrypted data)
+	std::string clear_text = in_dataToEncrypt.toStdString();
+	while (pos < clear_text.length()) {
+		std::string sub_str = clear_text.substr(pos, block_len);
+		memset(sub_text, 0, key_len + 1);
+		const unsigned char* start = (const unsigned char*)sub_str.c_str();
+		unsigned char* end = (unsigned char*)sub_text;
+		int ret = RSA_public_encrypt(sub_str.length(), start, end, rsa, RSA_PKCS1_PADDING);
+		if (ret >= 0) {
+			std::string partOfEncryptedText = std::string(sub_text, ret);
+			out_encryptedText.append(partOfEncryptedText);
+			pos += block_len;
+		}
+		else {
+			// release memory  
+			qDebug() << "Error in encryptKey_Public";
+			BIO_free_all(keybio);
+			RSA_free(rsa);
+			delete[] sub_text;
+			return false;
+		}
+	}
+
+	// release memory  
+	BIO_free_all(keybio);
+	RSA_free(rsa);
+	delete[] sub_text;
+
+	return true;
 }
 bool Cryptography::decryptKey_Priv(std::string privateKey, QString& out_decrpytedData, std::string in_encryptedText) {
+	RSA* rsa = RSA_new();
+	unsigned char* privateKeyData = (unsigned char*)privateKey.c_str();
+	BIO* keybio = BIO_new_mem_buf(privateKeyData, -1);
+
+	rsa = PEM_read_bio_RSAPrivateKey(keybio, &rsa, NULL, NULL);
+	if (rsa == nullptr) {
+		unsigned long err = ERR_get_error(); //Get the error number
+		char err_msg[1024] = { 0 };
+		ERR_error_string(err, err_msg); // Format: error:errId: library: function: reason
+		QString errNumberAsStr = QString::number(err);
+		QString errMsg = QString::fromStdString(err_msg);
+		qDebug() << "error decryptKey_Priv   wrong key input";//to do
+		qDebug() << errNumberAsStr + "   " + errMsg;//to do
+		return false;
+	}
+
+	// Get the maximum length of RSA single processing
+	int key_len = RSA_size(rsa);
+	char* sub_text = new char[key_len + 1];
+	memset(sub_text, 0, key_len + 1);
+	int pos = 0;
+
+	// Decrypt the ciphertext in segments
+	while (pos < in_encryptedText.length()) {
+		std::string sub_str = in_encryptedText.substr(pos, key_len);
+		memset(sub_text, 0, key_len + 1);
+		const unsigned char* start = (const unsigned char*)sub_str.c_str();
+		unsigned char* end = (unsigned char*)sub_text;
+		int ret = RSA_private_decrypt(sub_str.length(), start, end, rsa, RSA_PKCS1_PADDING);
+		if (ret >= 0) {
+			std::string partOfText = (std::string(sub_text, ret));
+			QString toAdd = QString::fromStdString(partOfText);
+			out_decrpytedData.append(toAdd);
+			pos += key_len;
+		}
+		else {
+			// release memory  
+			delete[] sub_text;
+			BIO_free_all(keybio);
+			RSA_free(rsa);
+			return false;
+			qDebug() << "error in decryptKey_Priv";
+		}
+	}
+	// release memory  
+	delete[] sub_text;
+	BIO_free_all(keybio);
+	RSA_free(rsa);
 	return true;
+
 }
 
 
