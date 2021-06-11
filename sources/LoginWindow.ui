@@ -113,19 +113,6 @@
     </item>
     <item row="6" column="0" colspan="2">
      <layout class="QGridLayout" name="buttonsLayout">
-      <item row="3" column="0">
-       <spacer name="horizontalSpacer_5">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>40</width>
-          <height>20</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
       <item row="0" column="0">
        <widget class="QPushButton" name="logInButton">
         <property name="text">
@@ -287,13 +274,13 @@
         </property>
        </widget>
       </item>
-      <item row="3" column="1">
+      <item row="3" column="0" colspan="2">
        <widget class="QLabel" name="versionLabel">
         <property name="text">
          <string/>
         </property>
         <property name="alignment">
-         <set>Qt::AlignCenter</set>
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
         </property>
        </widget>
       </item>

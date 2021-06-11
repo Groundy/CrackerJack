@@ -66,7 +66,7 @@ bool Cryptography::encryptKey_Priv(std::string privateKey, QString in_dataToEncr
 
 	return true;
 }
-bool Cryptography::decryptKey_Public(std::string publicKey , QString& out_decryptedData, std::string& in_encryptedData){
+bool Cryptography::decryptKey_Public(std::string publicKey , QString& out_decryptedData, std::string in_encryptedData){
 	out_decryptedData.clear();
 	std::string decrypt_text;
 	unsigned char* pubKeyData = (unsigned char*)publicKey.c_str();

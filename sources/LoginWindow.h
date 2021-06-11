@@ -3,7 +3,7 @@
 #include "ui_LoginWindow.h"
 #include "SelectProfileWindow.h"
 #include "StringResource.h"
-
+#include "version.h"
 class LoginWindow : public QDialog
 {
 	Q_OBJECT
@@ -20,9 +20,7 @@ public slots:
 	void languageChanged();
 private:
 	Ui::LoginWindowClass ui;
-
 	void checkLogInPossibility();
-	QString getAndSetVersion();
 	void showThatPasswordFailed();
 	bool checkPasswordCorrectness();
 	void setUpGUI();

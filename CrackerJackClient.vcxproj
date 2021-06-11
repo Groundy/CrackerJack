@@ -100,7 +100,7 @@
   </ItemDefinitionGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|Win32'" Label="QtSettings">
     <QtInstall>msvc2019</QtInstall>
-    <QtModules>core;gui;sql;widgets</QtModules>
+    <QtModules>core;gui;network;widgets</QtModules>
     <QtBuildConfig>debug</QtBuildConfig>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="QtSettings">
@@ -110,7 +110,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|Win32'" Label="QtSettings">
     <QtInstall>msvc2019</QtInstall>
-    <QtModules>core;gui;widgets</QtModules>
+    <QtModules>core;gui;network;widgets</QtModules>
     <QtBuildConfig>release</QtBuildConfig>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="QtSettings">
@@ -197,6 +197,7 @@
     <ClCompile Include="sources\ScreenAnalyzer.cpp" />
     <ClCompile Include="sources\ScreenSaver.cpp" />
     <ClCompile Include="sources\SelectProfileWindow.cpp" />
+    <ClCompile Include="sources\ServerConnector.cpp" />
     <ClCompile Include="sources\Utilities.cpp" />
     <ClCompile Include="sources\StringResource.cpp" />
     <ClCompile Include="sources\VariablesClass.cpp" />
@@ -212,6 +213,7 @@
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="sources\Cryptography.h" />
+    <QtMoc Include="sources\ServerConnector.h" />
     <ClInclude Include="version.h" />
     <QtMoc Include="sources\VariablesClass.h" />
     <QtMoc Include="sources\ScreenSaver.h" />

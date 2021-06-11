@@ -21,7 +21,7 @@ public:
 	bool encryptKey_Priv(std::string privateKey, QString in_dataToEncrypt, std::string& out_textEncrypted);
 	bool encryptKey_Public(std::string pubKey, QString dataToEncrypt, std::string& encryptedText);
 	bool decryptKey_Priv(std::string priKey, QString& encrpytedData, std::string encryptedText);
-	bool decryptKey_Public(std::string publicKey, QString& out_decryptedData, std::string& in_encryptedData);
+	bool decryptKey_Public(std::string publicKey, QString& out_decryptedData, std::string in_encryptedData);
 
 	bool generateKeyPairToFile(uint keyLengthInBits, QString pathToOutPutFolder);
 private:

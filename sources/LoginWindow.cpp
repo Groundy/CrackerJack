@@ -4,7 +4,6 @@
 LoginWindow::LoginWindow(QWidget* parent) :
 	QDialog(parent) {
 	ui.setupUi(this);
-	getAndSetVersion();
 	bool isPl = StringResource::languageIsPl();
 	ui.laungageComboBox->addItem("eng");
 	ui.laungageComboBox->addItem("pl");
@@ -57,17 +56,11 @@ void LoginWindow::languageChanged() {
 	setUpGUI();
 }
 
-
 void LoginWindow::checkLogInPossibility() {
 	bool logIsNotEmpty = !ui.loginLine->text().isEmpty();
 	bool passIsNotEmpty = !ui.passwordLine->text().isEmpty();
 	bool canLogIn = logIsNotEmpty && passIsNotEmpty;
 	ui.logInButton->setEnabled(canLogIn);
-}
-
-QString LoginWindow::getAndSetVersion() {
-	QString verVal = "0.0.0";    //TODO
-	return verVal;
 }
 
 void LoginWindow::showThatPasswordFailed() {
@@ -112,7 +105,7 @@ void LoginWindow::setUpGUI() {
 
 	QString textToSet;
 	textToSet = isPl ? QString::fromLocal8Bit("Wersja ") : "Version ";
-	QString verVal = getAndSetVersion();
+	QString verVal = VER_FILEVERSION_STR;
 	textToSet += verVal;
 	ui.versionLabel->setText(textToSet);
 	ui.versionLabel->repaint();

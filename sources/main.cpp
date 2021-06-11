@@ -9,7 +9,7 @@
 #include "Calibrator.h"
 #include "Logger.h"
 #include "Cryptography.h"
-
+#include "ServerConnector.h"
 QString makeRandomProccessName();
 void test();
 QIcon getIcon();
@@ -24,12 +24,11 @@ int main(int argc, char *argv[])
 
     QApplication::setAttribute(Qt::AA_DisableWindowContextHelpButton);
     test();
-   /*
+   
     LoginWindow w;
     int result = w.exec();
     if (result != QDialog::Accepted)
         return 0;
-*/
     Profile* prof = new Profile();
     SelectProfileWindow win(NULL, prof);
     bool accepted = win.exec() == QDialog::Accepted;
@@ -46,8 +45,8 @@ int main(int argc, char *argv[])
 }
 
 void test(){
-    Cryptography rsa;
-    exit(0);
+    ServerConnector con;
+    //exit(0);
 };
 
 QIcon getIcon() {
