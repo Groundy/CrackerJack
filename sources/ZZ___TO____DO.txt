@@ -1,5 +1,5 @@
 34.
-33.
+33. Przenieœæ czêœæ funkcji analizy obrazu z Utilites do Calibratora
 25. dodatkowy cooldown miêdzy mana potami{
 	25.0 mo¿liwoœæ wprowadzenia przez uzytkownika
 	25.1 saveowanie 

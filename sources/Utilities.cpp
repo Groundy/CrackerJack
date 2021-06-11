@@ -22,7 +22,7 @@ bool Utilities::showMessageBox_NO_YES(QString title, QString text)
  }
 
 bool Utilities::sendKeyStrokeToProcess(Key key, unsigned int PID, QString nameOfWindow) {
-	LPCWSTR nameOfWindowLPCWSTR = convert_StrToLPCWSTR(nameOfWindow);
+	LPCWSTR nameOfWindowLPCWSTR = (const wchar_t*)nameOfWindow.utf16();
     HWND handler = FindWindow(NULL, nameOfWindowLPCWSTR);
 	if (handler == NULL) {
 		Logger::logPotenialBug("Can't get handler to window: " + nameOfWindow, "Utilities", "sendKeyStrokeToProcess");
@@ -507,10 +507,6 @@ void Utilities::writeIniFile(FieldsOfIniFile nameOfField, QString value){
 	QString nameOfFieldAsStr = map[nameOfField];
 	setttings.setValue(nameOfFieldAsStr, value);
 }
-
-LPCWSTR Utilities::convert_StrToLPCWSTR(QString str){
-     return (const wchar_t*)str.utf16();
- }
 
 
 

@@ -22,21 +22,13 @@ public:
 	static int showMessageBox(QString title, QString text, QFlags<QMessageBox::StandardButton> buttons);
 	static bool showMessageBox_NO_YES(QString title, QString text);
 	static bool sendKeyStrokeToProcess(Key key, unsigned int PID, QString WindowName);
-	static LPCWSTR convert_StrToLPCWSTR(QString str);
-	static void cutBlackBordersOfImg(QImage& img);
-	static void imgToBlackAndWhiteOneColor(QImage& img, int threshold);
 	static void imgToBlackAndWhiteAllColors(QImage& img, int threshold);
-	static void cutImgWithLettersToSingleLettersImgList(QImage& img, QList<QImage>& list);
 	static QString imgWithStrToStr(QImage* img);
-	static QString letterImgToLetterCodeStr(QImage* SingleLetterImg);
-	static QChar StrCodeToQChar(QString code);
-	static QMap<QString, QChar> getQmapWithCodes();
 	static QImage fromCharToImg(QChar CharToImg);
 	static void rotateImgToRight(QImage* imgToRotate, int timesToRotateRight);
 	static bool isItPixelFromFrame(uint color, int minValueAcceptable, int maxValueAcceptable, bool requireSameValuesOfRGB);
 	static LONG64 getCurrentTimeInMiliSeconds();
 	static QImage getImageFromAdvancedCode(QString codeOfImg);
-	static void getMapWithNumbersFromBottomBar(QMap<QString, int>& lightToRet, QMap<QString, int>& darkToRet);
 	static int getNumberFromBottomBar(QImage& bottomBar);
 
 	enum class FieldsOfIniFile {
@@ -101,15 +93,21 @@ public:
 		bool forMage, forRp, forEk;
 	};
 	
-
+private:
 	static void TOOL_convertMapsFromOrgNameToSqrName(QString inputFolder);
 	static void TOOL_generateMapAsText(QString inputFolder);
 	static QStringList TOOL_getCodesOfAllInFolder_regular(QString pathToInputFolder, QString pathToOutputFolder);
 	static QStringList TOOL_getCodesOfAllInFolder_bottom(QString pathToInputFolder);
 	static void TOOL_saveImgToOutPutFolder(QImage* img, QString* extraName);
 
-private:
+	static void cutImgWithLettersToSingleLettersImgList(QImage& img, QList<QImage>& list);
+	static QMap<QString, QChar> getQmapWithCodes();
 	static QString getPathToSettingsFile();
+	static void getMapWithNumbersFromBottomBar(QMap<QString, int>& lightToRet, QMap<QString, int>& darkToRet);
+	static void imgToBlackAndWhiteOneColor(QImage& img, int threshold);
+	static QChar StrCodeToQChar(QString code);
+	static void cutBlackBordersOfImg(QImage& img);
+	static QString letterImgToLetterCodeStr(QImage* SingleLetterImg);
 	/*
 	static void UNSUED_findBoredersOfFrames(QImage fullScreen);
 	static void UNUSED_imgToOneColor(QImage& img, QRgb minimalColorValues, QRgb maxColorValues, QRgb colorToSet, bool allOfThem);

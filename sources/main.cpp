@@ -10,19 +10,16 @@
 #include "Logger.h"
 #include "Cryptography.h"
 #include "ServerConnector.h"
+
 QString makeRandomProccessName();
 void test();
 QIcon getIcon();
+void initSettings(QApplication& a);
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    a.setQuitOnLastWindowClosed(true);
-    a.setStyle("fusion"); 
-
-    a.setWindowIcon(getIcon());
-
-    QApplication::setAttribute(Qt::AA_DisableWindowContextHelpButton);
+    initSettings(a);
     test();
    
     LoginWindow w;
@@ -75,4 +72,10 @@ QString makeRandomProccessName() {
         wordTmp.clear();
     }
     return ProccessName;
+}
+void initSettings(QApplication &a) {
+    a.setQuitOnLastWindowClosed(true);
+    a.setStyle("fusion");
+    a.setWindowIcon(getIcon());
+    QApplication::setAttribute(Qt::AA_DisableWindowContextHelpButton);
 }
