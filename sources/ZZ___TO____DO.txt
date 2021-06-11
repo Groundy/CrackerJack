@@ -1,4 +1,5 @@
-26. Dodaæ pliki .dll do budowy w trybie Debug i Release, teraz s¹ dodane rêcznie 
+34.
+33.
 25. dodatkowy cooldown miêdzy mana potami{
 	25.0 mo¿liwoœæ wprowadzenia przez uzytkownika
 	25.1 saveowanie 
@@ -18,6 +19,7 @@
 30. Tworzenie logów z buggami powinno sie odbywac tylko w trybie debug
 29. Dodaæ sprawdzenie czy po zainstalowaniu CrackerJacka folder roboczy ma prawo do tworzenia pilków, w tym plików settings i profiles, dodaæ obs³ugê przypadku gdy tych praw nie ma
 27. Zrobiæ system Logów;
+26. Dodaæ pliki .dll do budowy w trybie Debug i Release, teraz s¹ dodane rêcznie 
 18. W LoginWindow dodaæ mo¿liwoœæ wyboru folderu z screenami{ //To by³o chujowe, zosta³o zmienione
 	18.0 dodaæ okno QFileWindow
 	18.1 sprawdziæ uprawnienia lokacji do bycia zapisywalnymi
