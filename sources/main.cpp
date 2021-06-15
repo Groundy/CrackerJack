@@ -42,7 +42,8 @@ int main(int argc, char *argv[])
 }
 
 void test(){
-    ServerConnector con;
+   ServerConnector con;
+
     //exit(0);
 };
 

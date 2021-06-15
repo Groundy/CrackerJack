@@ -2,20 +2,34 @@
 #include <QtCore/qdir.h>
 
 Cryptography::Cryptography(){
-	generateKeyPairToFile(512*4, "C:\\Users\\ADMIN\\Desktop\\output");
-	QString tmpPrivate = "C:\\Users\\ADMIN\\Desktop\\output\\private.txt";
-	QString tmpPublic = "C:\\Users\\ADMIN\\Desktop\\output\\public.txt";
-	std::string keyPrivate = getKeyFromFile(tmpPrivate, false);
-	std::string keyPublic = getKeyFromFile(tmpPublic, false);
-
-	std::string encryptedText;
-	QString toEncrypt = "s";
-	QString toBeDecrypted;
-	bool ok2 = encryptKey_Public(keyPublic, toEncrypt, encryptedText);
-	bool ok1 = decryptKey_Priv(keyPrivate, toBeDecrypted, encryptedText);
-	int b = 2;
+	pathToPublicKey = QDir::current().absoluteFilePath("public.txt");
 };
 
+
+bool Cryptography::encryptUsingUserPublicKey(QByteArray in, QByteArray& out){
+	std::string userPublicKey;
+	bool keyAndIdFound = getKeyFromFile(pathToPublicKey, userPublicKey, NULL);
+	if (!keyAndIdFound)
+		return false;//todo
+
+	std::string encryptedStr;
+	bool encryptedOK = encryptKey_Public(userPublicKey, QString(in), encryptedStr);
+	if(!encryptedOK)
+		return false;//todo
+
+	out = QByteArray::fromStdString(encryptedStr);
+	return true;
+}
+
+bool Cryptography::getUserIdFromFile(int& userID){
+	std::string noImportantKey;
+	int userIdTmp;
+	bool IdFound = getKeyFromFile(pathToPublicKey, noImportantKey, &userIdTmp);
+	if (!IdFound)
+		return false;//todo
+	userID = userIdTmp;
+	return true;
+}
 
 bool Cryptography::encryptKey_Priv(std::string privateKey, QString in_dataToEncrypt, std::string& out_textEncrypted){
 	unsigned char* privateKeyData = (unsigned char*)privateKey.c_str();
@@ -261,62 +275,88 @@ bool Cryptography::generateKeyPairToFile(uint keyLengthInBits, QString pathToOut
 
 	return true;
 }
+bool Cryptography::getKeyFromFile(QString pathToFileWithPrivateKey, std::string& key, int* user_ID) {
+	QString data;
+	bool ok = readFile(pathToFileWithPrivateKey, data);
+	if (!ok)
+		return false;
 
-std::string Cryptography::getKeyFromFile(QString pathToFileWithPrivateKey, bool cutHeadersOut){
-	QDir dir(pathToFileWithPrivateKey);
+
+	QStringList partsOfFile = data.split(QString("#"), Qt::SplitBehaviorFlags::SkipEmptyParts);
+	int size = partsOfFile.size();
+	if (size == 1) {
+		//parts[0]		-----BEGIN PUBLIC KEY-----_key_-----END PUBLIC KEY-----
+		key = partsOfFile[0].toStdString();
+		return true;
+	}
+	else if (size == 2) {
+		//parts[0]		USER::_number_
+		//parts[1]		-----BEGIN PUBLIC KEY-----_key_-----END PUBLIC KEY-----
+		QStringList partsOfUserId = partsOfFile[0].split(QString("::"), Qt::SplitBehaviorFlags::SkipEmptyParts);
+		key = partsOfFile[1].remove(0, 1).toStdString();
+		bool vaildFileStructure = partsOfUserId.size() == 2;
+		if (vaildFileStructure&& user_ID != NULL) {
+			//partsOfUserId[0] USER
+			//partsOfUserId[1] _number_
+			*user_ID = partsOfUserId[1].toInt(&vaildFileStructure);
+		}
+		return vaildFileStructure;
+	}
+	else {
+		return false;//todo, poinformowac, wrong file structure
+	}
+
+
+	return true;
+}
+
+bool Cryptography::readFile(QString pathToFileWithPrivateKey, QString& fileData){
+	//file struct -----BEGIN PUBLIC KEY-----_key_-----END PUBLIC KEY-----;
+	QFileInfo dir(pathToFileWithPrivateKey);
 
 	bool fileExist = dir.exists();
 	if (!fileExist)
-		;//todo
+		;//return false;//todo, poinformowac
 
 	bool fileCanBeRead = dir.isReadable();
 	if (!fileCanBeRead)
-		;//todo
+		return false;//todo, poinformowac
 
 	QFile file(pathToFileWithPrivateKey);
 	bool filedOpened = file.open(QIODevice::OpenModeFlag::ReadOnly);
 	if (!filedOpened)
-		;//todo
+		return false;//todo, poinformowac
 
 	QByteArray data = file.readAll();
 	bool isEmpty = data.size() == 0;
 	if (isEmpty)
-		;//todo
+		return false;//todo, poinformowac
 
-	QString fileContent = QString(data);
-
-	if(!cutHeadersOut)
-		return fileContent.toStdString();
-
-	const QString HEADER_MARK = QString("-----");
-	QStringList partOfKeyFile = fileContent.split(HEADER_MARK, Qt::SkipEmptyParts);
-
-	//header, key, foot and sometimes empty part at the end of file
-	bool vaildKeyFileStruct = partOfKeyFile.size() == 3 || partOfKeyFile.size() == 4;
-	if (!vaildKeyFileStruct)
-		;//todo
-
-	std::string key = partOfKeyFile[1].toStdString();
-	return key;
-}
-
-bool Cryptography::TEST_maxLengthOfEncrypting(std::string privateKey, int& maxNumberOfchars, int lenghthOfKey){
-	generateKeyPairToFile(lenghthOfKey, "C:\\Users\\ADMIN\\Desktop\\output");
-	QString tmp = "C:\\Users\\ADMIN\\Desktop\\output\\private.txt";
-	std::string key = getKeyFromFile(tmp, true);
-
-	for (int i = 4; i < 2048; i += 10) {
-		qDebug() << QString::number(i);
-		QString fileName = "encrypted_" + QString::number(i) + ".txt";
-		QFile filePath("C:\\Users\\ADMIN\\Desktop\\output\\" + fileName);
-		QString wordToEncrypt = "";
-		wordToEncrypt.fill('H', i);
-		std::string encrpyedText;
-		bool sucess = encryptKey_Priv(key, wordToEncrypt, encrpyedText);
-		if (!sucess) {
-			maxNumberOfchars = i;
-			break;
-		}
-	}
+	fileData = QString(data);
 	return true;
 }
+bool Cryptography::testPairOfKeys(QString pathToFolderWithBothKeys){
+	std::string publicKey, privateKey;
+	QString privPath = QDir(pathToFolderWithBothKeys).absoluteFilePath("private.txt");
+	QString publicPath = QDir(pathToFolderWithBothKeys).absoluteFilePath("public.txt");
+	bool filesExist = QFileInfo(privPath).exists() && QFileInfo(publicPath).exists();
+	if (!filesExist) return false;
+	bool ok1 = getKeyFromFile(publicPath, publicKey, NULL);
+	bool ok2 = getKeyFromFile(privPath, privateKey, NULL);
+	bool toRet = (ok1 && ok2) ? testPairOfKeys(publicKey, privateKey) : false;
+	return toRet;
+}
+bool Cryptography::testPairOfKeys(std::string publicKey, std::string privateKey){
+	QString toEncrypt = "Test sentence !@#123";
+	std::string encrypted_Pri, encrypted_Pub;
+	QString decrypted_Pub, decrypted_Priv;
+	bool ok1 = encryptKey_Priv(privateKey, toEncrypt, encrypted_Pri);
+	bool ok2 = encryptKey_Public(publicKey, toEncrypt, encrypted_Pub);
+	bool ok3 = decryptKey_Priv(privateKey, decrypted_Priv, encrypted_Pub);
+	bool ok4 = decryptKey_Public(publicKey, decrypted_Pub, encrypted_Pri);
+	bool ok5 = decrypted_Pub == toEncrypt;
+	bool ok6 = decrypted_Priv == toEncrypt;
+	bool toRet = ok1 && ok2 && ok3 && ok4 && ok5 && ok6;
+	return toRet;
+}
+

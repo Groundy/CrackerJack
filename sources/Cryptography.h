@@ -12,19 +12,23 @@
 #include <memory>
 #include "qdebug.h"
 #include "qcryptographichash.h"
-class Cryptography : public QObject
-{
+#include "qfileinfo.h"
+class Cryptography : public QObject{
 	Q_OBJECT
-
 public:
 	Cryptography();
+	bool encryptUsingUserPublicKey(QByteArray in, QByteArray& out);
+	bool getUserIdFromFile(int& userID);
+private:
+	QString pathToPublicKey;
 	bool encryptKey_Priv(std::string privateKey, QString in_dataToEncrypt, std::string& out_textEncrypted);
 	bool encryptKey_Public(std::string pubKey, QString dataToEncrypt, std::string& encryptedText);
 	bool decryptKey_Priv(std::string priKey, QString& encrpytedData, std::string encryptedText);
 	bool decryptKey_Public(std::string publicKey, QString& out_decryptedData, std::string in_encryptedData);
-
 	bool generateKeyPairToFile(uint keyLengthInBits, QString pathToOutPutFolder);
-private:
-	std::string getKeyFromFile(QString pathToFileWithPrivateKey, bool cutHeadersOut);
-	bool TEST_maxLengthOfEncrypting(std::string privateKey, int& maxNumberOfchars, int lenghthOfKey);
+	
+	bool getKeyFromFile(QString pathToFileWithPrivateKey, std::string& key, int* user_ID);
+	bool readFile(QString pathToFileWithPrivateKey, QString& fileData);
+	bool testPairOfKeys(QString pathToFolderWithBothKeys);
+	bool testPairOfKeys(std::string publicKey, std::string privateKey);
 };
