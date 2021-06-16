@@ -21,6 +21,10 @@ bool Cryptography::encryptUsingUserPublicKey(QByteArray in, QByteArray& out){
 	return true;
 }
 
+bool Cryptography::encryptUsingUserPublicKey(QByteArray& in_out){
+	return encryptUsingUserPublicKey(in_out, in_out);
+}
+
 bool Cryptography::getUserIdFromFile(int& userID){
 	std::string noImportantKey;
 	int userIdTmp;

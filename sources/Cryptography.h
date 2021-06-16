@@ -18,6 +18,7 @@ class Cryptography : public QObject{
 public:
 	Cryptography();
 	bool encryptUsingUserPublicKey(QByteArray in, QByteArray& out);
+	bool encryptUsingUserPublicKey(QByteArray& in_out);
 	bool getUserIdFromFile(int& userID);
 private:
 	QString pathToPublicKey;

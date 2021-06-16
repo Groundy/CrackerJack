@@ -4,21 +4,20 @@
 #include "version.h"
 #include "qtcpsocket.h"
 #include "Cryptography.h"
+#include "ClientServerApi.h"
+
 class ServerConnector : public QObject
 {
 	Q_OBJECT
-
 public:
-	enum REASON_TO_CONNECT { ASK_FOR_NEWEST_VERSION, ASK_FOR_VALIDITY_OF_KEY };
-	enum FIELDS_OF_MSGS {IP_ADRESS, MAC_ADRESS, REASON, USER_ID};
 	ServerConnector();
 	~ServerConnector();
 
 	bool conectToServer(QByteArray in_dataToSend, QByteArray& out_recivedData);
-private:
 	struct VersionStruct {
 		int day, month, year, versionOfDay;
 	};
+private:
 
 	const uint port = 4002;
 	const QString ip = "192.168.1.14";
@@ -28,11 +27,13 @@ private:
 	QTcpSocket* socket;
 
 	bool versionToStruct(QString verStr, VersionStruct& structToRet);
-	bool getMACAdress(QString& MAC_Adress);
+	bool getMACAdress(QByteArray& MAC_Adress);
 	bool isCurrentVersion(const QString versionStrRecivedFromServer);
-	QByteArray getStrOfEnum_FieldsOfMsg(FIELDS_OF_MSGS field);
-	QByteArray getStrOfEnum_REASON_TO_CONNECT(REASON_TO_CONNECT reason);
 	QByteArray getMarkUp(FIELDS_OF_MSGS markUpField, QByteArray markUpValue);
-	QByteArray createMsg(REASON_TO_CONNECT reson);
+	bool getUserInternetData(QByteArray& userDataMarkUps, REASON_TO_CONNECT_TO_SERVER reason);
+	QByteArray createMsg(REASON_TO_CONNECT_TO_SERVER reason);
+
+	bool encryptAndAddHeaderToMsg(QByteArray& msg);
+	void test();
 
 };
