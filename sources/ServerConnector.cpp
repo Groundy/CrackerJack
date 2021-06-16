@@ -1,7 +1,11 @@
 #include "ServerConnector.h"
 ServerConnector::ServerConnector(){
-    createMsg(ASK_FOR_NEWEST_VERSION);
-    
+    QByteArray arr = createMsg(ASK_FOR_NEWEST_VERSION);
+    //arr.resize(arr.size() / 6);
+    QByteArray got;
+    while(true)
+        bool ok = conectToServer(arr, got);
+    int g = 4;
 }
 
 bool ServerConnector::versionToStruct(QString verStr, VersionStruct& structToRet){
@@ -129,6 +133,7 @@ ServerConnector::~ServerConnector()
 }
 
 bool ServerConnector::conectToServer(QByteArray in_dataToSend, QByteArray& out_recivedData){
+    qDebug() << "Bytes to send: "+ QString::number(in_dataToSend.size());
     socket = new QTcpSocket(this);
     QHostAddress hostNAme(ip);
     socket->connectToHost(hostNAme, port);
@@ -138,9 +143,9 @@ bool ServerConnector::conectToServer(QByteArray in_dataToSend, QByteArray& out_r
         socket->write(in_dataToSend);
         socket->waitForBytesWritten(timeWaitForDataWrite);
         socket->waitForReadyRead(timeWaitForDataRead);
-        int byteRead = socket->bytesAvailable();
-        qDebug() << "Reading bytes::" + QString::number(byteRead);
+        //int byteRead = socket->bytesAvailable();
         out_recivedData = socket->readAll();
+        qDebug() << "Recived bytes:" + QString::number(out_recivedData.size());
         qDebug() << out_recivedData;
         socket->close();
     }

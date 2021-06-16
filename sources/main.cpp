@@ -44,7 +44,7 @@ int main(int argc, char *argv[])
 void test(){
    ServerConnector con;
 
-    //exit(0);
+    exit(0);
 };
 
 QIcon getIcon() {

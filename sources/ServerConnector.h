@@ -21,7 +21,7 @@ private:
 	};
 
 	const uint port = 4002;
-	const QString ip = "127.0.0.1";
+	const QString ip = "192.168.1.14";
 	const int timeWaitForConn = 3000;
 	const int timeWaitForDataWrite = 1000;
 	const int timeWaitForDataRead = 3000;
