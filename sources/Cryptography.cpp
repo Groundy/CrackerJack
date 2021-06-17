@@ -3,6 +3,8 @@
 
 Cryptography::Cryptography(){
 	pathToPublicKey = QDir::current().absoluteFilePath("public.txt");
+	QByteArray s = "test";
+	encryptUsingClientAppKey(s);
 };
 
 
@@ -23,6 +25,21 @@ bool Cryptography::encryptUsingUserPublicKey(QByteArray in, QByteArray& out){
 
 bool Cryptography::encryptUsingUserPublicKey(QByteArray& in_out){
 	return encryptUsingUserPublicKey(in_out, in_out);
+}
+
+bool Cryptography::encryptUsingClientAppKey(QByteArray in, QByteArray& out){
+	std::string userPublicKey = QByteArray::fromHex(clientPublicKey).toStdString();
+	std::string encryptedStr;
+	bool encryptedOK = encryptKey_Public(userPublicKey, QString(in), encryptedStr);
+	if (!encryptedOK)
+		return false;//todo
+
+	out = QByteArray::fromStdString(encryptedStr);
+	return true;
+}
+
+bool Cryptography::encryptUsingClientAppKey(QByteArray& in_out){
+	return encryptUsingClientAppKey(in_out, in_out);
 }
 
 bool Cryptography::getUserIdFromFile(int& userID){

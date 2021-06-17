@@ -8,6 +8,7 @@
 
 class ServerConnector : public QObject
 {
+
 	Q_OBJECT
 public:
 	ServerConnector();
@@ -20,7 +21,7 @@ public:
 private:
 
 	const uint port = 4002;
-	const QString ip = "192.168.1.14";
+	const QString ip = "127.0.0.1";// "192.168.1.14";
 	const int timeWaitForConn = 3000;
 	const int timeWaitForDataWrite = 1000;
 	const int timeWaitForDataRead = 3000;
@@ -29,7 +30,6 @@ private:
 	bool versionToStruct(QString verStr, VersionStruct& structToRet);
 	bool getMACAdress(QByteArray& MAC_Adress);
 	bool isCurrentVersion(const QString versionStrRecivedFromServer);
-	QByteArray getMarkUp(FIELDS_OF_MSGS markUpField, QByteArray markUpValue);
 	bool getUserInternetData(QByteArray& userDataMarkUps, REASON_TO_CONNECT_TO_SERVER reason);
 	QByteArray createMsg(REASON_TO_CONNECT_TO_SERVER reason);
 

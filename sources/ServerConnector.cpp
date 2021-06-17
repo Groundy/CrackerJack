@@ -62,18 +62,11 @@ bool ServerConnector::isCurrentVersion(const QString versionStrRecivedFromServer
 	return isSameVersion;
 }
 
-QByteArray ServerConnector::getMarkUp(FIELDS_OF_MSGS field, QByteArray markUpValue){
-	QString nameOfField = QString::fromStdString(getFieldStr(field));
-	QString arrAsStr = QString("<") + nameOfField + QString("===") + markUpValue + QString(">") + QString("\n");
-	QByteArray toRet = arrAsStr.toUtf8();
-	return toRet;
-}
-
 bool ServerConnector::getUserInternetData(QByteArray& userDataMarkUps, REASON_TO_CONNECT_TO_SERVER reason){
 	QByteArray toRet;
 
-	QByteArray reasonTmp = QByteArray::fromStdString(getConnectionReasonStr(reason));
-	QByteArray toAdd = getMarkUp(FIELDS_OF_MSGS::REASON, reasonTmp);
+	QByteArray reasonTmp = ClientServerApi::reasonMap[reason];
+	QByteArray toAdd = ClientServerApi::getMarkUp(FIELDS_OF_MSGS::REASON, reasonTmp);
 	toRet.append(toAdd);
 
 	QByteArray macAdress;
@@ -81,7 +74,7 @@ bool ServerConnector::getUserInternetData(QByteArray& userDataMarkUps, REASON_TO
 	if (!ok2)
 		return false;//todo //tmp 
 
-	toAdd = getMarkUp(FIELDS_OF_MSGS::MAC_ADRESS, macAdress);
+	toAdd = ClientServerApi::getMarkUp(FIELDS_OF_MSGS::MAC_ADRESS, macAdress);
 	toRet.append(toAdd);
 
 	userDataMarkUps = toRet;
@@ -101,36 +94,41 @@ bool ServerConnector::encryptAndAddHeaderToMsg(QByteArray& msg){
 	bool ok1 = crypto.encryptUsingUserPublicKey(msg);
 	int user_ID;
 	bool ok2 = crypto.getUserIdFromFile(user_ID);
-	QByteArray header = getMarkUp(FIELDS_OF_MSGS::USER_ID, QByteArray::number(user_ID));
+	QByteArray header = ClientServerApi::getMarkUp(FIELDS_OF_MSGS::USER_ID, QByteArray::number(user_ID));
 	msg.push_front(header);
 	return ok1 && ok2;
 }
 
 void ServerConnector::test(){
+	QByteArray msg = createMsg(REASON_TO_CONNECT_TO_SERVER::ASK_FOR_NEWEST_VERSION);
+	encryptAndAddHeaderToMsg(msg);
+	QByteArray out;
+	conectToServer(msg, out);
+	int g = 5;
 }
 
 ServerConnector::~ServerConnector()
 {
 }
 
-bool ServerConnector::conectToServer(QByteArray in_dataToSend, QByteArray& out_recivedData){
-	qDebug() << "Bytes to send: "+ QString::number(in_dataToSend.size());
+bool ServerConnector::conectToServer(QByteArray encryptedDataToSend, QByteArray& encryptedRecivedData){
 	socket = new QTcpSocket(this);
 	QHostAddress hostNAme(ip);
 	socket->connectToHost(hostNAme, port);
 	bool waited = socket->waitForConnected(timeWaitForConn);
 	if (waited) {
 		qDebug() << "Connected";
-		socket->write(in_dataToSend);
+		socket->write(encryptedDataToSend);
 		socket->waitForBytesWritten(timeWaitForDataWrite);
 		socket->waitForReadyRead(timeWaitForDataRead);
-		//int byteRead = socket->bytesAvailable();
-		out_recivedData = socket->readAll();
-		qDebug() << "Recived bytes:" + QString::number(out_recivedData.size());
-		qDebug() << out_recivedData;
+		encryptedRecivedData = socket->readAll();
 		socket->close();
+		qDebug() << "Recived bytes:" + QString::number(encryptedRecivedData.size());
+		qDebug() << encryptedRecivedData;
+		return true;
 	}
-	else
+	else {
 		qDebug() << " Not connected";
-	return true;
+		return false;
+	}
 }

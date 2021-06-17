@@ -97,6 +97,9 @@
     <ClCompile Include="sources\ServerConnector.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="sources\ClientServerApi.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="sources\LoginWindow.h">
@@ -148,6 +151,9 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="sources\ServerConnector.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="sources\ClientServerApi.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>
