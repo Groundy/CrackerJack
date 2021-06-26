@@ -13,7 +13,7 @@ bool ServerConnector::versionToStruct(QString verStr, VersionStruct& structToRet
 		//todo dodaæ log
 		return false; 
 	}
-	QStringList partsOfDate = partsOfVerStr[0].split("/", Qt::SkipEmptyParts);
+	QStringList partsOfDate = partsOfVerStr[0].split("-", Qt::SkipEmptyParts);
 	wrongFormatOfVersionStr = partsOfDate.size() != 3;
 	if (wrongFormatOfVersionStr) {
 		//todo dodaæ log
@@ -100,10 +100,12 @@ bool ServerConnector::encryptAndAddHeaderToMsg(QByteArray& msg){
 }
 
 void ServerConnector::test(){
-	QByteArray msg = createMsg(REASON_TO_CONNECT_TO_SERVER::ASK_FOR_NEWEST_VERSION);
-	encryptAndAddHeaderToMsg(msg);
-	QByteArray out;
-	conectToServer(msg, out);
+	QByteArray msgToSend, recivedMsg;
+	msgToSend = createMsg(REASON_TO_CONNECT_TO_SERVER::ASK_FOR_TIME);
+	encryptAndAddHeaderToMsg(msgToSend);
+	conectToServer(msgToSend, recivedMsg);
+	QList<MarkUp> list = ClientServerApi::splitMsgToMarkUps(recivedMsg);
+	//bool t = isCurrentVersion(QString(list[1].value));
 	int g = 5;
 }
 

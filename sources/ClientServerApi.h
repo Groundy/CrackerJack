@@ -3,6 +3,7 @@
 #include <QObject>
 #include <qdebug.h>
 enum class REASON_TO_CONNECT_TO_SERVER {
+	UNKNOWN,
 	ASK_FOR_NEWEST_VERSION,//Retrun Str with newest version to client to compare with it's local version
 	ASK_FOR_VALIDITY_OF_KEY,//Check if combination of userId public key have coresponding private key at usage
 	ASK_FOR_KEY_EXP_DATE,// Return date with expiration date of that key
@@ -12,19 +13,20 @@ enum class REASON_TO_CONNECT_TO_SERVER {
 	END_ENUM_REASON//to Count enum 
 };
 enum class FIELDS_OF_MSGS {
+	UNKOWN,
 	IP_ADRESS,
 	MAC_ADRESS,
 	REASON,
 	USER_ID,
 	RESPONSE_TYPE,
 	VERSION_STR,
-	UNKOWN,
+	CURRENT_EPOCH_UTC_TIME_STR,
 
 	END_ENUM_FIELD//to Count enum 
 };
 enum class SERVER_RESPONSES {
-	UNDEFINED_ERROR,
-	NEWEST_VERSION_STR,//Server return newest version Str
+	UNKNOWN,
+	RET_NEWEST_VERSION_STR,//Server return newest version Str
 	KEY_IS_VALID,// userID and public client has current active private key on server
 	KEY_NOT_VALID,// userID and public client key, has no exisiting private key on server 
 	KEY_IS_VALID_BUT_NOT_REGISTER,
@@ -32,7 +34,7 @@ enum class SERVER_RESPONSES {
 	RESULT_OF_REGISTARTION,
 	USER_KEY_DOESNT_MATCH,
 	KEY_FILE_WRONG_STR,
-
+	RET_CURRENT_EPOCH_UTC_TIME,//Server return CURRENT_EPOCH_UTC_TIME in seconds
 
 
 

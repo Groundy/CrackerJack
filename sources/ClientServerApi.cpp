@@ -1,5 +1,5 @@
 #include "ClientServerApi.h"
-//this class is shared between Client and Server;f
+//this class is shared between Client and Server;
 
 
 QMap<REASON_TO_CONNECT_TO_SERVER, QByteArray> ClientServerApi::reasonMap = {
@@ -7,7 +7,8 @@ QMap<REASON_TO_CONNECT_TO_SERVER, QByteArray> ClientServerApi::reasonMap = {
 	{REASON_TO_CONNECT_TO_SERVER::ASK_FOR_VALIDITY_OF_KEY, "ASK_FOR_VALIDITY_OF_KEY"},
 	{REASON_TO_CONNECT_TO_SERVER::ASK_FOR_KEY_EXP_DATE, "ASK_FOR_KEY_EXP_DATE"},
 	{REASON_TO_CONNECT_TO_SERVER::REGISTER_KEY, "REGISTER_KEY"},
-	{REASON_TO_CONNECT_TO_SERVER::ASK_FOR_TIME, "ASK_FOR_TIME"}
+	{REASON_TO_CONNECT_TO_SERVER::ASK_FOR_TIME, "ASK_FOR_TIME"},
+	{REASON_TO_CONNECT_TO_SERVER::UNKNOWN, "UNKOWN_REASON"}
 };
 
 QMap<FIELDS_OF_MSGS, QByteArray> ClientServerApi::fieldMap = {
@@ -17,36 +18,35 @@ QMap<FIELDS_OF_MSGS, QByteArray> ClientServerApi::fieldMap = {
 	{FIELDS_OF_MSGS::USER_ID, "USER_ID"},
 	{FIELDS_OF_MSGS::VERSION_STR, "VERSION_STR"},
 	{FIELDS_OF_MSGS::RESPONSE_TYPE, "RESPONSE_TYPE"},
-	{FIELDS_OF_MSGS::UNKOWN, "UNKOWN"}
+	{FIELDS_OF_MSGS::CURRENT_EPOCH_UTC_TIME_STR, "CURRENT_EPOCH_UTC_TIME_STR"},
+	{FIELDS_OF_MSGS::UNKOWN, "UNKOWN_FIELD"}
 };
 
 
 QMap<SERVER_RESPONSES, QByteArray> ClientServerApi::responsMap = {
-	{SERVER_RESPONSES::UNDEFINED_ERROR, "UNDEFINED_ERROR"},
-	{SERVER_RESPONSES::NEWEST_VERSION_STR, "NEWEST_VERSION_STR"},
+	{SERVER_RESPONSES::UNKNOWN, "UNKNOWN_RESPONS"},
+	{SERVER_RESPONSES::RET_NEWEST_VERSION_STR, "NEWEST_VERSION_STR"},
 	{SERVER_RESPONSES::KEY_IS_VALID, "KEY_IS_VALID"},
 	{SERVER_RESPONSES::KEY_IS_VALID_BUT_NOT_REGISTER, "KEY_IS_VALID_BUT_NOT_REGISTER"},
 	{SERVER_RESPONSES::KEY_EXPERIENCE_TIME, "KEY_EXPERIENCE_TIME"},
 	{SERVER_RESPONSES::RESULT_OF_REGISTARTION, "RESULT_OF_REGISTARTION"},
 	{SERVER_RESPONSES::USER_KEY_DOESNT_MATCH, "USER_KEY_DOESNT_MATCH"},
 	{SERVER_RESPONSES::KEY_FILE_WRONG_STR, "KEY_FILE_WRONG_STR"},
+	{SERVER_RESPONSES::RET_CURRENT_EPOCH_UTC_TIME, "RET_CURRENT_EPOCH_UTC_TIME"}
 };
 
 QList<MarkUp> ClientServerApi::splitMsgToMarkUps(QByteArray& decryptedMsg) {
-	/*
-	expected Structure
-	<FIELD1===VALUE1>\n<FIELD2===VALUE2>\n<FIELD3===VALUE3>\n...
-	*/
+	/*	expected Structure	<FIELD1===VALUE1>\n<FIELD2===VALUE2>\n<FIELD3===VALUE3>\n...	*/
 	QList<MarkUp> toRet;
 	QByteArrayList allParts = decryptedMsg.split('\n');
-	for each (QByteArray var in allParts) {
+	for each (QString var in allParts) {
 		bool hasOpening = var.contains("<");
 		bool hasEnding = var.contains(">");
 		bool hasEqSign = var.contains("===");
 		bool vailStructure = hasEnding && hasOpening && hasEqSign;
 		if (!vailStructure)	continue;
 
-		QByteArrayList partsOfMarkUp = var.split('===');//suspicious //todo
+		QStringList partsOfMarkUp = var.split("===",Qt::SkipEmptyParts);//suspicious //todo
 		if (partsOfMarkUp.size() != 2)	continue;
 
 		QString leftValue = partsOfMarkUp[0];
@@ -67,7 +67,6 @@ QList<MarkUp> ClientServerApi::splitMsgToMarkUps(QByteArray& decryptedMsg) {
 		toAdd.field = field;
 		toAdd.value = fieldValue;
 		toRet.append(toAdd);
-
 	}
 	return toRet;
 }
