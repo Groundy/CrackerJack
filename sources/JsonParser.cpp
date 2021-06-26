@@ -8,72 +8,27 @@ JsonParser::~JsonParser()
 {
 }
 
-QString JsonParser::getItemCategoryName(Utilities::Item::TYPE_OF_ITEM typeOfItem)
-{
-	switch (typeOfItem)
-	{
-		case Utilities::Item::TYPE_OF_ITEM::ARMOR: {
-			return "armors"; break; 
-		}
-		case Utilities::Item::TYPE_OF_ITEM::AMULETS: {
-			return "amulets"; break; 
-		}
-		case Utilities::Item::TYPE_OF_ITEM::BOOTS: {
-			return "boots"; break;
-		}
-		case Utilities::Item::TYPE_OF_ITEM::CREATURE: {
-			return "creature"; break; 
-		}
-		case Utilities::Item::TYPE_OF_ITEM::HELMETS: {
-			  return "helmets"; break; 
-		}
-		case Utilities::Item::TYPE_OF_ITEM::LEGS: {
-			return "legs"; break; 
-		}
-		case Utilities::Item::TYPE_OF_ITEM::OTHER: {
-			return "other"; break; 
-		}
-		case Utilities::Item::TYPE_OF_ITEM::POTIONS: {
-			return "potions"; break; 
-		}
-		case Utilities::Item::TYPE_OF_ITEM::RINGS: {
-			return "rings"; break; 
-		}
-		case Utilities::Item::TYPE_OF_ITEM::RUNES: {
-			return "runes"; break; 
-		}
-		case Utilities::Item::TYPE_OF_ITEM::SHIELDS: {
-			return "shields"; break; 
-		}
-		case Utilities::Item::TYPE_OF_ITEM::VALUABLES: {
-			return "valuables"; break; 
-		}
-		case Utilities::Item::TYPE_OF_ITEM::AMMO: {
-			return "ammo"; break;
-		}
-		case Utilities::Item::TYPE_OF_ITEM::AXES: {
-			return "axes"; break;
-		}
-		case Utilities::Item::TYPE_OF_ITEM::SWORDS: {
-			return "swords"; break;
-		}
-		case Utilities::Item::TYPE_OF_ITEM::CLUBS: {
-			return "clubs"; break;
-		}
-		case Utilities::Item::TYPE_OF_ITEM::DISTANCES: {
-			return "distance"; break; 
-		}
-		case Utilities::Item::TYPE_OF_ITEM::ROD: {
-			return "rod"; break; 
-		}
-		case Utilities::Item::TYPE_OF_ITEM::WANDS: {
-			return "wands"; break; 
-		}
-   
-		default:    
-			return "";  break;
-	}
-}
+QMap<Utilities::Item::TYPE_OF_ITEM, QString> JsonParser::itemType_itemStr_map = {
+	{Utilities::Item::TYPE_OF_ITEM::ARMOR, "armors"},
+	{Utilities::Item::TYPE_OF_ITEM::AMULETS, "amulets"},
+	{Utilities::Item::TYPE_OF_ITEM::BOOTS, "boots"},
+	{Utilities::Item::TYPE_OF_ITEM::CREATURE, "creature"},
+	{Utilities::Item::TYPE_OF_ITEM::HELMETS, "helmets"},
+	{Utilities::Item::TYPE_OF_ITEM::LEGS, "legs"},
+	{Utilities::Item::TYPE_OF_ITEM::OTHER, "other"},
+	{Utilities::Item::TYPE_OF_ITEM::POTIONS, "potions"},
+	{Utilities::Item::TYPE_OF_ITEM::RINGS, "rings"},
+	{Utilities::Item::TYPE_OF_ITEM::RUNES, "runes"},
+	{Utilities::Item::TYPE_OF_ITEM::SHIELDS, "shields"},
+	{Utilities::Item::TYPE_OF_ITEM::VALUABLES, "valuables"},
+	{Utilities::Item::TYPE_OF_ITEM::AMMO, "ammo"},
+	{Utilities::Item::TYPE_OF_ITEM::AXES, "axes"},
+	{Utilities::Item::TYPE_OF_ITEM::SWORDS, "swords"},
+	{Utilities::Item::TYPE_OF_ITEM::CLUBS, "clubs"},
+	{Utilities::Item::TYPE_OF_ITEM::DISTANCES, "distance"},
+	{Utilities::Item::TYPE_OF_ITEM::ROD, "rod"},
+	{Utilities::Item::TYPE_OF_ITEM::WANDS, "wands"}
+};
 
 bool JsonParser::openJsonFile(QJsonObject* jsonDoc, QString pathToFile){
 	QFile file;
@@ -94,7 +49,7 @@ bool JsonParser::openJsonFile(QJsonObject* jsonDoc, QString pathToFile){
 	return true;
 }
 
-bool JsonParser::readSpellsJson(QList<Utilities::Spell>& spells){
+bool JsonParser::readSpellsJson(QList<Spell>& spells){
 	QJsonObject obj;
 	bool res = openJsonFile(&obj, spellFilePath);
 	if (!res) {
@@ -108,10 +63,10 @@ bool JsonParser::readSpellsJson(QList<Utilities::Spell>& spells){
 		return false;
 	}
 
-	QList<Utilities::Spell> spellsToRet;
+	QList<Spell> spellsToRet;
 	for (size_t i = 0; i < arr.size(); i++){
 		QJsonValue val = arr.at(i);
-		Utilities::Spell objToAdd;
+		Spell objToAdd;
 		objToAdd.name = val["name"].toString();
 		objToAdd.incantations = val["incantantion"].toString();
 		objToAdd.EK = val["EK"].toBool();
@@ -123,13 +78,13 @@ bool JsonParser::readSpellsJson(QList<Utilities::Spell>& spells){
 		objToAdd.cdGroup = val["CDGROUP"].toInt();
 		objToAdd.soulPoints = val["SoulPoints"].toInt();
 		QString typeAsStr = val["TYPE"].toString();
-		Utilities::Spell::TYPE_OF_SPELL type;
+		Spell::TYPE_OF_SPELL type;
 		if (typeAsStr == "HEALING")
-			type = Utilities::Spell::TYPE_OF_SPELL::HEALING;
+			type = Spell::TYPE_OF_SPELL::HEALING;
 		else if (typeAsStr == "SUPPORT")
-			type = Utilities::Spell::TYPE_OF_SPELL::SUPPORT;
+			type = Spell::TYPE_OF_SPELL::SUPPORT;
 		else if (typeAsStr == "ATTACK")
-			type = Utilities::Spell::TYPE_OF_SPELL::ATTACK;
+			type = Spell::TYPE_OF_SPELL::ATTACK;
 		else {
 			Logger::logPotenialBug("Type value read from json file is other than 3 allowed types", "JsonParser", "readSpellsJson");
 			return false;
@@ -141,7 +96,7 @@ bool JsonParser::readSpellsJson(QList<Utilities::Spell>& spells){
 	return true;
 }
 
-bool JsonParser::filtrSpells(QList<Utilities::Spell>& spells, Profile::PROFESSION* prof, Utilities::Spell::TYPE_OF_SPELL* type){
+bool JsonParser::filtrSpells(QList<Spell>& spells, Profile::PROFESSION* prof, Spell::TYPE_OF_SPELL* type){
 	if (prof == NULL && type == NULL)
 		return false;
 	typedef Utilities::Spell Spell;
@@ -336,8 +291,6 @@ bool JsonParser::readItemJson(QList<Utilities::Item>* items){
 }
 
 bool JsonParser::getHealthRestoreMethodes(QStringList incantationsAndSpellsList, QList<Utilities::RestoreMethode>& spellsAndPotionsObjects) {
-	typedef Utilities::Item Item;
-	typedef Utilities::Spell Spell;
 	typedef Utilities::RestoreMethode RestoreMethode;
 	QList<Item> potions;
 	QList<Spell> spells;
@@ -382,8 +335,7 @@ bool JsonParser::getHealthRestoreMethodes(QStringList incantationsAndSpellsList,
 	return allWentGood;
 }
 
-bool JsonParser::getManaRestoreMethodes(QStringList potionNameToBeFound, QList<Utilities::Item>& potionToReturn){
-	typedef Utilities::Item Item;
+bool JsonParser::getManaRestoreMethodes(QStringList potionNameToBeFound, QList<Item>& potionToReturn){
 	QList<Item> allExistingPotions;
 	getItemsFromCategory(allExistingPotions, Item::TYPE_OF_ITEM::POTIONS);
 
@@ -405,19 +357,44 @@ bool JsonParser::getManaRestoreMethodes(QStringList potionNameToBeFound, QList<U
 	return allWentGood;
 }
 
-bool JsonParser::getItemsFromCategory(QList<Utilities::Item>& itemsToRet, Utilities::Item::TYPE_OF_ITEM type){
-	QList<Utilities::Item> readItems, itemsTmp;
+bool JsonParser::getItemsFromCategory(QList<Item>& itemsToRet, Item::TYPE_OF_ITEM type){
+	QList<Item> readItems, itemsTmp;
 	bool sucess = readItemJson(&readItems);
 	if (!sucess)
 		return false;
 
-	for each (Utilities::Item var in readItems){
+	for each (Item var in readItems){
 		bool isProperCategory = type == var.type;
 		if (isProperCategory)
 			itemsTmp.push_back(var);
 	}
 
 	itemsToRet = itemsTmp;
+	return true;
+}
+
+bool JsonParser::saveJsonFile(QString pathToFolder, QString fileNameWithExtension, QJsonDocument& docToSave){
+	QFileInfo folderInfo = QFileInfo(pathToFolder);
+	bool isDir = folderInfo.isDir();
+	if (!isDir){
+		Logger::logPotenialBug("Error, path is not folder", "JsonParser", "saveJsonFile");
+		return false;
+	}
+	bool isWritable = folderInfo.isWritable();
+	if (!isDir) {
+		Logger::logPotenialBug("Error, path is writable folder", "JsonParser", "saveJsonFile");
+		return false;
+	}
+
+	QFile file(fileNameWithExtension);
+	bool ok = file.open(QIODevice::OpenModeFlag::WriteOnly);
+	if (!ok) {
+		Logger::logPotenialBug("Another Error", "JsonParser", "saveJsonFile");
+		return false;
+	}
+	file.write(docToSave.toJson());
+	file.close();
+
 	return true;
 }
 

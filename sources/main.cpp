@@ -11,6 +11,11 @@
 #include "Cryptography.h"
 #include "ServerConnector.h"
 
+#include "qjsondocument.h"
+#include "qjsonobject.h"
+#include "qjsonvalue.h"
+
+
 QString makeRandomProccessName();
 void test();
 QIcon getIcon();
@@ -42,9 +47,7 @@ int main(int argc, char *argv[])
 }
 
 void test(){
-	//ServerConnector con;
 
-	//exit(0);
 };
 
 QIcon getIcon() {
