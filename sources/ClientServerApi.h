@@ -36,10 +36,6 @@ enum class SERVER_RESPONSES {
 	KEY_FILE_WRONG_STR,
 	RET_CURRENT_EPOCH_UTC_TIME,//Server return CURRENT_EPOCH_UTC_TIME in seconds
 
-
-
-
-
 	END_ENUM_RESPONSE//toCount enum 
 };
 

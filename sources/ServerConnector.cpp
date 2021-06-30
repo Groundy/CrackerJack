@@ -5,8 +5,7 @@ ServerConnector::ServerConnector(){
 
 bool ServerConnector::versionToStruct(QString verStr, VersionStruct& structToRet){
 	//version format dd-mm-yyyy/t, t is version of a day, start from 0;
-	QString versionStr = VER_FILEVERSION_STR;
-	QStringList partsOfVerStr = versionStr.split("/", Qt::SkipEmptyParts);
+	QStringList partsOfVerStr = verStr.split("/", Qt::SkipEmptyParts);
 
 	bool wrongFormatOfVersionStr = partsOfVerStr.size() != 2;
 	if (wrongFormatOfVersionStr) {
@@ -105,7 +104,7 @@ void ServerConnector::test(){
 	encryptAndAddHeaderToMsg(msgToSend);
 	conectToServer(msgToSend, recivedMsg);
 	QList<MarkUp> list = ClientServerApi::splitMsgToMarkUps(recivedMsg);
-	//bool t = isCurrentVersion(QString(list[1].value));
+	bool t = isCurrentVersion(QString(list[1].value));
 	int g = 5;
 }
 
