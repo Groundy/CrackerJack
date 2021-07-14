@@ -331,7 +331,7 @@ bool NewProfileConfiguartor::checkCorrectnessOfPage_3(){
 			mapToDeleteReplicatedValues.insert(valueOfKey, 0);
 		}
 		bool allWidgetsAreDiffrent = mapToDeleteReplicatedValues.size() == maxWidgetIndex;
-		bool AtLeastOneIsActive = maxWidgetIndex;
+		bool AtLeastOneIsActive = maxWidgetIndex > 0;
 		if(AtLeastOneIsActive)
 			theSameValueIsAssignedToMoreThanOneBox = !allWidgetsAreDiffrent;
 	}
@@ -344,7 +344,7 @@ bool NewProfileConfiguartor::checkCorrectnessOfPage_3(){
 			keyNumber_noImportnat_map.insert(keyNumber,0);
 		}
 		bool allKeysAreDiffrent = keyNumber_noImportnat_map.size() == guiPtrs.activeElementsOnPage_3;
-		theSameKeyIsAssignedToMoreThanOneKeyShortCut = allKeysAreDiffrent;
+		theSameKeyIsAssignedToMoreThanOneKeyShortCut = !allKeysAreDiffrent;
 	}
 
 	if (!everySliderHasDiffrentValue) {
@@ -453,7 +453,7 @@ bool NewProfileConfiguartor::checkCorrectnessOfPage_4(){
 			mapToDeleteReplicatedValues.insert(valueOfKey, 0);
 		}
 		bool allWidgetsAreDiffrent = mapToDeleteReplicatedValues.size() == maxWidgetIndex;
-		bool AtLeastOneIsActive = maxWidgetIndex;
+		bool AtLeastOneIsActive = maxWidgetIndex > 0;
 		if (AtLeastOneIsActive)
 			theSameValueIsAssignedToMoreThanOneBox = !allWidgetsAreDiffrent;
 	}
@@ -466,7 +466,7 @@ bool NewProfileConfiguartor::checkCorrectnessOfPage_4(){
 			keyNumber_noImportnat_map.insert(keyNumber, 0);
 		}
 		bool allKeysAreDiffrent = keyNumber_noImportnat_map.size() == guiPtrs.activeElementsOnPage_4;
-		theSameKeyIsAssignedToMoreThanOneKeyShortCut = allKeysAreDiffrent;
+		theSameKeyIsAssignedToMoreThanOneKeyShortCut = !allKeysAreDiffrent;
 	}
 
 	if (!everySliderHasDiffrentValue) {

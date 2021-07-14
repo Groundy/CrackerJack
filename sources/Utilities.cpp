@@ -91,7 +91,7 @@ void Utilities::cutBlackBordersOfImg(QImage& img) {
 			 if (!isBlack) {
 				 linesOfBlackRows_LEFT = x;
 				 x = WIDTH; //endOfLoop
-				 y = WIDTH; //endOfLoop
+				 y = HEIGHT; //endOfLoop
 			 }
 		 }
 	 }

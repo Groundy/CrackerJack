@@ -26,11 +26,12 @@ int main(int argc, char *argv[])
 	QApplication a(argc, argv);
 	initSettings(a);
 	test();
-   
+   /*
 	LoginWindow w;
 	int result = w.exec();
 	if (result != QDialog::Accepted)
 		return 0;
+	*/
 	Profile* prof = new Profile();
 	SelectProfileWindow win(NULL, prof);
 	bool accepted = win.exec() == QDialog::Accepted;
