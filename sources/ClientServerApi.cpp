@@ -45,7 +45,7 @@ QList<MarkUp> ClientServerApi::splitMsgToMarkUps(QByteArray& decryptedMsg) {
 		bool hasEqSign = var.contains("===");
 		bool vailStructure = hasEnding && hasOpening && hasEqSign;
 		if (!vailStructure)	continue;
-
+		
 		QStringList partsOfMarkUp = var.split("===",Qt::SkipEmptyParts);//suspicious //todo
 		if (partsOfMarkUp.size() != 2)	continue;
 

@@ -62,10 +62,10 @@ bool ServerConnector::isCurrentVersion(const QString versionStrRecivedFromServer
 }
 
 bool ServerConnector::getUserInternetData(QByteArray& userDataMarkUps, REASON_TO_CONNECT_TO_SERVER reason){
-	QByteArray toRet;
 
 	QByteArray reasonTmp = ClientServerApi::reasonMap[reason];
 	QByteArray toAdd = ClientServerApi::getMarkUp(FIELDS_OF_MSGS::REASON, reasonTmp);
+	QByteArray toRet;
 	toRet.append(toAdd);
 
 	QByteArray macAdress;
@@ -90,8 +90,8 @@ QByteArray ServerConnector::createMsg(REASON_TO_CONNECT_TO_SERVER reason){
 
 bool ServerConnector::encryptAndAddHeaderToMsg(QByteArray& msg){
 	Cryptography crypto;
-	bool ok1 = crypto.encryptUsingUserPublicKey(msg);
 	int user_ID;
+	bool ok1 = crypto.encryptUsingUserPublicKey(msg);
 	bool ok2 = crypto.getUserIdFromFile(user_ID);
 	QByteArray header = ClientServerApi::getMarkUp(FIELDS_OF_MSGS::USER_ID, QByteArray::number(user_ID));
 	msg.push_front(header);
@@ -124,12 +124,12 @@ bool ServerConnector::conectToServer(QByteArray encryptedDataToSend, QByteArray&
 		socket->waitForReadyRead(timeWaitForDataRead);
 		encryptedRecivedData = socket->readAll();
 		socket->close();
+		//todo logger + sprawdzic rozmiar danych powinno byc 256 bajtow + headre.length();
 		qDebug() << "Recived bytes:" + QString::number(encryptedRecivedData.size());
 		qDebug() << encryptedRecivedData;
-		return true;
 	}
 	else {
 		qDebug() << " Not connected";
-		return false;
 	}
+	return waited;
 }

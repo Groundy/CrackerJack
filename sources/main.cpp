@@ -47,8 +47,12 @@ int main(int argc, char *argv[])
 }
 
 void test(){
-	ServerConnector t;
-
+	QImage img, imgSmall;
+	QString path = "C:\\Users\\ADMIN\\Desktop\\mapPlus1.png",pathSmall = "C:\\Users\\ADMIN\\Desktop\\small1.png";
+	img.load(path);
+	imgSmall.load(pathSmall);
+	QList<QPoint> points = Calibrator::findStartPositionInImg(imgSmall, img);
+	int g = 5;
 };
 
 QIcon getIcon() {
