@@ -131,13 +131,10 @@ void MainMenu::threadStarter(){
 }
 
 void MainMenu::signalSlotConnector(){
+	QObject *sigSender, *slotRec;
+	const char *sig, *slot;
 	
-	QObject* sigSender = this->healthManaStateAnalyzer;
-	QObject* slotRec = this->screenAnalyzer;
-	const char* sig = SIGNAL(demandReCalibration());
-	const char* slot = SLOT(reCalibrate());
-	bool connectionAccepted_1 = connect(sigSender, sig, slotRec, slot, Qt::UniqueConnection);
-	
+
 	sigSender = healthManaStateAnalyzer;
 	slotRec = this;
 	sig = SIGNAL(sendValueToMainThread(QString, QString, QString));
@@ -214,7 +211,6 @@ void MainMenu::setUpGui(){
 	QString windowTitle = isPl ? QString::fromLocal8Bit("CrackerJack - Okno g³ówne") : "CrackerJack - Main menu";
 	ui->manaShieldLabel->setText(manaShieldLabel);
 	ui->manaShieldLabel->repaint();
-	// = isPl ? QString::fromLocal8Bit("") : "";
 }
 
 void MainMenu::autoHealAndManaRegCheckBoxChanged() {

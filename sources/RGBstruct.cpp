@@ -21,6 +21,10 @@ RGBstruct::RGBstruct(uint r, uint g, uint b) {
 	this->b = b;
 }
 
+uint RGBstruct::toUint() {
+	return r << 16 | g << 8 | b;
+}
+
 RGBstruct::~RGBstruct()
 {
 }

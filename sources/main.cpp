@@ -10,11 +10,9 @@
 #include "Logger.h"
 #include "Cryptography.h"
 #include "ServerConnector.h"
-
 #include "qjsondocument.h"
 #include "qjsonobject.h"
 #include "qjsonvalue.h"
-
 
 QString makeRandomProccessName();
 void test();
@@ -48,13 +46,8 @@ int main(int argc, char *argv[])
 }
 
 void test(){
-	QImage img, imgSmall;
-	QString path = "C:\\Users\\ADMIN\\Desktop\\mapPlus1.png",pathSmall = "C:\\Users\\ADMIN\\Desktop\\small1.png";
-	img.load(path);
-	imgSmall.load(pathSmall);
-	QList<QPoint> points = Calibrator::findStartPositionInImg(imgSmall, img);
-	int g = 5;
 };
+
 
 QIcon getIcon() {
 	QDir dir = QDir::current();

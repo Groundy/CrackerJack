@@ -711,6 +711,22 @@ void Utilities::UNSUED_findBoredersOfFrames(QImage fullScreen){
 	QImage startOfFrame = QImage(3, 3, QImage::Format::Format_RGB32);
 }
 
+void convertMapToNoise(QImage& img, quint32 seed) {
+	auto generator = QRandomGenerator(seed);
+	//that fun needs #include "qrandom.h" to be used;
+	quint64 AMOUNT_OF_POSSIBLE_COLOURS = 15;
+	for (int x = 0; x < img.width(); x++) {
+		for (int y = 0; y < img.height(); y++) {
+			uint basic = generator.generate64() % (256 - AMOUNT_OF_POSSIBLE_COLOURS);
+			RGBstruct rgb(img.pixel(x,y));
+			uint sumOfColorsToAdd = rgb.r + rgb.g + rgb.b;
+			uint toSet = basic + sumOfColorsToAdd;
+			uint colourToSet= RGBstruct(toSet, toSet, toSet).toUint();
+			img.setPixelColor(x, y, colourToSet);
+		}
+	}
+}
+
 void Utilities::UNUSED_imgToOneColor(QImage& img, QRgb minimalColorValues, QRgb maxColorValues, QRgb colorToSet, bool allOfThem){
 	 int width = img.width();
 	 int height = img.height();

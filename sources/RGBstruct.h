@@ -21,5 +21,6 @@ public:
 		bool sameG = this->g == rgb.g;
 		return sameR && sameG && sameB;
 	};
+	uint toUint();
 	~RGBstruct();
 };
