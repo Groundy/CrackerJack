@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>882</width>
-    <height>665</height>
+    <width>896</width>
+    <height>738</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,11 +16,8 @@
   <layout class="QGridLayout" name="gridLayout_2">
    <item row="0" column="0">
     <layout class="QGridLayout" name="gridLayout">
-     <item row="1" column="1">
-      <widget class="QListWidget" name="listWidget"/>
-     </item>
      <item row="3" column="1">
-      <widget class="QListView" name="listView"/>
+      <widget class="QListView" name="itemList"/>
      </item>
      <item row="0" column="1">
       <spacer name="verticalSpacer_2">
@@ -86,6 +83,9 @@
         </size>
        </property>
       </spacer>
+     </item>
+     <item row="1" column="1">
+      <widget class="QListView" name="categoriesList"/>
      </item>
     </layout>
    </item>

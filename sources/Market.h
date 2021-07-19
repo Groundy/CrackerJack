@@ -1,5 +1,5 @@
 #pragma once
-
+#include "Utilities.h"
 #include <QWidget>
 namespace Ui { class Market; };
 
@@ -13,4 +13,5 @@ public:
 
 private:
 	Ui::Market *ui;
+	void fillCategoryList();
 };

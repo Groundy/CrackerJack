@@ -2,8 +2,7 @@
 #include "ui_Market.h"
 
 Market::Market(QWidget *parent)
-	: QWidget(parent)
-{
+	: QWidget(parent){
 	ui = new Ui::Market();
 	ui->setupUi(this);
 }
@@ -11,4 +10,7 @@ Market::Market(QWidget *parent)
 Market::~Market()
 {
 	delete ui;
+}
+
+void Market::fillCategoryList(){
 }
