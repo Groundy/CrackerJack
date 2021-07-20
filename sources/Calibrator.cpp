@@ -223,7 +223,7 @@ bool Calibrator::findPotionsOnBottomBar(QStringList namesOfPotionsToFind, QStrin
 	return true;
 }
 
-QList<QPoint> Calibrator::findStartPositionInImg(QImage& imgToFind, QImage& imgToSearchWithin) {
+QList<QPoint> Calibrator::findStartPositionInImg(const QImage& imgToFind, const QImage& imgToSearchWithin) {
 	//fun return list of start positions of imgToFind, position is lef down corner
 	const int WIDTH_SMALL_PIC = imgToFind.width();
 	const int HEIGHT_SMALL_PIC = imgToFind.height();

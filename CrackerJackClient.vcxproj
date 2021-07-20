@@ -203,6 +203,7 @@ xcopy /y /d ".\dependencies\libcrypto-1_1.dll" "$(OutDir)"
     <ClCompile Include="sources\MainMenu.cpp" />
     <ClCompile Include="sources\ManaHealthStateAnalyzer.cpp" />
     <ClCompile Include="sources\Market.cpp" />
+    <ClCompile Include="sources\MinimapAnalyzer.cpp" />
     <ClCompile Include="sources\NewProfileConfiguartor.cpp" />
     <ClCompile Include="sources\Key.cpp" />
     <ClCompile Include="sources\ProfileDataBaseManager.cpp" />
@@ -233,6 +234,7 @@ xcopy /y /d ".\dependencies\libcrypto-1_1.dll" "$(OutDir)"
     <QtMoc Include="sources\ServerConnector.h" />
     <QtMoc Include="sources\ClientServerApi.h" />
     <QtMoc Include="sources\Market.h" />
+    <QtMoc Include="sources\MinimapAnalyzer.h" />
     <ClInclude Include="version.h" />
     <QtMoc Include="sources\VariablesClass.h" />
     <QtMoc Include="sources\ScreenSaver.h" />

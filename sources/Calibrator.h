@@ -22,7 +22,7 @@ public:
 		NO_FRAMES_FOUND = 64
 	};
 	static QList<QPoint> findStartPositionInImg_mulitpeImgs(QList<QImage*> imgsToFind, QImage& imgToShareWithin);
-	static QList<QPoint> findStartPositionInImg(QImage& imgToFind, QImage& imgToShareWithin);
+	static QList<QPoint> findStartPositionInImg(const QImage& imgToFind, const QImage& imgToShareWithin);
 	int calibrateManaAndHealthBar();
 
 private:

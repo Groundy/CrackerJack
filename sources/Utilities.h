@@ -93,9 +93,7 @@ public:
 		bool forMage, forRp, forEk;
 	};
 	
-private:
-	static void TOOL_convertMapsFromOrgNameToSqrName(QString inputFolder);
-	static void TOOL_generateMapAsText(QString inputFolder);
+
 	static QStringList TOOL_getCodesOfAllInFolder_regular(QString pathToInputFolder, QString pathToOutputFolder);
 	static QStringList TOOL_getCodesOfAllInFolder_bottom(QString pathToInputFolder);
 	static void TOOL_saveImgToOutPutFolder(QImage* img, QString* extraName);

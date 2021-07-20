@@ -13,7 +13,7 @@
 #include "qjsondocument.h"
 #include "qjsonobject.h"
 #include "qjsonvalue.h"
-
+#include "MinimapAnalyzer.h"
 QString makeRandomProccessName();
 void test();
 QIcon getIcon();
@@ -46,6 +46,9 @@ int main(int argc, char *argv[])
 }
 
 void test(){
+	QString path = "C:\\Users\\ADMIN\\source\\repos\\CrackerJackClient\\Resources", outPath = "C:\\Users\\ADMIN\\Desktop";
+	MinimapAnalyzer t;
+	t;
 };
 
 

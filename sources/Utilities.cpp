@@ -522,77 +522,6 @@ void Utilities::TOOL_saveImgToOutPutFolder(QImage* img, QString *extraName){
 	img->save(fullname);
 }
 
-void Utilities::TOOL_convertMapsFromOrgNameToSqrName(QString inputFolder) {
-	for (size_t i = 0; i < 16; i++) {
-		qDebug() << QString::number(i);
-		QString path = inputFolder + "\\" + QString::number(i);
-		QDir directory(path);
-		QStringList litOfFIles = directory.entryList(QStringList() << "*.png", QDir::Files);
-		for each (QString var in litOfFIles) {
-			QStringList partOfNames = var.split("_");
-			partOfNames[2] = QString::number(partOfNames[2].toInt() / 256);
-			partOfNames[3] = QString::number(partOfNames[3].toInt() / 256);
-			QString newName = partOfNames.join("_");
-			QString pathToFileOld = path + "\\" + var;
-			QString pathToFileNew = path + "\\" + newName;
-			QFile::rename(pathToFileOld, pathToFileNew);
-		}
-	}
-}
-
-void Utilities::TOOL_generateMapAsText(QString inputFolder){
-	//it takes so fucking long approximately 210s
-	const long start_xPos = 124, start_yPos = 120;
-	const long end_xPos_included = 133, end_yPos_included = 128;
-	const long width = 256 * (end_xPos_included - start_xPos + 1);
-	const long height = 256 * (end_yPos_included - start_yPos + 1);
-	const QString floor("_");
-	const QString minimapStr = "Minimap";//_Color_126_124_2.png"
-	const QString color = "Color";
-	const QString end = ".png";
-
-	for (long level = 0; level < 16; level++) {
-		QString name = QString::number(level) + ".txt";
-		QFile fOut(name);
-		fOut.open(QFile::WriteOnly | QFile::Text);
-		QTextStream s(&fOut);
-		for (long fileNamePosX = start_xPos; fileNamePosX <= end_xPos_included; fileNamePosX++) {
-			for (long fileNamePosY = start_yPos; fileNamePosY <= end_yPos_included; fileNamePosY++) {
-				qDebug() << "[" + QString::number(fileNamePosX - start_xPos) + "," + QString::number(fileNamePosY - start_yPos) + "]_"+ QString::number(level);
-
-				QString fileXPos = QString::number(fileNamePosX);
-				QString fileYPos = QString::number(fileNamePosY);
-				QString fileName = minimapStr + floor + color + floor + fileXPos + floor + fileYPos + floor + QString::number(level) + end;
-				QString nameOfFileToReadFrom = inputFolder + "\\" + QString::number(level) + "\\" + fileName;
-				QImage img;
-				bool sucess = img.load(nameOfFileToReadFrom);
-				if (sucess) {
-					for (long x = 0; x < 256; x++){
-						for (long y = 0; y < 256; y++){
-							RGBstruct rgb(img.pixel(x, y));
-							bool isBlack = rgb.r == 0 && rgb.g == 0 && rgb.b == 0;
-							if (isBlack) continue;
-							bool isGrass = rgb.r == 0 && rgb.g == 204 && rgb.b == 0;
-							if (isGrass) continue;
-							bool isWater = rgb.r == 51 && rgb.g == 102 && rgb.b == 153;
-							if (isWater) continue;
-
-							QString xPosStr = QString::number(256 * (fileNamePosX - start_xPos) + x);
-							QString yPosStr = QString::number(256 * (fileNamePosY - start_yPos) + y);
-							QString str = QString::number(rgb.r) + "_" + QString::number(rgb.g) + "_" + QString::number(rgb.b);
-							QString toAppend = "[" + xPosStr + "," + yPosStr +"] "+ str;
-							s << toAppend << '\n';
-						}
-					}
-				}
-			}
-		}
-		fOut.close();
-	}
-	
-	int endLoop = 4;
-}
-
 QStringList Utilities::TOOL_getCodesOfAllInFolder_bottom(QString pathToInputFolder) {
 	QDir directory(pathToInputFolder);
 	QStringList litOfFIles = directory.entryList(QStringList() << "*.png", QDir::Files);
@@ -670,6 +599,78 @@ QStringList Utilities::TOOL_getCodesOfAllInFolder_regular(QString pathToInputFol
  }
 
 /*
+
+void Utilities::TOOL_convertMapsFromOrgNameToSqrName(QString inputFolder) {
+	for (size_t i = 0; i < 16; i++) {
+		qDebug() << QString::number(i);
+		QString path = inputFolder + "\\" + QString::number(i);
+		QDir directory(path);
+		QStringList litOfFIles = directory.entryList(QStringList() << "*.png", QDir::Files);
+		for each (QString var in litOfFIles) {
+			QStringList partOfNames = var.split("_");
+			partOfNames[2] = QString::number(partOfNames[2].toInt() / 256);
+			partOfNames[3] = QString::number(partOfNames[3].toInt() / 256);
+			QString newName = partOfNames.join("_");
+			QString pathToFileOld = path + "\\" + var;
+			QString pathToFileNew = path + "\\" + newName;
+			QFile::rename(pathToFileOld, pathToFileNew);
+		}
+	}
+}
+
+void Utilities::TOOL_generateMapAsText(QString inputFolder){
+	//it takes so fucking long approximately 210s
+	const long start_xPos = 124, start_yPos = 120;
+	const long end_xPos_included = 133, end_yPos_included = 128;
+	const long width = 256 * (end_xPos_included - start_xPos + 1);
+	const long height = 256 * (end_yPos_included - start_yPos + 1);
+	const QString floor("_");
+	const QString minimapStr = "Minimap";//_Color_126_124_2.png"
+	const QString color = "Color";
+	const QString end = ".png";
+
+	for (long level = 0; level < 16; level++) {
+		QString name = QString::number(level) + ".txt";
+		QFile fOut(name);
+		fOut.open(QFile::WriteOnly | QFile::Text);
+		QTextStream s(&fOut);
+		for (long fileNamePosX = start_xPos; fileNamePosX <= end_xPos_included; fileNamePosX++) {
+			for (long fileNamePosY = start_yPos; fileNamePosY <= end_yPos_included; fileNamePosY++) {
+				qDebug() << "[" + QString::number(fileNamePosX - start_xPos) + "," + QString::number(fileNamePosY - start_yPos) + "]_"+ QString::number(level);
+
+				QString fileXPos = QString::number(fileNamePosX);
+				QString fileYPos = QString::number(fileNamePosY);
+				QString fileName = minimapStr + floor + color + floor + fileXPos + floor + fileYPos + floor + QString::number(level) + end;
+				QString nameOfFileToReadFrom = inputFolder + "\\" + QString::number(level) + "\\" + fileName;
+				QImage img;
+				bool sucess = img.load(nameOfFileToReadFrom);
+				if (sucess) {
+					for (long x = 0; x < 256; x++){
+						for (long y = 0; y < 256; y++){
+							RGBstruct rgb(img.pixel(x, y));
+							bool isBlack = rgb.r == 0 && rgb.g == 0 && rgb.b == 0;
+							if (isBlack) continue;
+							bool isGrass = rgb.r == 0 && rgb.g == 204 && rgb.b == 0;
+							if (isGrass) continue;
+							bool isWater = rgb.r == 51 && rgb.g == 102 && rgb.b == 153;
+							if (isWater) continue;
+
+							QString xPosStr = QString::number(256 * (fileNamePosX - start_xPos) + x);
+							QString yPosStr = QString::number(256 * (fileNamePosY - start_yPos) + y);
+							QString str = QString::number(rgb.r) + "_" + QString::number(rgb.g) + "_" + QString::number(rgb.b);
+							QString toAppend = "[" + xPosStr + "," + yPosStr +"] "+ str;
+							s << toAppend << '\n';
+						}
+					}
+				}
+			}
+		}
+		fOut.close();
+	}
+	
+	int endLoop = 4;
+}
+
 void Utilities::UNSUED_findBoredersOfFrames(QImage fullScreen){
 	QImage screeOfFrames(fullScreen);
 	auto  minBlack = qRgb(19, 19, 19);
