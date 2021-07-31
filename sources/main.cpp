@@ -47,8 +47,8 @@ int main(int argc, char *argv[])
 
 void test(){
 	QString path = "C:\\Users\\ADMIN\\source\\repos\\CrackerJackClient\\Resources", outPath = "C:\\Users\\ADMIN\\Desktop";
-	MinimapAnalyzer t;
-	t;
+	//MinimapAnalyzer t;
+	//t;
 };
 
 

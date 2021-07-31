@@ -5,9 +5,13 @@
 #include <qstring.h>
 #include <qpoint.h>
 #include "Logger.h"
-#include "Utilities.h"
+#include "Utilities.h"	
 #include "Calibrator.h"
-
+#include "qrandom.h"
+#include "VariablesClass.h"
+#include "qdatetime.h"
+#include "Utilities.h"
+typedef QList<int> Histogram;
 class ShearchArea {
 public:
 	QMap<int, QList<QRect>> areas;
@@ -109,32 +113,44 @@ struct Position3D{
 class MinimapAnalyzer : public QObject
 {
 	Q_OBJECT
-
+	
 public:
 	MinimapAnalyzer();
+	MinimapAnalyzer(VariablesClass* varClass);
 	~MinimapAnalyzer();
 	QList<Position3D> findPlayerPositionOnMap(QImage& miniMapSnippet, ShearchArea shearchArea);
 	QList<Position3D> findPlayerPositionOnMap(QImage& miniMapSnippet, int floor);
 	QList<Position3D> findPlayerPositionOnMap(QImage& miniMapSnippet);
-
-	QList<QPoint> findPlayerPosition(QImage& miniMapSnippet, QImage& ImgToShareWithIn, int maxPixThatCanBeDiffrent);
+	QList<QPoint> test_findPlayerPosition(QImage& smaller, QImage& biger, int maxPixThatCanBeDiffrent);
+	void test();
 private:
 	QString getNameOfMapFileToLoad(int floor, bool regularMapType = true);
 	QString setPathToFolderMap();
 	QImage setSliderImg();
 	uint getFloorNumber();
-	QList<QPoint> fillFobiddenPixList();
-
+	QList<uint> getAllPossibleMapColors();
+	QList<QRect> fillListWithRectsPosOfMiniMapParts();
+	
+	QPoint test_cutImgToShearFromDarkAndWater(QImage& img);
+	void test_TEST_PERFORMANCE();
+	QPair<QImage, QPoint> test_cutRandomAreaFromMap(QImage& map);
+	QList<QImage> test_splitMiniMapScreenToListWithoutCross(QImage& miniMapScreen);
+	QPoint test_findPlayerPositionByParts(QImage& snipet, QImage& map);
+	QList<QPoint> test_findPlayerOnMap_IgnoreColours(QImage& snipet, QImage& map, QList<uint> colorsToIgnore);
 	QString pathToMapFolder;
 	QImage minimapWithSlider;
-	const QImage maps[16];
 	
-	const QList<QPoint> forbiddenPixels = fillFobiddenPixList();
+	VariablesClass* test_varClass;
+
+	const QList<QRect> miniMapParts = fillListWithRectsPosOfMiniMapParts();
 	const QString PATH_TO_FOLDER_WITH_MAPS = setPathToFolderMap();
 	const QImage SLIDER_IMG = setSliderImg();
+	const QList<uint> allPosibleColorsOnTheMap = getAllPossibleMapColors();
 	const int WIDTH_TO_WHOLE_PASSED_IMG = 160;
 	const int WIDTH_OF_MAP_ONLY_AREA = 106;
 	const int HEIGHT_OF_WHOLE_PASSED_IMG = 109;
 	const QSize MAP_SIZE = QSize(2560,2048);
 	const QSize MAP_START_CORINATES = QSize(31744, 30976);
+	const QPoint POSITION_OF_PLAYER_ON_MINIMAP =QPoint(53,54);
+	
 };

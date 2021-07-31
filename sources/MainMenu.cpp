@@ -1,6 +1,6 @@
 #include "MainMenu.h"
 #include "ui_MainMenu.h"
-
+#include "MinimapAnalyzer.h"
 MainMenu::MainMenu(Profile* selectedProf, QWidget* parent)
 	: QDialog(parent)
 {
@@ -12,6 +12,7 @@ MainMenu::MainMenu(Profile* selectedProf, QWidget* parent)
 	threadStarter();
 	signalSlotConnector();
 	setUpGui();
+	MinimapAnalyzer t(&var);
 }
 
 MainMenu::~MainMenu(){

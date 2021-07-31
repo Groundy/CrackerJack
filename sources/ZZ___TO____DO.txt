@@ -1,4 +1,4 @@
-34.
+34. Algorytm przycinania czarnych krawedzi ma bug, przyciane jest tylko 2 z 4 czesci, reszta miniLoop nie jest wykonywana
 33. Przenieœæ czêœæ funkcji analizy obrazu z Utilites do Calibratora
 25. dodatkowy cooldown miêdzy mana potami{
 	25.0 mo¿liwoœæ wprowadzenia przez uzytkownika

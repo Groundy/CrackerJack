@@ -20,6 +20,7 @@ public:
 	QImage var_manaPieceImg;
 	QImage var_manaShieldPieceImg;
 	QImage var_combinedBoxPieceImg;
+
 	float health, mana, manashield;
 	int rotationNeededForPointsAbove;
 	bool manaFound, healthFound, manaShieldFound, combinedFound;
