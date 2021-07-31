@@ -72,15 +72,15 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|Win32'" />
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <AdditionalIncludeDirectories>C:\Program Files %28x86%29\OpenSSL-Win32\include;.\dependencies;.\sources;.\Resources;.\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\;.\sources;.\Resources;.\dependencies;.\dependencies\32-bit;C:\Program Files %28x86%29\OpenSSL-Win32\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <AdditionalDependencies>libssl.lib;libcrypto.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>C:\Program Files %28x86%29\OpenSSL-Win32\include;.\dependencies;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>.\dependencies\32-bit;C:\Program Files %28x86%29\OpenSSL-Win32\include;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy /y /d ".\dependencies\libssl-1_1.dll" "$(OutDir)"
-xcopy /y /d ".\dependencies\libcrypto-1_1.dll" "$(OutDir)"
+      <Command>xcopy /y /d ".\dependencies\32-bit\libssl-1_1.dll" "$(OutDir)"
+xcopy /y /d ".\dependencies\32-bit\libcrypto-1_1.dll" "$(OutDir)"
 
 
 </Command>
@@ -88,29 +88,53 @@ xcopy /y /d ".\dependencies\libcrypto-1_1.dll" "$(OutDir)"
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>.\sources;.\Resources;.\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-    </ClCompile>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <ClCompile>
-      <AdditionalIncludeDirectories>C:\Program Files %28x86%29\OpenSSL-Win32\include;.\sources;.\Resources;.\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\;.\sources;.\Resources;.\dependencies;.\dependencies\64-bit;C:\Program Files\OpenSSL-Win64\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <PostBuildEvent>
-      <Command>xcopy /y /d ".\dependencies\libssl-1_1.dll" "$(OutDir)"
-xcopy /y /d ".\dependencies\libcrypto-1_1.dll" "$(OutDir)"
+      <Command>xcopy /y /d ".\dependencies\64-bit\libssl-1_1-x64.dll" "$(OutDir)"
+xcopy /y /d ".\dependencies\64-bit\libcrypto-1_1-x64.dll" "$(OutDir)"
 
 
 </Command>
     </PostBuildEvent>
+    <Link>
+      <AdditionalDependencies>libssl.lib;libcrypto.lib$(Qt_LIBS_);%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>./dependencies/64-bit;C:\Program Files\OpenSSL-Win64\include;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>C:\Program Files %28x86%29\OpenSSL-Win32\include;.\sources;.\Resources;.\dependencies;.\dependencies\32-bit;.\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <PostBuildEvent>
+      <Command>xcopy /y /d ".\dependencies\32-bit\libssl-1_1.dll" "$(OutDir)"
+xcopy /y /d ".\dependencies\32-bit\libcrypto-1_1.dll" "$(OutDir)"
+
+
+</Command>
+    </PostBuildEvent>
+    <Link>
+      <AdditionalDependencies>libssl.lib;libcrypto.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>./dependencies/\32-bit;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>.\sources;.\Resources;C:\Program Files\OpenSSL-Win64\include;.\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\;.\sources;.\Resources;.\dependencies;.\dependencies\64-bit;C:\Program Files\OpenSSL-Win64\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link />
     <Link>
       <TargetMachine>MachineX64</TargetMachine>
+      <AdditionalDependencies>libssl.lib;libcrypto.lib$(Qt_LIBS_);%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\Program Files\OpenSSL-Win64\include;./dependencies/64-bit;$(Qt_LIBPATH_);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
+    <PostBuildEvent>
+      <Command>xcopy /y /d ".\dependencies\64-bit\libssl-1_1-x64.dll" "$(OutDir)"
+xcopy /y /d ".\dependencies\64-bit\libcrypto-1_1-x64.dll" "$(OutDir)"
+
+
+</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|Win32'" Label="QtSettings">
     <QtInstall>msvc2019</QtInstall>
