@@ -512,14 +512,14 @@ void Utilities::writeIniFile(FieldsOfIniFile nameOfField, QString value){
 
 
 
-void Utilities::TOOL_saveImgToOutPutFolder(QImage* img, QString *extraName){
+void Utilities::TOOL_saveImgToOutPutFolder(QImage& img, QString *extraName){
 	QString prefixOfName;
-	if (extraName == NULL)
+	if (extraName->isNull())
 		prefixOfName = QDateTime::currentDateTime().toString("mm_ss_zzz");
 	else
 		prefixOfName = *extraName;
 	QString fullname = "C:\\Users\\ADMIN\\Desktop\\output\\_" + prefixOfName + ".png";
-	img->save(fullname);
+	img.save(fullname);
 }
 
 QStringList Utilities::TOOL_getCodesOfAllInFolder_bottom(QString pathToInputFolder) {

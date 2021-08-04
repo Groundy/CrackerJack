@@ -10,6 +10,7 @@
 #include "qrandom.h"
 #include "VariablesClass.h"
 #include "qdatetime.h"
+
 #include "Utilities.h"
 typedef QList<int> Histogram;
 class ShearchArea {
@@ -121,7 +122,6 @@ public:
 	QList<Position3D> findPlayerPositionOnMap(QImage& miniMapSnippet, ShearchArea shearchArea);
 	QList<Position3D> findPlayerPositionOnMap(QImage& miniMapSnippet, int floor);
 	QList<Position3D> findPlayerPositionOnMap(QImage& miniMapSnippet);
-	QList<QPoint> test_findPlayerPosition(QImage& smaller, QImage& biger, int maxPixThatCanBeDiffrent);
 	void test();
 private:
 	QString getNameOfMapFileToLoad(int floor, bool regularMapType = true);
@@ -131,26 +131,31 @@ private:
 	QList<uint> getAllPossibleMapColors();
 	QList<QRect> fillListWithRectsPosOfMiniMapParts();
 	
-	QPoint test_cutImgToShearFromDarkAndWater(QImage& img);
+	QRect test_cutImgToShearchFromDarkAndWater(QImage& img);
 	void test_TEST_PERFORMANCE();
 	QPair<QImage, QPoint> test_cutRandomAreaFromMap(QImage& map);
 	QList<QImage> test_splitMiniMapScreenToListWithoutCross(QImage& miniMapScreen);
 	QPoint test_findPlayerPositionByParts(QImage& snipet, QImage& map);
-	QList<QPoint> test_findPlayerOnMap_IgnoreColours(QImage& snipet, QImage& map, QList<uint> colorsToIgnore);
+	QList<QPoint> test_findPlayerOnMap(QImage& snipet, QImage& map);
+	void test_showImg(QImage img);
+	QList<QPoint> test_fillForbiddenPixPositions();
+
 	QString pathToMapFolder;
 	QImage minimapWithSlider;
 	
 	VariablesClass* test_varClass;
 
-	const QList<QRect> miniMapParts = fillListWithRectsPosOfMiniMapParts();
+	const QList<QPoint> forbiddenPixPositions = test_fillForbiddenPixPositions();
+	const QList<QRect> test_miniMapParts = fillListWithRectsPosOfMiniMapParts();
 	const QString PATH_TO_FOLDER_WITH_MAPS = setPathToFolderMap();
 	const QImage SLIDER_IMG = setSliderImg();
-	const QList<uint> allPosibleColorsOnTheMap = getAllPossibleMapColors();
+	const QList<uint> test_allPosibleColorsOnTheMap = getAllPossibleMapColors();
 	const int WIDTH_TO_WHOLE_PASSED_IMG = 160;
 	const int WIDTH_OF_MAP_ONLY_AREA = 106;
 	const int HEIGHT_OF_WHOLE_PASSED_IMG = 109;
 	const QSize MAP_SIZE = QSize(2560,2048);
 	const QSize MAP_START_CORINATES = QSize(31744, 30976);
 	const QPoint POSITION_OF_PLAYER_ON_MINIMAP =QPoint(53,54);
+	const uint RED_COLOR_ON_MAP = qRgb(255, 51, 0);
 	
 };

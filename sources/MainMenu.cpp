@@ -12,7 +12,6 @@ MainMenu::MainMenu(Profile* selectedProf, QWidget* parent)
 	threadStarter();
 	signalSlotConnector();
 	setUpGui();
-	MinimapAnalyzer t(&var);
 }
 
 MainMenu::~MainMenu(){

@@ -96,7 +96,7 @@ public:
 
 	static QStringList TOOL_getCodesOfAllInFolder_regular(QString pathToInputFolder, QString pathToOutputFolder);
 	static QStringList TOOL_getCodesOfAllInFolder_bottom(QString pathToInputFolder);
-	static void TOOL_saveImgToOutPutFolder(QImage* img, QString* extraName);
+	static void TOOL_saveImgToOutPutFolder(QImage& img, QString* extraName);
 
 	static void cutImgWithLettersToSingleLettersImgList(QImage& img, QList<QImage>& list);
 	static QMap<QString, QChar> getQmapWithCodes();

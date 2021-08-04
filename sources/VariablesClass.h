@@ -12,8 +12,6 @@ public:
 
 	bool HealthAndManaRestorationShouldBeActive = false;
 
-	//Advaned health and mana shearch
-	//enum class calibrationState{NOT_CALIBRATED, CALIBRATED, DURING_CALIBRATION};
 	QImage wholeImg;
 	
 	QImage var_healthPieceImg;

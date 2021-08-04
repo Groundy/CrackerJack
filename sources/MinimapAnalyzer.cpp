@@ -2,7 +2,6 @@
 typedef QList<int> Histogram;
 
 MinimapAnalyzer::MinimapAnalyzer(){
-	test();
 }
 MinimapAnalyzer::MinimapAnalyzer(VariablesClass* var) {
 	test_varClass = var;
@@ -47,60 +46,6 @@ QString MinimapAnalyzer::setPathToFolderMap(){
 QImage MinimapAnalyzer::setSliderImg(){
 	const QString SLIDER_IMG_CODE = "4_5_#155#155#155_#101#101#101_#101#101#101_#101#101#101_#37#38#38_#101#101#101_#101#101#101_#101#101#101_#101#101#101_#101#101#101_#101#101#101_#101#101#101_#101#101#101_#101#101#101_#101#101#101_#120#120#120_#120#120#120_#120#120#120_#120#120#120_#120#120#120_";
 	return Utilities::getImageFromAdvancedCode(SLIDER_IMG_CODE);
-}
-
-QList<QPoint> MinimapAnalyzer::test_findPlayerPosition(QImage& snipet, QImage& map, int maxPixThatCanBeDiffrent){
-	const int WIDTH_SMALL_PIC = snipet.width();
-	const int HEIGHT_SMALL_PIC = snipet.height();
-	const int WIDTH_BIG_PIC = map.width();
-	const int HEIGHT_BIG_PIC = map.height();
-
-	bool errWidth = WIDTH_SMALL_PIC >= WIDTH_BIG_PIC;
-	bool errHeight = HEIGHT_SMALL_PIC >= HEIGHT_BIG_PIC;
-	bool errFormat = map.format() != snipet.format();
-	bool anyErr = errWidth || errHeight || errFormat;
-	if (anyErr) {
-		Logger::logPotenialBug("Wrong input of two img", "MinimapAnalyzer", "findPlayerPosition");
-		//return QList<QPoint>();
-	}
-
-	const int MAX_X_INDEX_TO_CHECK = WIDTH_BIG_PIC - WIDTH_SMALL_PIC;
-	const int MAX_Y_INDEX_TO_CHECK = HEIGHT_BIG_PIC - HEIGHT_SMALL_PIC;
-	
-	QList<QPoint> startPointsListToRet;
-
-	for (int x = 0; x <= MAX_X_INDEX_TO_CHECK; x++) {
-		//qDebug() << x * 100.0 / (MAX_X_INDEX_TO_CHECK);
-		for (int y = 0; y <= MAX_Y_INDEX_TO_CHECK; y++) {
-			uint pixSmallImg = snipet.pixel(0, 0);
-			uint pixBigImg = map.pixel(x, y);
-			bool firstPixelMatched = pixSmallImg == pixBigImg;	
-			if (firstPixelMatched) {
-				int pixThatNotMatch = 0;
-				bool skipThisImg = false;
-
-				for (int x_TMP = WIDTH_SMALL_PIC -1 ; x_TMP >= 0; x_TMP--) {
-					for (int y_TMP = HEIGHT_SMALL_PIC -1 ; y_TMP >= 0; y_TMP--) {
-						pixSmallImg = snipet.pixel(x_TMP, y_TMP);
-						pixBigImg = map.pixel(x + x_TMP, y + y_TMP);
-						bool pixAreDiffrent = pixSmallImg != pixBigImg;
-						if (pixAreDiffrent) {
-							pixThatNotMatch++;
-							if (pixThatNotMatch > maxPixThatCanBeDiffrent) {
-								x_TMP = -1; //loopBreak
-								y_TMP = -1; //loopBreak
-								skipThisImg = true;
-							}
-						}
-					}
-				}
-				if (!skipThisImg)
-					startPointsListToRet.push_back(QPoint(x, y));
-			}
-		}
-	}
-	
-	return startPointsListToRet;
 }
 
 uint MinimapAnalyzer::getFloorNumber(){
@@ -149,28 +94,23 @@ QList<uint> MinimapAnalyzer::getAllPossibleMapColors(){
 }
 
 void MinimapAnalyzer::test(){
-	test_TEST_PERFORMANCE();
-	/*
-	QImage map;
-	bool ok1 = map.load("C:\\Users\\ADMIN\\Desktop\\map.png");
-
-	qint64 previous = 0;
+	QImage map, snipet;
+	map.load("C:\\Users\\ADMIN\\Desktop\\map2.png");
 	while (true) {
-		Sleep(1);
-		if (test_varClass->wholeImg.width() == 0)
-			continue;
-		QImage snipet = test_varClass->wholeImg.copy(1753,5, 106, 109);
-		//Utilities::TOOL_saveImgToOutPutFolder(&var->wholeImg, NULL);
-		QPoint res = test_findPlayerPositionByParts(snipet,map);
-		qDebug() << res;
-		if (res.x() != 0) {
+		if (test_varClass->wholeImg.width() > 0) {
+			snipet = test_varClass->wholeImg.copy(1753, 5, 106, 109);
 			test_varClass->wholeImg = QImage();
-			qint64 curr = QDateTime::currentMSecsSinceEpoch();
-			qDebug() << QString::number(curr - previous);
-			previous = curr;
 		}
+		else {
+			Sleep(100);
+			continue;
+		}
+		qint64 start = QDateTime::currentMSecsSinceEpoch();
+		auto res = test_findPlayerOnMap(snipet, map);
+		qint64 diff = QDateTime::currentMSecsSinceEpoch() - start;
+		qDebug() << res << " diff:" << QString::number(diff);
+
 	}
-	*/
 }
 
 QList<QRect> MinimapAnalyzer::fillListWithRectsPosOfMiniMapParts(){
@@ -179,7 +119,7 @@ QList<QRect> MinimapAnalyzer::fillListWithRectsPosOfMiniMapParts(){
 	toCut.push_back(QRect(53, 0, 2, 52));
 	toCut.push_back(QRect(55, 0, 51, 54));
 
-	toCut.push_back(QRect(0, 54, 49, 2));
+	toCut.push_back(QRect(0, 54, 51, 2));
 	toCut.push_back(QRect(57, 54, 49, 2));
 
 	toCut.push_back(QRect(0, 56, 53, 53));
@@ -188,7 +128,8 @@ QList<QRect> MinimapAnalyzer::fillListWithRectsPosOfMiniMapParts(){
 	return toCut;
 }
 
-QPoint MinimapAnalyzer::test_cutImgToShearFromDarkAndWater(QImage& img){
+QRect MinimapAnalyzer::test_cutImgToShearchFromDarkAndWater(QImage& img){
+	//return Qrect that was cut;
 	int cutLines_TOP = 0, cutLines_LEFT = 0, cutLines_DOWN = 0, cutLines_RIGHT = 0;
 	const int WIDTH = img.width();
 	const int HEIGHT = img.height();
@@ -210,8 +151,9 @@ QPoint MinimapAnalyzer::test_cutImgToShearFromDarkAndWater(QImage& img){
 	}
 	bool AllPixShouldBeChecked = x == WIDTH && y == HEIGHT;
 	if (AllPixShouldBeChecked) {
+		QRect toRet{ WIDTH, HEIGHT, 0, 0 };
 		img = QImage();
-		return QPoint();
+		return toRet;
 		//todo log
 	}
 
@@ -255,37 +197,47 @@ QPoint MinimapAnalyzer::test_cutImgToShearFromDarkAndWater(QImage& img){
 
 	int widthToCut = anotherParametr_x >= 0 ? anotherParametr_x : 0;
 	int heightToCut = anotherParametr_y >= 0 ? anotherParametr_y : 0;
-	img = img.copy(cutLines_LEFT, cutLines_TOP, widthToCut, heightToCut);
-	return QPoint{cutLines_LEFT, cutLines_TOP};
+	QRect rectThatShouldBeCut{cutLines_LEFT, cutLines_TOP, widthToCut, heightToCut};
+	img = img.copy(rectThatShouldBeCut);
+	return rectThatShouldBeCut;
 }
 
 void MinimapAnalyzer::test_TEST_PERFORMANCE(){
 	QImage map;
-	QString pathToMap = "C:\\Users\\ADMIN\\Desktop\\map.png";
+	QString pathToMap = "C:\\Users\\ADMIN\\Desktop\\" + QString("map2") + ".png";
 	map.load(pathToMap);
-	QDateTime dateTimeObj;
-	LONG64 miliSec_cutting_algo = 0;
-	int analyzedImgs = 0;
-	int properlyAnalyzedImgs = 0;
-	for (size_t i = 0; i < 200; i++){
-		qDebug() << QString::number(i);
+	//auto o = test_cutImgToShearchFromDarkAndWater(map);
+	int failed = 0;
+	for (size_t i = 1; i < 1000; i++){
 		QPair<QImage, QPoint> pair = test_cutRandomAreaFromMap(map);
-		quint64 t1 = dateTimeObj.currentMSecsSinceEpoch();
-		QPoint res2 = test_findPlayerPositionByParts(pair.first, map);
-		quint64 t2 = dateTimeObj.currentMSecsSinceEpoch();
-		//Utilities::TOOL_saveImgToOutPutFolder(&pair.first, &QString::number(i));
-		bool isEmpty = res2.rx() == 0;
-		if (!isEmpty) {
-			int diff = t2 - t1;
-			qDebug() << "result: " << res2;
-			qDebug() << "diff: " + QString::number(diff);
-			miliSec_cutting_algo += diff;
-	
-			analyzedImgs++;
-			if (pair.second == res2)
-				properlyAnalyzedImgs++;
-			qDebug() << "mean: " <<QString::number(miliSec_cutting_algo * 1.0 / properlyAnalyzedImgs);
+		{
+			QImage test = pair.first;
+			test_cutImgToShearchFromDarkAndWater(test);
+			if (test.width() == 0) {
+				i--;
+				continue;
+			}
 		}
+		QImage imgCopy = pair.first;
+
+		qint64 start = QDateTime::currentMSecsSinceEpoch();
+		QList<QPoint> res2 = test_findPlayerOnMap(imgCopy, map);
+		qint64 diff = QDateTime::currentMSecsSinceEpoch() - start;
+
+		//QPoint res2 = test_findPlayerPositionByParts(imgCopy, map);
+		//qDebug() << QString::number(i) + "---random point: " << pair.second << " found: " << res2;
+		if (res2.isEmpty()) {
+			failed++;
+			//test_showImg(pair.first);
+			qDebug() << QString::number(failed);
+		}
+		else {
+			bool right = (res2.first() == pair.second);
+			qDebug() << QString::number(i) << right << " diff:" + QString::number(diff);
+			if (!right)
+				failed++;//test_showImg(pair.first);
+		}
+
 	}
 	int b = 5;
 }
@@ -293,16 +245,18 @@ void MinimapAnalyzer::test_TEST_PERFORMANCE(){
 QPair<QImage, QPoint> MinimapAnalyzer::test_cutRandomAreaFromMap(QImage& map){
 	QDateTime dateTimeObj;
 	QRandomGenerator gen(dateTimeObj.currentMSecsSinceEpoch());
-	int startPosX = gen.generate64() % (MAP_SIZE.width() - WIDTH_OF_MAP_ONLY_AREA);
-	int startPosY = gen.generate64() % (MAP_SIZE.height() - HEIGHT_OF_WHOLE_PASSED_IMG);
+	int startPosX = gen.generate64() % (map.width() - WIDTH_OF_MAP_ONLY_AREA);
+	int startPosY = gen.generate64() % (map.height() - HEIGHT_OF_WHOLE_PASSED_IMG);
 	QRect randomRectFromMap(startPosX, startPosY, WIDTH_OF_MAP_ONLY_AREA, HEIGHT_OF_WHOLE_PASSED_IMG);
 	QImage snipet = map.copy(randomRectFromMap);
-	return QPair<QImage, QPoint>{snipet,QPoint(startPosX,startPosY)};
+	QPoint startPosition(startPosX,startPosY);
+	QPair<QImage, QPoint> toRet{snipet, startPosition};
+	return toRet;
 }
 
 QList<QImage> MinimapAnalyzer::test_splitMiniMapScreenToListWithoutCross(QImage& miniMapScreen){
 	QList<QImage> toRet;
-	for each (QRect rect in miniMapParts) {
+	for each (QRect rect in test_miniMapParts) {
 		QImage imgToCut = miniMapScreen.copy(rect);
 		toRet.push_back(imgToCut);
 	}
@@ -310,106 +264,147 @@ QList<QImage> MinimapAnalyzer::test_splitMiniMapScreenToListWithoutCross(QImage&
 }
 
 QPoint MinimapAnalyzer::test_findPlayerPositionByParts(QImage& snipet, QImage& map){
-	qint64 start = QDateTime::currentMSecsSinceEpoch();
 	bool errWrongSize = snipet.width() != WIDTH_OF_MAP_ONLY_AREA || snipet.height() != HEIGHT_OF_WHOLE_PASSED_IMG;
-	if (errWrongSize) {
-		//todo logg
-		return QPoint();
-	}
-
+	if (errWrongSize)
+		return QPoint();		//todo logg
+	
 	QList<QImage> imgs = test_splitMiniMapScreenToListWithoutCross(snipet);
-	QList<int> orderOfImgsToCheck{ 1,3,4,6,0,2,5,7 };
-	uint BLUE = qRgb(51, 102, 153);
-	uint RED = qRgb(255,51,0);
-	QList<uint> colsToIgnore{ BLUE, RED};
-	for each (int i in orderOfImgsToCheck){
-		QImage img = imgs[i];
-
-		QPoint additionalCordinats = test_cutImgToShearFromDarkAndWater(img);
-		//qDebug() << img.size();
-		bool isEmpty = img.width() == 0 || img.height() == 0;
-		if (isEmpty)
+	for (size_t i = 0; i < 8; i++){
+		QRect rect = test_cutImgToShearchFromDarkAndWater(imgs[i]);
+		bool isEmpty = imgs[i].width() == 0 || imgs[i].height() == 0;
+		if (isEmpty) {
+			//() << "Part " + QString::number(i) + " is empty.";
 			continue;
-		//Utilities::TOOL_saveImgToOutPutFolder(&img, &QString::number(i));
+		}
 
-		QList<QPoint> startPoints = test_findPlayerOnMap_IgnoreColours(snipet, map, colsToIgnore);
-		//qDebug() << "size:" + QString::number(startPoints.size());
-		if (startPoints.size() != 1)
+		QList<QPoint> startPoints = test_findPlayerOnMap(imgs[i], map);
+		//qDebug() << "Part " + QString::number(i) + " found: " + QString::number(startPoints.size()) + " similarities";
+		if (startPoints.size() != 1) {
 			continue;
+		}
 
-		int startPosX = startPoints[0].x() - additionalCordinats.x() + miniMapParts[i].x() + POSITION_OF_PLAYER_ON_MINIMAP.x();
-		int startPosY = startPoints[0].y() - additionalCordinats.y() + miniMapParts[i].y() + POSITION_OF_PLAYER_ON_MINIMAP.y();
-		qint64 end = QDateTime::currentMSecsSinceEpoch();
-		//qDebug() << QString::number(end - start);
-		return QPoint(startPosX, startPosY);
+		QPoint playerPosOnWorldMap = startPoints.first() - rect.topLeft() - test_miniMapParts[i].topLeft();// +POSITION_OF_PLAYER_ON_MINIMAP;
+		return playerPosOnWorldMap;
 	}
 	return QPoint();
 }
 
-QList<QPoint> MinimapAnalyzer::test_findPlayerOnMap_IgnoreColours(QImage& snipet, QImage& map, QList<uint> colorsToIgnore){
-	const int WIDTH_SMALL_PIC = snipet.width();
-	const int HEIGHT_SMALL_PIC = snipet.height();
-	const int WIDTH_BIG_PIC = map.width();
-	const int HEIGHT_BIG_PIC = map.height();
-
-	bool errWidth = WIDTH_SMALL_PIC >= WIDTH_BIG_PIC;
-	bool errHeight = HEIGHT_SMALL_PIC >= HEIGHT_BIG_PIC;
-	bool errFormat = map.format() != snipet.format();
-	bool anyErr = errWidth || errHeight || errFormat;
-	if (anyErr) {
-		Logger::logPotenialBug("Wrong input of two img", "MinimapAnalyzer", "findPlayerPosition");
-		//return QList<QPoint>();
-	}
-
-	const int MAX_X_INDEX_TO_CHECK = WIDTH_BIG_PIC - WIDTH_SMALL_PIC;
-	const int MAX_Y_INDEX_TO_CHECK = HEIGHT_BIG_PIC - HEIGHT_SMALL_PIC;
+QList<QPoint> MinimapAnalyzer::test_findPlayerOnMap(QImage& snipet, QImage& map){
 
 	QList<QPoint> startPointsListToRet;
+	QImage snipetCopy = snipet;
+	QRect rect = test_cutImgToShearchFromDarkAndWater(snipetCopy);
+	if (snipetCopy.width() == 0 || snipetCopy.height() == 0)
+		return startPointsListToRet;
 
-	for (int x = 0; x <= MAX_X_INDEX_TO_CHECK; x++) {
-		for (int y = 0; y <= MAX_Y_INDEX_TO_CHECK; y++) {
-			bool pixMatch_Top_Left = snipet.pixel(0, 0) == map.pixel(x, y);
-			if (!pixMatch_Top_Left)
-				continue;
-			const int MAX_PIX_IND_Y = snipet.height() - 1;
-			const int MAX_PIX_IND_X = snipet.width() - 1;
-			bool pixMatch_Top_Right = snipet.pixel(MAX_PIX_IND_X, 0) == map.pixel(x + MAX_PIX_IND_X, y);
-			if (!pixMatch_Top_Right)
-				continue;
-			bool pixMatch_Down_Left = snipet.pixel(0, MAX_PIX_IND_Y) == map.pixel(x , y + MAX_PIX_IND_Y);
-			if (!pixMatch_Down_Left)
-				continue;
-			bool pixMatch_Down_Right = snipet.pixel(MAX_PIX_IND_X, MAX_PIX_IND_Y) == map.pixel(x + MAX_PIX_IND_X, MAX_PIX_IND_Y);
-			if (!pixMatch_Down_Right)
-				continue;
+	const int MAX_PIX_IND_Y = snipetCopy.height() - 1;
+	const int MAX_PIX_IND_X = snipetCopy.width() - 1;
 
+	const int MAX_Y_INDEX_TO_CHECK = map.height() - snipet.height() - 1;
+	const int MAX_X_INDEX_TO_CHECK = map.width() - snipet.width() - 1;
 
+	for (int y = 0; y <= MAX_Y_INDEX_TO_CHECK; y++) {
+		for (int x = 0; x <= MAX_X_INDEX_TO_CHECK; x++) {
 
-			bool thisImgIsOk = true;
-			for (int x_TMP = 0; x_TMP < WIDTH_SMALL_PIC; x_TMP++) {
-				for (int y_TMP = 0; y_TMP < HEIGHT_SMALL_PIC; y_TMP++) {
-					uint pixSmallImg = snipet.pixel(x_TMP, y_TMP);
-					if (colorsToIgnore.contains(pixSmallImg))
+			uint smallPixCol = snipetCopy.pixel(0, 0);
+			uint bigPixCol = map.pixel(x, y);
+			bool oneOfColoursIsForbidden = smallPixCol == RED_COLOR_ON_MAP || bigPixCol == RED_COLOR_ON_MAP;
+			if (oneOfColoursIsForbidden) {
+				bool pixMatch = smallPixCol == bigPixCol;
+				if (!pixMatch)
+					continue;
+			}
+
+			smallPixCol = snipetCopy.pixel(MAX_PIX_IND_X, 0);
+			bigPixCol = map.pixel(x + MAX_PIX_IND_X, y);
+			oneOfColoursIsForbidden = smallPixCol == RED_COLOR_ON_MAP || bigPixCol == RED_COLOR_ON_MAP;
+			if (oneOfColoursIsForbidden) {
+				bool pixMatch = smallPixCol == bigPixCol;
+				if (!pixMatch)
+					continue;
+			}
+			smallPixCol = snipetCopy.pixel(0, MAX_PIX_IND_Y);
+			bigPixCol = map.pixel(x, y + MAX_PIX_IND_Y);
+			oneOfColoursIsForbidden = smallPixCol == RED_COLOR_ON_MAP || bigPixCol == RED_COLOR_ON_MAP;
+			if (oneOfColoursIsForbidden) {
+				bool pixMatch = smallPixCol == bigPixCol;
+				if (!pixMatch)
+					continue;
+			}
+			smallPixCol = snipetCopy.pixel(MAX_PIX_IND_X, MAX_PIX_IND_Y);
+			bigPixCol = map.pixel(x + MAX_PIX_IND_X, y + MAX_PIX_IND_Y);
+			oneOfColoursIsForbidden = smallPixCol == RED_COLOR_ON_MAP || bigPixCol == RED_COLOR_ON_MAP;
+			if (oneOfColoursIsForbidden) {
+				bool pixMatch = smallPixCol == bigPixCol;
+				if (!pixMatch)
+					continue;
+			}
+
+			int x_TMP = rect.x(), y_TMP = rect.y();
+			const int MAX_X = x_TMP + rect.width();
+			const int MAX_Y = y_TMP + rect.height();
+			bool imgMatch = false;
+			for (; x_TMP < MAX_X; x_TMP++) {
+				for (; y_TMP < MAX_Y; y_TMP++) {
+					if (forbiddenPixPositions.contains(QPoint(x_TMP,y_TMP)))
 						continue;
-					uint pixBigImg = map.pixel(x + x_TMP, y + y_TMP);
-					if (colorsToIgnore.contains(pixBigImg))
+					smallPixCol = snipet.pixel(x_TMP, y_TMP);
+					if (smallPixCol == RED_COLOR_ON_MAP)
 						continue;
-					bool pixAreDiffrent = pixSmallImg != pixBigImg;
+					bigPixCol = map.pixel(x + x_TMP, y + y_TMP);
+					if (bigPixCol == RED_COLOR_ON_MAP)
+						continue;
+					bool pixAreDiffrent = smallPixCol != bigPixCol;
 					if (pixAreDiffrent) {
-						x_TMP = WIDTH_SMALL_PIC; //loopBreak
-						y_TMP = HEIGHT_SMALL_PIC; //loopBreak
-						thisImgIsOk = false;
+						imgMatch = false;
+						x_TMP = MAX_X + 10; //loopBreak
+						y_TMP = MAX_Y + 10; //loopBreak
+						continue;
 					}
+					imgMatch = true;
 				}
 			}
-			if (thisImgIsOk)
-				startPointsListToRet.push_back(QPoint(x, y));
+			if (imgMatch && x_TMP == MAX_X && y_TMP == MAX_Y)
+				//startPointsListToRet.push_back(QPoint(x, y));
+				return QList<QPoint> {QPoint(x,y)};
 			
 		}
 	}
 
 	return startPointsListToRet;
 }
+
+void MinimapAnalyzer::test_showImg(QImage img){
+	QMessageBox msgBox;
+	msgBox.setIconPixmap(QPixmap::fromImage(img));
+	msgBox.exec();
+}
+
+QList<QPoint> MinimapAnalyzer::test_fillForbiddenPixPositions(){
+	QList<QPoint> toRet;
+	toRet.push_back(QPoint(51, 54));
+	toRet.push_back(QPoint(51, 55));
+	toRet.push_back(QPoint(52, 54));
+	toRet.push_back(QPoint(52, 55));
+	toRet.push_back(QPoint(53, 52));
+	toRet.push_back(QPoint(53, 53));
+	toRet.push_back(QPoint(53, 54));
+	toRet.push_back(QPoint(53, 55));
+	toRet.push_back(QPoint(53, 56));
+	toRet.push_back(QPoint(53, 57));
+	toRet.push_back(QPoint(54, 52));
+	toRet.push_back(QPoint(54, 53));
+	toRet.push_back(QPoint(54, 54));
+	toRet.push_back(QPoint(54, 55));
+	toRet.push_back(QPoint(54, 56));
+	toRet.push_back(QPoint(54, 57));
+	toRet.push_back(QPoint(55, 54));
+	toRet.push_back(QPoint(55, 55));
+	toRet.push_back(QPoint(56, 54));
+	toRet.push_back(QPoint(56, 55));
+	return toRet;
+}
+
 
 
 
