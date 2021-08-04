@@ -124,13 +124,14 @@ public:
 	QList<Position3D> findPlayerPositionOnMap(QImage& miniMapSnippet);
 	void test();
 private:
+	enum class typesOfWalkablePoints { REGULAR, ROPE_HOLE, SHOVEL_HOLE, LADDER, TELEPORT, EXIT_POINT };
 	QString getNameOfMapFileToLoad(int floor, bool regularMapType = true);
 	QString setPathToFolderMap();
 	QImage setSliderImg();
 	uint getFloorNumber();
-	QList<uint> getAllPossibleMapColors();
-	QList<QRect> fillListWithRectsPosOfMiniMapParts();
-	
+
+	QList<uint> test_getAllPossibleMapColors();
+	QList<QRect> test_fillListWithRectsPosOfMiniMapParts();
 	QRect test_cutImgToShearchFromDarkAndWater(QImage& img);
 	void test_TEST_PERFORMANCE();
 	QPair<QImage, QPoint> test_cutRandomAreaFromMap(QImage& map);
@@ -146,10 +147,10 @@ private:
 	VariablesClass* test_varClass;
 
 	const QList<QPoint> forbiddenPixPositions = test_fillForbiddenPixPositions();
-	const QList<QRect> test_miniMapParts = fillListWithRectsPosOfMiniMapParts();
+	const QList<QRect> test_miniMapParts = test_fillListWithRectsPosOfMiniMapParts();
 	const QString PATH_TO_FOLDER_WITH_MAPS = setPathToFolderMap();
 	const QImage SLIDER_IMG = setSliderImg();
-	const QList<uint> test_allPosibleColorsOnTheMap = getAllPossibleMapColors();
+	const QList<uint> test_allPosibleColorsOnTheMap = test_getAllPossibleMapColors();
 	const int WIDTH_TO_WHOLE_PASSED_IMG = 160;
 	const int WIDTH_OF_MAP_ONLY_AREA = 106;
 	const int HEIGHT_OF_WHOLE_PASSED_IMG = 109;

@@ -166,25 +166,25 @@ int ScreenAnalyzer::cutImportantImgsFromWholeScreenAndSendThemToVarClass(QImage&
 	if (healthFrameFound) {
 		QImage healthValueImg = fullscreen.copy(profile->frames.healthFrame);
 		if (profile->frames.howTheyShouldBeRotated != 0)
-			Utilities::rotateImgToRight(&healthValueImg, profile->frames.howTheyShouldBeRotated);
+			Utilities::rotateImgToRight(healthValueImg, profile->frames.howTheyShouldBeRotated);
 		var->var_healthPieceImg = healthValueImg;
 	}
 	if (manaFrameFound) {
 		QImage manaValueImg = fullscreen.copy(profile->frames.manaFrame);
 		if (profile->frames.howTheyShouldBeRotated != 0)
-			Utilities::rotateImgToRight(&manaValueImg, profile->frames.howTheyShouldBeRotated);
+			Utilities::rotateImgToRight(manaValueImg, profile->frames.howTheyShouldBeRotated);
 		var->var_manaPieceImg = manaValueImg;
 	}
 	if (manaShieldFound) {
 		QImage manaShieldValueImg = fullscreen.copy(profile->frames.manaShieldFrame);
 		if (profile->frames.howTheyShouldBeRotated != 0)
-			Utilities::rotateImgToRight(&manaShieldValueImg, profile->frames.howTheyShouldBeRotated);
+			Utilities::rotateImgToRight(manaShieldValueImg, profile->frames.howTheyShouldBeRotated);
 		var->var_manaShieldPieceImg = manaShieldValueImg;
 	}
 	if (combinedBoxFound) {
 		QImage combinedValueImg = fullscreen.copy(profile->frames.combinedFrame);
 		if (profile->frames.howTheyShouldBeRotated != 0)
-			Utilities::rotateImgToRight(&combinedValueImg, profile->frames.howTheyShouldBeRotated);
+			Utilities::rotateImgToRight(combinedValueImg, profile->frames.howTheyShouldBeRotated);
 		var->var_combinedBoxPieceImg = combinedValueImg;
 	}
 	var->healthFound = healthFrameFound;

@@ -73,7 +73,7 @@ uint MinimapAnalyzer::getFloorNumber(){
 	return toRet;
 }
 
-QList<uint> MinimapAnalyzer::getAllPossibleMapColors(){
+QList<uint> MinimapAnalyzer::test_getAllPossibleMapColors(){
 	QList<uint> toRet;
 	toRet.push_back(RGBstruct(0, 0, 0).toUint());
 	toRet.push_back(RGBstruct(0, 102, 0).toUint());
@@ -94,26 +94,9 @@ QList<uint> MinimapAnalyzer::getAllPossibleMapColors(){
 }
 
 void MinimapAnalyzer::test(){
-	QImage map, snipet;
-	map.load("C:\\Users\\ADMIN\\Desktop\\map2.png");
-	while (true) {
-		if (test_varClass->wholeImg.width() > 0) {
-			snipet = test_varClass->wholeImg.copy(1753, 5, 106, 109);
-			test_varClass->wholeImg = QImage();
-		}
-		else {
-			Sleep(100);
-			continue;
-		}
-		qint64 start = QDateTime::currentMSecsSinceEpoch();
-		auto res = test_findPlayerOnMap(snipet, map);
-		qint64 diff = QDateTime::currentMSecsSinceEpoch() - start;
-		qDebug() << res << " diff:" << QString::number(diff);
-
-	}
 }
 
-QList<QRect> MinimapAnalyzer::fillListWithRectsPosOfMiniMapParts(){
+QList<QRect> MinimapAnalyzer::test_fillListWithRectsPosOfMiniMapParts(){
 	QList<QRect> toCut;
 	toCut.push_back(QRect(0, 0, 53, 54));
 	toCut.push_back(QRect(53, 0, 2, 52));

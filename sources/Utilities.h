@@ -25,7 +25,7 @@ public:
 	static void imgToBlackAndWhiteAllColors(QImage& img, int threshold);
 	static QString imgWithStrToStr(QImage* img);
 	static QImage fromCharToImg(QChar CharToImg);
-	static void rotateImgToRight(QImage* imgToRotate, int timesToRotateRight);
+	static void rotateImgToRight(QImage& imgToRotate, int timesToRotateRight);
 	static bool isItPixelFromFrame(uint color, int minValueAcceptable, int maxValueAcceptable, bool requireSameValuesOfRGB);
 	static LONG64 getCurrentTimeInMiliSeconds();
 	static QImage getImageFromAdvancedCode(QString codeOfImg);

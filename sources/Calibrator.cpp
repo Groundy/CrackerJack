@@ -653,8 +653,8 @@ int Calibrator::categorizeWindows(QImage& fullscreen, QList<QRect>& importantRec
 			int surf = var.width() * var.height();
 			surphacesOfFrames.push_back(surf);
 		}
-		int indexOfBiggestValue = 0;
-		int previousBiggestValue = 0;
+
+		int indexOfBiggestValue = 0, previousBiggestValue = 0;
 		for (size_t i = 0; i < surphacesOfFrames.size(); i++) {
 			if (surphacesOfFrames[i] > previousBiggestValue) {
 				previousBiggestValue = surphacesOfFrames[i];
@@ -767,7 +767,6 @@ int Calibrator::findWindowsOnScreen(QImage& fullScreen, QList<QRect>& importantR
 	const int MIN_WIDTH = 5, MIN_HEIGHT = 5;
 	for each (QPoint startPoint in startOfFrames) {
 		int currentWidth = 0;
-		int currentHeight = 0;
 		for (size_t x = startPoint.x(); x < WIDTH; x++) {
 			uint color = fullScreen.pixel(x, startPoint.y());
 			bool isPixOfFrame = Utilities::isItPixelFromFrame(color, MIN_ACCEPTABLE_VAL, MAX_ACCEPTABLE_VAL, true);
@@ -776,6 +775,7 @@ int Calibrator::findWindowsOnScreen(QImage& fullScreen, QList<QRect>& importantR
 			else
 				break;
 		}
+		int currentHeight = 0;
 		for (size_t y = startPoint.y(); y < HEIGHT; y++) {
 			uint color = fullScreen.pixel(startPoint.x(), y);
 			bool isPixOfFrame = Utilities::isItPixelFromFrame(color, MIN_ACCEPTABLE_VAL, MAX_ACCEPTABLE_VAL, true);
@@ -823,7 +823,7 @@ void Calibrator::TEST_setPositionHealthImhs(QString pathToFolderWithDiffrentPosi
 		health = img.copy(importantRects[indHealth]);
 		QString healthStr, manaStr, ManaShieldStr, combinedStr;
 
-		Utilities::rotateImgToRight(&health, howTheyShouldBeRotated);
+		Utilities::rotateImgToRight(health, howTheyShouldBeRotated);
 		Utilities::imgToBlackAndWhiteAllColors(health, 240);
 		healthStr = Utilities::imgWithStrToStr(&health);
 		qDebug() << "Health: " + healthStr;
@@ -835,7 +835,7 @@ void Calibrator::TEST_setPositionHealthImhs(QString pathToFolderWithDiffrentPosi
 			QRect rect = importantRects.at(indCombined);
 			combined = img.copy(rect);
 
-			Utilities::rotateImgToRight(&combined, howTheyShouldBeRotated);
+			Utilities::rotateImgToRight(combined, howTheyShouldBeRotated);
 			Utilities::imgToBlackAndWhiteAllColors(combined, 240);
 			QString combinedStr = Utilities::imgWithStrToStr(&combined);
 			qDebug() << "combinedStr: " + combinedStr;
@@ -846,12 +846,12 @@ void Calibrator::TEST_setPositionHealthImhs(QString pathToFolderWithDiffrentPosi
 			rect = importantRects.at(indManaShield);
 			manaShield = img.copy(rect);
 
-			Utilities::rotateImgToRight(&mana, howTheyShouldBeRotated);
+			Utilities::rotateImgToRight(mana, howTheyShouldBeRotated);
 			Utilities::imgToBlackAndWhiteAllColors(mana, 240);
 			QString manaStr = Utilities::imgWithStrToStr(&mana);
 			qDebug() << "manaStr: " + manaStr;
 
-			Utilities::rotateImgToRight(&manaShield, howTheyShouldBeRotated);
+			Utilities::rotateImgToRight(manaShield, howTheyShouldBeRotated);
 			Utilities::imgToBlackAndWhiteAllColors(manaShield, 240);
 			QString ManaShieldStr = Utilities::imgWithStrToStr(&manaShield);
 			qDebug() << "ManaShieldStr: " + ManaShieldStr;
@@ -860,7 +860,7 @@ void Calibrator::TEST_setPositionHealthImhs(QString pathToFolderWithDiffrentPosi
 			QRect rect = importantRects.at(indMana);
 			mana = img.copy(rect);
 
-			Utilities::rotateImgToRight(&mana, howTheyShouldBeRotated);
+			Utilities::rotateImgToRight(mana, howTheyShouldBeRotated);
 			Utilities::imgToBlackAndWhiteAllColors(mana, 240);
 			QString manaStr = Utilities::imgWithStrToStr(&mana);
 			qDebug() << "manaStr: " + manaStr;
@@ -898,34 +898,33 @@ bool Calibrator::getRectsFromProfile(QList<QRect>& importRectsFromProf) {
 	importRectsFromProf.clear();
 
 	//they have to be;
-	bool isEmpty2 = profile->frames.gameFrame.isEmpty();
-	bool isEmpty3 = profile->frames.healthFrame.isEmpty();
-	bool isEmpty4 = profile->frames.miniMapFrame.isEmpty();
+	bool isEmpty_gameFram = profile->frames.gameFrame.isEmpty();
+	bool isEmpty_healthFrame = profile->frames.healthFrame.isEmpty();
+	bool isEmpty_minimapFrame = profile->frames.miniMapFrame.isEmpty();
 
-	if (isEmpty2 || isEmpty3 || isEmpty4)
+	if (isEmpty_gameFram || isEmpty_healthFrame || isEmpty_minimapFrame)
 		return false;
 
 	//one of them have to be;
-	bool isEmpty5 = profile->frames.manaFrame.isEmpty();
-	bool isEmpty6 = profile->frames.combinedFrame.isEmpty();
+	bool isEmpty_manaFrame = profile->frames.manaFrame.isEmpty();
+	bool isEmpty_combinedFrame = profile->frames.combinedFrame.isEmpty();
 
-	if (isEmpty5 && isEmpty6)
+	if (isEmpty_manaFrame && isEmpty_combinedFrame)
 		return false;
 
-	//one that can be
-	bool isEmpty1 = profile->frames.manaShieldFrame.isEmpty();
+	//one that can be or not
+	bool isEmpty_manaShieldFrame = profile->frames.manaShieldFrame.isEmpty();
 
 	importRectsFromProf.push_back(profile->frames.gameFrame);
 	importRectsFromProf.push_back(profile->frames.healthFrame);
 	importRectsFromProf.push_back(profile->frames.miniMapFrame);
 
-	if (!isEmpty5)
+	if (!isEmpty_manaFrame)
 		importRectsFromProf.push_back(profile->frames.manaFrame);
-	if (!isEmpty6)
+	if (!isEmpty_combinedFrame)
 		importRectsFromProf.push_back(profile->frames.combinedFrame);
-	if (!isEmpty1)
+	if (!isEmpty_manaShieldFrame)
 		importRectsFromProf.push_back(profile->frames.manaShieldFrame);
-
 
 	return true;
 }

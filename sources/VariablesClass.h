@@ -3,6 +3,7 @@
 #include "qmap.h"
 #include "qimage.h"
 #include <basetsd.h>
+#include <qmutex.h>
 class VariablesClass : public QObject
 {
 	Q_OBJECT
@@ -11,7 +12,6 @@ public:
 	QString var_winTitleOfGame;
 
 	bool HealthAndManaRestorationShouldBeActive = false;
-
 	QImage wholeImg;
 	
 	QImage var_healthPieceImg;

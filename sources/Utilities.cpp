@@ -376,12 +376,11 @@ QImage Utilities::fromCharToImg(QChar CharToImg){
 	}
 }
 
-void Utilities::rotateImgToRight(QImage* imgToRotate, int timesToRotateRight){
+void Utilities::rotateImgToRight(QImage& imgToRotate, int timesToRotateRight){
 	QTransform rotating;
 	qreal degreeToRotateToRight = timesToRotateRight * 90;
 	rotating.rotate(degreeToRotateToRight,Qt::Axis::ZAxis);
-	QImage tmp = imgToRotate->transformed(rotating);
-	*imgToRotate = tmp;
+	imgToRotate = imgToRotate.transformed(rotating);
 }
 
 bool Utilities::isItPixelFromFrame(uint color, int minValueAcceptable, int maxValueAcceptable, bool requireSameValuesOfRGB){
