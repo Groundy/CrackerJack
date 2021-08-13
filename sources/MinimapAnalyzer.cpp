@@ -11,20 +11,6 @@ MinimapAnalyzer::MinimapAnalyzer(VariablesClass* var) {
 MinimapAnalyzer::~MinimapAnalyzer(){
 }
 
-QList<Position3D> MinimapAnalyzer::findPlayerPositionOnMap(QImage& miniMapSnippet, ShearchArea shearchArea)
-{
-	return QList<Position3D>();
-}
-
-QList<Position3D> MinimapAnalyzer::findPlayerPositionOnMap(QImage& miniMapSnippet, int floor)
-{
-	return QList<Position3D>();
-}
-
-QList<Position3D> MinimapAnalyzer::findPlayerPositionOnMap(QImage& miniMapSnippet)
-{
-	return QList<Position3D>();
-}
 
 QString MinimapAnalyzer::getNameOfMapFileToLoad(int floor, bool regularMapType){
 	QString type = regularMapType ? "map" : "path";

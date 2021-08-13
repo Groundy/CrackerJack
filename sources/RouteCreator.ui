@@ -1,0 +1,994 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>RouteCreator</class>
+ <widget class="QWidget" name="RouteCreator">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>770</width>
+    <height>425</height>
+   </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>770</width>
+    <height>425</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>770</width>
+    <height>425</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>RouteCreator</string>
+  </property>
+  <widget class="QWidget" name="gridLayoutWidget">
+   <property name="geometry">
+    <rect>
+     <x>8</x>
+     <y>3</y>
+     <width>757</width>
+     <height>436</height>
+    </rect>
+   </property>
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="0" column="1">
+     <layout class="QGridLayout" name="gridLayout_3">
+      <item row="1" column="0">
+       <layout class="QVBoxLayout" name="verticalLayout">
+        <property name="spacing">
+         <number>0</number>
+        </property>
+        <item>
+         <widget class="QPushButton" name="moveMapLeft_1">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>80</width>
+            <height>30</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>80</width>
+            <height>30</height>
+           </size>
+          </property>
+          <property name="baseSize">
+           <size>
+            <width>0</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="text">
+           <string>Left</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="moveMapLeft_2">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>80</width>
+            <height>30</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>50</width>
+            <height>30</height>
+           </size>
+          </property>
+          <property name="baseSize">
+           <size>
+            <width>0</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="text">
+           <string>Left 5x</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="moveMapLeft_3">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>80</width>
+            <height>30</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>80</width>
+            <height>30</height>
+           </size>
+          </property>
+          <property name="baseSize">
+           <size>
+            <width>0</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="text">
+           <string>Left 100x</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item row="0" column="3" rowspan="3" colspan="2">
+       <layout class="QGridLayout" name="gridLayout_2">
+        <item row="0" column="0" alignment="Qt::AlignLeft">
+         <widget class="QPushButton" name="routeTypeButton">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>270</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>270</width>
+            <height>16777215</height>
+           </size>
+          </property>
+          <property name="text">
+           <string>Route type: Circle</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0" alignment="Qt::AlignLeft">
+         <widget class="QListWidget" name="listWidget">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>270</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>270</width>
+            <height>500</height>
+           </size>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item row="3" column="3" colspan="2">
+       <layout class="QHBoxLayout" name="horizontalLayout_4">
+        <property name="spacing">
+         <number>0</number>
+        </property>
+        <item>
+         <widget class="QPushButton" name="movePointUpButton">
+          <property name="maximumSize">
+           <size>
+            <width>60</width>
+            <height>30</height>
+           </size>
+          </property>
+          <property name="text">
+           <string>Move up</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="addPointButton">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>60</width>
+            <height>30</height>
+           </size>
+          </property>
+          <property name="text">
+           <string>Add point</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="deletePointButton">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>70</width>
+            <height>30</height>
+           </size>
+          </property>
+          <property name="text">
+           <string>Delete point</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="movePointDownButton">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+            <horstretch>15</horstretch>
+            <verstretch>10</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>70</width>
+            <height>30</height>
+           </size>
+          </property>
+          <property name="text">
+           <string>Move down</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item row="0" column="1">
+       <layout class="QHBoxLayout" name="horizontalLayout">
+        <item alignment="Qt::AlignVCenter">
+         <widget class="QPushButton" name="moveMapUp_1">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Maximum" vsizetype="Minimum">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>80</width>
+            <height>30</height>
+           </size>
+          </property>
+          <property name="text">
+           <string>Up</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="moveMapUp_2">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Minimum">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>80</width>
+            <height>30</height>
+           </size>
+          </property>
+          <property name="text">
+           <string>Up 5x</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="moveMapUp_3">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>80</width>
+            <height>30</height>
+           </size>
+          </property>
+          <property name="text">
+           <string>Up 100x</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item row="1" column="1">
+       <widget class="QLabel" name="imgLabel">
+        <property name="enabled">
+         <bool>true</bool>
+        </property>
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>299</width>
+          <height>299</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>299</width>
+          <height>299</height>
+         </size>
+        </property>
+        <property name="sizeIncrement">
+         <size>
+          <width>0</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="baseSize">
+         <size>
+          <width>0</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="contextMenuPolicy">
+         <enum>Qt::NoContextMenu</enum>
+        </property>
+        <property name="text">
+         <string>test text</string>
+        </property>
+        <property name="scaledContents">
+         <bool>false</bool>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="1">
+       <layout class="QHBoxLayout" name="horizontalLayout_3">
+        <property name="sizeConstraint">
+         <enum>QLayout::SetDefaultConstraint</enum>
+        </property>
+        <item>
+         <widget class="QPushButton" name="lowerFloor">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>80</width>
+            <height>30</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>80</width>
+            <height>30</height>
+           </size>
+          </property>
+          <property name="text">
+           <string>Floor down</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="zoomButton">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>80</width>
+            <height>30</height>
+           </size>
+          </property>
+          <property name="text">
+           <string>Zoom 1x</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="upFloor">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>80</width>
+            <height>30</height>
+           </size>
+          </property>
+          <property name="text">
+           <string>Floor up</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item row="1" column="2">
+       <layout class="QVBoxLayout" name="verticalLayout_2">
+        <item>
+         <widget class="QPushButton" name="moveMapRight_1">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>80</width>
+            <height>30</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>80</width>
+            <height>30</height>
+           </size>
+          </property>
+          <property name="layoutDirection">
+           <enum>Qt::LeftToRight</enum>
+          </property>
+          <property name="text">
+           <string>Right</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="moveMapRight_2">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>80</width>
+            <height>30</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>80</width>
+            <height>30</height>
+           </size>
+          </property>
+          <property name="text">
+           <string>Right 5x</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="moveMapRight_3">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>80</width>
+            <height>30</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>80</width>
+            <height>30</height>
+           </size>
+          </property>
+          <property name="text">
+           <string>Right 100x</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item row="2" column="1">
+       <layout class="QHBoxLayout" name="horizontalLayout_2">
+        <property name="sizeConstraint">
+         <enum>QLayout::SetFixedSize</enum>
+        </property>
+        <item>
+         <widget class="QPushButton" name="moveMapDown_1">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>80</width>
+            <height>30</height>
+           </size>
+          </property>
+          <property name="text">
+           <string>Down</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="moveMapDown_2">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>80</width>
+            <height>30</height>
+           </size>
+          </property>
+          <property name="text">
+           <string>Down 5x</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="moveMapDown_3">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>80</width>
+            <height>50</height>
+           </size>
+          </property>
+          <property name="text">
+           <string>Down 100x</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item row="4" column="0" rowspan="2" colspan="5">
+       <widget class="QLabel" name="positionCordinateLabel">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>20</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>TextLabel</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+   </layout>
+  </widget>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>upFloor</sender>
+   <signal>clicked()</signal>
+   <receiver>RouteCreator</receiver>
+   <slot>floorUp()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>383</x>
+     <y>402</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>482</x>
+     <y>224</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>lowerFloor</sender>
+   <signal>clicked()</signal>
+   <receiver>RouteCreator</receiver>
+   <slot>floorDown()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>189</x>
+     <y>402</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>482</x>
+     <y>224</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>moveMapUp_3</sender>
+   <signal>clicked()</signal>
+   <receiver>RouteCreator</receiver>
+   <slot>imgMoved_top_very_fast()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>383</x>
+     <y>28</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>493</x>
+     <y>0</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>moveMapLeft_1</sender>
+   <signal>clicked()</signal>
+   <receiver>RouteCreator</receiver>
+   <slot>imgMoved_left()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>85</x>
+     <y>117</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>27</x>
+     <y>0</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>moveMapLeft_2</sender>
+   <signal>clicked()</signal>
+   <receiver>RouteCreator</receiver>
+   <slot>imgMoved_left_fast()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>77</x>
+     <y>198</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>49</x>
+     <y>0</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>moveMapDown_2</sender>
+   <signal>clicked()</signal>
+   <receiver>RouteCreator</receiver>
+   <slot>imgMoved_down_fast()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>286</x>
+     <y>364</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>345</x>
+     <y>499</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>moveMapUp_2</sender>
+   <signal>clicked()</signal>
+   <receiver>RouteCreator</receiver>
+   <slot>imgMoved_top_fast()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>286</x>
+     <y>28</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>263</x>
+     <y>0</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>moveMapRight_1</sender>
+   <signal>clicked()</signal>
+   <receiver>RouteCreator</receiver>
+   <slot>imgMoved_right()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>483</x>
+     <y>114</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>437</x>
+     <y>0</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>moveMapRight_2</sender>
+   <signal>clicked()</signal>
+   <receiver>RouteCreator</receiver>
+   <slot>imgMoved_right_fast()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>483</x>
+     <y>198</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>657</x>
+     <y>0</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>moveMapRight_3</sender>
+   <signal>clicked()</signal>
+   <receiver>RouteCreator</receiver>
+   <slot>imgMoved_right_very_fast()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>483</x>
+     <y>282</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>797</x>
+     <y>0</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>moveMapDown_1</sender>
+   <signal>clicked()</signal>
+   <receiver>RouteCreator</receiver>
+   <slot>imgMoved_down()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>189</x>
+     <y>364</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>115</x>
+     <y>492</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>moveMapDown_3</sender>
+   <signal>clicked()</signal>
+   <receiver>RouteCreator</receiver>
+   <slot>imgMoved_down_very_fast()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>383</x>
+     <y>364</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>516</x>
+     <y>495</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>moveMapUp_1</sender>
+   <signal>clicked()</signal>
+   <receiver>RouteCreator</receiver>
+   <slot>imgMoved_top()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>189</x>
+     <y>28</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>104</x>
+     <y>0</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>moveMapLeft_3</sender>
+   <signal>clicked()</signal>
+   <receiver>RouteCreator</receiver>
+   <slot>imgMoved_left_very_fast()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>73</x>
+     <y>279</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>247</x>
+     <y>0</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>addPointButton</sender>
+   <signal>clicked()</signal>
+   <receiver>RouteCreator</receiver>
+   <slot>addPoint()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>615</x>
+     <y>402</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>371</x>
+     <y>205</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>zoomButton</sender>
+   <signal>clicked()</signal>
+   <receiver>RouteCreator</receiver>
+   <slot>zoomChanged()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>286</x>
+     <y>402</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>398</x>
+     <y>298</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>deletePointButton</sender>
+   <signal>clicked()</signal>
+   <receiver>RouteCreator</receiver>
+   <slot>deletePoint()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>687</x>
+     <y>402</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>398</x>
+     <y>298</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>routeTypeButton</sender>
+   <signal>clicked()</signal>
+   <receiver>RouteCreator</receiver>
+   <slot>routeTypeChanged()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>761</x>
+     <y>28</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>398</x>
+     <y>298</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>listWidget</sender>
+   <signal>itemSelectionChanged()</signal>
+   <receiver>RouteCreator</receiver>
+   <slot>selectedItemOnListChanged()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>609</x>
+     <y>212</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>-2</x>
+     <y>33</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>movePointDownButton</sender>
+   <signal>clicked()</signal>
+   <receiver>RouteCreator</receiver>
+   <slot>moveListItemDown()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>724</x>
+     <y>387</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>384</x>
+     <y>212</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>movePointUpButton</sender>
+   <signal>clicked()</signal>
+   <receiver>RouteCreator</receiver>
+   <slot>moveListItemUp()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>523</x>
+     <y>387</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>384</x>
+     <y>212</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <signal>signal1()</signal>
+  <slot>floorDown()</slot>
+  <slot>floorUp()</slot>
+  <slot>imgMoved_left()</slot>
+  <slot>imgMoved_left_fast()</slot>
+  <slot>imgMoved_left_very_fast()</slot>
+  <slot>imgMoved_right()</slot>
+  <slot>imgMoved_right_fast()</slot>
+  <slot>imgMoved_right_very_fast()</slot>
+  <slot>imgMoved_top()</slot>
+  <slot>imgMoved_top_fast()</slot>
+  <slot>imgMoved_top_very_fast()</slot>
+  <slot>imgMoved_down()</slot>
+  <slot>imgMoved_down_fast()</slot>
+  <slot>imgMoved_down_very_fast()</slot>
+  <slot>addPoint()</slot>
+  <slot>zoomChanged()</slot>
+  <slot>routeTypeChanged()</slot>
+  <slot>deletePoint()</slot>
+  <slot>selectedItemOnListChanged()</slot>
+  <slot>moveListItemUp()</slot>
+  <slot>moveListItemDown()</slot>
+ </slots>
+</ui>

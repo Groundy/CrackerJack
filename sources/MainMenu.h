@@ -13,6 +13,7 @@
 #include "Calibrator.h"
 #include "StringResource.h"
 #include "SelectProfileWindow.h"
+#include "RouteCreator.h"
 namespace Ui { class MainMenu; };
 
 class MainMenu : public QDialog

@@ -230,11 +230,14 @@ xcopy /y /d ".\dependencies\64-bit\libcrypto-1_1-x64.dll" "$(OutDir)"
     <ClCompile Include="sources\MinimapAnalyzer.cpp" />
     <ClCompile Include="sources\NewProfileConfiguartor.cpp" />
     <ClCompile Include="sources\Key.cpp" />
+    <ClCompile Include="sources\PointInRootSetterWindow.cpp" />
     <ClCompile Include="sources\ProfileDataBaseManager.cpp" />
     <ClCompile Include="sources\LoginWindow.cpp" />
     <ClCompile Include="sources\main.cpp" />
     <ClCompile Include="sources\Profile.cpp" />
     <ClCompile Include="sources\RGBstruct.cpp" />
+    <ClCompile Include="sources\Route.cpp" />
+    <ClCompile Include="sources\RouteCreator.cpp" />
     <ClCompile Include="sources\ScreenAnalyzer.cpp" />
     <ClCompile Include="sources\ScreenSaver.cpp" />
     <ClCompile Include="sources\SelectProfileWindow.cpp" />
@@ -251,6 +254,8 @@ xcopy /y /d ".\dependencies\64-bit\libcrypto-1_1-x64.dll" "$(OutDir)"
     <QtUic Include="sources\Market.ui" />
     <QtUic Include="sources\NewProfileConfiguartor.ui" />
     <QtUic Include="sources\LoginWindow.ui" />
+    <QtUic Include="sources\PointInRootSetterWindow.ui" />
+    <QtUic Include="sources\RouteCreator.ui" />
     <QtUic Include="sources\SelectProfileWindow.ui" />
   </ItemGroup>
   <ItemGroup>
@@ -259,6 +264,9 @@ xcopy /y /d ".\dependencies\64-bit\libcrypto-1_1-x64.dll" "$(OutDir)"
     <QtMoc Include="sources\ClientServerApi.h" />
     <QtMoc Include="sources\Market.h" />
     <QtMoc Include="sources\MinimapAnalyzer.h" />
+    <QtMoc Include="sources\RouteCreator.h" />
+    <QtMoc Include="sources\PointInRootSetterWindow.h" />
+    <QtMoc Include="sources\Route.h" />
     <ClInclude Include="version.h" />
     <QtMoc Include="sources\VariablesClass.h" />
     <QtMoc Include="sources\ScreenSaver.h" />

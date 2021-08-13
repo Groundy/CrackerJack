@@ -12,7 +12,6 @@
 #include "qdatetime.h"
 
 #include "Utilities.h"
-typedef QList<int> Histogram;
 class ShearchArea {
 public:
 	QMap<int, QList<QRect>> areas;
@@ -107,10 +106,6 @@ public:
 	};
 };
 
-struct Position3D{
-	int x, y, floor;
-};
-
 class MinimapAnalyzer : public QObject
 {
 	Q_OBJECT
@@ -119,12 +114,8 @@ public:
 	MinimapAnalyzer();
 	MinimapAnalyzer(VariablesClass* varClass);
 	~MinimapAnalyzer();
-	QList<Position3D> findPlayerPositionOnMap(QImage& miniMapSnippet, ShearchArea shearchArea);
-	QList<Position3D> findPlayerPositionOnMap(QImage& miniMapSnippet, int floor);
-	QList<Position3D> findPlayerPositionOnMap(QImage& miniMapSnippet);
 	void test();
 private:
-	enum class typesOfWalkablePoints { REGULAR, ROPE_HOLE, SHOVEL_HOLE, LADDER, TELEPORT, EXIT_POINT };
 	QString getNameOfMapFileToLoad(int floor, bool regularMapType = true);
 	QString setPathToFolderMap();
 	QImage setSliderImg();

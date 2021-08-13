@@ -1,5 +1,5 @@
-
-
+40. Dodac t³umaczenie RouteCreatora
+39. Gdy mama na zoomie dojdzie do krawedzi to po oddaleniu nie cala mapa jest pokazywana
 38. Dodaæ mutexy w przypadku czytania i edycji pó³ pamiêci wycinków obrazów.
 37. Dodaæ trzymanie mapek w pamiêci.
 36. ??? Przerobic minimap analyzer na thread
