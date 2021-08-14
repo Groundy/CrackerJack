@@ -1,7 +1,6 @@
 #pragma once
 #include <qdialog.h>
 #include "MinimapAnalyzer.h"
-#include "PointInRootSetterWindow.h"
 #include <qsize.h>
 #include "Point3D.h"
 #include "Route.h"

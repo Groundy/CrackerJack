@@ -109,9 +109,6 @@
     <ClCompile Include="sources\RouteCreator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="sources\PointInRootSetterWindow.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="sources\Route.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -183,9 +180,6 @@
     <QtMoc Include="sources\RouteCreator.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="sources\PointInRootSetterWindow.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="sources\LoginWindow.ui">
@@ -204,9 +198,6 @@
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="sources\RouteCreator.ui">
-      <Filter>Form Files</Filter>
-    </QtUic>
-    <QtUic Include="sources\PointInRootSetterWindow.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>
