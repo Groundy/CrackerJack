@@ -11,6 +11,7 @@ RouteCreator::RouteCreator(QDialog* parent)
 	ui->movePointUpButton->setEnabled(false);
 	ui->movePointDownButton->setEnabled(false);
 	ui->deletePointButton->setEnabled(false);
+	TRANSLATE_addNamesOfFieldTypesToList();
 }
 
 RouteCreator::~RouteCreator(){
@@ -74,22 +75,20 @@ void RouteCreator::floorUp(){
 }
 
 void RouteCreator::addPoint(){
-	QListWidget *list = ui->listWidget;
-	Route::FIELDS_TYPE typeOfPoint;
-	PointInRootSetterWindow ptSetter(this,currentChoosenPoint.toString(), &typeOfPoint);
-	int retCode = ptSetter.exec();
-	if (retCode == QDialog::Accepted) {
-		QString indexStr = QString::number(list->count());
-		QString text = QString("[%1] %2").arg(indexStr, currentChoosenPoint.toString());
-		route.addPoint(currentChoosenPoint, typeOfPoint);
-		list->addItem(text);
-	}
+	QListWidget *list = ui->pointsList;
+	Route::FIELDS_TYPE typeOfPoint = getFieldTypeComboBox();
+	QString indexStr = QString::number(list->count());
+	QString text = QString("[%1] %2").arg(indexStr, currentChoosenPoint.toString());
+	route.addPoint(currentChoosenPoint, typeOfPoint);
+	list->addItem(text);
 	selectedItemOnListChanged();
 	list->repaint();
+	ui->fieldTypesBox->setCurrentIndex(0);
+	ui->fieldTypesBox->repaint();
 }
 
 void RouteCreator::moveListItemUp(){
-	QListWidget* list = ui->listWidget;
+	QListWidget* list = ui->pointsList;
 	int currentRow = list->currentRow();
 	bool allRight = route.movePointUp(currentRow);
 	if (allRight) {
@@ -100,7 +99,7 @@ void RouteCreator::moveListItemUp(){
 }
 
 void RouteCreator::moveListItemDown(){
-	QListWidget* list = ui->listWidget;
+	QListWidget* list = ui->pointsList;
 	int currentRow = list->currentRow();
 	bool allRight = route.movePointDown(currentRow);
 	if (allRight) {
@@ -111,7 +110,7 @@ void RouteCreator::moveListItemDown(){
 }
 
 void RouteCreator::deletePoint(){
-	auto list = ui->listWidget;
+	auto list = ui->pointsList;
 	int rowToDelete = list->currentRow();
 	route.removePoint(rowToDelete);
 
@@ -173,6 +172,57 @@ QPixmap RouteCreator::getPixMapWithZoomAndCenterPix(QImage imgWithMap, QSize siz
 	return pixMaptoDisplay;
 }
 
+void RouteCreator::TRANSLATE_addNamesOfFieldTypesToList(){
+	QComboBox* box = ui->fieldTypesBox;
+	bool isPl = StringResource::languageIsPl();
+	QString textToSet;
+	if (isPl) {
+		textToSet = QString::fromLocal8Bit("[01] Zwyk³e pole");
+		box->addItem(textToSet);
+		textToSet = QString::fromLocal8Bit("[02] Schody do góry");
+		box->addItem(textToSet);
+		textToSet = QString::fromLocal8Bit("[03] Schody do do³u");
+		box->addItem(textToSet);
+		textToSet = QString::fromLocal8Bit("[04] Pole liny");
+		box->addItem(textToSet);
+		textToSet = QString::fromLocal8Bit("[05] Dziura, otwarta");
+		box->addItem(textToSet);
+		textToSet = QString::fromLocal8Bit("[06] Dziura, zamknieta");
+		box->addItem(textToSet);
+		textToSet = QString::fromLocal8Bit("[07] Drabina w górê");
+		box->addItem(textToSet);
+		textToSet = QString::fromLocal8Bit("[08] Drabian w dó³");
+		box->addItem(textToSet);
+		textToSet = QString::fromLocal8Bit("[09] Teleport");
+		box->addItem(textToSet);
+		textToSet = QString::fromLocal8Bit("[10] Punkt wyjscia");
+		box->addItem(textToSet);
+	}
+	else {
+		textToSet = "[01] Regular Field";
+		box->addItem(textToSet);
+		textToSet = "[02] Stairs-up";
+		box->addItem(textToSet);
+		textToSet = "[03] Stairs-down";
+		box->addItem(textToSet);
+		textToSet = "[04] Rope field";
+		box->addItem(textToSet);
+		textToSet = "[05] Hole, open";
+		box->addItem(textToSet);
+		textToSet = "[06] Hole, close";
+		box->addItem(textToSet);
+		textToSet = "[07] Ladder up";
+		box->addItem(textToSet);
+		textToSet = "[08] Ladder down";
+		box->addItem(textToSet);
+		textToSet = "[09] Teleport";
+		box->addItem(textToSet);
+		textToSet = "[10] Log out point";
+		box->addItem(textToSet);
+	}
+	box->repaint();
+}
+
 void RouteCreator::routeTypeChanged(){
 	typedef Route::ROUTE_TYPE Type;
 	bool shouldBeCircle = route.routeType == Type::BACK_AND_FORTH;
@@ -221,7 +271,7 @@ void RouteCreator::refreshPositionLabel(){
 }
 
 void RouteCreator::selectedItemOnListChanged(){
-	QListWidget* list = ui->listWidget;
+	QListWidget* list = ui->pointsList;
 	int size = list->count();
 	int curr = list->currentRow();
 
@@ -286,3 +336,11 @@ void RouteCreator::moveMap(DIRECTIONS direction, int step){
 	repaintMap();
 }
 
+Route::FIELDS_TYPE RouteCreator::getFieldTypeComboBox() {
+	QString textFromBox = ui->fieldTypesBox->currentText();
+	QString indexOfFieldType = textFromBox.mid(1, 2);
+	int index = indexOfFieldType.toInt();
+	index--;
+
+	return (Route::FIELDS_TYPE)index;
+}

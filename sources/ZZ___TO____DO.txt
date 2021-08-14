@@ -1,3 +1,4 @@
+42. Przeniesc Logike PointInRootSetterWindow do RouteCreatora
 41. Usunac macro Q_OBJECT z wszystkich klas które nie s¹ graficzne
 40. Dodac t³umaczenie RouteCreatora
 39. Gdy mama na zoomie dojdzie do krawedzi to po oddaleniu nie cala mapa jest pokazywana

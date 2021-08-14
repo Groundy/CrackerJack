@@ -56,4 +56,6 @@ private:
 	void refreshPositionLabel();
 	void moveMap(DIRECTIONS direction, int step);
 	QPixmap getPixMapWithZoomAndCenterPix(QImage imgWithMap, QSize sizeToScale);
+	Route::FIELDS_TYPE getFieldTypeComboBox();
+	void TRANSLATE_addNamesOfFieldTypesToList();
 };
