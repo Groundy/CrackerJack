@@ -115,6 +115,9 @@
     <ClCompile Include="sources\Route.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="sources\Point3D.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="sources\LoginWindow.h">
@@ -183,9 +186,6 @@
     <QtMoc Include="sources\PointInRootSetterWindow.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="sources\Route.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="sources\LoginWindow.ui">
@@ -225,6 +225,12 @@
     </ClInclude>
     <ClInclude Include="version.h">
       <Filter>Resource Files</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\Route.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\Point3D.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

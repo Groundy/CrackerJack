@@ -75,24 +75,15 @@ void RouteCreator::floorUp(){
 
 void RouteCreator::addPoint(){
 	QListWidget *list = ui->listWidget;
-	int positionIndex = list->count();
-	QString index = QString::number(positionIndex + 1);
-	QString text = QString("[%1] %2").arg(index, currentChoosenPoint.toString());
-	bool pointAlreadyAddedOnLastPos = false;
-	if (positionIndex != 0) {
-		QString lastElementText = list->item(positionIndex - 1)->text();
-		QString lastPositionIndex = QString::number(positionIndex);
-		QString textTmp = QString("[%1] %2").arg(lastPositionIndex, currentChoosenPoint.toString());
-		pointAlreadyAddedOnLastPos = lastElementText == textTmp;
+	Route::FIELDS_TYPE typeOfPoint;
+	PointInRootSetterWindow ptSetter(this,currentChoosenPoint.toString(), &typeOfPoint);
+	int retCode = ptSetter.exec();
+	if (retCode == QDialog::Accepted) {
+		QString indexStr = QString::number(list->count());
+		QString text = QString("[%1] %2").arg(indexStr, currentChoosenPoint.toString());
+		route.addPoint(currentChoosenPoint, typeOfPoint);
+		list->addItem(text);
 	}
-	if (pointAlreadyAddedOnLastPos)
-		return;
-
-	FIELDS_TYPE typeOfPoint;
-	PointInRootSetterWindow ptSetter(this,currentChoosenPoint.toString(), typeOfPoint);
-	ptSetter.exec();
-
-	list->addItem(text);
 	selectedItemOnListChanged();
 	list->repaint();
 }
@@ -100,82 +91,37 @@ void RouteCreator::addPoint(){
 void RouteCreator::moveListItemUp(){
 	QListWidget* list = ui->listWidget;
 	int currentRow = list->currentRow();
-
-	bool itIsFirstElement = currentRow == 0;
-	bool itemNotSelected = currentRow == -1;
-	if (itIsFirstElement || itemNotSelected)
-		return;
-
-	QString textOfItemCurrent = list->item(currentRow)->text();
-	QString textOfItemAbove = list->item(currentRow - 1)->text();
-
-	QStringList partsCurrent = textOfItemCurrent.split("] ", Qt::SkipEmptyParts);
-	QStringList partsAbove = textOfItemAbove.split("] ", Qt::SkipEmptyParts);
-
-	bool okStructs = partsCurrent.size() == 2 && partsAbove.size() == 2;
-	if (!okStructs) {
-		//todo log
-		return;
+	bool allRight = route.movePointUp(currentRow);
+	if (allRight) {
+		list->setCurrentRow(currentRow - 1);
+		selectedItemOnListChanged();
+		list->repaint();
 	}
-
-	partsAbove[0].swap(partsCurrent[0]);
-	textOfItemCurrent = partsCurrent[0] + "] " + partsCurrent[1];
-	textOfItemAbove = partsAbove[0] + "] " + partsAbove[1];
-
-	list->item(currentRow)->setText(textOfItemAbove);
-	list->item(currentRow + 1)->setText(textOfItemCurrent);
-
-	list->repaint();
 }
 
 void RouteCreator::moveListItemDown(){
 	QListWidget* list = ui->listWidget;
 	int currentRow = list->currentRow();
-
-	bool itIsLastElement = currentRow + 1  == list->count();
-	bool itemNotSelected = (currentRow == -1);
-	if (itIsLastElement || itemNotSelected)
-		return;
-
-	QString textOfItemCurrent = list->item(currentRow)->text();
-	QString textOfItemBelow = list->item(currentRow + 1)->text();
-	
-	QStringList partsCurrent = textOfItemCurrent.split("] ", Qt::SkipEmptyParts);
-	QStringList partsBelow = textOfItemBelow.split("] ", Qt::SkipEmptyParts);
-
-	bool okStructs = partsCurrent.size() == 2 && partsBelow.size() == 2;
-	if (!okStructs) {
-		//todo log
-		return;
+	bool allRight = route.movePointDown(currentRow);
+	if (allRight) {
+		list->setCurrentRow(currentRow + 1);
+		selectedItemOnListChanged();
+		list->repaint();
 	}
-
-	partsBelow[0].swap(partsCurrent[0]);
-	textOfItemCurrent = partsCurrent[0] + "] " + partsCurrent[1];
-	textOfItemBelow = partsBelow[0] + "] " + partsBelow[1];
-
-	list->item(currentRow)->setText(textOfItemBelow);
-	list->item(currentRow + 1)->setText(textOfItemCurrent);
-
-	list->repaint();
 }
 
 void RouteCreator::deletePoint(){
 	auto list = ui->listWidget;
 	int rowToDelete = list->currentRow();
-	list->takeItem(rowToDelete);
+	route.removePoint(rowToDelete);
 
-	int sizeOfList = list->count();
-	for (size_t i = rowToDelete; i < sizeOfList; i++){
-		QString textOfCurrentItem = list->item(i)->text();
-		QStringList partsOfPoint = textOfCurrentItem.split("] ",Qt::SkipEmptyParts);
-		QString indexAsStr = partsOfPoint[0].remove("[");
-		int index = indexAsStr.toInt();
-		index--;
-		indexAsStr = QString::number(index);
-		QString textToSet = QString("[%1] %2").arg(indexAsStr, partsOfPoint[1]);
-		list->item(i)->setText(textToSet);
+	QStringList textOfAllPoints = route.toStringList();
+	list->clear();
+	for (size_t i = 0; i < textOfAllPoints.size(); i++) {
+		list->addItem(textOfAllPoints[i]);
 	}
 
+	selectedItemOnListChanged();
 	list->repaint();
 }
 
@@ -228,11 +174,18 @@ QPixmap RouteCreator::getPixMapWithZoomAndCenterPix(QImage imgWithMap, QSize siz
 }
 
 void RouteCreator::routeTypeChanged(){
-	bool shouldBeCircle = routeType == ROUTE_TYPE::BACK_AND_FORTH;
-	routeType = shouldBeCircle ? ROUTE_TYPE::CIRCLE : ROUTE_TYPE::BACK_AND_FORTH;
+	typedef Route::ROUTE_TYPE Type;
+	bool shouldBeCircle = route.routeType == Type::BACK_AND_FORTH;
+	route.routeType = shouldBeCircle ? Type::CIRCLE : Type::BACK_AND_FORTH;
 
-	QString routeTypeAsStr = shouldBeCircle ? "Circle" : "Back-and-forth";
-	QString buttonText = QString("Route: %1").arg(routeTypeAsStr);
+	bool isPl = StringResource::languageIsPl();
+	QString buttonText = isPl ? QString::fromLocal8Bit("Typ: ") : "Type: ";
+	QString routeTypeAsStr; 
+	if(isPl)
+		routeTypeAsStr = shouldBeCircle ? QString::fromLocal8Bit("Pêtla") : QString::fromLocal8Bit("w tê i z powrotem");
+	else
+		routeTypeAsStr = shouldBeCircle ? "Circle" : "Back-and-forth";
+	buttonText.append(routeTypeAsStr);
 	ui->routeTypeButton->setText(buttonText);
 	ui->routeTypeButton->repaint();
 }
@@ -269,19 +222,30 @@ void RouteCreator::refreshPositionLabel(){
 
 void RouteCreator::selectedItemOnListChanged(){
 	QListWidget* list = ui->listWidget;
+	int size = list->count();
+	int curr = list->currentRow();
 
-	bool isFirstElement = 0 == list->currentRow();
-	bool elementCanBeMovedUp = !isFirstElement && (list->count() >= 2);
+	bool isFirstElement = curr == 0;
+	bool elementCanBeMovedUp = !isFirstElement && (size >= 2);
 	ui->movePointUpButton->setEnabled(elementCanBeMovedUp);
 
-	bool isLastElement = (list->count() - 1) == list->currentRow();
-	bool elementCanBeMovedDown = !isLastElement && (list->count() >= 2);
+	bool isLastElement = curr == (size - 1);
+	bool elementCanBeMovedDown = !isLastElement && (size >= 2);
 	ui->movePointDownButton->setEnabled(elementCanBeMovedDown);
 
-	bool thereAreElementsOnList = list->count() > 0;
-	bool thereIsSlectedItem = list->currentRow() > -1;
+	bool thereAreElementsOnList = size > 0;
+	bool thereIsSlectedItem = curr > -1;
 	bool desiredState = thereAreElementsOnList && thereIsSlectedItem;
 	ui->deletePointButton->setEnabled(desiredState);
+
+	
+	QStringList textOfAllPoints = route.toStringList();
+	for (size_t i = 0; i < size; i++){
+		bool textForItemExist = i < textOfAllPoints.size();
+		if (!textForItemExist)
+			break;
+		list->item(i)->setText(textOfAllPoints[i]);
+	}
 }
 
 void RouteCreator::moveMap(DIRECTIONS direction, int step){

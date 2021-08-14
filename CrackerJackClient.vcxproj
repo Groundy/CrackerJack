@@ -230,6 +230,7 @@ xcopy /y /d ".\dependencies\64-bit\libcrypto-1_1-x64.dll" "$(OutDir)"
     <ClCompile Include="sources\MinimapAnalyzer.cpp" />
     <ClCompile Include="sources\NewProfileConfiguartor.cpp" />
     <ClCompile Include="sources\Key.cpp" />
+    <ClCompile Include="sources\Point3D.cpp" />
     <ClCompile Include="sources\PointInRootSetterWindow.cpp" />
     <ClCompile Include="sources\ProfileDataBaseManager.cpp" />
     <ClCompile Include="sources\LoginWindow.cpp" />
@@ -266,7 +267,8 @@ xcopy /y /d ".\dependencies\64-bit\libcrypto-1_1-x64.dll" "$(OutDir)"
     <QtMoc Include="sources\MinimapAnalyzer.h" />
     <QtMoc Include="sources\RouteCreator.h" />
     <QtMoc Include="sources\PointInRootSetterWindow.h" />
-    <QtMoc Include="sources\Route.h" />
+    <ClInclude Include="sources\Route.h" />
+    <ClInclude Include="sources\Point3D.h" />
     <ClInclude Include="version.h" />
     <QtMoc Include="sources\VariablesClass.h" />
     <QtMoc Include="sources\ScreenSaver.h" />

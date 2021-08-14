@@ -1,7 +1,7 @@
 #pragma once
 #include <QObject>
 #include <QDialog>
-
+#include "Route.h"
 namespace Ui { class PointInRootSetterWindow; };
 
 class PointInRootSetterWindow : public QDialog 
@@ -9,13 +9,14 @@ class PointInRootSetterWindow : public QDialog
 
 	Q_OBJECT
 public:
-	PointInRootSetterWindow(QDialog* parent, QString pointStr, RouteCreator::FIELDS_TYPE &type);
+	PointInRootSetterWindow(QDialog* parent, QString pointStr, Route::FIELDS_TYPE* fieldType);
 	~PointInRootSetterWindow();
 public slots:
 	void cancelButtonClicked();
 	void okButtonClicked();
 private:
 	Ui::PointInRootSetterWindow *ui;
-	RouteCreator::FIELDS_TYPE* fieldInfoPtr;
-	RouteCreator::FIELDS_TYPE getFieldTypeFromButtons();
+	Route::FIELDS_TYPE* fieldTypeToRet;
+	Route::FIELDS_TYPE getFieldTypeFromButtons();
+	void TRANSLATE_setRadioButtonDescrpitions();
 };
