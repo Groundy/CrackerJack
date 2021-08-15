@@ -57,4 +57,5 @@ private:
 	QPixmap getPixMapWithZoomAndCenterPix(QImage imgWithMap, QSize sizeToScale);
 	Route::FIELDS_TYPE getFieldTypeComboBox();
 	void TRANSLATE_addNamesOfFieldTypesToList();
+	void TRANSLATE_gui();
 };
