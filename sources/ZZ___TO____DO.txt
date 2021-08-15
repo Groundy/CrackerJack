@@ -1,5 +1,4 @@
-39. w RouteCreator mapa nie mo¿e byæ przewinieta do koñca
-38. Dodaæ mutexy w przypadku czytania i edycji pó³ pamiêci wycinków obrazów.
+39. Dodaæ mutexy w przypadku czytania i edycji pó³ pamiêci wycinków obrazów.
 37. Dodaæ trzymanie mapek w pamiêci.
 36. ??? Przerobic minimap analyzer na thread
 35. Dodaæ wycinanie z calego obrazka nie tylko minimapy ale tez odpowiednio duzego obszaru ze sliderem
@@ -22,6 +21,7 @@
 42. Przeniesc Logike PointInRootWindow do RouteCreatora
 41. Usunac macro Q_OBJECT z wszystkich klas które nie s¹ graficzne
 40. Dodac t³umaczenie RouteCreatora
+38. w RouteCreator mapa nie mo¿e byæ przewinieta do koñca
 32. zastapic hard coded path do folderu ze screenami w ScreenAnalyzer wczytywanym z .ini 32.correct path jest teraz samoczynie znajdowany
 31. dodac scie¿kê w których powinny byæ tworzone logów
 30. Tworzenie logów z buggami powinno sie odbywac tylko w trybie debug
