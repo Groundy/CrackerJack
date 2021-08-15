@@ -285,10 +285,14 @@ void RouteCreator::routeTypeChanged(){
 
 bool RouteCreator::repaintMap(){
 	const QSize sizeOfLabel = ui->imgLabel->size();
+
+
 	int startX = currentChoosenPoint.x - sizeToDisplay.width() / 2;
 	int width =  sizeToDisplay.width();
 	int startY = currentChoosenPoint.y - sizeToDisplay.height() / 2;
 	int height =  sizeToDisplay.height();
+
+
 	QRect rect(startX, startY, width, height);
 	QImage orgImg = currentMap.copy(rect);
 	QPixmap pixMaptoDisplay;

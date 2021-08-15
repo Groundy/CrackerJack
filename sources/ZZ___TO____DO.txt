@@ -1,4 +1,4 @@
-39. Gdy mama na zoomie dojdzie do krawedzi to po oddaleniu nie cala mapa jest pokazywana
+39. w RouteCreator mapa nie mo¿e byæ przewinieta do koñca
 38. Dodaæ mutexy w przypadku czytania i edycji pó³ pamiêci wycinków obrazów.
 37. Dodaæ trzymanie mapek w pamiêci.
 36. ??? Przerobic minimap analyzer na thread
