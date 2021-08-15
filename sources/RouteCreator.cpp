@@ -285,7 +285,8 @@ void RouteCreator::routeTypeChanged(){
 
 bool RouteCreator::repaintMap(){
 	const QSize sizeOfLabel = ui->imgLabel->size();
-
+	const int WIDTH = currentMap.width();
+	const int HEIGHT = currentMap.height();
 
 	int startX = currentChoosenPoint.x - sizeToDisplay.width() / 2;
 	int width =  sizeToDisplay.width();
@@ -347,32 +348,31 @@ void RouteCreator::selectedItemOnListChanged(){
 
 void RouteCreator::moveMap(DIRECTIONS direction, int step){
 	const int maxX = currentMap.width() - 1;
-	const int maxY = currentMap.height() - 1;//to do zmienic na prawdziwe wartosci
-	const int DISPLAY_HEIGHT = sizeToDisplay.height() / zoom;
-	const int DISPLAY_WIDTH = sizeToDisplay.width() / zoom;
+	const int maxY = currentMap.height() - 1;
+
 	switch (direction)	{
 	case DIRECTIONS::UP: {
 		int tmpCordinateY = currentChoosenPoint.y - step;
-		bool imgWillGoOutOfRange = tmpCordinateY - DISPLAY_HEIGHT < 0;
-		currentChoosenPoint.y = imgWillGoOutOfRange ? DISPLAY_HEIGHT : tmpCordinateY;
+		bool ptOutOfRange = tmpCordinateY  < 0;
+		currentChoosenPoint.y = ptOutOfRange ? 0 : tmpCordinateY;
 		break;
 	}
 	case DIRECTIONS::DOWN: {
 		int tmpCordinateY = currentChoosenPoint.y + step;
-		bool imgWillGoOutOfRange = tmpCordinateY + DISPLAY_HEIGHT > maxY;
-		currentChoosenPoint.y = imgWillGoOutOfRange ? (maxY - DISPLAY_HEIGHT) : tmpCordinateY;
+		bool ptOutOfRange = tmpCordinateY  > maxY;
+		currentChoosenPoint.y = ptOutOfRange ? maxY : tmpCordinateY;
 		break;
 	}
 	case DIRECTIONS::RIGHT: {
 		int tmpCordinateX = currentChoosenPoint.x + step;
-		bool imgWillGoOutOfRange = tmpCordinateX + DISPLAY_WIDTH > maxX;
-		currentChoosenPoint.x = imgWillGoOutOfRange ? maxX - DISPLAY_WIDTH : tmpCordinateX;
+		bool ptOutOfRange = tmpCordinateX  > maxX;
+		currentChoosenPoint.x = ptOutOfRange ? maxX : tmpCordinateX;
 		break;
 	}
 	case DIRECTIONS::LEFT: {
 		int tmpCordinateX = currentChoosenPoint.x - step;
-		bool imgWillGoOutOfRange = tmpCordinateX - DISPLAY_WIDTH < 0;
-		currentChoosenPoint.x = imgWillGoOutOfRange ? DISPLAY_WIDTH : tmpCordinateX;
+		bool ptOutOfRange = tmpCordinateX < 0;
+		currentChoosenPoint.x = ptOutOfRange ? 0 : tmpCordinateX;
 		break;
 	}
 	default:
