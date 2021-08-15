@@ -9,16 +9,12 @@
 #include "Windows.h"
 
 
-class Profile : public QObject{
-	Q_OBJECT
-
+class Profile{
 public:
 	enum PROFESSION { RP, EK, ED, MS};
 	enum AUTO_LOOT_KEY { RIGHT_MOUSE_BUTTON, SHIFT_RIGHT, LEFT_MOUSE_BUTTON };//enable only if controls
 	enum CONTROLS { CLSSIC_CONTROLS, REGULARCONTROLS, LEFT_SMART_CLICK };
 	//enum STATES {HASTE, BATTLE, PROTECTOR_ZONE, POISONED, PARALYZED, UPGRADED}
-	Profile(QObject *parent);
-	//Profile(Profile& prof);
 	Profile();
 	~Profile();
 

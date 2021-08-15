@@ -1,9 +1,6 @@
 #pragma once
-#include <QObject>
-
-class RGBstruct : public QObject
-{
-	Q_OBJECT
+#include <qobject.h>
+class RGBstruct{
 public:
 	uint r, g, b;
 	static bool isPixelInRangeOfGrey(uint rgb, uint minValue, uint maxValue);

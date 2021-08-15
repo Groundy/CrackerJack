@@ -13,8 +13,7 @@
 #include "qdebug.h"
 #include "qcryptographichash.h"
 #include "qfileinfo.h"
-class Cryptography : public QObject{
-	Q_OBJECT
+class Cryptography{
 public:
 	Cryptography();
 	bool encryptUsingUserPublicKey(QByteArray in, QByteArray& out);

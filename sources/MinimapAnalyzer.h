@@ -10,7 +10,6 @@
 #include "qrandom.h"
 #include "VariablesClass.h"
 #include "qdatetime.h"
-
 #include "Utilities.h"
 class ShearchArea {
 public:
@@ -106,10 +105,7 @@ public:
 	};
 };
 
-class MinimapAnalyzer : public QObject
-{
-	Q_OBJECT
-	
+class MinimapAnalyzer{
 public:
 	MinimapAnalyzer();
 	MinimapAnalyzer(VariablesClass* varClass);

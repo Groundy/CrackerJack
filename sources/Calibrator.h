@@ -5,10 +5,7 @@
 #include <qmap.h>
 #include "Utilities.h"
 #include "ProfileDataBaseManager.h"
-class Calibrator : public QObject
-{
-	Q_OBJECT
-
+class Calibrator{
 public:
 	Calibrator(QImage& fullScreenImg, VariablesClass& varClass, Profile* profileToSet);
 	~Calibrator();	

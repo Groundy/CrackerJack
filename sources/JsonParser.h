@@ -8,9 +8,8 @@
 #include "Utilities.h"
 #include "Profile.h"
 #include "qfileinfo.h"
-class JsonParser : public QObject
-{
-	Q_OBJECT
+class JsonParser{
+
 	typedef Utilities::Item Item;
 	typedef Utilities::Spell Spell;
 public:

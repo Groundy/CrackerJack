@@ -3,12 +3,9 @@
 #include <QObject>
 #include <qdir.h>
 #include <qtextstream.h>
-class Logger : public QObject
-{
-	Q_OBJECT
-
+class Logger{
 public:
-	Logger(QObject *parent);
+	Logger();
 	static void logPotenialBug(const QString textToSave);
 	static void logPotenialBug(const QString textToSave, const QString className, const QString functionName);
 	static QString getPathToLogFolder();

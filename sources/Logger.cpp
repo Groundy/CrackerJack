@@ -1,7 +1,7 @@
 #include "Logger.h"
 #include "qdatetime.h"
-Logger::Logger(QObject *parent)
-	: QObject(parent){
+Logger::Logger(){
+	
 
 }
 

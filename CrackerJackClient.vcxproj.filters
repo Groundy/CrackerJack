@@ -123,28 +123,10 @@
     <QtMoc Include="sources\SelectProfileWindow.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="sources\Profile.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
     <QtMoc Include="sources\NewProfileConfiguartor.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="sources\ProfileDataBaseManager.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-    <QtMoc Include="sources\ScreenSaver.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
     <QtMoc Include="sources\MainMenu.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-    <QtMoc Include="sources\activeGameThread.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-    <QtMoc Include="sources\VariablesClass.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-    <QtMoc Include="sources\RGBstruct.h">
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="sources\ManaHealthStateAnalyzer.h">
@@ -153,31 +135,16 @@
     <QtMoc Include="sources\ScreenAnalyzer.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="sources\JsonParser.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-    <QtMoc Include="sources\Calibrator.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-    <QtMoc Include="sources\Logger.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-    <QtMoc Include="sources\Cryptography.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-    <QtMoc Include="sources\ServerConnector.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
     <QtMoc Include="sources\ClientServerApi.h">
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="sources\Market.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="sources\MinimapAnalyzer.h">
+    <QtMoc Include="sources\RouteCreator.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="sources\RouteCreator.h">
+    <QtMoc Include="sources\activeGameThread.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>
@@ -221,6 +188,39 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="sources\Point3D.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\Calibrator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\Cryptography.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\VariablesClass.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\ServerConnector.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\ScreenSaver.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\RGBstruct.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\ProfileDataBaseManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\Profile.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\MinimapAnalyzer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\Logger.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\JsonParser.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

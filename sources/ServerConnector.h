@@ -6,10 +6,7 @@
 #include "Cryptography.h"
 #include "ClientServerApi.h"
 
-class ServerConnector : public QObject
-{
-
-	Q_OBJECT
+class ServerConnector{
 public:
 	ServerConnector();
 	~ServerConnector();

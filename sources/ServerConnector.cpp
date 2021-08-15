@@ -113,7 +113,7 @@ ServerConnector::~ServerConnector()
 }
 
 bool ServerConnector::conectToServer(QByteArray encryptedDataToSend, QByteArray& encryptedRecivedData){
-	socket = new QTcpSocket(this);
+	socket = new QTcpSocket();
 	QHostAddress hostNAme(ip);
 	socket->connectToHost(hostNAme, port);
 	bool waited = socket->waitForConnected(timeWaitForConn);

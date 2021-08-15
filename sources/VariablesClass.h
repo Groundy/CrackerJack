@@ -4,9 +4,7 @@
 #include "qimage.h"
 #include <basetsd.h>
 #include <qmutex.h>
-class VariablesClass : public QObject
-{
-	Q_OBJECT
+class VariablesClass{
 public:
 	uint var_pidOfGame;
 	QString var_winTitleOfGame;

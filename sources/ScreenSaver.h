@@ -2,10 +2,7 @@
 #include <QThread>
 #include "activeGameThread.h"
 #include "VariablesClass.h"
-class ScreenSaver : public QThread
-{
-	Q_OBJECT
-
+class ScreenSaver : public QThread{
 public:
 	bool enableScreenCapture = true;
 	void run();

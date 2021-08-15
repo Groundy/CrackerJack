@@ -1,8 +1,5 @@
 #include "Profile.h"
 #include "ProfileDataBaseManager.h"
-Profile::Profile(QObject *parent) : QObject(parent){
-
-}
 
 Profile::Profile(){
 	qDebug() << "New profile created";
