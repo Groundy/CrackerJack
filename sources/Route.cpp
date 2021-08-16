@@ -1,11 +1,27 @@
 #include "Route.h"
 
 Route::Route(){
+	fillMaps();
 }
 
 Route::~Route()
 {
 }
+
+void Route::fillMaps() {
+	fieldTypesStrsUsedInJson.insert(Route::FIELDS_TYPE::REGULAR,"REGULAR");
+	fieldTypesStrsUsedInJson.insert(Route::FIELDS_TYPE::STAIRS_UP,"STAIRS_UP");
+	fieldTypesStrsUsedInJson.insert(Route::FIELDS_TYPE::STAIRS_DOWN,"STAIRS_DOWN");
+	fieldTypesStrsUsedInJson.insert(Route::FIELDS_TYPE::ROPE_FIELD,"ROPE_FIELD");
+	fieldTypesStrsUsedInJson.insert(Route::FIELDS_TYPE::SHOVEL_HOLE_ALWAYS_OPEN,"SHOVEL_HOLE_ALWAYS_OPEN");
+	fieldTypesStrsUsedInJson.insert(Route::FIELDS_TYPE::SHOVEL_HOLE_NEED_SHOVEL,"SHOVEL_HOLE_NEED_SHOVEL");
+	fieldTypesStrsUsedInJson.insert(Route::FIELDS_TYPE::LADDER_UP,"LADDER_UP");
+	fieldTypesStrsUsedInJson.insert(Route::FIELDS_TYPE::LADDER_DOWN,"LADDER_DOWN");
+	fieldTypesStrsUsedInJson.insert(Route::FIELDS_TYPE::TELEPORT,"TELEPORT");
+	fieldTypesStrsUsedInJson.insert(Route::FIELDS_TYPE::EXIT_POINT,"EXIT_POINT");
+	routeTypesStrsUsedInJson.insert(Route::ROUTE_TYPE::BACK_AND_FORTH, "BACK_AND_FORTH");
+	routeTypesStrsUsedInJson.insert(Route::ROUTE_TYPE::CIRCLE, "CIRCLE");
+};
 
 QStringList Route::toStringList(){
 	if(route.isEmpty())
@@ -50,6 +66,65 @@ bool Route::movePointDown(int index){
 
 	route[index].swap(route[index + 1]);
 	return true;
+}
+
+bool Route::loadFromJsonFile(QString pathToFile){
+	QJsonObject obj;
+	JsonParser jsonParser;
+	bool fileFound = jsonParser.openJsonFile(obj, pathToFile);
+	if (!fileFound) {
+		//todo logg
+		//todo info window
+		return false;
+	}
+
+	QString routeTypeValue = obj["Route Type"].toString();
+	ROUTE_TYPE tmpRouteType = routeTypesStrsUsedInJson.key(routeTypeValue, ROUTE_TYPE::CIRCLE);
+
+	QJsonArray pointsArray = obj["points"].toArray();
+	if (pointsArray.isEmpty()) {
+			//todo logg
+			//todo info window
+		return false;
+	}
+
+	QList<QPair<Point3D, FIELDS_TYPE>> tmpRoute;
+	for each (QJsonValue val in pointsArray){
+		QString positionStr = val["position"].toString();
+		Point3D position(positionStr);
+		QString typeStr = val["type"].toString();
+		FIELDS_TYPE fieldTypeToSet = fieldTypesStrsUsedInJson.key(typeStr, FIELDS_TYPE::REGULAR);
+		QPair<Point3D, FIELDS_TYPE> toAdd(position, fieldTypeToSet);
+		tmpRoute.append(toAdd);
+	}
+
+
+	route = tmpRoute;
+	routeType = tmpRouteType;
+	return true;
+}
+
+bool Route::writeToJsonFile(QString pathToDir, QString fileNameWithExtension){
+	QJsonObject mainObj;
+
+	QJsonObject routeTypeObj;
+	mainObj.insert("Route Type", routeTypesStrsUsedInJson.value(routeType));
+
+	QJsonArray arr;
+	for each (QPair<Point3D, FIELDS_TYPE> pt in route){
+		QJsonObject toAdd;
+		QString postionStr = pt.first.toString();
+		QString typeStr = fieldTypesStrsUsedInJson.value(pt.second);
+		toAdd.insert("position", postionStr);
+		toAdd.insert("type", typeStr);
+		arr.append(toAdd);
+	}
+	mainObj.insert("points", QJsonValue(arr));
+
+	QJsonDocument doc(mainObj);
+	JsonParser jsonParser;
+	bool ok = jsonParser.saveJsonFile(pathToDir,fileNameWithExtension,doc);
+	return ok;
 }
 
 QString Route::TRANSLATE_getPointTypeDescription(FIELDS_TYPE type) {

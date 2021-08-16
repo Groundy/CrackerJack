@@ -1,7 +1,8 @@
-#include "LoginWindow.h"
 #include <QtWidgets/QApplication>
-#include "ScreenSaver.h"
 #include "MainMenu.h"
+/*
+#include "LoginWindow.h"
+#include "ScreenSaver.h"
 #include <memory.h>
 #include "JsonParser.h"
 #include "qsettings.h"
@@ -15,6 +16,7 @@
 #include "qjsonvalue.h"
 #include "MinimapAnalyzer.h"
 #include "RouteCreator.h"
+*/
 QString makeRandomProccessName();
 void test();
 QIcon getIcon();
@@ -48,6 +50,8 @@ int main(int argc, char *argv[])
 
 void test(){
 	RouteCreator t;
+	Route tt;
+	tt.loadFromJsonFile("C:\\Users\\ADMIN\\Desktop\\chuj.json");
 	t.exec();
 };
 

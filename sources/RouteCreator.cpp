@@ -305,7 +305,7 @@ bool RouteCreator::repaintMap(){
 
 void RouteCreator::zoomChanged(){
 	zoom*=2;
-	if (zoom == 16)
+	if (zoom == 8)
 		zoom = 1;
 	QString textOnButton = QString("Zoom %1x").arg(QString::number(zoom));
 	ui->zoomButton->setText(textOnButton);

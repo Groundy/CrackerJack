@@ -30,7 +30,7 @@ QMap<Utilities::Item::TYPE_OF_ITEM, QString> JsonParser::itemType_itemStr_map = 
 	{Utilities::Item::TYPE_OF_ITEM::WANDS, "wands"}
 };
 
-bool JsonParser::openJsonFile(QJsonObject* jsonDoc, QString pathToFile){
+bool JsonParser::openJsonFile(QJsonObject& jsonDoc, QString pathToFile){
 	QFile file;
 	file.setFileName(pathToFile);
 	bool sucess = file.open(QIODevice::ReadOnly | QIODevice::Text);
@@ -45,13 +45,13 @@ bool JsonParser::openJsonFile(QJsonObject* jsonDoc, QString pathToFile){
 	}
 	file.close();
 	QJsonDocument doc = QJsonDocument::fromJson(val.toUtf8());
-	*jsonDoc = doc.object();
+	jsonDoc = doc.object();
 	return true;
 }
 
 bool JsonParser::readSpellsJson(QList<Spell>& spells){
 	QJsonObject obj;
-	bool res = openJsonFile(&obj, spellFilePath);
+	bool res = openJsonFile(obj, spellFilePath);
 	if (!res) {
 		Logger::logPotenialBug("Problem with Json reading", "JsonParser", "readSpellsJson");
 		return false;
@@ -135,7 +135,7 @@ bool JsonParser::filtrSpells(QList<Spell>& spells, Profile::PROFESSION* prof, Sp
 bool JsonParser::getPotionsForProf(QList<Utilities::Potion>& potions, Profile::PROFESSION* prof, TypeOfPotion type){
 	typedef Utilities::Potion Potion;
 	QJsonObject obj;
-	bool res = openJsonFile(&obj, itemsFilePath);
+	bool res = openJsonFile(obj, itemsFilePath);
 	if (!res) {
 		Logger::logPotenialBug("Problem with Json reading", "JsonParser", "getPotionsForProf");
 		return false;
@@ -196,7 +196,7 @@ bool JsonParser::getPotionsForProf(QList<Utilities::Potion>& potions, Profile::P
 bool JsonParser::readItemJson(QList<Utilities::Item>* items){
 	typedef Utilities::Item Item;
 	QJsonObject obj;
-	bool res = openJsonFile(&obj, itemsFilePath);
+	bool res = openJsonFile(obj, itemsFilePath);
 	if (!res) {
 		Logger::logPotenialBug("Problem with Json reading", "JsonParser", "readSpellsJson");
 		return false;
@@ -209,9 +209,8 @@ bool JsonParser::readItemJson(QList<Utilities::Item>* items){
 	};
 	for each (QString var in listOfCategoryNames) {
 		QJsonArray toAdd = obj[var].toArray();
-		for each (QJsonValue val in toAdd){
+		for each (QJsonValue val in toAdd)
 			arr.push_back(val);
-		}
 	}
 
 	if (arr.size() == 0) {
@@ -381,12 +380,12 @@ bool JsonParser::saveJsonFile(QString pathToFolder, QString fileNameWithExtensio
 		return false;
 	}
 	bool isWritable = folderInfo.isWritable();
-	if (!isDir) {
-		Logger::logPotenialBug("Error, path is writable folder", "JsonParser", "saveJsonFile");
+	if (!isWritable) {
+		Logger::logPotenialBug("Error, path is not writable folder", "JsonParser", "saveJsonFile");
 		return false;
 	}
-
-	QFile file(fileNameWithExtension);
+	QString pathToFile = pathToFolder + "\\" + fileNameWithExtension;
+	QFile file(pathToFile);
 	bool ok = file.open(QIODevice::OpenModeFlag::WriteOnly);
 	if (!ok) {
 		Logger::logPotenialBug("Another Error", "JsonParser", "saveJsonFile");

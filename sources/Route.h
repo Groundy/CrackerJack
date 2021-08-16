@@ -1,7 +1,9 @@
 #pragma once
 #include "Point3D.h"
 #include "StringResource.h"
-
+#include <qdir.h>
+#include "JsonParser.h"
+#include <qmap.h>
 class Route{
 
 public:
@@ -12,11 +14,16 @@ public:
 	QStringList toStringList();
 	void addPoint(Point3D point, FIELDS_TYPE type);
 	bool removePoint(int index);
-	ROUTE_TYPE routeType;
 	bool movePointUp(int index);
 	bool movePointDown(int index);
+	bool loadFromJsonFile(QString pathToFile);
+	bool writeToJsonFile(QString pathToDir, QString fileNameWithExtension);
+	QMap <FIELDS_TYPE, QString> fieldTypesStrsUsedInJson;
+	QMap <ROUTE_TYPE, QString> routeTypesStrsUsedInJson;
+	
+	ROUTE_TYPE routeType;
 private:
 	QList<QPair<Point3D, FIELDS_TYPE>> route;
 	QString TRANSLATE_getPointTypeDescription(FIELDS_TYPE type);
-
+	void fillMaps();
 };

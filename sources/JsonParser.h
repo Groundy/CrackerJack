@@ -20,7 +20,7 @@ public:
 	enum class TypeOfPotion {HEALTH, MANA, EVERYPOTION};
 	const QString spellFilePath = "C:\\Users\\ADMIN\\source\\repos\\CrackerJackClient\\Resources\\spells.json";
 	const QString itemsFilePath = "C:\\Users\\ADMIN\\source\\repos\\CrackerJackClient\\Resources\\items.json";//todo
-	bool openJsonFile(QJsonObject* jsonDoc, QString pathToFile);
+	bool openJsonFile(QJsonObject& jsonDoc, QString pathToFile);
 	bool readSpellsJson(QList<Spell>& spells);
 	bool filtrSpells(QList<Spell>& spells, Profile::PROFESSION* prof, Spell::TYPE_OF_SPELL* type);
 	bool getPotionsForProf(QList<Utilities::Potion>& potions ,Profile::PROFESSION* prof, TypeOfPotion type);

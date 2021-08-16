@@ -18,6 +18,7 @@
 
 
 //DONE
+43. Dodaæ zapisywanie route'a do jsona i wczytywanie z niego;
 42. Przeniesc Logike PointInRootWindow do RouteCreatora
 41. Usunac macro Q_OBJECT z wszystkich klas które nie s¹ graficzne
 40. Dodac t³umaczenie RouteCreatora
