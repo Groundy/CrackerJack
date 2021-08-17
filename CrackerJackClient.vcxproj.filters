@@ -115,6 +115,9 @@
     <ClCompile Include="sources\Point3D.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="sources\SetNameWidnow.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="sources\LoginWindow.h">
@@ -147,6 +150,9 @@
     <QtMoc Include="sources\activeGameThread.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <QtMoc Include="sources\SetNameWidnow.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="sources\LoginWindow.ui">
@@ -165,6 +171,9 @@
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="sources\RouteCreator.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="sources\SetNameWidnow.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>

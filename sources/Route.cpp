@@ -104,6 +104,10 @@ bool Route::loadFromJsonFile(QString pathToFile){
 	return true;
 }
 
+int Route::size(){
+	return route.size();
+}
+
 bool Route::writeToJsonFile(QString pathToDir, QString fileNameWithExtension){
 	QJsonObject mainObj;
 

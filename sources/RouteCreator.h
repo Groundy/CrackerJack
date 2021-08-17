@@ -4,6 +4,8 @@
 #include <qsize.h>
 #include "Point3D.h"
 #include "Route.h"
+#include <qfiledialog.h>
+#include "SetNameWidnow.h"
 namespace Ui { class RouteCreator; };
 
 
@@ -28,6 +30,7 @@ public slots:
 	void imgMoved_down();
 	void imgMoved_down_fast();
 	void imgMoved_down_very_fast();
+
 	void floorDown();
 	void floorUp();
 	void addPoint();
@@ -37,6 +40,9 @@ public slots:
 	void routeTypeChanged();
 	void zoomChanged();
 	void selectedItemOnListChanged();
+	void cancelButtonPressed();
+	void finishButtonPressed();
+	void loadRouteButtonPressed();
 
 private:
 	enum class DIRECTIONS { UP, DOWN, LEFT, RIGHT };
@@ -47,8 +53,9 @@ private:
 	QImage currentMap;
 	const QSize sizeToDisplay = { 108,108 };
 	int zoom = 1;
-	const uint CHOOSEN_POINT_COLOR = qRgb(255,0,255);
-	Route route;
+	const uint CHOOSEN_POINT_COLOR = qRgb(60,60,60);
+	Route route ;
+	QDir dirWithRoutes;
 
 	bool loadMap(int floor);
 	bool repaintMap();

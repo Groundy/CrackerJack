@@ -42,6 +42,7 @@ private:
 	QString gameWindowTitle;
 	Ui::MainMenu *ui;
 	Profile* prof;
+	bool isPl;
 
 	ScreenSaver* screenSaverThread;
 	activeGameThread* activityThread;
@@ -49,11 +50,11 @@ private:
 	ManaHealthStateAnalyzer* healthManaStateAnalyzer;
 	VariablesClass var;
 
-	bool isPl;
+
 	void setProblemsWindow(QStringList problemsToShow);
 	void threadStarter();
 	void signalSlotConnector();
-	void setUpGui();
+	void TRANSLATE_setUpGui();
 
 	const QString CALIBRATION_STRING_PL = QString::fromLocal8Bit("Kalibracja");
 	const QString CALIBRATION_STRING_ENG = "Calibrating";

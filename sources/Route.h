@@ -17,11 +17,12 @@ public:
 	bool movePointUp(int index);
 	bool movePointDown(int index);
 	bool loadFromJsonFile(QString pathToFile);
+	int size();
 	bool writeToJsonFile(QString pathToDir, QString fileNameWithExtension);
 	QMap <FIELDS_TYPE, QString> fieldTypesStrsUsedInJson;
 	QMap <ROUTE_TYPE, QString> routeTypesStrsUsedInJson;
 	
-	ROUTE_TYPE routeType;
+	ROUTE_TYPE routeType = ROUTE_TYPE::BACK_AND_FORTH;
 private:
 	QList<QPair<Point3D, FIELDS_TYPE>> route;
 	QString TRANSLATE_getPointTypeDescription(FIELDS_TYPE type);

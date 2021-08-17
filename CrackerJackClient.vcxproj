@@ -242,6 +242,7 @@ xcopy /y /d ".\dependencies\64-bit\libcrypto-1_1-x64.dll" "$(OutDir)"
     <ClCompile Include="sources\ScreenSaver.cpp" />
     <ClCompile Include="sources\SelectProfileWindow.cpp" />
     <ClCompile Include="sources\ServerConnector.cpp" />
+    <ClCompile Include="sources\SetNameWidnow.cpp" />
     <ClCompile Include="sources\Utilities.cpp" />
     <ClCompile Include="sources\StringResource.cpp" />
     <ClCompile Include="sources\VariablesClass.cpp" />
@@ -256,6 +257,7 @@ xcopy /y /d ".\dependencies\64-bit\libcrypto-1_1-x64.dll" "$(OutDir)"
     <QtUic Include="sources\LoginWindow.ui" />
     <QtUic Include="sources\RouteCreator.ui" />
     <QtUic Include="sources\SelectProfileWindow.ui" />
+    <QtUic Include="sources\SetNameWidnow.ui" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="sources\Cryptography.h" />
@@ -266,6 +268,7 @@ xcopy /y /d ".\dependencies\64-bit\libcrypto-1_1-x64.dll" "$(OutDir)"
     <QtMoc Include="sources\RouteCreator.h" />
     <ClInclude Include="sources\Route.h" />
     <ClInclude Include="sources\Point3D.h" />
+    <QtMoc Include="sources\SetNameWidnow.h" />
     <ClInclude Include="version.h" />
     <ClInclude Include="sources\VariablesClass.h" />
     <ClInclude Include="sources\ScreenSaver.h" />

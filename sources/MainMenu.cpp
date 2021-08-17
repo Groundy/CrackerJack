@@ -11,7 +11,7 @@ MainMenu::MainMenu(Profile* selectedProf, QWidget* parent)
 	ui->profileNameLabel->setText(prof->profileName);
 	threadStarter();
 	signalSlotConnector();
-	setUpGui();
+	TRANSLATE_setUpGui();
 }
 
 MainMenu::~MainMenu(){
@@ -154,7 +154,7 @@ void MainMenu::signalSlotConnector(){
 	bool connectionAccepted_4 = connect(sigSender, sig, slotRec, slot, Qt::UniqueConnection);
 }
 
-void MainMenu::setUpGui(){
+void MainMenu::TRANSLATE_setUpGui(){
 
 	ui->potion_label_1->setVisible(false);
 	ui->potion_label_2->setVisible(false);

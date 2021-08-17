@@ -13,6 +13,26 @@ RouteCreator::RouteCreator(QDialog* parent)
 	ui->deletePointButton->setEnabled(false);
 	TRANSLATE_addNamesOfFieldTypesToList();
 	TRANSLATE_gui();
+
+	QDir dir = QDir::temp();
+	{
+		dir.cdUp();
+		bool CrackerJackDirExist = dir.cd("CrackerJack");
+		if (!CrackerJackDirExist) {
+			bool dirMade = dir.mkdir("CrackerJack");
+			if (!dirMade)
+				;//todo logg
+			bool CrackerJackDirExist = dir.cd("CrackerJack");
+		}
+		bool RoutesDirExist = dir.cd("Routes");
+		if (!CrackerJackDirExist) {
+			bool dirMade = dir.mkdir("Routes");
+			if (!dirMade)
+				;//todo logg
+			bool CrackerJackDirExist = dir.cd("Routes");
+		}
+	}
+	dirWithRoutes = dir;
 }
 
 RouteCreator::~RouteCreator(){
@@ -244,8 +264,17 @@ void RouteCreator::TRANSLATE_gui(){
 	ui->upFloor->setText(floorUp);
 	ui->upFloor->repaint();
 
-	QString routeType = isPl ? QString::fromLocal8Bit("Typ trasy: ") : "Route type: ";
-	ui->routeTypeButton->setText(routeType);
+	QString routeTypeText = isPl ? QString::fromLocal8Bit("Typ trasy: ") : "Route type: ";
+	bool isCircle = route.routeType == Route::ROUTE_TYPE::CIRCLE;
+	if (isPl && isCircle)
+		routeTypeText.append(QString::fromLocal8Bit("Pêtla"));
+	else if (isPl && !isCircle)
+		routeTypeText.append(QString::fromLocal8Bit("w tê i z powrotem"));
+	else if (!isPl && isCircle)
+		routeTypeText.append("Circle");
+	else if (!isPl && !isCircle)
+		routeTypeText.append("Back-and-forth");
+	ui->routeTypeButton->setText(routeTypeText);
 	ui->routeTypeButton->repaint();
 
 	QString pointUp = isPl ? QString::fromLocal8Bit("w górê") : "move up";
@@ -264,6 +293,18 @@ void RouteCreator::TRANSLATE_gui(){
 	ui->addPointButton->setText(addPoint);
 	ui->addPointButton->repaint();
 
+	QString cancelButton = isPl ? QString::fromLocal8Bit("Anuluj") : "Cancel";
+	ui->cancelButton->setText(cancelButton);
+	ui->cancelButton->repaint();
+
+	QString finishButton = isPl ? QString::fromLocal8Bit("Zakoñcz") : "Finish";
+	ui->finishButton->setText(finishButton);
+	ui->finishButton->repaint();
+
+	QString loadButton = isPl ? QString::fromLocal8Bit("Wczytaj trase") : "Load route";
+	ui->loadRouteButton->setText(loadButton);
+	ui->loadRouteButton->repaint();
+
 }
 
 void RouteCreator::routeTypeChanged(){
@@ -272,14 +313,18 @@ void RouteCreator::routeTypeChanged(){
 	route.routeType = shouldBeCircle ? Type::CIRCLE : Type::BACK_AND_FORTH;
 
 	bool isPl = StringResource::languageIsPl();
-	QString buttonText = isPl ? QString::fromLocal8Bit("Typ: ") : "Type: ";
-	QString routeTypeAsStr; 
-	if(isPl)
-		routeTypeAsStr = shouldBeCircle ? QString::fromLocal8Bit("Pêtla") : QString::fromLocal8Bit("w tê i z powrotem");
-	else
-		routeTypeAsStr = shouldBeCircle ? "Circle" : "Back-and-forth";
-	buttonText.append(routeTypeAsStr);
-	ui->routeTypeButton->setText(buttonText);
+	QString routeTypeText = isPl ? QString::fromLocal8Bit("Typ trasy: ") : "Route type: ";
+	bool isCircle = route.routeType == Route::ROUTE_TYPE::CIRCLE;
+	if (isPl && isCircle)
+		routeTypeText.append(QString::fromLocal8Bit("Pêtla"));
+	else if (isPl && !isCircle)
+		routeTypeText.append(QString::fromLocal8Bit("w tê i z powrotem"));
+	else if (!isPl && isCircle)
+		routeTypeText.append("Circle");
+	else if (!isPl && !isCircle)
+		routeTypeText.append("Back-and-forth");
+
+	ui->routeTypeButton->setText(routeTypeText);
 	ui->routeTypeButton->repaint();
 }
 
@@ -338,12 +383,53 @@ void RouteCreator::selectedItemOnListChanged(){
 
 	
 	QStringList textOfAllPoints = route.toStringList();
-	for (size_t i = 0; i < size; i++){
-		bool textForItemExist = i < textOfAllPoints.size();
-		if (!textForItemExist)
-			break;
-		list->item(i)->setText(textOfAllPoints[i]);
+	for (size_t i = 0; i < textOfAllPoints.size(); i++){
+		QString str = textOfAllPoints[i];
+		bool itemExist = list->count() > i;
+		if (itemExist)
+			list->item(i)->setText(str);
+		else
+			list->addItem(str);
 	}
+}
+
+void RouteCreator::cancelButtonPressed(){
+	this->reject();
+}
+
+void RouteCreator::finishButtonPressed(){
+	bool isPl = StringResource::languageIsPl();
+	if (route.size() < 2) {
+		QString textToDiplay = isPl ? QString::fromLocal8Bit("Trasa musi mieæ minimum 2 punkty.") : "Route has to be at least 2 points long.";
+		Utilities::showMessageBox("CrackerJack", textToDiplay,QMessageBox::StandardButton::Ok);
+		return;
+	}
+
+	QString textToDisplay = isPl ? QString::fromLocal8Bit("Wybierz nazwê dla nowej trasy.") : "Set name for new route.";
+	QString title = "CrackerJack";
+	QString fileName;
+	SetNameWidnow nameWindow(this, title, textToDisplay, &fileName);
+	int retCode = nameWindow.exec();
+	if (retCode == QDialog::Accepted) {
+		fileName.push_back(".json");
+		route.writeToJsonFile(dirWithRoutes.path(), fileName);
+	}
+}
+
+void RouteCreator::loadRouteButtonPressed(){
+	QFileDialog fileDialog;
+	fileDialog.setNameFilter("*.json");
+	fileDialog.setDirectory(dirWithRoutes);
+	int retCode = fileDialog.exec();
+	bool accepted = retCode == QDialog::Accepted;
+	if (!accepted)
+		return;
+	QStringList fileList = fileDialog.selectedFiles();
+	if (fileList.size() == 0)
+		return;
+	QString pathToFile = fileList.first();
+	route.loadFromJsonFile(pathToFile);
+	selectedItemOnListChanged();
 }
 
 void RouteCreator::moveMap(DIRECTIONS direction, int step){

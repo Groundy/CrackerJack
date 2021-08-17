@@ -1,3 +1,5 @@
+46.W SetNameWindow ustawic sprawdzanie czy nazwa nie zawiera znakow ktore sa niedozwolone
+44. Zrobiæ clean-up polegaj¹cy na oznaczeniu funkcji translate
 39. Dodaæ mutexy w przypadku czytania i edycji pó³ pamiêci wycinków obrazów.
 37. Dodaæ trzymanie mapek w pamiêci.
 36. ??? Przerobic minimap analyzer na thread
@@ -18,6 +20,7 @@
 
 
 //DONE
+45. Dodaæ przyciski koñcz¹ce tworzenie trasy, wychodz¹ce z okna oraz ³adowania trasy w RouteCreator i ich obsluge
 43. Dodaæ zapisywanie route'a do jsona i wczytywanie z niego;
 42. Przeniesc Logike PointInRootWindow do RouteCreatora
 41. Usunac macro Q_OBJECT z wszystkich klas które nie s¹ graficzne
