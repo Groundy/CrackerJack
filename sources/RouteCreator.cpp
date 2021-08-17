@@ -264,19 +264,6 @@ void RouteCreator::TRANSLATE_gui(){
 	ui->upFloor->setText(floorUp);
 	ui->upFloor->repaint();
 
-	QString routeTypeText = isPl ? QString::fromLocal8Bit("Typ trasy: ") : "Route type: ";
-	bool isCircle = route.routeType == Route::ROUTE_TYPE::CIRCLE;
-	if (isPl && isCircle)
-		routeTypeText.append(QString::fromLocal8Bit("Pêtla"));
-	else if (isPl && !isCircle)
-		routeTypeText.append(QString::fromLocal8Bit("w tê i z powrotem"));
-	else if (!isPl && isCircle)
-		routeTypeText.append("Circle");
-	else if (!isPl && !isCircle)
-		routeTypeText.append("Back-and-forth");
-	ui->routeTypeButton->setText(routeTypeText);
-	ui->routeTypeButton->repaint();
-
 	QString pointUp = isPl ? QString::fromLocal8Bit("w górê") : "move up";
 	ui->movePointUpButton->setText(pointUp);
 	ui->movePointUpButton->repaint();
@@ -305,27 +292,14 @@ void RouteCreator::TRANSLATE_gui(){
 	ui->loadRouteButton->setText(loadButton);
 	ui->loadRouteButton->repaint();
 
-}
+	QString helpButton = isPl ? QString::fromLocal8Bit("Pomoc") : "Help";
+	ui->helpButton->setText(helpButton);
+	ui->helpButton->repaint();
 
-void RouteCreator::routeTypeChanged(){
-	typedef Route::ROUTE_TYPE Type;
-	bool shouldBeCircle = route.routeType == Type::BACK_AND_FORTH;
-	route.routeType = shouldBeCircle ? Type::CIRCLE : Type::BACK_AND_FORTH;
+	QString checkRouteButton = isPl ? QString::fromLocal8Bit("SprawdŸ poprawnoœæ trasy") : "Check route correctness";
+	ui->checkButton->setText(checkRouteButton);
+	ui->checkButton->repaint();
 
-	bool isPl = StringResource::languageIsPl();
-	QString routeTypeText = isPl ? QString::fromLocal8Bit("Typ trasy: ") : "Route type: ";
-	bool isCircle = route.routeType == Route::ROUTE_TYPE::CIRCLE;
-	if (isPl && isCircle)
-		routeTypeText.append(QString::fromLocal8Bit("Pêtla"));
-	else if (isPl && !isCircle)
-		routeTypeText.append(QString::fromLocal8Bit("w tê i z powrotem"));
-	else if (!isPl && isCircle)
-		routeTypeText.append("Circle");
-	else if (!isPl && !isCircle)
-		routeTypeText.append("Back-and-forth");
-
-	ui->routeTypeButton->setText(routeTypeText);
-	ui->routeTypeButton->repaint();
 }
 
 bool RouteCreator::repaintMap(){
@@ -430,6 +404,20 @@ void RouteCreator::loadRouteButtonPressed(){
 	QString pathToFile = fileList.first();
 	route.loadFromJsonFile(pathToFile);
 	selectedItemOnListChanged();
+}
+
+void RouteCreator::helpButtonPressed()
+{
+}
+
+void RouteCreator::checkRouteButtonPressed(){
+	QString textToDisplayToUser;
+	bool ok = route.checkRouteCorectness(textToDisplayToUser);
+	if (ok) {
+		bool isPl = StringResource::languageIsPl();
+		textToDisplayToUser = isPl ? QString::fromLocal8Bit("Trasa jest w porz¹dku.") : "Route is correct.";
+	}
+		Utilities::showMessageBox("CrackerJack", textToDisplayToUser, QMessageBox::Ok);
 }
 
 void RouteCreator::moveMap(DIRECTIONS direction, int step){

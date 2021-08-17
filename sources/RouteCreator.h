@@ -37,12 +37,13 @@ public slots:
 	void moveListItemUp();
 	void moveListItemDown();
 	void deletePoint();
-	void routeTypeChanged();
 	void zoomChanged();
 	void selectedItemOnListChanged();
 	void cancelButtonPressed();
 	void finishButtonPressed();
 	void loadRouteButtonPressed();
+	void helpButtonPressed();
+	void checkRouteButtonPressed();
 
 private:
 	enum class DIRECTIONS { UP, DOWN, LEFT, RIGHT };

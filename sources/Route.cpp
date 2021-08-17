@@ -18,9 +18,7 @@ void Route::fillMaps() {
 	fieldTypesStrsUsedInJson.insert(Route::FIELDS_TYPE::LADDER_UP,"LADDER_UP");
 	fieldTypesStrsUsedInJson.insert(Route::FIELDS_TYPE::LADDER_DOWN,"LADDER_DOWN");
 	fieldTypesStrsUsedInJson.insert(Route::FIELDS_TYPE::TELEPORT,"TELEPORT");
-	fieldTypesStrsUsedInJson.insert(Route::FIELDS_TYPE::EXIT_POINT,"EXIT_POINT");
-	routeTypesStrsUsedInJson.insert(Route::ROUTE_TYPE::BACK_AND_FORTH, "BACK_AND_FORTH");
-	routeTypesStrsUsedInJson.insert(Route::ROUTE_TYPE::CIRCLE, "CIRCLE");
+	fieldTypesStrsUsedInJson.insert(Route::FIELDS_TYPE::EXIT_POINT,"EXIT_POINT");	
 };
 
 QStringList Route::toStringList(){
@@ -78,9 +76,6 @@ bool Route::loadFromJsonFile(QString pathToFile){
 		return false;
 	}
 
-	QString routeTypeValue = obj["Route Type"].toString();
-	ROUTE_TYPE tmpRouteType = routeTypesStrsUsedInJson.key(routeTypeValue, ROUTE_TYPE::CIRCLE);
-
 	QJsonArray pointsArray = obj["points"].toArray();
 	if (pointsArray.isEmpty()) {
 			//todo logg
@@ -100,7 +95,7 @@ bool Route::loadFromJsonFile(QString pathToFile){
 
 
 	route = tmpRoute;
-	routeType = tmpRouteType;
+	//routeType = tmpRouteType;
 	return true;
 }
 
@@ -110,9 +105,6 @@ int Route::size(){
 
 bool Route::writeToJsonFile(QString pathToDir, QString fileNameWithExtension){
 	QJsonObject mainObj;
-
-	QJsonObject routeTypeObj;
-	mainObj.insert("Route Type", routeTypesStrsUsedInJson.value(routeType));
 
 	QJsonArray arr;
 	for each (QPair<Point3D, FIELDS_TYPE> pt in route){
@@ -131,30 +123,20 @@ bool Route::writeToJsonFile(QString pathToDir, QString fileNameWithExtension){
 	return ok;
 }
 
-bool Route::routeIsOk(QString& errorTextToDisplay){
+bool Route::checkRouteCorectness(QString& errorTextToDisplay){
 	bool isPl = StringResource::languageIsPl();
 	if (route.size() < 2) {
 		errorTextToDisplay = isPl ? QString::fromLocal8Bit("Trasa jest za krótka.") : "Route is too short.";
 		return false;
 	}
 
-	QList<QPair<Point3D, FIELDS_TYPE>> tmpRoute;
-	if (routeType == Route::ROUTE_TYPE::CIRCLE) {
-		tmpRoute = route;
-		QPair<Point3D, FIELDS_TYPE> toAdd;
-		toAdd.first = route.first().first;
-		toAdd.second = route.first().second;
-		tmpRoute.push_back(toAdd);
+	bool samePoint = route.first().first == route.last().first;
+	bool sameType = route.first().second == route.last().second;
+	bool twoPointsAreSame = sameType && samePoint;
+	if (!twoPointsAreSame) {
+		errorTextToDisplay = isPl ? QString::fromLocal8Bit("Trasa powinna zaczynaæ siê i koñczyæ w tym samym punkcie.") : "Route should start and end in the same point.";
+		return false;
 	}
-	else if (routeType == Route::ROUTE_TYPE::BACK_AND_FORTH) {
-		tmpRoute = route;
-		int startIndex = route.size() - 2;//skipped last point from doubling;
-		for (size_t i = route.size() - 2; i > 0; i--){
-			tmpRoute.push_back(route[i]);
-		}
-	}
-	bool sizeOkCircle = tmpRoute.size() == route.size() - 1;//tmp
-	bool sizeOkBackAndForth = tmpRoute.size() == 2*route.size() - 1;
 
 	QList<FIELDS_TYPE> typesGoingDown = { 
 		FIELDS_TYPE::EXIT_POINT,
@@ -177,19 +159,47 @@ bool Route::routeIsOk(QString& errorTextToDisplay){
 	FIELDS_TYPE::TELEPORT
 	};
 
-	for (size_t i = 0; i < tmpRoute.size() - 1; i++){
-		Point3D current = tmpRoute[i].first;
-		Point3D next = tmpRoute[i + 1].first;
-		FIELDS_TYPE currentType = tmpRoute[i].second;
+	enum class FLOOR_CHANGE { UP, SAME, DOWN };
+	FLOOR_CHANGE flChange;
+
+	for (size_t i = 0; i < route.size() - 1; i++){
+		Point3D current = route[i].first;
+		Point3D next = route[i + 1].first;
+		FIELDS_TYPE currentType = route[i].second;
+
+		bool canGoToNextPoint;
+
 		if (current.floor < next.floor) {
-			bool ok = typesGoingUp.contains(currentType);
+			canGoToNextPoint = typesGoingUp.contains(currentType);
+			flChange = FLOOR_CHANGE::UP;
 		}
-		if (current.floor == next.floor) {
-			bool ok = typesGoingSame.contains(currentType);
+		else if (current.floor == next.floor) {
+			canGoToNextPoint = typesGoingSame.contains(currentType);
+			flChange = FLOOR_CHANGE::SAME;
 		}
-		if (current.floor > next.floor) {
-			bool ok = typesGoingDown.contains(currentType);
+		else if (current.floor > next.floor) {
+			canGoToNextPoint = typesGoingDown.contains(currentType);
+			flChange = FLOOR_CHANGE::DOWN;
 		}
+		if (canGoToNextPoint)
+			continue;
+
+		QString firstPointStr = QString::number(i);
+		QString secondPointStr = QString::number(i+1);
+		QString typeStr = TRANSLATE_getPointTypeDescription(currentType);
+		if (isPl) {
+			QString argumentText = flChange == FLOOR_CHANGE::DOWN ? "ni¿ej" : "wy¿ej";
+			QString text = QString::fromLocal8Bit("Nie mo¿na ustaliæ trasy z punktu [%1] do punktu [%2]").arg(firstPointStr, secondPointStr);
+			QString reason = QString::fromLocal8Bit(", poniewa¿ typ %1, nie mo¿e przenieœæ poziom %2.").arg(typeStr, argumentText);
+			errorTextToDisplay = text + reason;
+		}
+		else {
+			QString argumentText = flChange == FLOOR_CHANGE::DOWN ? "down" : "up";
+			QString text = QString("Can't find a way from point [%1] to point [%2]").arg(firstPointStr, secondPointStr);
+			QString reason = QString::fromLocal8Bit(", because type %1, can't move to %2 floor.").arg(typeStr, argumentText);
+			errorTextToDisplay = text + reason;
+		}
+		return false;
 	}
 	return true;
 }
@@ -213,7 +223,7 @@ QString Route::TRANSLATE_getPointTypeDescription(FIELDS_TYPE type) {
 	case Route::FIELDS_TYPE::LADDER_UP:
 		return isPl ? QString::fromLocal8Bit("Drabina w górê") : "Ladder up";
 	case Route::FIELDS_TYPE::LADDER_DOWN:
-		return isPl ? QString::fromLocal8Bit("Drabian w dó³") : "Ladder down";
+		return isPl ? QString::fromLocal8Bit("Drabina w dó³") : "Ladder down";
 	case Route::FIELDS_TYPE::TELEPORT:
 		return isPl ? QString::fromLocal8Bit("Teleport") : "Teleport";
 	case Route::FIELDS_TYPE::EXIT_POINT:
