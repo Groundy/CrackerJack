@@ -21,6 +21,7 @@ public:
 	bool writeToJsonFile(QString pathToDir, QString fileNameWithExtension);
 	QMap <FIELDS_TYPE, QString> fieldTypesStrsUsedInJson;
 	QMap <ROUTE_TYPE, QString> routeTypesStrsUsedInJson;
+	bool routeIsOk(QString& errorTextToDisplay);
 	
 	ROUTE_TYPE routeType = ROUTE_TYPE::BACK_AND_FORTH;
 private:

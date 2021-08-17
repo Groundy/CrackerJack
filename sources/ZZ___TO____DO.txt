@@ -1,4 +1,5 @@
-46.W SetNameWindow ustawic sprawdzanie czy nazwa nie zawiera znakow ktore sa niedozwolone
+47. Dodac sprawdzanie czy trasa jest zrobiona dobrze w RouteCreator
+46. W SetNameWindow ustawic sprawdzanie czy nazwa nie zawiera znakow ktore sa niedozwolone
 44. Zrobiæ clean-up polegaj¹cy na oznaczeniu funkcji translate
 39. Dodaæ mutexy w przypadku czytania i edycji pó³ pamiêci wycinków obrazów.
 37. Dodaæ trzymanie mapek w pamiêci.

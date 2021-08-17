@@ -131,6 +131,69 @@ bool Route::writeToJsonFile(QString pathToDir, QString fileNameWithExtension){
 	return ok;
 }
 
+bool Route::routeIsOk(QString& errorTextToDisplay){
+	bool isPl = StringResource::languageIsPl();
+	if (route.size() < 2) {
+		errorTextToDisplay = isPl ? QString::fromLocal8Bit("Trasa jest za krótka.") : "Route is too short.";
+		return false;
+	}
+
+	QList<QPair<Point3D, FIELDS_TYPE>> tmpRoute;
+	if (routeType == Route::ROUTE_TYPE::CIRCLE) {
+		tmpRoute = route;
+		QPair<Point3D, FIELDS_TYPE> toAdd;
+		toAdd.first = route.first().first;
+		toAdd.second = route.first().second;
+		tmpRoute.push_back(toAdd);
+	}
+	else if (routeType == Route::ROUTE_TYPE::BACK_AND_FORTH) {
+		tmpRoute = route;
+		int startIndex = route.size() - 2;//skipped last point from doubling;
+		for (size_t i = route.size() - 2; i > 0; i--){
+			tmpRoute.push_back(route[i]);
+		}
+	}
+	bool sizeOkCircle = tmpRoute.size() == route.size() - 1;//tmp
+	bool sizeOkBackAndForth = tmpRoute.size() == 2*route.size() - 1;
+
+	QList<FIELDS_TYPE> typesGoingDown = { 
+		FIELDS_TYPE::EXIT_POINT,
+		FIELDS_TYPE::LADDER_DOWN,
+		FIELDS_TYPE::SHOVEL_HOLE_ALWAYS_OPEN,
+		FIELDS_TYPE::SHOVEL_HOLE_NEED_SHOVEL,
+		FIELDS_TYPE::STAIRS_DOWN,
+		FIELDS_TYPE::TELEPORT
+	};
+	QList<FIELDS_TYPE> typesGoingSame = {
+		FIELDS_TYPE::EXIT_POINT,
+		FIELDS_TYPE::REGULAR,
+		FIELDS_TYPE::TELEPORT
+	};
+	QList<FIELDS_TYPE> typesGoingUp = {
+	FIELDS_TYPE::EXIT_POINT,
+	FIELDS_TYPE::LADDER_UP,
+	FIELDS_TYPE::ROPE_FIELD,
+	FIELDS_TYPE::STAIRS_UP,
+	FIELDS_TYPE::TELEPORT
+	};
+
+	for (size_t i = 0; i < tmpRoute.size() - 1; i++){
+		Point3D current = tmpRoute[i].first;
+		Point3D next = tmpRoute[i + 1].first;
+		FIELDS_TYPE currentType = tmpRoute[i].second;
+		if (current.floor < next.floor) {
+			bool ok = typesGoingUp.contains(currentType);
+		}
+		if (current.floor == next.floor) {
+			bool ok = typesGoingSame.contains(currentType);
+		}
+		if (current.floor > next.floor) {
+			bool ok = typesGoingDown.contains(currentType);
+		}
+	}
+	return true;
+}
+
 QString Route::TRANSLATE_getPointTypeDescription(FIELDS_TYPE type) {
 	bool isPl = StringResource::languageIsPl();
 	switch (type)
