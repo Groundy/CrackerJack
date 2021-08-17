@@ -2,7 +2,6 @@
 46. W SetNameWindow ustawic sprawdzanie czy nazwa nie zawiera znakow ktore sa niedozwolone
 44. Zrobiæ clean-up polegaj¹cy na oznaczeniu funkcji translate
 39. Dodaæ mutexy w przypadku czytania i edycji pó³ pamiêci wycinków obrazów.
-37. Dodaæ trzymanie mapek w pamiêci.
 36. ??? Przerobic minimap analyzer na thread
 35. Dodaæ wycinanie z calego obrazka nie tylko minimapy ale tez odpowiednio duzego obszaru ze sliderem
 34. Algorytm przycinania czarnych krawedzi ma bug, przyciane jest tylko 2 z 4 czesci, reszta miniLoop nie jest wykonywana

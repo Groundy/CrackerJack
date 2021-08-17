@@ -160,12 +160,17 @@ bool RouteCreator::loadMap(int floor){
 	//todo zmeinic
 	QString pathToMapFile = "C:\\Users\\ADMIN\\Desktop\\maps\\floor-" + floorAsStr + "-map.png";
 	QImage tmpImg;
-	bool loadedCorrectly = tmpImg.load(pathToMapFile);
-	if (loadedCorrectly) {
+	bool loadedCorrectlyNormal = tmpImg.load(pathToMapFile);
+	if (loadedCorrectlyNormal)
 		currentMap = tmpImg;
-		currentlyLoadedFloor = floor;
-	}
-	return loadedCorrectly;
+
+	//todo zmeinic
+	pathToMapFile = "C:\\Users\\ADMIN\\Desktop\\maps\\floor-" + floorAsStr + "-path.png";
+	bool loadedCorrectlyWalkable = tmpImg.load(pathToMapFile);
+	if (loadedCorrectlyWalkable)
+		currentMapOfWalkability = tmpImg;
+	
+	return loadedCorrectlyNormal && loadedCorrectlyWalkable;
 }
 
 QPixmap RouteCreator::getPixMapWithZoomAndCenterPix(QImage imgWithMap, QSize sizeToScale) {
@@ -195,7 +200,6 @@ QPixmap RouteCreator::getPixMapWithZoomAndCenterPix(QImage imgWithMap, QSize siz
 
 void RouteCreator::TRANSLATE_addNamesOfFieldTypesToList(){
 	QComboBox* box = ui->fieldTypesBox;
-	bool isPl = StringResource::languageIsPl();
 	QString text;
 
 	text = isPl ? QString::fromLocal8Bit("[01] Zwyk³e pole") : "[01] Regular Field";
@@ -222,8 +226,6 @@ void RouteCreator::TRANSLATE_addNamesOfFieldTypesToList(){
 }
 
 void RouteCreator::TRANSLATE_gui(){
-	bool isPl = StringResource::languageIsPl();
-
 	QString left = isPl ? QString::fromLocal8Bit("lewo") : "left";
 	ui->moveMapLeft_1->setText(left);
 	ui->moveMapLeft_2->setText(left + " 5x");
@@ -332,7 +334,14 @@ void RouteCreator::zoomChanged(){
 }
 
 void RouteCreator::refreshPositionLabel(){
-	QString textToDisplay = currentChoosenPoint.toString();
+	bool isWalkable = currentPixIsWalkable();
+	QString textBase = isPl ? QString::fromLocal8Bit("   Pole przechodnie: ") : "   Walkable field: ";
+	QString toAppendYes = isPl ? "Tak" : "Yes";
+	QString toAppendNo = isPl ? "Nie" : "No";
+	QString pointWakabilityStr = isWalkable ? (textBase + toAppendYes) : (textBase + toAppendNo);
+
+
+	QString textToDisplay = currentChoosenPoint.toString() + pointWakabilityStr;
 	ui->positionCordinateLabel->setText(textToDisplay);
 	ui->positionCordinateLabel->repaint();
 }
@@ -372,12 +381,9 @@ void RouteCreator::cancelButtonPressed(){
 }
 
 void RouteCreator::finishButtonPressed(){
-	bool isPl = StringResource::languageIsPl();
-	if (route.size() < 2) {
-		QString textToDiplay = isPl ? QString::fromLocal8Bit("Trasa musi mieæ minimum 2 punkty.") : "Route has to be at least 2 points long.";
-		Utilities::showMessageBox("CrackerJack", textToDiplay,QMessageBox::StandardButton::Ok);
+	bool routeOk = checkRouteButtonPressed();
+	if (!routeOk)
 		return;
-	}
 
 	QString textToDisplay = isPl ? QString::fromLocal8Bit("Wybierz nazwê dla nowej trasy.") : "Set name for new route.";
 	QString title = "CrackerJack";
@@ -410,14 +416,28 @@ void RouteCreator::helpButtonPressed()
 {
 }
 
-void RouteCreator::checkRouteButtonPressed(){
+bool RouteCreator::checkRouteButtonPressed(){
 	QString textToDisplayToUser;
-	bool ok = route.checkRouteCorectness(textToDisplayToUser);
-	if (ok) {
-		bool isPl = StringResource::languageIsPl();
+	bool routeCorrect = route.checkRouteCorectness(textToDisplayToUser);
+	if (routeCorrect)
 		textToDisplayToUser = isPl ? QString::fromLocal8Bit("Trasa jest w porz¹dku.") : "Route is correct.";
+	Utilities::showMessageBox("CrackerJack", textToDisplayToUser, QMessageBox::Ok);
+	return routeCorrect;
+}
+
+bool RouteCreator::currentPixIsWalkable(){
+	QPoint pt(currentChoosenPoint.x, currentChoosenPoint.y);
+	uint pixCol = currentMapOfWalkability.pixel(pt);
+	RGBstruct rgb(pixCol);
+	bool isWalkable = (rgb.r == rgb.g) && (rgb.r == rgb.b);
+	if (!isWalkable) {
+		pixCol = currentMap.pixel(pt);
+		rgb = RGBstruct(pixCol);
+		bool isYellowOnNormalMap = rgb.r == 255 && rgb.g == 255 && rgb.b == 0;
+		if (isYellowOnNormalMap)
+			isWalkable = true;
 	}
-		Utilities::showMessageBox("CrackerJack", textToDisplayToUser, QMessageBox::Ok);
+	return isWalkable;
 }
 
 void RouteCreator::moveMap(DIRECTIONS direction, int step){

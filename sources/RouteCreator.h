@@ -6,6 +6,7 @@
 #include "Route.h"
 #include <qfiledialog.h>
 #include "SetNameWidnow.h"
+#include "RGBstruct.h"
 namespace Ui { class RouteCreator; };
 
 
@@ -43,20 +44,22 @@ public slots:
 	void finishButtonPressed();
 	void loadRouteButtonPressed();
 	void helpButtonPressed();
-	void checkRouteButtonPressed();
+	bool checkRouteButtonPressed();
+	bool currentPixIsWalkable();
 
 private:
 	enum class DIRECTIONS { UP, DOWN, LEFT, RIGHT };
 
 	Ui::RouteCreator *ui;
 	Point3D currentChoosenPoint = { 625,1265,0 };
-	uint currentlyLoadedFloor;
 	QImage currentMap;
+	QImage currentMapOfWalkability;
 	const QSize sizeToDisplay = { 108,108 };
 	int zoom = 1;
 	const uint CHOOSEN_POINT_COLOR = qRgb(60,60,60);
 	Route route ;
 	QDir dirWithRoutes;
+	bool isPl = StringResource::languageIsPl();
 
 	bool loadMap(int floor);
 	bool repaintMap();
