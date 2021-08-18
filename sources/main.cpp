@@ -51,7 +51,6 @@ int main(int argc, char *argv[])
 void test(){
 	RouteCreator t;
 	Route tt;
-	tt.loadFromJsonFile("C:\\Users\\ADMIN\\Desktop\\chuj.json");
 	t.exec();
 };
 

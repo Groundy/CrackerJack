@@ -36,5 +36,12 @@ public:
 
 	static QString MainMenu_helpButton();
 	static QString MainMenu_helpTitle();
+
+	static QString Cryptography_wrongFileStruct();
+	static QString Cryptography_cryptographyError();
+	static QString Cryptography_cantFindFile();
+	static QString Cryptography_fileNotPermissionToRead();
+	static QString Cryptography_cantOpenFile();
+	static QString Cryptography_fileEmpty();
 };
 

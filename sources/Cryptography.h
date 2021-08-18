@@ -12,7 +12,10 @@
 #include <memory>
 #include "qdebug.h"
 #include "qcryptographichash.h"
+#include "Logger.h"
+#include "Utilities.h"
 #include "qfileinfo.h"
+#include "StringResource.h"
 class Cryptography{
 public:
 	Cryptography();

@@ -71,15 +71,21 @@ bool Route::loadFromJsonFile(QString pathToFile){
 	JsonParser jsonParser;
 	bool fileFound = jsonParser.openJsonFile(obj, pathToFile);
 	if (!fileFound) {
-		//todo logg
-		//todo info window
+		Logger::logPotenialBug("Can't find file " + pathToFile, "loadFromJsonFile", "Route");
+		QString textPl = QString::fromLocal8Bit("Plik: %1 nie istnieje.").arg(pathToFile);
+		QString textEng = QString("File: %1 does not exist.").arg(pathToFile);
+		QString textToDisplay = isPl ? textPl : textEng;
+		Utilities::showMessageBox("CrackerJack", textToDisplay, QMessageBox::Ok);
 		return false;
 	}
 
 	QJsonArray pointsArray = obj["points"].toArray();
 	if (pointsArray.isEmpty()) {
-			//todo logg
-			//todo info window
+		Logger::logPotenialBug(QString("file has wrong structure.").arg(pathToFile), "loadFromJsonFile", "Route");
+		QString textPl = QString::fromLocal8Bit("Plik: %1 ma z³¹ strukturê.").arg(pathToFile);
+		QString textEng = QString("File: %1 has wrong structure.").arg(pathToFile);
+		QString textToDisplay = isPl ? textPl : textEng;
+		Utilities::showMessageBox("CrackerJack", textToDisplay, QMessageBox::Ok);
 		return false;
 	}
 
@@ -93,9 +99,7 @@ bool Route::loadFromJsonFile(QString pathToFile){
 		tmpRoute.append(toAdd);
 	}
 
-
 	route = tmpRoute;
-	//routeType = tmpRouteType;
 	return true;
 }
 

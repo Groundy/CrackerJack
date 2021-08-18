@@ -2,22 +2,27 @@
 #include <QtCore/qdir.h>
 
 Cryptography::Cryptography(){
-	pathToPublicKey = QDir::current().absoluteFilePath("public.txt");
-	QByteArray s = "test";
-	encryptUsingClientAppKey(s);
 };
 
 
-bool Cryptography::encryptUsingUserPublicKey(QByteArray in, QByteArray& out){
+bool Cryptography::encryptUsingUserPublicKey(QByteArray in, QByteArray& out) {
 	std::string userPublicKey;
 	bool keyAndIdFound = getKeyFromFile(pathToPublicKey, userPublicKey, NULL);
-	if (!keyAndIdFound)
-		return false;//todo
+	if (!keyAndIdFound){
+		QString text = QString("File %1 with key kas wrong structure").arg(QString(in));
+		Logger::logPotenialBug(text,"encryptUsingUserPublicKey","Cryptography");
+		Utilities::showMessageBox(StringResource::WindowTitle_CrackerJackProblem(),StringResource::Cryptography_wrongFileStruct(),QMessageBox::Ok);
+		return false;
+	}
 
 	std::string encryptedStr;
 	bool encryptedOK = encryptKey_Public(userPublicKey, QString(in), encryptedStr);
-	if(!encryptedOK)
-		return false;//todo
+	if(!encryptedOK) {
+		QString text = QString("Error in cryptography");
+		Logger::logPotenialBug(text, "encryptUsingUserPublicKey", "Cryptography");
+		Utilities::showMessageBox(StringResource::WindowTitle_CrackerJackProblem(), StringResource::Cryptography_cryptographyError(), QMessageBox::Ok);
+		return false;
+	}
 
 	out = QByteArray::fromStdString(encryptedStr);
 	return true;
@@ -31,8 +36,12 @@ bool Cryptography::encryptUsingClientAppKey(QByteArray in, QByteArray& out){
 	std::string userPublicKey = QByteArray::fromHex(clientPublicKey).toStdString();
 	std::string encryptedStr;
 	bool encryptedOK = encryptKey_Public(userPublicKey, QString(in), encryptedStr);
-	if (!encryptedOK)
-		return false;//todo
+	if (!encryptedOK) {
+		QString text = QString("Error in cryptography");
+		Logger::logPotenialBug(text, "encryptUsingClientAppKey", "Cryptography");
+		Utilities::showMessageBox(StringResource::WindowTitle_CrackerJackProblem(), StringResource::Cryptography_cryptographyError(), QMessageBox::Ok);
+		return false;
+	}
 
 	out = QByteArray::fromStdString(encryptedStr);
 	return true;
@@ -46,8 +55,12 @@ bool Cryptography::getUserIdFromFile(int& userID){
 	std::string noImportantKey;
 	int userIdTmp;
 	bool IdFound = getKeyFromFile(pathToPublicKey, noImportantKey, &userIdTmp);
-	if (!IdFound)
-		return false;//todo
+	if (!IdFound) {
+		QString text = QString("File with key kas wrong structure");
+		Logger::logPotenialBug(text, "encryptUsingUserPublicKey", "getUserIdFromFile");
+		Utilities::showMessageBox(StringResource::WindowTitle_CrackerJackProblem(), StringResource::Cryptography_wrongFileStruct(), QMessageBox::Ok);
+		return false;
+	}
 	userID = userIdTmp;
 	return true;
 }
@@ -58,7 +71,9 @@ bool Cryptography::encryptKey_Priv(std::string privateKey, QString in_dataToEncr
 	RSA* rsa = RSA_new();
 	rsa = PEM_read_bio_RSAPrivateKey(keybio, &rsa, NULL, NULL);
 	if (!rsa){
-		qDebug() << QString("Error in encryptKey_Priv, wrong key passed");//todo
+		QString text = QString("Error in cryptography");
+		Logger::logPotenialBug(text, "encryptKey_Priv", "Cryptography");
+		Utilities::showMessageBox(StringResource::WindowTitle_CrackerJackProblem(), StringResource::Cryptography_cryptographyError(), QMessageBox::Ok);
 		BIO_free_all(keybio);
 		return false;
 	}
@@ -86,7 +101,9 @@ bool Cryptography::encryptKey_Priv(std::string privateKey, QString in_dataToEncr
 			pos += block_len;
 		}
 		else {
-			qDebug() << QString("encryptKey_Priv") + QString("    Error in encrypting"); //todo 
+			QString text = QString("Error in cryptography");
+			Logger::logPotenialBug(text, "encryptKey_Priv", "Cryptography");
+			Utilities::showMessageBox(StringResource::WindowTitle_CrackerJackProblem(), StringResource::Cryptography_cryptographyError(), QMessageBox::Ok);
 			delete sub_text;
 			BIO_free_all(keybio);
 			RSA_free(rsa);
@@ -137,7 +154,9 @@ bool Cryptography::decryptKey_Public(std::string publicKey , QString& out_decryp
 			pos += len;
 		}
 		else {
-			qDebug() << "Encrypting error"; //todo
+			QString text = QString("Error in cryptography");
+			Logger::logPotenialBug(text, "encryptKey_Priv", "Cryptography");
+			Utilities::showMessageBox(StringResource::WindowTitle_CrackerJackProblem(), StringResource::Cryptography_cryptographyError(), QMessageBox::Ok);
 			delete sub_text;
 			BIO_free_all(keybio);
 			RSA_free(rsa);
@@ -182,7 +201,9 @@ bool Cryptography::encryptKey_Public(std::string publicKey, QString in_dataToEnc
 		}
 		else {
 			// release memory  
-			qDebug() << "Error in encryptKey_Public";
+			QString text = QString("Error in cryptography");
+			Logger::logPotenialBug(text, "encryptKey_Priv", "Cryptography");
+			Utilities::showMessageBox(StringResource::WindowTitle_CrackerJackProblem(), StringResource::Cryptography_cryptographyError(), QMessageBox::Ok);
 			BIO_free_all(keybio);
 			RSA_free(rsa);
 			delete[] sub_text;
@@ -207,10 +228,9 @@ bool Cryptography::decryptKey_Priv(std::string privateKey, QString& out_decrpyte
 		unsigned long err = ERR_get_error(); //Get the error number
 		char err_msg[1024] = { 0 };
 		ERR_error_string(err, err_msg); // Format: error:errId: library: function: reason
-		QString errNumberAsStr = QString::number(err);
-		QString errMsg = QString::fromStdString(err_msg);
-		qDebug() << "error decryptKey_Priv   wrong key input";//to do
-		qDebug() << errNumberAsStr + "   " + errMsg;//to do
+		QString errMsg = QString::fromStdString(err_msg) + "Code: " + QString::number(err);
+		Logger::logPotenialBug(errMsg, "decryptKey_Priv", "Cryptography");
+		Utilities::showMessageBox(StringResource::WindowTitle_CrackerJackProblem(), StringResource::Cryptography_cryptographyError(), QMessageBox::Ok);
 		return false;
 	}
 
@@ -324,7 +344,12 @@ bool Cryptography::getKeyFromFile(QString pathToFileWithPrivateKey, std::string&
 		return vaildFileStructure;
 	}
 	else {
-		return false;//todo, poinformowac, wrong file structure
+		QString textToLog = QString("Wrong file structure.");
+		Logger::logPotenialBug(textToLog, "getKeyFromFile", "Cryptography");
+		QString title = StringResource::WindowTitle_CrackerJackProblem();
+		QString text = StringResource::Cryptography_wrongFileStruct();
+		Utilities::showMessageBox(title, text, QMessageBox::Ok);
+		return false;
 	}
 
 
@@ -336,22 +361,46 @@ bool Cryptography::readFile(QString pathToFileWithPrivateKey, QString& fileData)
 	QFileInfo dir(pathToFileWithPrivateKey);
 
 	bool fileExist = dir.exists();
-	if (!fileExist)
-		;//return false;//todo, poinformowac
+	if (!fileExist) {
+		QString textToLog = QString("Can't find file %1").arg(pathToFileWithPrivateKey);
+		Logger::logPotenialBug(textToLog, "readFile", "Cryptography");
+		QString title = StringResource::WindowTitle_CrackerJackProblem();
+		QString text = StringResource::Cryptography_cantFindFile() + pathToFileWithPrivateKey;
+		Utilities::showMessageBox(title,text,QMessageBox::Ok);
+		return false;
+	}
 
 	bool fileCanBeRead = dir.isReadable();
-	if (!fileCanBeRead)
-		return false;//todo, poinformowac
+	if (!fileCanBeRead) {
+		QString textToLog = QString("Not permitted to read file \n %1").arg(pathToFileWithPrivateKey);
+		Logger::logPotenialBug(textToLog, "readFile", "Cryptography");
+		QString title = StringResource::WindowTitle_CrackerJackProblem();
+		QString text = StringResource::Cryptography_fileNotPermissionToRead() + "\n" + pathToFileWithPrivateKey;
+		Utilities::showMessageBox(title, text, QMessageBox::Ok);
+		return false;
+	}
 
 	QFile file(pathToFileWithPrivateKey);
 	bool filedOpened = file.open(QIODevice::OpenModeFlag::ReadOnly);
-	if (!filedOpened)
-		return false;//todo, poinformowac
+	if (!filedOpened) {
+		QString textToLog = QString("Can't read file: \n %1").arg(pathToFileWithPrivateKey);
+		Logger::logPotenialBug(textToLog, "readFile", "Cryptography");
+		QString title = StringResource::WindowTitle_CrackerJackProblem();
+		QString text = StringResource::Cryptography_cantOpenFile() + "\n" + pathToFileWithPrivateKey;
+		Utilities::showMessageBox(title, text, QMessageBox::Ok);
+		return false;
+	}
 
 	QByteArray data = file.readAll();
 	bool isEmpty = data.size() == 0;
-	if (isEmpty)
-		return false;//todo, poinformowac
+	if (isEmpty) {
+		QString textToLog = QString("File \n %1 \n is empty.").arg(pathToFileWithPrivateKey);
+		Logger::logPotenialBug(textToLog, "readFile", "Cryptography");
+		QString title = StringResource::WindowTitle_CrackerJackProblem();
+		QString text = StringResource::Cryptography_fileEmpty();
+		Utilities::showMessageBox(title, text, QMessageBox::Ok);
+		return false;
+	}
 
 	fileData = QString(data);
 	return true;

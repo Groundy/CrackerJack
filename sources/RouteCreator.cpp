@@ -15,22 +15,20 @@ RouteCreator::RouteCreator(QDialog* parent)
 	TRANSLATE_gui();
 
 	QDir dir = QDir::temp();
-	{
-		dir.cdUp();
-		bool CrackerJackDirExist = dir.cd("CrackerJack");
-		if (!CrackerJackDirExist) {
-			bool dirMade = dir.mkdir("CrackerJack");
-			if (!dirMade)
-				;//todo logg
-			bool CrackerJackDirExist = dir.cd("CrackerJack");
-		}
-		bool RoutesDirExist = dir.cd("Routes");
-		if (!CrackerJackDirExist) {
-			bool dirMade = dir.mkdir("Routes");
-			if (!dirMade)
-				;//todo logg
-			bool CrackerJackDirExist = dir.cd("Routes");
-		}
+	dir.cdUp();
+	bool CrackerJackDirExist = dir.cd("CrackerJack");
+	if (!CrackerJackDirExist) {
+		bool dirMade = dir.mkdir("CrackerJack");
+		if (!dirMade)
+			Logger::logPotenialBug("Can't create path to folder with routes","RouteCreator","RouteCreator");
+		dir.cd("CrackerJack");
+	}
+	bool RoutesDirExist = dir.cd("Routes");
+	if (!RoutesDirExist) {
+		bool dirMade = dir.mkdir("Routes");
+		if (!dirMade)
+			Logger::logPotenialBug("Can't create path to folder with routes", "RouteCreator", "RouteCreator");
+		dir.cd("Routes");
 	}
 	dirWithRoutes = dir;
 }
@@ -150,27 +148,35 @@ bool RouteCreator::loadMap(int floor){
 	floor += 8;// (0 bottom, 8 ground, 15 top)
 	floor = 15 - floor;// (15 bottom, 7 ground, 0 top)
 	bool wrongInput = floor < 0 || floor >15;
-	if (wrongInput)
-		;//todo logg
+	if (wrongInput) {
+		Logger::logPotenialBug("Wrong input, input=" + QString::number(floor), "RouteCreator", "loadMap");
+	}
 
 	QString floorAsStr = QString::number(floor);
 	if (floorAsStr.size() == 1)
 		floorAsStr.push_front(QString::number(0));
 		
-	//todo zmeinic
-	QString pathToMapFile = "C:\\Users\\ADMIN\\Desktop\\maps\\floor-" + floorAsStr + "-map.png";
-	QImage tmpImg;
-	bool loadedCorrectlyNormal = tmpImg.load(pathToMapFile);
-	if (loadedCorrectlyNormal)
-		currentMap = tmpImg;
 
-	//todo zmeinic
-	pathToMapFile = "C:\\Users\\ADMIN\\Desktop\\maps\\floor-" + floorAsStr + "-path.png";
-	bool loadedCorrectlyWalkable = tmpImg.load(pathToMapFile);
-	if (loadedCorrectlyWalkable)
-		currentMapOfWalkability = tmpImg;
-	
-	return loadedCorrectlyNormal && loadedCorrectlyWalkable;
+	QString mapFileName = "floor-" + floorAsStr + "-map.png";
+	QString walkMapFileName = "floor-" + floorAsStr + "-path.png";
+	QString pathToMap = dirWithMaps.absoluteFilePath(mapFileName);
+	QString pathToWalkMap = dirWithMaps.absoluteFilePath(mapFileName);
+
+	QImage mapTmpImg, walkMapTmpImg;
+	bool mapLoadedCorrectly = mapTmpImg.load(pathToMap);
+	bool walkMapLoadedCorrectly = walkMapTmpImg.load(pathToWalkMap);
+
+	if (mapLoadedCorrectly && walkMapLoadedCorrectly) {
+		currentMap = mapTmpImg;
+		currentMapOfWalkability = walkMapTmpImg;
+	}
+	else {
+		QString text = QString("Can't load file \n %1 \n or \n %2").arg(pathToMap, pathToWalkMap);
+		Logger::logPotenialBug(text, "RouteCreator", "loadMap");
+		return false;
+	}
+
+	return true;
 }
 
 QPixmap RouteCreator::getPixMapWithZoomAndCenterPix(QImage imgWithMap, QSize sizeToScale) {

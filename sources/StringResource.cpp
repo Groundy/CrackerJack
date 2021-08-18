@@ -7,8 +7,7 @@ bool StringResource::languageIsPl(){
 	return toRet;
 }
 
-QString StringResource::WindowTitle_CrackerJackProblem()
-{
+QString StringResource::WindowTitle_CrackerJackProblem(){
 	return "CrackerJack problem";
 }
 
@@ -223,5 +222,41 @@ QString StringResource::MainMenu_helpButton(){
 QString StringResource::MainMenu_helpTitle(){
 	QString pl = QString::fromLocal8Bit("CrackerJack - Okno pomocy");
 	QString eng = "CrackerJack - Help window";
+	return languageIsPl() ? pl : eng;
+}
+
+QString StringResource::Cryptography_wrongFileStruct(){
+	QString pl = QString::fromLocal8Bit("Plik klucza ma z³¹ strukture.");
+	QString eng = "Key file has wrong sturcure.";
+	return languageIsPl() ? pl : eng;
+}
+
+QString StringResource::Cryptography_cryptographyError() {
+	QString pl = QString::fromLocal8Bit("B³¹d szyfrowania.");
+	QString eng = "Error in encoding.";
+	return languageIsPl() ? pl : eng;
+}
+
+QString StringResource::Cryptography_cantFindFile(){
+	QString pl = QString::fromLocal8Bit("Nie mozna odnalezc pliku: ");
+	QString eng = "Can't find file: ";
+	return languageIsPl() ? pl : eng;
+}
+
+QString StringResource::Cryptography_fileNotPermissionToRead() {
+	QString pl = QString::fromLocal8Bit("Nie ma praw do odczytu pliku: ");
+	QString eng = "No permission to read file: ";
+	return languageIsPl() ? pl : eng;
+}
+
+QString StringResource::Cryptography_cantOpenFile() {
+	QString pl = QString::fromLocal8Bit("Nie mo¿na wczytaæ pliku: ");
+	QString eng = "Can't read file: ";
+	return languageIsPl() ? pl : eng;
+}
+
+QString StringResource::Cryptography_fileEmpty() {
+	QString pl = QString::fromLocal8Bit("Plik jest pusty.");
+	QString eng = "File is empty.";
 	return languageIsPl() ? pl : eng;
 }

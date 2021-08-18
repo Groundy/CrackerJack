@@ -17,7 +17,8 @@ Point3D::Point3D(int X, int Y, int F) {
 Point3D::Point3D(QString str) {
 	QStringList parts = str.split(",", Qt::SplitBehaviorFlags::SkipEmptyParts);
 	if (parts.size() != 3) {
-		//todo log
+		QString text = QString("String pass to create Point3D has wrong structure. Input=[%1]").arg(str);
+		Logger::logPotenialBug(text, "Point3D", "Point3D");
 		return;
 	}
 
@@ -35,7 +36,8 @@ Point3D::Point3D(QString str) {
 	bool fReadOk = floor >= -7 && floor <= 8 && ok3;
 	bool readAllOk = xReadOk && yReadOk && fReadOk;
 	if (!readAllOk) {
-		//todo log
+		QString text = QString("String pass to create Point3D has wrong values. Input=[%1]").arg(str);
+		Logger::logPotenialBug(text, "Point3D", "Point3D");
 		return;
 	}
 };

@@ -1,6 +1,7 @@
 #pragma once
 #include <qstring.h>
 #include <qstringlist.h>
+#include "Logger.h"
 class Point3D
 {
 public:

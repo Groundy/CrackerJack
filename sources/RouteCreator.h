@@ -51,15 +51,16 @@ private:
 	enum class DIRECTIONS { UP, DOWN, LEFT, RIGHT };
 
 	Ui::RouteCreator *ui;
-	Point3D currentChoosenPoint = { 625,1265,0 };
 	QImage currentMap;
 	QImage currentMapOfWalkability;
-	const QSize sizeToDisplay = { 108,108 };
-	int zoom = 1;
-	const uint CHOOSEN_POINT_COLOR = qRgb(60,60,60);
 	Route route ;
 	QDir dirWithRoutes;
+	QDir dirWithMaps = QDir("C:\\Users\\ADMIN\\Desktop\\maps");//todo zmienic
+	int zoom = 1;
+	Point3D currentChoosenPoint = { 625,1265,0 };
 	bool isPl = StringResource::languageIsPl();
+	const QSize sizeToDisplay = { 108,108 };
+	const uint CHOOSEN_POINT_COLOR = qRgb(60,60,60);
 
 	bool loadMap(int floor);
 	bool repaintMap();

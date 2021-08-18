@@ -123,7 +123,6 @@ QRect MinimapAnalyzer::test_cutImgToShearchFromDarkAndWater(QImage& img){
 		QRect toRet{ WIDTH, HEIGHT, 0, 0 };
 		img = QImage();
 		return toRet;
-		//todo log
 	}
 
 	for (int x = WIDTH - 1; x >= cutLines_LEFT; x--) {
@@ -234,23 +233,19 @@ QList<QImage> MinimapAnalyzer::test_splitMiniMapScreenToListWithoutCross(QImage&
 
 QPoint MinimapAnalyzer::test_findPlayerPositionByParts(QImage& snipet, QImage& map){
 	bool errWrongSize = snipet.width() != WIDTH_OF_MAP_ONLY_AREA || snipet.height() != HEIGHT_OF_WHOLE_PASSED_IMG;
-	if (errWrongSize)
-		return QPoint();		//todo logg
+	if (errWrongSize) 
+		return QPoint();
 	
 	QList<QImage> imgs = test_splitMiniMapScreenToListWithoutCross(snipet);
 	for (size_t i = 0; i < 8; i++){
 		QRect rect = test_cutImgToShearchFromDarkAndWater(imgs[i]);
 		bool isEmpty = imgs[i].width() == 0 || imgs[i].height() == 0;
-		if (isEmpty) {
-			//() << "Part " + QString::number(i) + " is empty.";
+		if (isEmpty)
 			continue;
-		}
 
 		QList<QPoint> startPoints = test_findPlayerOnMap(imgs[i], map);
-		//qDebug() << "Part " + QString::number(i) + " found: " + QString::number(startPoints.size()) + " similarities";
-		if (startPoints.size() != 1) {
+		if (startPoints.size() != 1)
 			continue;
-		}
 
 		QPoint playerPosOnWorldMap = startPoints.first() - rect.topLeft() - test_miniMapParts[i].topLeft();// +POSITION_OF_PLAYER_ON_MINIMAP;
 		return playerPosOnWorldMap;
@@ -259,7 +254,6 @@ QPoint MinimapAnalyzer::test_findPlayerPositionByParts(QImage& snipet, QImage& m
 }
 
 QList<QPoint> MinimapAnalyzer::test_findPlayerOnMap(QImage& snipet, QImage& map){
-
 	QList<QPoint> startPointsListToRet;
 	QImage snipetCopy = snipet;
 	QRect rect = test_cutImgToShearchFromDarkAndWater(snipetCopy);
@@ -373,106 +367,3 @@ QList<QPoint> MinimapAnalyzer::test_fillForbiddenPixPositions(){
 	toRet.push_back(QPoint(56, 55));
 	return toRet;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-/*
-void MinimapAnalyzer::testHistogramFunc(){
-	QImage map, snipet;
-	QString pathToMap = "C:\\Users\\ADMIN\\Desktop\\map.png";
-	QString pathToSnipet = "C:\\Users\\ADMIN\\Desktop\\snipet.png";
-	bool ok1 = map.load(pathToMap);
-	bool ok2 = snipet.load(pathToSnipet);
-
-	auto t = splitScreenToFitImg(map, snipet);
-	Histogram modelHist = getRGBHistorgram(snipet);
-	double biggestSimilarity = 0.0;
-	QPoint point;
-	for each (auto splited in t) {
-		QImage testImg = splited.second;
-		Histogram testHist = getRGBHistorgram(testImg);
-		double similartity = getSimiliarityOfTwoHistograms(modelHist, testHist);
-		if (similartity > biggestSimilarity) {
-			biggestSimilarity = similartity;
-			point = splited.first;
-		}
-	}
-	
-	int x = (point.x() - 1) * snipet.width();
-	int y = (point.y() - 1) * snipet.height();
-	int w = snipet.width() * 3;
-	int h = snipet.height() * 3;
-	QImage img = map.copy(x,y,w,h);
-	Utilities::TOOL_saveImgToOutPutFolder(&img, NULL);
-	
-	int stop = 3;
-}
-
-
-Histogram MinimapAnalyzer::getRGBHistorgram(QImage& img) {
-	QVector<int> histogram(15);
-	histogram.fill(0);
-	for (int x = 0; x < img.width(); x++){
-		for (int y = 0; y < img.height(); y++) {
-			uint col = RGBstruct(img.pixel(x, y)).toUint();//horrible solution
-			int indexToIncrement = allPosibleColorsOnTheMap.indexOf(col);
-			histogram[indexToIncrement]++;
-		}
-	}
-	return histogram.toList();
-}
-
-QList<QPair<QPoint, QImage>> MinimapAnalyzer::splitScreenToFitImg(const QImage& imgToSplit, const QImage& imgToGetSizeFrom){
-	const int WIDTH = imgToGetSizeFrom.width();
-	const int HEIGHT = imgToGetSizeFrom.height();
-	// todo dodac obsluge bledow
-	const int X_AXIS_SIZE = imgToSplit.width() / WIDTH;
-	const int Y_AXIS_SIZE = imgToSplit.height() / HEIGHT;
-
-	QList<QPair<QPoint, QImage>> toRet;
-	for (int x = 0; x < X_AXIS_SIZE; x++){
-		for (int y = 0; y < Y_AXIS_SIZE; y++) {
-			QRect partOfFrameToCopy(x * WIDTH, y * HEIGHT, WIDTH, HEIGHT);
-			QImage imgToAdd = imgToSplit.copy(partOfFrameToCopy);
-
-			//QString name = QString::number(x) + "_" + QString::number(y);
-			//Utilities::TOOL_saveImgToOutPutFolder(&imgToAdd, &name);
-
-			//todo niepotrzebne kopiowania, poprawic 
-			QPair<QPoint, QImage> toAdd(QPoint(x, y), imgToAdd);
-			toRet.push_back(toAdd);
-		}
-	}
-	return toRet;
-}
-
-double MinimapAnalyzer::getSimiliarityOfTwoHistograms(const Histogram modelHistogram, const Histogram testedHistogram){
-	bool diffrentSizesOfHistograms = modelHistogram.size() != testedHistogram.size();
-	bool wrongSizeOfHistograms = modelHistogram.size() != allPosibleColorsOnTheMap.size();
-	//todo dodac do loga sytuacje bledu
-
-	int difference = 0;
-	int modelHistogramSum = 0;
-	for (int i = 0; i < modelHistogram.size(); i++) {
-		//if (i == 3) continue;//water case
-		int valueModel = modelHistogram[i];
-		int valueTest = testedHistogram[i];
-		int differenceOnOneColor = abs(valueModel - valueTest);
-		difference += differenceOnOneColor;
-		modelHistogramSum += 2*modelHistogram[i];
-	}
-
-	double toRet = 100.0 - (difference * 100.0 / modelHistogramSum);
-	return toRet;
-}
-*/
-

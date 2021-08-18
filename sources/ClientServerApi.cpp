@@ -46,7 +46,7 @@ QList<MarkUp> ClientServerApi::splitMsgToMarkUps(QByteArray& decryptedMsg) {
 		bool vailStructure = hasEnding && hasOpening && hasEqSign;
 		if (!vailStructure)	continue;
 		
-		QStringList partsOfMarkUp = var.split("===",Qt::SkipEmptyParts);//suspicious //todo
+		QStringList partsOfMarkUp = var.split("===",Qt::SkipEmptyParts);
 		if (partsOfMarkUp.size() != 2)	continue;
 
 		QString leftValue = partsOfMarkUp[0];
@@ -59,7 +59,7 @@ QList<MarkUp> ClientServerApi::splitMsgToMarkUps(QByteArray& decryptedMsg) {
 		if (rightValue.isEmpty()) continue;
 		vailStructure = rightValue.contains('>');
 		if (!vailStructure) continue;
-		QByteArray fieldValue = rightValue.remove(rightValue.size() - 1, 1).toUtf8();//suspicious //todo
+		QByteArray fieldValue = rightValue.remove(rightValue.size() - 1, 1).toUtf8();
 
 		FIELDS_OF_MSGS field = fieldMap.key(fieldVal, FIELDS_OF_MSGS::UNKOWN);
 

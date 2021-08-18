@@ -25,4 +25,5 @@ private:
 	QList<QPair<Point3D, FIELDS_TYPE>> route;
 	QString TRANSLATE_getPointTypeDescription(FIELDS_TYPE type);
 	void fillMaps();
+	bool isPl = StringResource::languageIsPl();
 };
