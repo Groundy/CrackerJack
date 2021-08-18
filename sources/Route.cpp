@@ -211,9 +211,9 @@ QString Route::TRANSLATE_getPointTypeDescription(FIELDS_TYPE type) {
 	case Route::FIELDS_TYPE::REGULAR:
 		return isPl ? QString::fromLocal8Bit("Zwyk³e pole") : "Regular field";
 	case Route::FIELDS_TYPE::STAIRS_UP:
-		return isPl ? QString::fromLocal8Bit("Schody do góry") : "Staris-up";
+		return isPl ? QString::fromLocal8Bit("Schody do góry") : "Stairs-up";
 	case Route::FIELDS_TYPE::STAIRS_DOWN: 
-		return isPl ? QString::fromLocal8Bit("Schody do do³u") : "Staris-down";
+		return isPl ? QString::fromLocal8Bit("Schody do do³u") : "Stairs-down";
 	case Route::FIELDS_TYPE::ROPE_FIELD:
 		return isPl ? QString::fromLocal8Bit("Pole liny") : "Rope field";
 	case Route::FIELDS_TYPE::SHOVEL_HOLE_ALWAYS_OPEN:

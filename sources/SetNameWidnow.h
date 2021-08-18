@@ -10,13 +10,14 @@ class SetNameWidnow : public QDialog
 public:
 	SetNameWidnow(QDialog *parent, QString title, QString textToDisplay, QString* insertedLine);
 	~SetNameWidnow();
-	int minLength = 3;
-	int maxLength = 40;
+	const int minLength = 3;
+	const int maxLength = 40;
 public slots:
 	void okButtonPressed();
 	void textChanged();
 	void cancelButtonPressed();
 private:
 	Ui::SetNameWidnow *ui;
+	bool allCharsAreOk(QString strToCheck);
 	QString* ptToRetrunStr;
 };

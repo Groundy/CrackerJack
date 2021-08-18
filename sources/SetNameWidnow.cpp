@@ -30,10 +30,20 @@ void SetNameWidnow::okButtonPressed(){
 void SetNameWidnow::textChanged(){
 	QString str = ui->lineEdit->text();
 	bool lengthOk = str.length() >= minLength && str.length() <= maxLength;
-	ui->okButton->setEnabled(lengthOk);
+	bool shouldBeEnabled = lengthOk && allCharsAreOk(str);
+	ui->okButton->setEnabled(shouldBeEnabled);
 	ui->okButton->repaint();
 }
 
 void SetNameWidnow::cancelButtonPressed(){
 	reject();
+}
+
+bool SetNameWidnow::allCharsAreOk(QString strToCheck){
+	for each (QChar var in strToCheck){
+		bool isAllowed = var.isLetterOrNumber() || var.isSpace();
+		if (!isAllowed)
+			return false;
+	}
+	return true;
 }

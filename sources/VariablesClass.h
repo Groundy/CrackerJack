@@ -3,7 +3,6 @@
 #include "qmap.h"
 #include "qimage.h"
 #include <basetsd.h>
-#include <qmutex.h>
 class VariablesClass{
 public:
 	uint var_pidOfGame;
