@@ -38,7 +38,7 @@ RouteCreator::~RouteCreator(){
 }
 
 void RouteCreator::imgMoved_left(){
-	moveMap(DIRECTIONS::LEFT, 2);
+	moveMap(DIRECTIONS::LEFT, 1);
 }
 void RouteCreator::imgMoved_left_fast(){
 	moveMap(DIRECTIONS::LEFT, 5);
