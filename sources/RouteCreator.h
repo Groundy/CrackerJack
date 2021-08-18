@@ -63,6 +63,7 @@ private:
 	const uint CHOOSEN_POINT_COLOR = qRgb(60,60,60);
 
 	bool loadMap(int floor);
+	void repaintList();
 	bool repaintMap();
 	void refreshPositionLabel();
 	void moveMap(DIRECTIONS direction, int step);

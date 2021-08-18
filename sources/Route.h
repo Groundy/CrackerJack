@@ -17,13 +17,14 @@ public:
 	bool movePointDown(int index);
 	bool loadFromJsonFile(QString pathToFile);
 	int size();
+	void clear();
 	bool writeToJsonFile(QString pathToDir, QString fileNameWithExtension);
 	QMap <FIELDS_TYPE, QString> fieldTypesStrsUsedInJson;
 	bool checkRouteCorectness(QString& errorTextToDisplay);
+	static QString TRANSLATE_getPointTypeDescription(FIELDS_TYPE type);
 	
 private:
 	QList<QPair<Point3D, FIELDS_TYPE>> route;
-	QString TRANSLATE_getPointTypeDescription(FIELDS_TYPE type);
 	void fillMaps();
 	bool isPl = StringResource::languageIsPl();
 };

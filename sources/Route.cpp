@@ -107,6 +107,10 @@ int Route::size(){
 	return route.size();
 }
 
+void Route::clear(){
+	route.clear();
+}
+
 bool Route::writeToJsonFile(QString pathToDir, QString fileNameWithExtension){
 	QJsonObject mainObj;
 

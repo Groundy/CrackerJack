@@ -96,12 +96,9 @@ void RouteCreator::floorUp(){
 void RouteCreator::addPoint(){
 	QListWidget *list = ui->pointsList;
 	Route::FIELDS_TYPE typeOfPoint = getFieldTypeComboBox();
-	QString indexStr = QString::number(list->count());
-	QString text = QString("[%1] %2").arg(indexStr, currentChoosenPoint.toString());
 	route.addPoint(currentChoosenPoint, typeOfPoint);
-	list->addItem(text);
 	selectedItemOnListChanged();
-	list->repaint();
+	repaintList();
 	ui->fieldTypesBox->setCurrentIndex(0);
 	ui->fieldTypesBox->repaint();
 }
@@ -109,38 +106,41 @@ void RouteCreator::addPoint(){
 void RouteCreator::moveListItemUp(){
 	QListWidget* list = ui->pointsList;
 	int currentRow = list->currentRow();
+	if (currentRow == -1 || currentRow == 0)
+		return;
 	bool allRight = route.movePointUp(currentRow);
 	if (allRight) {
-		list->setCurrentRow(currentRow - 1);
 		selectedItemOnListChanged();
-		list->repaint();
+		repaintList();
+		list->setCurrentRow(currentRow - 1);
 	}
 }
 
 void RouteCreator::moveListItemDown(){
 	QListWidget* list = ui->pointsList;
 	int currentRow = list->currentRow();
+	if (currentRow == -1 || currentRow == route.size() - 1)
+		return;
 	bool allRight = route.movePointDown(currentRow);
 	if (allRight) {
-		list->setCurrentRow(currentRow + 1);
 		selectedItemOnListChanged();
-		list->repaint();
+		repaintList();
+		list->setCurrentRow(currentRow + 1);
 	}
 }
 
 void RouteCreator::deletePoint(){
 	auto list = ui->pointsList;
 	int rowToDelete = list->currentRow();
+	if (rowToDelete == -1)
+		return;
 	route.removePoint(rowToDelete);
-
-	QStringList textOfAllPoints = route.toStringList();
-	list->clear();
-	for (size_t i = 0; i < textOfAllPoints.size(); i++) {
-		list->addItem(textOfAllPoints[i]);
-	}
-
 	selectedItemOnListChanged();
-	list->repaint();
+	repaintList();
+
+	bool delRowWasntLast = rowToDelete < route.size();
+	int rowToSet = delRowWasntLast ? rowToDelete : route.size() - 1;
+	list->setCurrentRow(rowToDelete);
 }
 
 bool RouteCreator::loadMap(int floor){
@@ -177,6 +177,16 @@ bool RouteCreator::loadMap(int floor){
 	}
 
 	return true;
+}
+
+void RouteCreator::repaintList(){
+	QListWidget* list = ui->pointsList;
+	list->clear();
+	QStringList textOfAllPoints = route.toStringList();
+	for each (QString var in textOfAllPoints){
+		list->addItem(var);
+	}
+	list->repaint();
 }
 
 QPixmap RouteCreator::getPixMapWithZoomAndCenterPix(QImage imgWithMap, QSize sizeToScale) {
@@ -354,32 +364,21 @@ void RouteCreator::refreshPositionLabel(){
 
 void RouteCreator::selectedItemOnListChanged(){
 	QListWidget* list = ui->pointsList;
-	int size = list->count();
+	int size = route.size();
 	int curr = list->currentRow();
+	bool somethingIsSelected = curr != -1;
 
 	bool isFirstElement = curr == 0;
-	bool elementCanBeMovedUp = !isFirstElement && (size >= 2);
+	bool elementCanBeMovedUp = somethingIsSelected && !isFirstElement && (size >= 2);
 	ui->movePointUpButton->setEnabled(elementCanBeMovedUp);
 
 	bool isLastElement = curr == (size - 1);
-	bool elementCanBeMovedDown = !isLastElement && (size >= 2);
+	bool elementCanBeMovedDown = somethingIsSelected && !isLastElement && (size >= 2);
 	ui->movePointDownButton->setEnabled(elementCanBeMovedDown);
 
 	bool thereAreElementsOnList = size > 0;
-	bool thereIsSlectedItem = curr > -1;
-	bool desiredState = thereAreElementsOnList && thereIsSlectedItem;
+	bool desiredState = thereAreElementsOnList && somethingIsSelected;
 	ui->deletePointButton->setEnabled(desiredState);
-
-	
-	QStringList textOfAllPoints = route.toStringList();
-	for (size_t i = 0; i < textOfAllPoints.size(); i++){
-		QString str = textOfAllPoints[i];
-		bool itemExist = list->count() > i;
-		if (itemExist)
-			list->item(i)->setText(str);
-		else
-			list->addItem(str);
-	}
 }
 
 void RouteCreator::cancelButtonPressed(){
@@ -414,7 +413,9 @@ void RouteCreator::loadRouteButtonPressed(){
 	if (fileList.size() == 0)
 		return;
 	QString pathToFile = fileList.first();
+
 	route.loadFromJsonFile(pathToFile);
+	repaintList();
 	selectedItemOnListChanged();
 }
 
