@@ -1,22 +1,8 @@
 #include <QtWidgets/QApplication>
 #include "MainMenu.h"
-/*
-#include "LoginWindow.h"
-#include "ScreenSaver.h"
-#include <memory.h>
-#include "JsonParser.h"
-#include "qsettings.h"
-#include "VariablesClass.h"
-#include "Calibrator.h"
-#include "Logger.h"
-#include "Cryptography.h"
-#include "ServerConnector.h"
-#include "qjsondocument.h"
-#include "qjsonobject.h"
-#include "qjsonvalue.h"
-#include "MinimapAnalyzer.h"
-#include "RouteCreator.h"
-*/
+
+#include "Market.h"
+
 QString makeRandomProccessName();
 void test();
 QIcon getIcon();
@@ -49,8 +35,7 @@ int main(int argc, char *argv[])
 }
 
 void test(){
-	RouteCreator t;
-	Route tt;
+	Market t;
 	t.exec();
 };
 

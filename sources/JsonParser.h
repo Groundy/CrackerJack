@@ -14,7 +14,6 @@ class JsonParser{
 public:
 	JsonParser();
 	~JsonParser();
-	static QMap<Item::TYPE_OF_ITEM, QString> itemType_itemStr_map;
 
 	enum class TypeOfPotion {HEALTH, MANA, EVERYPOTION};
 	const QString spellFilePath = "C:\\Users\\ADMIN\\source\\repos\\CrackerJackClient\\Resources\\spells.json";

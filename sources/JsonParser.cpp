@@ -8,28 +8,6 @@ JsonParser::~JsonParser()
 {
 }
 
-QMap<Item::TYPE_OF_ITEM, QString> JsonParser::itemType_itemStr_map = {
-	{Item::TYPE_OF_ITEM::ARMOR, "armors"},
-	{Item::TYPE_OF_ITEM::AMULETS, "amulets"},
-	{Item::TYPE_OF_ITEM::BOOTS, "boots"},
-	{Item::TYPE_OF_ITEM::CREATURE, "creature"},
-	{Item::TYPE_OF_ITEM::HELMETS, "helmets"},
-	{Item::TYPE_OF_ITEM::LEGS, "legs"},
-	{Item::TYPE_OF_ITEM::OTHER, "other"},
-	{Item::TYPE_OF_ITEM::POTIONS, "potions"},
-	{Item::TYPE_OF_ITEM::RINGS, "rings"},
-	{Item::TYPE_OF_ITEM::RUNES, "runes"},
-	{Item::TYPE_OF_ITEM::SHIELDS, "shields"},
-	{Item::TYPE_OF_ITEM::VALUABLES, "valuables"},
-	{Item::TYPE_OF_ITEM::AMMO, "ammo"},
-	{Item::TYPE_OF_ITEM::AXES, "axes"},
-	{Item::TYPE_OF_ITEM::SWORDS, "swords"},
-	{Item::TYPE_OF_ITEM::CLUBS, "clubs"},
-	{Item::TYPE_OF_ITEM::DISTANCES, "distance"},
-	{Item::TYPE_OF_ITEM::ROD, "rod"},
-	{Item::TYPE_OF_ITEM::WANDS, "wands"}
-};
-
 bool JsonParser::openJsonFile(QJsonObject& jsonDoc, QString pathToFile){
 	QFile file;
 	file.setFileName(pathToFile);
@@ -141,7 +119,7 @@ bool JsonParser::filtrItems(QList<Item>& items, Item::SELLER* seller, Item::TYPE
 	bool filtrBySeller = seller != NULL;
 	bool filtrByType = typeOfItem != NULL;
 	QList<Item> itemsToCopy = items;
-	QList<Item> spelsToRet;
+	items.clear();
 	for each (Item var in itemsToCopy) {
 		if (filtrBySeller) {
 			bool isProperSeller = (var.seller == *seller);

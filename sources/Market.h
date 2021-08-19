@@ -1,13 +1,18 @@
 #pragma once
 #include "Utilities.h"
-#include <QWidget>
+#include <QDialog>
 #include "JsonParser.h"
 #include "Item.h"
 namespace Ui { class Market; };
 typedef Item::SELLER Seller;
 typedef Item::TYPE_OF_ITEM ItemType;
 
-class Market : public QWidget{
+struct ItemsSorted {
+	QStringList namesOfCategories;
+	QList<QList<Item>> itemsOfCategory;
+};
+
+class Market : public QDialog{
 	Q_OBJECT
 public slots:
 	void showOnly_GreenDijnn();
@@ -19,11 +24,14 @@ public slots:
 
 
 public:
-	Market(QWidget *parent = Q_NULLPTR);
+	//Market(QDialog *parent = Q_NULLPTR);
+	Market();
 	~Market();
 
 private:
 	Ui::Market *ui;
 	QDir ditWithSavedItemLists;
-	void fillLists(Seller* seller, ItemType* type);
+	QList<Item> allItems;
+	ItemsSorted itemsToDisplay;
+	void fillLists(Seller* seller);
 };
