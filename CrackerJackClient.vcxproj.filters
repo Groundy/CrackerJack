@@ -118,6 +118,9 @@
     <ClCompile Include="sources\SetNameWidnow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="sources\Item.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="sources\LoginWindow.h">
@@ -230,6 +233,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="sources\JsonParser.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\Item.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

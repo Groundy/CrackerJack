@@ -8,26 +8,26 @@ JsonParser::~JsonParser()
 {
 }
 
-QMap<Utilities::Item::TYPE_OF_ITEM, QString> JsonParser::itemType_itemStr_map = {
-	{Utilities::Item::TYPE_OF_ITEM::ARMOR, "armors"},
-	{Utilities::Item::TYPE_OF_ITEM::AMULETS, "amulets"},
-	{Utilities::Item::TYPE_OF_ITEM::BOOTS, "boots"},
-	{Utilities::Item::TYPE_OF_ITEM::CREATURE, "creature"},
-	{Utilities::Item::TYPE_OF_ITEM::HELMETS, "helmets"},
-	{Utilities::Item::TYPE_OF_ITEM::LEGS, "legs"},
-	{Utilities::Item::TYPE_OF_ITEM::OTHER, "other"},
-	{Utilities::Item::TYPE_OF_ITEM::POTIONS, "potions"},
-	{Utilities::Item::TYPE_OF_ITEM::RINGS, "rings"},
-	{Utilities::Item::TYPE_OF_ITEM::RUNES, "runes"},
-	{Utilities::Item::TYPE_OF_ITEM::SHIELDS, "shields"},
-	{Utilities::Item::TYPE_OF_ITEM::VALUABLES, "valuables"},
-	{Utilities::Item::TYPE_OF_ITEM::AMMO, "ammo"},
-	{Utilities::Item::TYPE_OF_ITEM::AXES, "axes"},
-	{Utilities::Item::TYPE_OF_ITEM::SWORDS, "swords"},
-	{Utilities::Item::TYPE_OF_ITEM::CLUBS, "clubs"},
-	{Utilities::Item::TYPE_OF_ITEM::DISTANCES, "distance"},
-	{Utilities::Item::TYPE_OF_ITEM::ROD, "rod"},
-	{Utilities::Item::TYPE_OF_ITEM::WANDS, "wands"}
+QMap<Item::TYPE_OF_ITEM, QString> JsonParser::itemType_itemStr_map = {
+	{Item::TYPE_OF_ITEM::ARMOR, "armors"},
+	{Item::TYPE_OF_ITEM::AMULETS, "amulets"},
+	{Item::TYPE_OF_ITEM::BOOTS, "boots"},
+	{Item::TYPE_OF_ITEM::CREATURE, "creature"},
+	{Item::TYPE_OF_ITEM::HELMETS, "helmets"},
+	{Item::TYPE_OF_ITEM::LEGS, "legs"},
+	{Item::TYPE_OF_ITEM::OTHER, "other"},
+	{Item::TYPE_OF_ITEM::POTIONS, "potions"},
+	{Item::TYPE_OF_ITEM::RINGS, "rings"},
+	{Item::TYPE_OF_ITEM::RUNES, "runes"},
+	{Item::TYPE_OF_ITEM::SHIELDS, "shields"},
+	{Item::TYPE_OF_ITEM::VALUABLES, "valuables"},
+	{Item::TYPE_OF_ITEM::AMMO, "ammo"},
+	{Item::TYPE_OF_ITEM::AXES, "axes"},
+	{Item::TYPE_OF_ITEM::SWORDS, "swords"},
+	{Item::TYPE_OF_ITEM::CLUBS, "clubs"},
+	{Item::TYPE_OF_ITEM::DISTANCES, "distance"},
+	{Item::TYPE_OF_ITEM::ROD, "rod"},
+	{Item::TYPE_OF_ITEM::WANDS, "wands"}
 };
 
 bool JsonParser::openJsonFile(QJsonObject& jsonDoc, QString pathToFile){
@@ -132,8 +132,33 @@ bool JsonParser::filtrSpells(QList<Spell>& spells, Profile::PROFESSION* prof, Sp
 	return true;
 }
 
-bool JsonParser::getPotionsForProf(QList<Utilities::Potion>& potions, Profile::PROFESSION* prof, TypeOfPotion type){
-	typedef Utilities::Potion Potion;
+bool JsonParser::filtrItems(QList<Item>& items, Item::SELLER* seller, Item::TYPE_OF_ITEM* typeOfItem){
+	if (seller == NULL && typeOfItem == NULL)
+		return false;
+	typedef Item::SELLER Seller;
+	typedef Item::TYPE_OF_ITEM Type;
+
+	bool filtrBySeller = seller != NULL;
+	bool filtrByType = typeOfItem != NULL;
+	QList<Item> itemsToCopy = items;
+	QList<Item> spelsToRet;
+	for each (Item var in itemsToCopy) {
+		if (filtrBySeller) {
+			bool isProperSeller = (var.seller == *seller);
+			if (!isProperSeller)
+				continue;
+		}
+		if (filtrByType) {
+			bool isProperType = var.type == *typeOfItem;
+			if (!isProperType)
+				continue;
+		}
+		items.push_back(var);
+	}
+	return true;
+}
+
+bool JsonParser::getPotionsForProf(QList<Potion>& potions, Profile::PROFESSION* prof, TypeOfPotion type){
 	QJsonObject obj;
 	bool res = openJsonFile(obj, itemsFilePath);
 	if (!res) {
@@ -151,7 +176,7 @@ bool JsonParser::getPotionsForProf(QList<Utilities::Potion>& potions, Profile::P
 	for each (QJsonValue var in arr) {
 		Potion potionToAdd;
 		potionToAdd.name = var["name"].toString();
-		potionToAdd.type = Utilities::Item::TYPE_OF_ITEM::POTIONS;
+		potionToAdd.type = Item::TYPE_OF_ITEM::POTIONS;
 		potionToAdd.manaReg = var["mana"].toInt();
 		potionToAdd.healthReg = var["health"].toInt();
 		potionToAdd.forMage = var["for_mage"].toBool();
@@ -193,8 +218,7 @@ bool JsonParser::getPotionsForProf(QList<Utilities::Potion>& potions, Profile::P
 	return true;
 }
 
-bool JsonParser::readItemJson(QList<Utilities::Item>* items){
-	typedef Utilities::Item Item;
+bool JsonParser::readItemJson(QList<Item>& items){
 	QJsonObject obj;
 	bool res = openJsonFile(obj, itemsFilePath);
 	if (!res) {
@@ -225,6 +249,7 @@ bool JsonParser::readItemJson(QList<Utilities::Item>* items){
 		objToAdd.name = val["name"].toString();
 		objToAdd.price = val["price"].toInt();
 		objToAdd.weight = val["weight"].toInt();
+		//todo zamienic te if/elseif na mape
 		if (val["sell_blue_dijn"].toBool())
 			objToAdd.seller = Item::SELLER::BLUE_DJIN;
 		else if (val["sell_green_dijn"].toBool())
@@ -243,7 +268,7 @@ bool JsonParser::readItemJson(QList<Utilities::Item>* items){
 		}
 
 		QString typeOfItem = val["type"].toString();
-		
+		//todo zamienic te if/elseif na mape
 		if (typeOfItem == QString("ARMOR"))
 			objToAdd.type = Item::TYPE_OF_ITEM::ARMOR;
 		else if (typeOfItem == QString("AMULET"))
@@ -285,7 +310,7 @@ bool JsonParser::readItemJson(QList<Utilities::Item>* items){
 
 		itemToRet.push_back(objToAdd);
 	}
-	*items = itemToRet;
+	items = itemToRet;
 	return true;
 }
 
@@ -358,7 +383,7 @@ bool JsonParser::getManaRestoreMethodes(QStringList potionNameToBeFound, QList<I
 
 bool JsonParser::getItemsFromCategory(QList<Item>& itemsToRet, Item::TYPE_OF_ITEM type){
 	QList<Item> readItems, itemsTmp;
-	bool sucess = readItemJson(&readItems);
+	bool sucess = readItemJson(readItems);
 	if (!sucess)
 		return false;
 

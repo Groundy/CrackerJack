@@ -265,7 +265,7 @@ void ManaHealthStateAnalyzer::writeDataToVariableClass(){
 void ManaHealthStateAnalyzer::setupRestorationMethodes(QStringList listOfRestorationMethode_Health, QStringList listOfRestorationMethode_Mana){
 	JsonParser parser;
 	QList<Utilities::RestoreMethode> spellsAndPotions;
-	QList<Utilities::Item> manaPotions;
+	QList<Item> manaPotions;
 
 	parser.getHealthRestoreMethodes(listOfRestorationMethode_Health, spellsAndPotions);
 	parser.getManaRestoreMethodes(listOfRestorationMethode_Mana, manaPotions);

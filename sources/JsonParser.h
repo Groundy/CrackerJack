@@ -8,9 +8,8 @@
 #include "Utilities.h"
 #include "Profile.h"
 #include "qfileinfo.h"
+#include "Item.h"
 class JsonParser{
-
-	typedef Utilities::Item Item;
 	typedef Utilities::Spell Spell;
 public:
 	JsonParser();
@@ -23,8 +22,9 @@ public:
 	bool openJsonFile(QJsonObject& jsonDoc, QString pathToFile);
 	bool readSpellsJson(QList<Spell>& spells);
 	bool filtrSpells(QList<Spell>& spells, Profile::PROFESSION* prof, Spell::TYPE_OF_SPELL* type);
-	bool getPotionsForProf(QList<Utilities::Potion>& potions ,Profile::PROFESSION* prof, TypeOfPotion type);
-	bool readItemJson(QList<Item>* items);
+	bool filtrItems(QList<Item>& items, Item::SELLER* seller, Item::TYPE_OF_ITEM* typeOfItem);
+	bool getPotionsForProf(QList<Potion>& potions ,Profile::PROFESSION* prof, TypeOfPotion type);
+	bool readItemJson(QList<Item>& items);
 	bool getHealthRestoreMethodes(QStringList incantationsAndSpellsList, QList<Utilities::RestoreMethode>& spellsAndPotionsObjects);
 	bool getManaRestoreMethodes(QStringList potionNameList, QList<Item>& potionToReturn);
 	bool getItemsFromCategory(QList<Item> &readItems, Item::TYPE_OF_ITEM type);

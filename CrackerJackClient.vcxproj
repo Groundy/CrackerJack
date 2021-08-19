@@ -220,6 +220,7 @@ xcopy /y /d ".\dependencies\64-bit\libcrypto-1_1-x64.dll" "$(OutDir)"
   <ItemGroup>
     <ClCompile Include="sources\ClientServerApi.cpp" />
     <ClCompile Include="sources\Cryptography.cpp" />
+    <ClCompile Include="sources\Item.cpp" />
     <ClCompile Include="sources\Logger.cpp" />
     <ClCompile Include="sources\activeGameThread.cpp" />
     <ClCompile Include="sources\Calibrator.cpp" />
@@ -261,6 +262,7 @@ xcopy /y /d ".\dependencies\64-bit\libcrypto-1_1-x64.dll" "$(OutDir)"
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="sources\Cryptography.h" />
+    <ClInclude Include="sources\Item.h" />
     <ClInclude Include="sources\ServerConnector.h" />
     <QtMoc Include="sources\ClientServerApi.h" />
     <QtMoc Include="sources\Market.h" />

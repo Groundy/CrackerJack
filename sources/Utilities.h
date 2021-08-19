@@ -63,36 +63,7 @@ public:
 			toRet.type = RestoreMethode::TypeOfMethode::SPELL;
 			return toRet;
 		}
-	};
-	class Item {
-	public:
-		enum class TYPE_OF_ITEM { ARMOR, AMULETS, BOOTS, CREATURE, HELMETS, LEGS, OTHER, POTIONS, RINGS, RUNES, SHIELDS, VALUABLES, AMMO, AXES, SWORDS, CLUBS, DISTANCES, ROD, WANDS };
-		enum class SELLER {BLUE_DJIN, GREEN_DJIN, YASIR, ZAO, OTHER_SELLER, RASHID};
-		QString name;
-		int price, weight;
-		TYPE_OF_ITEM type;
-		SELLER seller;
-		RestoreMethode toRestoreMethode() {
-			bool isPotion = this->type == TYPE_OF_ITEM::POTIONS;
-			RestoreMethode toRet;
-			if (isPotion) {
-				toRet.name = this->name;
-				toRet.mana = 0;//manaNeededToUsePotion
-				toRet.cd = 1;//potions have 1 sec cooldown, for all potions
-				toRet.cdGroup = 1;
-				toRet.type = RestoreMethode::TypeOfMethode::POTION;
-			}
-			else
-				Logger::logPotenialBug("Tried to convert object _Item_ to _RestoreMethode_ but it's not a potion!, returning empty _RestoreMethode_","Utilites/Item","toRestoreMethode()");
-			return toRet;
-		}
-	};
-	class Potion : public Item {
-	public:
-		int manaReg, healthReg;
-		bool forMage, forRp, forEk;
-	};
-	
+	};	
 
 	static QStringList TOOL_getCodesOfAllInFolder_regular(QString pathToInputFolder, QString pathToOutputFolder);
 	static QStringList TOOL_getCodesOfAllInFolder_bottom(QString pathToInputFolder);

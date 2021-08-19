@@ -522,7 +522,7 @@ bool NewProfileConfiguartor::checkCorrectnessOfPage_5(){
 
 QStringList NewProfileConfiguartor::getNamesOfHealthRestoringMethodes(Profile::PROFESSION prof){
 	JsonParser parser;
-	QList<Utilities::Potion> potions;
+	QList<Potion> potions;
 	QList<Utilities::Spell> spells;
 	parser.readSpellsJson(spells);
 	auto typeOfSpell = Utilities::Spell::TYPE_OF_SPELL::HEALING;
@@ -540,7 +540,7 @@ QStringList NewProfileConfiguartor::getNamesOfHealthRestoringMethodes(Profile::P
 
 QStringList NewProfileConfiguartor::getNamesOfManaRestoringMethodes(Profile::PROFESSION prof){
 	JsonParser parser;
-	QList<Utilities::Potion> potions;
+	QList<Potion> potions;
 	parser.getPotionsForProf(potions, &prof, JsonParser::TypeOfPotion::MANA);
 
 	QStringList namesOfAvaibleManaRestoreMethodes;
