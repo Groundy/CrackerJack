@@ -1,7 +1,8 @@
 #pragma once
 #include "qstring.h"
 #include "qsettings.h"
- 
+#include "qdir.h"
+
 class StringResource{
 public:
 	static bool languageIsPl();

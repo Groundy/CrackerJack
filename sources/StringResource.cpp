@@ -1,7 +1,11 @@
 #include "StringResource.h"
 
 bool StringResource::languageIsPl(){
-	QSettings setttings("settings.ini", QSettings::IniFormat);
+	QDir dir = QDir::temp();
+	bool ok1 = dir.cdUp();
+	bool ok2 = dir.cd("CrackerJack");
+	QString path = dir.absoluteFilePath("settings.ini");
+	QSettings setttings(path, QSettings::IniFormat);
 	QString readVal = setttings.value("language").toString();
 	bool toRet = readVal == QString("pl");
 	return toRet;
