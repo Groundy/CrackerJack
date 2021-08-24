@@ -4,14 +4,16 @@
 #include "JsonParser.h"
 #include "Item.h"
 #include "StringResource.h"
+#include "SetNameWidnow.h"
+#include "qfiledialog.h"
 namespace Ui { class Market; };
 typedef Item::SELLER Seller;
 typedef Item::TYPE_OF_ITEM ItemType;
 class Offert {
 public:
-	Offert(Item item, int minPrice, int maxPrice, int amount);
+	Offert(QString itemName, int minPrice, int maxPrice, int amount);
 	QString toString();
-	Item item;
+	QString itemName;
 	int minPrice, maxPrice, amount;
 };
 
@@ -22,6 +24,9 @@ public slots:
 	void categoryChanged();
 	void itemChanged();
 	void addItemButtonPressed();
+	void saveListToJsonFile();
+	void readListFromJsonFile();
+	void removeItem();
 
 public:
 	Market();
@@ -36,13 +41,7 @@ private:
 
 	Seller filtr_seller;
 
-	bool isPl = StringResource::languageIsPl();
-	//change to map
-	const QString TEXT_ON_LABEL_ITEM_NAME = isPl ? QString::fromLocal8Bit("Nazwa: ") : "Name: ";
-	const QString TEXT_ON_LABEL_ITEM_PRICE = isPl ? QString::fromLocal8Bit("Cena: ") : "Price: ";
-	const QString TEXT_ON_LABEL_ITEM_WEIGHT = isPl ? QString::fromLocal8Bit("Waga: ") : "Weight: ";
-	const QString TEXT_ON_LABEL_RATION = isPl ? QString::fromLocal8Bit("Cena/waga: ") : "Price/weight: ";
-	const QString TEXT_ON_LABEL_BUYER = isPl ? QString::fromLocal8Bit("Kupiec: ") : "Buyer: ";
+	bool isPl;
 
 	void fillCategoryLists();
 	void fillLabels(Item* item);

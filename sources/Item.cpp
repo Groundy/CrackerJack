@@ -87,7 +87,7 @@ QMap<Item::TYPE_OF_ITEM, QString> Item::typesStrUsedInJson{
 	{Item::TYPE_OF_ITEM::HELMETS, "helmet"},
 	{Item::TYPE_OF_ITEM::LEGS, "legs"},
 	{Item::TYPE_OF_ITEM::OTHER, "other"},
-	{Item::TYPE_OF_ITEM::POTIONS, "potion"},
+	{Item::TYPE_OF_ITEM::POTIONS, "POTION"},
 	{Item::TYPE_OF_ITEM::RINGS, "ring"},
 	{Item::TYPE_OF_ITEM::RUNES, "rune"},
 	{Item::TYPE_OF_ITEM::SHIELDS, "shield"},

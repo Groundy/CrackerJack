@@ -18,6 +18,12 @@
 #include "Logger.h"
 class Utilities {
 public:
+	enum class FOLDERS_OF_TMP_FOLDER {Logs, Profiles, Main, Routes, MarketLists};
+	enum class FieldsOfIniFile {
+		LANGUAGE,
+		LAST_USED_LOGIN,
+		LAST_USED_PROFILE_NAME,
+	};
 
 	static int showMessageBox(QString title, QString text, QFlags<QMessageBox::StandardButton> buttons);
 	static bool showMessageBox_NO_YES(QString title, QString text);
@@ -30,12 +36,9 @@ public:
 	static LONG64 getCurrentTimeInMiliSeconds();
 	static QImage getImageFromAdvancedCode(QString codeOfImg);
 	static int getNumberFromBottomBar(QImage& bottomBar);
+	static QDir getDirWithCrackerJackTmpFolder(FOLDERS_OF_TMP_FOLDER folderType);
 
-	enum class FieldsOfIniFile {
-		LANGUAGE,
-		LAST_USED_LOGIN,
-		LAST_USED_PROFILE_NAME,
-	};
+
 	static QMap<FieldsOfIniFile, QString> get_Field_NamesFromIni_map();
 	static QString readFromIniFile(FieldsOfIniFile nameOfField);
 	static void writeIniFile(FieldsOfIniFile nameOfField, QString value);

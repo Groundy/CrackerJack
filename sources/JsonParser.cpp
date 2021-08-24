@@ -29,6 +29,8 @@ bool JsonParser::openJsonFile(QJsonObject& jsonDoc, QString pathToFile){
 
 bool JsonParser::readSpellsJson(QList<Spell>& spells){
 	QJsonObject obj;
+	static const QString spellFilePath = "C:\\Users\\ADMIN\\source\\repos\\CrackerJackClient\\Resources\\spells.json";//todo
+
 	bool res = openJsonFile(obj, spellFilePath);
 	if (!res) {
 		Logger::logPotenialBug("Problem with Json reading", "JsonParser", "readSpellsJson");
@@ -112,6 +114,7 @@ bool JsonParser::filtrSpells(QList<Spell>& spells, Profile::PROFESSION* prof, Sp
 
 bool JsonParser::getPotionsForProf(QList<Potion>& potions, Profile::PROFESSION* prof, TypeOfPotion type){
 	QJsonObject obj;
+	const QString itemsFilePath = "C:\\Users\\ADMIN\\source\\repos\\CrackerJackClient\\Resources\\items.json";//todo
 	bool res = openJsonFile(obj, itemsFilePath);
 	if (!res) {
 		Logger::logPotenialBug("Problem with Json reading", "JsonParser", "getPotionsForProf");
@@ -120,7 +123,7 @@ bool JsonParser::getPotionsForProf(QList<Potion>& potions, Profile::PROFESSION* 
 
 	QJsonArray arr = obj["potions"].toArray();
 	if (arr.size() == 0) {
-		Logger::logPotenialBug("No spells in json file", "JsonParser", "getPotionsForProf");
+		Logger::logPotenialBug("No potions in json file", "JsonParser", "getPotionsForProf");
 		return false;
 	}
 
@@ -172,6 +175,7 @@ bool JsonParser::getPotionsForProf(QList<Potion>& potions, Profile::PROFESSION* 
 
 bool JsonParser::readItemJson(QList<Item>& items){
 	QJsonObject obj;
+	const QString itemsFilePath = "C:\\Users\\ADMIN\\source\\repos\\CrackerJackClient\\Resources\\items.json";//todo
 	bool res = openJsonFile(obj, itemsFilePath);
 	if (!res) {
 		Logger::logPotenialBug("Problem with Json reading", "JsonParser", "readSpellsJson");

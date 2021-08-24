@@ -68,8 +68,7 @@ bool Route::movePointDown(int index){
 
 bool Route::loadFromJsonFile(QString pathToFile){
 	QJsonObject obj;
-	JsonParser jsonParser;
-	bool fileFound = jsonParser.openJsonFile(obj, pathToFile);
+	bool fileFound = JsonParser::openJsonFile(obj, pathToFile);
 	if (!fileFound) {
 		Logger::logPotenialBug("Can't find file " + pathToFile, "loadFromJsonFile", "Route");
 		QString textPl = QString::fromLocal8Bit("Plik: %1 nie istnieje.").arg(pathToFile);

@@ -14,23 +14,7 @@ RouteCreator::RouteCreator(QDialog* parent)
 	TRANSLATE_addNamesOfFieldTypesToList();
 	TRANSLATE_gui();
 
-	QDir dir = QDir::temp();
-	dir.cdUp();
-	bool CrackerJackDirExist = dir.cd("CrackerJack");
-	if (!CrackerJackDirExist) {
-		bool dirMade = dir.mkdir("CrackerJack");
-		if (!dirMade)
-			Logger::logPotenialBug("Can't create path to folder with routes","RouteCreator","RouteCreator");
-		dir.cd("CrackerJack");
-	}
-	bool RoutesDirExist = dir.cd("Routes");
-	if (!RoutesDirExist) {
-		bool dirMade = dir.mkdir("Routes");
-		if (!dirMade)
-			Logger::logPotenialBug("Can't create path to folder with routes", "RouteCreator", "RouteCreator");
-		dir.cd("Routes");
-	}
-	dirWithRoutes = dir;
+	dirWithRoutes = Utilities::getDirWithCrackerJackTmpFolder(Utilities::FOLDERS_OF_TMP_FOLDER::Routes);
 }
 
 RouteCreator::~RouteCreator(){

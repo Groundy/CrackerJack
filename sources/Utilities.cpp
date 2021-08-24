@@ -479,6 +479,44 @@ int Utilities::getNumberFromBottomBar(QImage& imgToShearchWithin){
 	return strToRe.toInt();
 }
 
+QDir Utilities::getDirWithCrackerJackTmpFolder(FOLDERS_OF_TMP_FOLDER folderType){
+	typedef FOLDERS_OF_TMP_FOLDER Sub;
+	QDir dir = QDir::tempPath();
+	dir.cdUp();
+	bool crackerJackFolderExist = dir.cd("CrackerJack");
+	if (!crackerJackFolderExist) {
+		bool dirCreationFailed = dir.mkdir("CrackerJack");
+		if (dirCreationFailed) {
+			QString text = QString("Failed to create sub-dir %1 in %2").arg("CrackerJack", dir.absolutePath());
+			Logger::logPotenialBug(text, "Utilities", "getDirWithCrackerJackTmpFolder");
+			return QDir::current();
+		}
+	}
+	if (folderType == Sub::Main)
+		return dir;
+
+	QString nameOfSubFolder;
+	if (folderType == Sub::Logs)
+		nameOfSubFolder = "Logs";
+	else if (folderType == Sub::MarketLists)
+		nameOfSubFolder = "MarketLists";
+	else if (folderType == Sub::Profiles)
+		nameOfSubFolder = "Profiles";
+	else if (folderType == Sub::Routes)
+		nameOfSubFolder = "Routes";
+
+	bool subFolderExist = dir.cd(nameOfSubFolder);
+	if (!subFolderExist) {
+		bool dirCreationFailed = dir.mkdir(nameOfSubFolder);
+		if (dirCreationFailed) {
+			QString text = QString("Failed to create sub-dir %1 in %2").arg(nameOfSubFolder, dir.absolutePath());
+			Logger::logPotenialBug(text, "Utilities", "getDirWithCrackerJackTmpFolder");
+			return QDir::current();
+		}
+	}
+	return dir;
+}
+
 QMap<Utilities::FieldsOfIniFile, QString> Utilities::get_Field_NamesFromIni_map(){
 	typedef Utilities::FieldsOfIniFile Field;
 	QMap<Field, QString> toRet;
@@ -506,8 +544,6 @@ void Utilities::writeIniFile(FieldsOfIniFile nameOfField, QString value){
 	QString nameOfFieldAsStr = map[nameOfField];
 	setttings.setValue(nameOfFieldAsStr, value);
 }
-
-
 
 
 
