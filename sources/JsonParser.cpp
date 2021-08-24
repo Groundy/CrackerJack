@@ -110,32 +110,6 @@ bool JsonParser::filtrSpells(QList<Spell>& spells, Profile::PROFESSION* prof, Sp
 	return true;
 }
 
-bool JsonParser::filtrItems(QList<Item>& items, Item::SELLER* seller, Item::TYPE_OF_ITEM* typeOfItem){
-	if (seller == NULL && typeOfItem == NULL)
-		return false;
-	typedef Item::SELLER Seller;
-	typedef Item::TYPE_OF_ITEM Type;
-
-	bool filtrBySeller = seller != NULL;
-	bool filtrByType = typeOfItem != NULL;
-	QList<Item> itemsToCopy = items;
-	items.clear();
-	for each (Item var in itemsToCopy) {
-		if (filtrBySeller) {
-			bool isProperSeller = (var.seller == *seller);
-			if (!isProperSeller)
-				continue;
-		}
-		if (filtrByType) {
-			bool isProperType = var.type == *typeOfItem;
-			if (!isProperType)
-				continue;
-		}
-		items.push_back(var);
-	}
-	return true;
-}
-
 bool JsonParser::getPotionsForProf(QList<Potion>& potions, Profile::PROFESSION* prof, TypeOfPotion type){
 	QJsonObject obj;
 	bool res = openJsonFile(obj, itemsFilePath);
@@ -205,10 +179,7 @@ bool JsonParser::readItemJson(QList<Item>& items){
 	}
 
 	QJsonArray arr;
-	QStringList listOfCategoryNames = { "armors","amulets","boots","creature","helmets",
-		"legs","other","potions","rings","runes","shields","valuables","ammo","axes","swords",
-		"clubs","distance","rod","wands"
-	};
+	QStringList listOfCategoryNames = Item::getListOfCategories();
 	for each (QString var in listOfCategoryNames) {
 		QJsonArray toAdd = obj[var].toArray();
 		for each (QJsonValue val in toAdd)
@@ -226,7 +197,7 @@ bool JsonParser::readItemJson(QList<Item>& items){
 		Item objToAdd;
 		objToAdd.name = val["name"].toString();
 		objToAdd.price = val["price"].toInt();
-		objToAdd.weight = val["weight"].toInt();
+		objToAdd.weight = val["weight"].toDouble();
 		//todo zamienic te if/elseif na mape
 		if (val["sell_blue_dijn"].toBool())
 			objToAdd.seller = Item::SELLER::BLUE_DJIN;
@@ -240,55 +211,12 @@ bool JsonParser::readItemJson(QList<Item>& items){
 			objToAdd.seller = Item::SELLER::OTHER_SELLER;
 		else if (val["sell_rashid"].toBool())
 			objToAdd.seller = Item::SELLER::RASHID;
-		else {
-			Logger::logPotenialBug("Seller value read from json file is other than allowed and defined sellers", "JsonParser", "readItemJson");
-			return false;
-		}
 
-		QString typeOfItem = val["type"].toString();
-		//todo zamienic te if/elseif na mape
-		if (typeOfItem == QString("ARMOR"))
-			objToAdd.type = Item::TYPE_OF_ITEM::ARMOR;
-		else if (typeOfItem == QString("AMULET"))
-			objToAdd.type = Item::TYPE_OF_ITEM::AMULETS;
-		else if (typeOfItem == QString("BOOTS"))
-			objToAdd.type = Item::TYPE_OF_ITEM::BOOTS;
-		else if (typeOfItem == QString("CREATURE"))
-			objToAdd.type = Item::TYPE_OF_ITEM::CREATURE;
-		else if (typeOfItem == QString("HELMET"))
-			objToAdd.type = Item::TYPE_OF_ITEM::HELMETS;
-		else if (typeOfItem == QString("LEGS"))
-			objToAdd.type = Item::TYPE_OF_ITEM::LEGS;
-		else if (typeOfItem == QString("OTHER"))
-			objToAdd.type = Item::TYPE_OF_ITEM::OTHER;
-		else if (typeOfItem == QString("POTION"))
-			objToAdd.type = Item::TYPE_OF_ITEM::POTIONS;
-		else if (typeOfItem == QString("RING"))
-			objToAdd.type = Item::TYPE_OF_ITEM::RINGS;
-		else if (typeOfItem == QString("RUNE"))
-			objToAdd.type = Item::TYPE_OF_ITEM::RUNES;
-		else if (typeOfItem == QString("SHIELD"))
-			objToAdd.type = Item::TYPE_OF_ITEM::SHIELDS;
-		else if (typeOfItem == QString("AMMO"))
-			objToAdd.type = Item::TYPE_OF_ITEM::AMMO;
-		else if (typeOfItem == QString("AXE"))
-			objToAdd.type = Item::TYPE_OF_ITEM::AXES;
-		else if (typeOfItem == QString("SWORD"))
-			objToAdd.type = Item::TYPE_OF_ITEM::SWORDS;
-		else if (typeOfItem == QString("CLUB"))
-			objToAdd.type = Item::TYPE_OF_ITEM::CLUBS;
-		else if (typeOfItem == QString("DISTANCE"))
-			objToAdd.type = Item::TYPE_OF_ITEM::DISTANCES;
-		else if (typeOfItem == QString("ROD"))
-			objToAdd.type = Item::TYPE_OF_ITEM::ROD;
-		else if (typeOfItem == QString("WAND"))
-			objToAdd.type = Item::TYPE_OF_ITEM::WANDS;
-		else
-			return false;
-
-		itemToRet.push_back(objToAdd);
+		QString typeOfItemStr = val["type"].toString();
+		Item::TYPE_OF_ITEM typeOfItem = Item::typesStrUsedInJson.key(typeOfItemStr);
+		objToAdd.type = typeOfItem;
+		items.push_back(objToAdd);
 	}
-	items = itemToRet;
 	return true;
 }
 

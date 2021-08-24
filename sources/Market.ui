@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>733</width>
-    <height>469</height>
+    <width>729</width>
+    <height>365</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -18,29 +18,8 @@
     <layout class="QGridLayout" name="gridLayout">
      <item row="0" column="0">
       <layout class="QGridLayout" name="gridLayout_3">
-       <item row="6" column="1">
-        <widget class="QRadioButton" name="showItemsButton_Esrik">
-         <property name="text">
-          <string>show Esrik</string>
-         </property>
-        </widget>
-       </item>
-       <item row="7" column="1">
-        <widget class="QRadioButton" name="showItemsButton_All">
-         <property name="text">
-          <string>show all</string>
-         </property>
-        </widget>
-       </item>
-       <item row="6" column="0">
-        <widget class="QRadioButton" name="showItemsButton_Yasir">
-         <property name="text">
-          <string>show Yasir</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="2" rowspan="9">
-        <spacer name="horizontalSpacer">
+       <item row="1" column="5" rowspan="11">
+        <spacer name="horizontalSpacer_2">
          <property name="orientation">
           <enum>Qt::Horizontal</enum>
          </property>
@@ -52,196 +31,7 @@
          </property>
         </spacer>
        </item>
-       <item row="1" column="3" rowspan="8">
-        <layout class="QGridLayout" name="gridLayout_5">
-         <item row="2" column="0" colspan="2">
-          <widget class="QLabel" name="buyerInfoLabel">
-           <property name="maximumSize">
-            <size>
-             <width>16777215</width>
-             <height>25</height>
-            </size>
-           </property>
-           <property name="text">
-            <string>Buyer: </string>
-           </property>
-          </widget>
-         </item>
-         <item row="3" column="0" colspan="2">
-          <widget class="QLabel" name="priceInfoLabel">
-           <property name="maximumSize">
-            <size>
-             <width>16777215</width>
-             <height>25</height>
-            </size>
-           </property>
-           <property name="text">
-            <string>Price:</string>
-           </property>
-          </widget>
-         </item>
-         <item row="5" column="0" colspan="2">
-          <widget class="QLabel" name="priceWeightRatioLabel">
-           <property name="text">
-            <string>Price/Weight ratio:</string>
-           </property>
-          </widget>
-         </item>
-         <item row="6" column="1">
-          <widget class="QRadioButton" name="sellOptionButton">
-           <property name="text">
-            <string>Sell on market</string>
-           </property>
-          </widget>
-         </item>
-         <item row="9" column="0" colspan="2">
-          <widget class="QLabel" name="minPriceLabel">
-           <property name="maximumSize">
-            <size>
-             <width>16777215</width>
-             <height>25</height>
-            </size>
-           </property>
-           <property name="text">
-            <string>min price to buy:</string>
-           </property>
-          </widget>
-         </item>
-         <item row="11" column="0" colspan="2">
-          <widget class="QLabel" name="maxPriceLabel">
-           <property name="maximumSize">
-            <size>
-             <width>16777215</width>
-             <height>25</height>
-            </size>
-           </property>
-           <property name="text">
-            <string>max price to buy:</string>
-           </property>
-          </widget>
-         </item>
-         <item row="7" column="0" rowspan="2" colspan="2">
-          <spacer name="verticalSpacer_2">
-           <property name="orientation">
-            <enum>Qt::Vertical</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>20</width>
-             <height>40</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item row="12" column="0" colspan="2">
-          <widget class="QSpinBox" name="maxPriceValue">
-           <property name="maximumSize">
-            <size>
-             <width>16777215</width>
-             <height>25</height>
-            </size>
-           </property>
-           <property name="buttonSymbols">
-            <enum>QAbstractSpinBox::NoButtons</enum>
-           </property>
-          </widget>
-         </item>
-         <item row="4" column="0" colspan="2">
-          <widget class="QLabel" name="weightInfoLabel">
-           <property name="maximumSize">
-            <size>
-             <width>16777215</width>
-             <height>25</height>
-            </size>
-           </property>
-           <property name="text">
-            <string>Weight:</string>
-           </property>
-          </widget>
-         </item>
-         <item row="14" column="0" colspan="2">
-          <spacer name="verticalSpacer_3">
-           <property name="orientation">
-            <enum>Qt::Vertical</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>20</width>
-             <height>40</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item row="1" column="0" colspan="2">
-          <widget class="QLabel" name="itemNameInfoLabel">
-           <property name="maximumSize">
-            <size>
-             <width>16777215</width>
-             <height>25</height>
-            </size>
-           </property>
-           <property name="text">
-            <string>Item: </string>
-           </property>
-          </widget>
-         </item>
-         <item row="6" column="0">
-          <widget class="QRadioButton" name="buyOptionButton">
-           <property name="text">
-            <string>Buy on market</string>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="0" colspan="2">
-          <spacer name="verticalSpacer">
-           <property name="orientation">
-            <enum>Qt::Vertical</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>20</width>
-             <height>40</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item row="10" column="0" colspan="2">
-          <widget class="QSpinBox" name="minPriceValue">
-           <property name="maximumSize">
-            <size>
-             <width>16777215</width>
-             <height>25</height>
-            </size>
-           </property>
-           <property name="buttonSymbols">
-            <enum>QAbstractSpinBox::NoButtons</enum>
-           </property>
-          </widget>
-         </item>
-         <item row="13" column="0" colspan="2">
-          <widget class="QPushButton" name="addItemButton">
-           <property name="text">
-            <string>add item</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </item>
-       <item row="5" column="1">
-        <widget class="QRadioButton" name="showItemsButton_Blue">
-         <property name="text">
-          <string>show Blue Dijnn</string>
-         </property>
-        </widget>
-       </item>
-       <item row="7" column="0">
-        <widget class="QRadioButton" name="showItemsButton_Rashid">
-         <property name="text">
-          <string>show Rashid</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="5" rowspan="7">
+       <item row="1" column="6" rowspan="9">
         <layout class="QGridLayout" name="gridLayout_4">
          <item row="1" column="0">
           <widget class="QPushButton" name="pushButton">
@@ -265,7 +55,20 @@
           </widget>
          </item>
          <item row="0" column="0" colspan="2">
-          <widget class="QListWidget" name="listWidget"/>
+          <widget class="QListWidget" name="listWidget">
+           <property name="minimumSize">
+            <size>
+             <width>250</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>250</width>
+             <height>16777215</height>
+            </size>
+           </property>
+          </widget>
          </item>
          <item row="2" column="1">
           <widget class="QPushButton" name="pushButton_4">
@@ -276,11 +79,185 @@
          </item>
         </layout>
        </item>
-       <item row="1" column="0" colspan="2">
-        <widget class="QListWidget" name="categoriesWindow"/>
+       <item row="1" column="4" rowspan="10">
+        <layout class="QGridLayout" name="gridLayout_5">
+         <item row="14" column="0" colspan="2">
+          <widget class="QPushButton" name="addItemButton">
+           <property name="text">
+            <string>add item</string>
+           </property>
+          </widget>
+         </item>
+         <item row="8" column="0" colspan="2">
+          <widget class="QLabel" name="minPriceLabel">
+           <property name="maximumSize">
+            <size>
+             <width>16777215</width>
+             <height>25</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>min price to buy:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="0" colspan="2">
+          <widget class="QLabel" name="priceInfoLabel">
+           <property name="maximumSize">
+            <size>
+             <width>16777215</width>
+             <height>25</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>Price:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="12" column="0" colspan="2">
+          <widget class="QLabel" name="label">
+           <property name="text">
+            <string>amount: </string>
+           </property>
+          </widget>
+         </item>
+         <item row="5" column="0" colspan="2">
+          <widget class="QLabel" name="priceWeightRatioLabel">
+           <property name="minimumSize">
+            <size>
+             <width>150</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>Price/Weight ratio:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="11" column="0" colspan="2">
+          <widget class="QSpinBox" name="maxPriceValue">
+           <property name="maximumSize">
+            <size>
+             <width>16777215</width>
+             <height>25</height>
+            </size>
+           </property>
+           <property name="buttonSymbols">
+            <enum>QAbstractSpinBox::NoButtons</enum>
+           </property>
+           <property name="maximum">
+            <number>999999999</number>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="0" colspan="2">
+          <widget class="QLabel" name="buyerInfoLabel">
+           <property name="maximumSize">
+            <size>
+             <width>16777215</width>
+             <height>25</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>Buyer: </string>
+           </property>
+          </widget>
+         </item>
+         <item row="4" column="0" colspan="2">
+          <widget class="QLabel" name="weightInfoLabel">
+           <property name="maximumSize">
+            <size>
+             <width>16777215</width>
+             <height>25</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>Weight:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="9" column="0" colspan="2">
+          <widget class="QSpinBox" name="minPriceValue">
+           <property name="maximumSize">
+            <size>
+             <width>16777215</width>
+             <height>25</height>
+            </size>
+           </property>
+           <property name="buttonSymbols">
+            <enum>QAbstractSpinBox::NoButtons</enum>
+           </property>
+           <property name="maximum">
+            <number>999999999</number>
+           </property>
+          </widget>
+         </item>
+         <item row="13" column="0" colspan="2">
+          <widget class="QSpinBox" name="amountValue">
+           <property name="buttonSymbols">
+            <enum>QAbstractSpinBox::NoButtons</enum>
+           </property>
+           <property name="maximum">
+            <number>999999999</number>
+           </property>
+          </widget>
+         </item>
+         <item row="10" column="0" colspan="2">
+          <widget class="QLabel" name="maxPriceLabel">
+           <property name="maximumSize">
+            <size>
+             <width>16777215</width>
+             <height>25</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>max price to buy:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="0" colspan="2">
+          <widget class="QLabel" name="itemNameInfoLabel">
+           <property name="maximumSize">
+            <size>
+             <width>16777215</width>
+             <height>25</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>Item: </string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="0" colspan="2">
+          <spacer name="verticalSpacer_2">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>20</width>
+             <height>40</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item row="15" column="0" colspan="2">
+          <spacer name="verticalSpacer">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>20</width>
+             <height>40</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+        </layout>
        </item>
-       <item row="1" column="4" rowspan="9">
-        <spacer name="horizontalSpacer_2">
+       <item row="1" column="3" rowspan="11">
+        <spacer name="horizontalSpacer">
          <property name="orientation">
           <enum>Qt::Horizontal</enum>
          </property>
@@ -292,15 +269,72 @@
          </property>
         </spacer>
        </item>
-       <item row="5" column="0">
-        <widget class="QRadioButton" name="showItemsButton_Green">
-         <property name="text">
-          <string>show Green Dijnn</string>
-         </property>
-        </widget>
-       </item>
-       <item row="4" column="0" colspan="2">
-        <widget class="QListWidget" name="itemList"/>
+       <item row="1" column="2">
+        <layout class="QVBoxLayout" name="verticalLayout_2">
+         <item>
+          <widget class="QListWidget" name="categoriesWindow"/>
+         </item>
+         <item>
+          <widget class="QListWidget" name="itemList"/>
+         </item>
+         <item>
+          <widget class="QGroupBox" name="sellersRadioButtonBox">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>90</height>
+            </size>
+           </property>
+           <property name="title">
+            <string/>
+           </property>
+           <layout class="QGridLayout" name="gridLayout_7">
+            <item row="2" column="1">
+             <widget class="QRadioButton" name="showItemsButton_All">
+              <property name="text">
+               <string>show all</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="1">
+             <widget class="QRadioButton" name="showItemsButton_Green">
+              <property name="text">
+               <string>show Green Dijnn</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="2">
+             <widget class="QRadioButton" name="showItemsButton_Yasir">
+              <property name="text">
+               <string>show Yasir</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="1">
+             <widget class="QRadioButton" name="showItemsButton_Blue">
+              <property name="text">
+               <string>show Blue Dijnn</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="2">
+             <widget class="QRadioButton" name="showItemsButton_Rashid">
+              <property name="text">
+               <string>show Rashid</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="2">
+             <widget class="QRadioButton" name="showItemsButton_Esrik">
+              <property name="text">
+               <string>show Esrik</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </item>
+        </layout>
        </item>
       </layout>
      </item>
@@ -310,5 +344,156 @@
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>categoriesWindow</sender>
+   <signal>currentItemChanged(QListWidgetItem*,QListWidgetItem*)</signal>
+   <receiver>Market</receiver>
+   <slot>categoryChanged()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>126</x>
+     <y>96</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>366</x>
+     <y>234</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>showItemsButton_All</sender>
+   <signal>clicked()</signal>
+   <receiver>Market</receiver>
+   <slot>sellerGroupBoxChanged()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>74</x>
+     <y>435</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>366</x>
+     <y>234</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>showItemsButton_Blue</sender>
+   <signal>clicked()</signal>
+   <receiver>Market</receiver>
+   <slot>sellerGroupBoxChanged()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>183</x>
+     <y>387</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>366</x>
+     <y>234</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>showItemsButton_Green</sender>
+   <signal>clicked()</signal>
+   <receiver>Market</receiver>
+   <slot>sellerGroupBoxChanged()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>74</x>
+     <y>387</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>366</x>
+     <y>234</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>showItemsButton_Rashid</sender>
+   <signal>clicked()</signal>
+   <receiver>Market</receiver>
+   <slot>sellerGroupBoxChanged()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>183</x>
+     <y>411</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>366</x>
+     <y>234</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>showItemsButton_Yasir</sender>
+   <signal>clicked()</signal>
+   <receiver>Market</receiver>
+   <slot>sellerGroupBoxChanged()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>74</x>
+     <y>411</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>366</x>
+     <y>234</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>showItemsButton_Esrik</sender>
+   <signal>clicked()</signal>
+   <receiver>Market</receiver>
+   <slot>sellerGroupBoxChanged()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>183</x>
+     <y>435</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>366</x>
+     <y>234</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>itemList</sender>
+   <signal>currentItemChanged(QListWidgetItem*,QListWidgetItem*)</signal>
+   <receiver>Market</receiver>
+   <slot>itemChanged()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>152</x>
+     <y>268</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>364</x>
+     <y>229</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>addItemButton</sender>
+   <signal>clicked()</signal>
+   <receiver>Market</receiver>
+   <slot>addItemButtonPressed()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>363</x>
+     <y>341</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>364</x>
+     <y>182</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>sellerGroupBoxChanged()</slot>
+  <slot>categoryChanged()</slot>
+  <slot>itemChanged()</slot>
+  <slot>addItemButtonPressed()</slot>
+ </slots>
 </ui>
