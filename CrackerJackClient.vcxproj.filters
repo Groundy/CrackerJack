@@ -121,6 +121,9 @@
     <ClCompile Include="sources\Item.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="sources\MarketProcess.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="sources\LoginWindow.h">
@@ -154,6 +157,9 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="sources\SetNameWidnow.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="sources\MarketProcess.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>

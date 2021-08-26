@@ -94,10 +94,10 @@ void Market::addItemButtonPressed(){
 		return;
 	}
 
-	Offert offert(currentlyDisplayedItem.name,minVal,maxVal,amount);
-	bool alreadyOnList = checkIfItemIsAlreadyOnList(offert);
+	Offer offer(currentlyDisplayedItem.name,minVal,maxVal,amount);
+	bool alreadyOnList = checkIfItemIsAlreadyOnList(offer);
 	if (!alreadyOnList) {
-		offertsList.push_back(offert);
+		offersList.push_back(offer);
 		repaitOfertsList();
 		currentlyDisplayedItem = Item();
 		fillLabels(NULL);
@@ -203,9 +203,9 @@ void Market::fillItemList(Seller sellerFiltr, ItemType categoryFiltr){
 	ui->itemList->repaint();
 }
 
-bool Market::checkIfItemIsAlreadyOnList(Offert& offertToCheck){
-	for each (auto var in offertsList){
-		bool alreadyOnList = offertToCheck.itemName == var.itemName;
+bool Market::checkIfItemIsAlreadyOnList(Offer& offerToCheck){
+	for each (auto var in offersList){
+		bool alreadyOnList = offerToCheck.itemName == var.itemName;
 		if (alreadyOnList)
 			return true;
 	}
@@ -215,7 +215,7 @@ bool Market::checkIfItemIsAlreadyOnList(Offert& offertToCheck){
 void Market::repaitOfertsList(){
 	QListWidget* list = ui->listWidget;
 	list->clear();
-	for each (auto var in offertsList)
+	for each (auto var in offersList)
 		list->addItem(var.toString());
 	list->repaint();
 }
@@ -230,7 +230,7 @@ void Market::saveListToJsonFile(){
 		return;
 
 	QJsonArray arr;
-	for each (auto var in offertsList){
+	for each (auto var in offersList){
 		QJsonObject toAdd;
 		toAdd.insert("itemName", QJsonValue(var.itemName));
 		toAdd.insert("minPrice", QJsonValue(var.minPrice));
@@ -239,7 +239,7 @@ void Market::saveListToJsonFile(){
 		arr.append(toAdd);
 	}
 	QJsonObject mainObj;
-	mainObj.insert("offerts", QJsonValue(arr));
+	mainObj.insert("offers", QJsonValue(arr));
 	QJsonDocument docToSave(mainObj);
 	
 	QString pathToFolder = ditWithSavedItemLists.absolutePath();
@@ -256,7 +256,7 @@ void Market::readListFromJsonFile(){
 		return;
 	QJsonObject obj;
 	JsonParser::openJsonFile(obj, fileList.first());
-	QJsonArray arr = obj["offerts"].toArray();
+	QJsonArray arr = obj["offers"].toArray();
 	if (arr.count() == 0) {
 		QString textToDisplayPl = QString::fromLocal8Bit("Plik nie jest poprawny lub jest pusty.");
 		QString textToDisplayEng = "File is uncorrect or empty.";
@@ -266,15 +266,15 @@ void Market::readListFromJsonFile(){
 		return;
 	}
 
-	offertsList.clear();
+	offersList.clear();
 	for each (QJsonValue var in arr){
 		QJsonObject obj = var.toObject();
 		QString itemNameStr = obj.value("itemName").toString();
 		int minPrice = obj.value("minPrice").toInt();
 		int maxPrice = obj.value("maxPrice").toInt();
 		int amount = obj.value("amount").toInt();
-		Offert offert(itemNameStr, minPrice, maxPrice, amount);
-		offertsList.append(offert);
+		Offer offer(itemNameStr, minPrice, maxPrice, amount);
+		offersList.append(offer);
 	}
 	repaitOfertsList();
 }
@@ -288,18 +288,18 @@ void Market::removeItem(){
 	if (!elementInRange)
 		return;
 
-	offertsList.removeAt(currentRow);
+	offersList.removeAt(currentRow);
 	repaitOfertsList();
 }
 
-Offert::Offert(QString itemNameToSet, int minPrice, int maxPrice, int amount){
+Offer::Offer(QString itemNameToSet, int minPrice, int maxPrice, int amount){
 	this->itemName = itemNameToSet;
 	this->amount = amount;
 	this->minPrice = minPrice;
 	this->maxPrice = maxPrice;
 }
 
-QString Offert::toString(){
+QString Offer::toString(){
 	QString minPriceStr = QString::number(minPrice);
 	QString maxPriceStr = QString::number(maxPrice);
 	QString amountStr = QString::number(amount);

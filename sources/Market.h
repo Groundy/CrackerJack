@@ -9,9 +9,9 @@
 namespace Ui { class Market; };
 typedef Item::SELLER Seller;
 typedef Item::TYPE_OF_ITEM ItemType;
-class Offert {
+class Offer {
 public:
-	Offert(QString itemName, int minPrice, int maxPrice, int amount);
+	Offer(QString itemName, int minPrice, int maxPrice, int amount);
 	QString toString();
 	QString itemName;
 	int minPrice, maxPrice, amount;
@@ -36,7 +36,7 @@ private:
 	Ui::Market *ui;
 	QDir ditWithSavedItemLists;
 	QList<Item> allItems;
-	QList<Offert> offertsList;
+	QList<Offer> offersList;
 	Item currentlyDisplayedItem;
 
 	Seller filtr_seller;
@@ -46,6 +46,6 @@ private:
 	void fillCategoryLists();
 	void fillLabels(Item* item);
 	void fillItemList(Seller sellerFiltr, ItemType categoryFiltr);
-	bool checkIfItemIsAlreadyOnList(Offert& offertToCheck);
+	bool checkIfItemIsAlreadyOnList(Offer& offerToCheck);
 	void repaitOfertsList();
 };

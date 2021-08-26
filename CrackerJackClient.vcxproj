@@ -228,6 +228,7 @@ xcopy /y /d ".\dependencies\64-bit\libcrypto-1_1-x64.dll" "$(OutDir)"
     <ClCompile Include="sources\MainMenu.cpp" />
     <ClCompile Include="sources\ManaHealthStateAnalyzer.cpp" />
     <ClCompile Include="sources\Market.cpp" />
+    <ClCompile Include="sources\MarketProcess.cpp" />
     <ClCompile Include="sources\MinimapAnalyzer.cpp" />
     <ClCompile Include="sources\NewProfileConfiguartor.cpp" />
     <ClCompile Include="sources\Key.cpp" />
@@ -263,6 +264,7 @@ xcopy /y /d ".\dependencies\64-bit\libcrypto-1_1-x64.dll" "$(OutDir)"
   <ItemGroup>
     <ClInclude Include="sources\Cryptography.h" />
     <ClInclude Include="sources\Item.h" />
+    <QtMoc Include="sources\MarketProcess.h" />
     <ClInclude Include="sources\ServerConnector.h" />
     <QtMoc Include="sources\ClientServerApi.h" />
     <QtMoc Include="sources\Market.h" />
