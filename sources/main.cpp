@@ -19,11 +19,14 @@ int main(int argc, char *argv[])
 	if (result != QDialog::Accepted)
 		return 0;
 	*/
+
 	Profile* prof = new Profile();
+	/*
 	SelectProfileWindow win(NULL, prof);
 	bool accepted = win.exec() == QDialog::Accepted;
 	if (!accepted)
 		return 0;
+	*/
 	MainMenu* mainMenu = new MainMenu(prof, NULL);
 	bool accepted2 = mainMenu->exec() == QDialog::Accepted;
 	if (!accepted2) {
@@ -35,8 +38,6 @@ int main(int argc, char *argv[])
 }
 
 void test(){
-	Market t;
-	t.exec();
 };
 
 

@@ -1,3 +1,5 @@
+50. Przy usuwaniu screenow, nalezy usuwac tylko te zrobione hotkeyem, nie nalezy usuwac screen automatycznych.
+48. Dodaæ obs³ugê przypadku gdy postaæ nie ma ustawionych zadnych ofert
 47. Dodac sprawdzanie czy trasa jest zrobiona dobrze w RouteCreator
 44. Zrobiæ clean-up polegaj¹cy na oznaczeniu funkcji translate
 39. Dodaæ mutexy w przypadku czytania i edycji pó³ pamiêci wycinków obrazów.
@@ -19,6 +21,7 @@
 
 
 //DONE
+49. dodaæ obs³ugê znaku "rt" i "rf" gdy¿ nie s¹ one rozdzielone;
 48. W RouteCreator po wczytaniu trasy krótszej niz aktaulna, punkty nie sa kasowane
 46. W SetNameWindow ustawic sprawdzanie czy nazwa nie zawiera znakow ktore sa niedozwolone
 45. Dodaæ przyciski koñcz¹ce tworzenie trasy, wychodz¹ce z okna oraz ³adowania trasy w RouteCreator i ich obsluge

@@ -29,7 +29,7 @@ public:
 	static bool showMessageBox_NO_YES(QString title, QString text);
 	static bool sendKeyStrokeToProcess(Key key, unsigned int PID, QString WindowName);
 	static void imgToBlackAndWhiteAllColors(QImage& img, int threshold);
-	static QString imgWithStrToStr(QImage* img);
+	static QString imgWithStrToStr(QImage& img);
 	static QImage fromCharToImg(QChar CharToImg);
 	static void rotateImgToRight(QImage& imgToRotate, int timesToRotateRight);
 	static bool isItPixelFromFrame(uint color, int minValueAcceptable, int maxValueAcceptable, bool requireSameValuesOfRGB);
@@ -37,12 +37,14 @@ public:
 	static QImage getImageFromAdvancedCode(QString codeOfImg);
 	static int getNumberFromBottomBar(QImage& bottomBar);
 	static QDir getDirWithCrackerJackTmpFolder(FOLDERS_OF_TMP_FOLDER folderType);
-
-
+	static void clickLeft(QPoint pt, HWND handler);
+	static void clickRight(QPoint pt, HWND handler);
+	static void sendStringToGame(QString str, HWND handler);
+	static HWND getHandlerToGameWindow(unsigned int PID, QString WindowName);
 	static QMap<FieldsOfIniFile, QString> get_Field_NamesFromIni_map();
 	static QString readFromIniFile(FieldsOfIniFile nameOfField);
 	static void writeIniFile(FieldsOfIniFile nameOfField, QString value);
-	
+
 	class RestoreMethode {
 	public:
 		enum class TypeOfMethode{ POTION, SPELL };
@@ -70,16 +72,18 @@ public:
 
 	static QStringList TOOL_getCodesOfAllInFolder_regular(QString pathToInputFolder, QString pathToOutputFolder);
 	static QStringList TOOL_getCodesOfAllInFolder_bottom(QString pathToInputFolder);
-	static void TOOL_saveImgToOutPutFolder(QImage& img, QString* extraName);
+	static void TOOL_saveImgToOutPutFolder(QImage& img, QString extraName);
 
 	static void cutImgWithLettersToSingleLettersImgList(QImage& img, QList<QImage>& list);
-	static QMap<QString, QChar> getQmapWithCodes();
+	static QMap<QString, QString> getQmapWithCodes();
 	static QString getPathToSettingsFile();
 	static void getMapWithNumbersFromBottomBar(QMap<QString, int>& lightToRet, QMap<QString, int>& darkToRet);
 	static void imgToBlackAndWhiteOneColor(QImage& img, int threshold);
-	static QChar StrCodeToQChar(QString code);
+	static QString StrCodeToLetter(QString code);
 	static void cutBlackBordersOfImg(QImage& img);
 	static QString letterImgToLetterCodeStr(QImage* SingleLetterImg);
+
+	static void TOOL_clearBaseMent(VariablesClass* var);
 	/*
 	static void UNSUED_findBoredersOfFrames(QImage fullScreen);
 	static void UNUSED_imgToOneColor(QImage& img, QRgb minimalColorValues, QRgb maxColorValues, QRgb colorToSet, bool allOfThem);

@@ -12,6 +12,8 @@ MainMenu::MainMenu(Profile* selectedProf, QWidget* parent)
 	threadStarter();
 	signalSlotConnector();
 	TRANSLATE_setUpGui();
+	this->activityThread->exit();
+	test();
 }
 
 MainMenu::~MainMenu(){

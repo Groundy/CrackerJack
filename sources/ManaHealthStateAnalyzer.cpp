@@ -75,22 +75,22 @@ void ManaHealthStateAnalyzer::mainLoop(){
 int ManaHealthStateAnalyzer::changeImgsToStrings(){
 	QString healthStr, manaStr, manaShieldStr, combinedStr, tmp;
 	if (healthFound) {
-		healthStr = Utilities::imgWithStrToStr(&healthImg);
+		healthStr = Utilities::imgWithStrToStr(healthImg);
 		tmp = healthStr.remove("\0");
 		healthStr = tmp;
 	}
 	if (manaFound) {
-		manaStr = Utilities::imgWithStrToStr(&manaImg);
+		manaStr = Utilities::imgWithStrToStr(manaImg);
 		tmp = manaStr.remove("\0");
 		manaStr = tmp;
 	}
 	if (manaShieldFound) {
-		manaShieldStr = Utilities::imgWithStrToStr(&manaShieldImg);
+		manaShieldStr = Utilities::imgWithStrToStr(manaShieldImg);
 		tmp = manaShieldStr.remove("\0");
 		manaShieldStr = tmp;
 	}
 	if (combinedFound) {
-		combinedStr = Utilities::imgWithStrToStr(&combinedImg);
+		combinedStr = Utilities::imgWithStrToStr(combinedImg);
 		tmp = combinedStr.remove("\0");
 		combinedStr = tmp;
 	}

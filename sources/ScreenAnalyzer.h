@@ -28,9 +28,10 @@ public:
 	~ScreenAnalyzer();
 	void run();
 	bool enableScreenAnalyzer = true;
-
+	int loadScreen(QImage& img);
 signals:
 	void sendAllowenceToAnalyze(bool state);
+
 
 
 private:
@@ -42,7 +43,6 @@ private:
 
 	void mainLoop();
 	int cutImportantImgsFromWholeScreenAndSendThemToVarClass(QImage& fullscreen);
-	int loadScreen(QImage& img);
 	void deleteScreenShotFolder();
 	QString getNameOfLastTakenScreenShot();
 	int getNameOfLastTakenScreenShotForSure(QString& toRet, int maxTries);

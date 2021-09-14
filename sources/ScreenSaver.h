@@ -9,8 +9,8 @@ public:
 	int timeBetweenScreens = 550;
 	ScreenSaver(QObject *parent, VariablesClass *varClass);
 	~ScreenSaver();
-private:
 	void sendScreenRequestToGame(Key keyCodeForScreen);
+private:
 	void screenLoop();
 	VariablesClass* var;
 };

@@ -1,9 +1,10 @@
 #include "Market.h"
 #include "ui_Market.h"
 
-Market::Market(){
+Market::Market(VariablesClass* varToSet){
 	ui = new Ui::Market();
 	ui->setupUi(this);
+	var = varToSet;
 	JsonParser::readItemJson(this->allItems);
 	ui->showItemsButton_All->setChecked(true);
 	filtr_seller = Seller::ANY;
@@ -230,14 +231,9 @@ void Market::saveListToJsonFile(){
 		return;
 
 	QJsonArray arr;
-	for each (auto var in offersList){
-		QJsonObject toAdd;
-		toAdd.insert("itemName", QJsonValue(var.itemName));
-		toAdd.insert("minPrice", QJsonValue(var.minPrice));
-		toAdd.insert("maxPrice", QJsonValue(var.maxPrice));
-		toAdd.insert("amount", QJsonValue(var.amount));
-		arr.append(toAdd);
-	}
+	for each (auto var in offersList)
+		arr.append(var.toJsonObj());
+
 	QJsonObject mainObj;
 	mainObj.insert("offers", QJsonValue(arr));
 	QJsonDocument docToSave(mainObj);
@@ -247,15 +243,25 @@ void Market::saveListToJsonFile(){
 }
 
 void Market::readListFromJsonFile(){
-	QFileDialog fDial(this, NULL, ditWithSavedItemLists.absolutePath(), "*.json");
-	bool accepted = fDial.exec() == QDialog::Accepted;
-	if (!accepted)
-		return;
-	QStringList fileList = fDial.selectedFiles();
-	if (fileList.size() == 0)
-		return;
-	QJsonObject obj;
-	JsonParser::openJsonFile(obj, fileList.first());
+	QStringList itemLists = ditWithSavedItemLists.entryList(QStringList("*.json"), QDir::Files | QDir::NoSymLinks);
+	bool moreThanOneFile = itemLists.size() != 1;
+	QString pathToFile;
+
+	if (moreThanOneFile) {
+		QFileDialog fDial(this, NULL, ditWithSavedItemLists.absolutePath(), "*.json");
+		bool accepted = fDial.exec() == QDialog::Accepted;
+		if (!accepted)
+			return;
+		QStringList fileList = fDial.selectedFiles();
+		if (fileList.size() == 0)
+			return;
+		pathToFile = fileList.first();
+	}
+	else
+		pathToFile = ditWithSavedItemLists.absoluteFilePath(itemLists.first());
+
+	QJsonObject obj;	
+	JsonParser::openJsonFile(obj, pathToFile);
 	QJsonArray arr = obj["offers"].toArray();
 	if (arr.count() == 0) {
 		QString textToDisplayPl = QString::fromLocal8Bit("Plik nie jest poprawny lub jest pusty.");
@@ -265,17 +271,10 @@ void Market::readListFromJsonFile(){
 		Utilities::showMessageBox(StringResource::WindowTitle_CrackerJackProblem(), msgToDisplay, QMessageBox::Ok);
 		return;
 	}
-
 	offersList.clear();
-	for each (QJsonValue var in arr){
-		QJsonObject obj = var.toObject();
-		QString itemNameStr = obj.value("itemName").toString();
-		int minPrice = obj.value("minPrice").toInt();
-		int maxPrice = obj.value("maxPrice").toInt();
-		int amount = obj.value("amount").toInt();
-		Offer offer(itemNameStr, minPrice, maxPrice, amount);
-		offersList.append(offer);
-	}
+	for each (QJsonValue var in arr)
+		offersList.append(Offer(var.toObject()));
+
 	repaitOfertsList();
 }
 
@@ -292,24 +291,10 @@ void Market::removeItem(){
 	repaitOfertsList();
 }
 
-Offer::Offer(QString itemNameToSet, int minPrice, int maxPrice, int amount){
-	this->itemName = itemNameToSet;
-	this->amount = amount;
-	this->minPrice = minPrice;
-	this->maxPrice = maxPrice;
+void Market::test() {
+	readListFromJsonFile();
+	MarketProcess t(var,offersList);
 }
 
-QString Offer::toString(){
-	QString minPriceStr = QString::number(minPrice);
-	QString maxPriceStr = QString::number(maxPrice);
-	QString amountStr = QString::number(amount);
-	//QString typeStr = OFERT_TYPE::BUY == type ? "BUY" : "SELL";
-
-	QString toRet;
-	toRet.append(this->itemName);
-	toRet.append(",  min: " + minPriceStr);
-	toRet.append(",  max: " + maxPriceStr);
-	toRet.append(",  amount: " + amountStr);
-	//toRet.append(",   " + typeStr);
-	return toRet;
+void Market::startTradingProcess(){
 }

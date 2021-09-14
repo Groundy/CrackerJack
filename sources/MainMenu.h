@@ -14,6 +14,7 @@
 #include "StringResource.h"
 #include "SelectProfileWindow.h"
 #include "RouteCreator.h"
+#include "Market.h"
 namespace Ui { class MainMenu; };
 
 class MainMenu : public QDialog
@@ -24,6 +25,10 @@ public:
 	MainMenu(Profile* prof, QWidget *parent = Q_NULLPTR);
 	~MainMenu();
 	activeGameThread::gameActivityStates gameActivitystate;
+	void test() {
+		Market t(&var);
+		t.exec();
+	};
 public slots:
 	void helpButtonAction();
 	void changeProfileButtonAction();

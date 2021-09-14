@@ -1,10 +1,22 @@
 #pragma once
 #include <QObject>
 #include <qrect.h>
+#include "Utilities.h"
+#include "ScreenSaver.h"
+#include "ScreenAnalyzer.h"
+#include "Offer.h"
+
+struct AlreadyPostedOffer {
+	QString name;
+	int price;
+	int amount;
+};
+
 struct Pos {
 	QRect itemListOnTheLeftOnWholeScreen;
 	QRect insertItemNameBar;
 	QRect clearItemNameButton;
+	QRect firstItemOnListOnLeftSide;
 
 	QRect acceptOffer_SELL;
 	QRect moreItems_SELL;
@@ -39,7 +51,6 @@ struct Pos {
 	QRect makeOffer_moreItems;
 	QRect makeOffer_piecePrice;
 	QRect makeOffer_createButton;
-	QRect makeOffer_piecePrice;
 	QRect makeOffer_anonymousBox;
 
 	QRect myOffersWin_goUp_SELL;
@@ -56,24 +67,56 @@ struct Pos {
 	QRect myOffersWin_piecePriceColumn_BUY;
 	QRect myOffersWin_cancelOfferButton_BUY;
 
-};
 
-class MarketProcess : public QObject{
+	QRect firstOffer_Price_Sell;
+	QRect firstOffer_Amount_Sell;
+
+	QRect firstOffer_Price_Buy;
+	QRect firstOffer_Amount_Buy;
+};
+class MarketProcess : public QObject {
 public:
-	MarketProcess();
+	MarketProcess(VariablesClass* var, QList<Offer> offersThatShouldBe);
 	~MarketProcess();
+	enum class Type { BUY, SELL };
+	enum class TradeAction {
+		BUY_LAST_OFFER_ITEM,
+		PLACE_OFFER_TO_SELL,
+		PLACE_OFFER_TO_BUY,
+		CANCEL_OFFER_TO_SELL,
+		CANCEL_OFFER_TO_BUY,
+		GO_NEXT_ITEM
+	};
 
 private:
 	Pos pos;
+	bool isPl;
 	void recalculatePositions(QPoint leftTopCorner);
 	void initPos();
-	/*
-	void clickOnPoint(QPoint pt);
-	void clickLeft(QPoint pt);
-	void clickRight(QPoint pt);
-	void clickOnPoint(QRect rect);
-	void insertName(QString itemName);
-	*/
-	static const int heightOfColumnsNames = 0;//
+	VariablesClass* var;
+	QImage currentImg;
+	HWND handlerToGame;
+	const int HEIGH_OF_OFFER_ROW = 16 ;
+	const int HEIGH_OF_OFFER_FIELD = 177;
+	QList<AlreadyPostedOffer> myCurrentOffers_SELL, myCurrentOffers_BUY;
+	QList<Offer> offerThatShouldBe_BUY;
+
+
+	QPoint findTopLeftCornerOfMarketWin();
+	bool askForScreenAndReadIt();
+	void mainLoop();
+	void readAllMyOfferts();
+	bool readFirstOffertsOfCurrentItem(int& price, int& amount, Type type);
+	int appendDisplayedOfferts(QList<AlreadyPostedOffer>& set, Type type);
+	void splitPicToBlackWhiteRows(QImage& imgToSplit, QList<QImage>& rows);
+	bool currentOfferIsMyOffer(QString nameWithoustSpaces, int price, Type type);
+	int howMuchMoneyDoIHave();
+	TradeAction decideWhatToDo(
+		int currentCash,
+		int amountOfLastSellOffer,
+		int priceOfLastSellOffer,
+		int amountOfLastBuyOffer,
+		int priceOfLastBuyOffer
+	);
 };
 
