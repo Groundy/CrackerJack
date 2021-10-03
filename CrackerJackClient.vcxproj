@@ -256,6 +256,7 @@ xcopy /y /d ".\dependencies\64-bit\libcrypto-1_1-x64.dll" "$(OutDir)"
   <ItemGroup>
     <QtUic Include="sources\MainMenu.ui" />
     <QtUic Include="sources\Market.ui" />
+    <QtUic Include="sources\MarketProcess.ui" />
     <QtUic Include="sources\NewProfileConfiguartor.ui" />
     <QtUic Include="sources\LoginWindow.ui" />
     <QtUic Include="sources\RouteCreator.ui" />
@@ -265,7 +266,7 @@ xcopy /y /d ".\dependencies\64-bit\libcrypto-1_1-x64.dll" "$(OutDir)"
   <ItemGroup>
     <ClInclude Include="sources\Cryptography.h" />
     <ClInclude Include="sources\Item.h" />
-    <ClInclude Include="sources\MarketProcess.h" />
+    <QtMoc Include="sources\MarketProcess.h" />
     <ClInclude Include="sources\Offer.h" />
     <ClInclude Include="sources\ServerConnector.h" />
     <QtMoc Include="sources\ClientServerApi.h" />

@@ -376,6 +376,8 @@ QMap<QString, QString>  Utilities::getQmapWithCodes() {
 	letters.insert("10_9_000111111000111111000010000000110000000110000000100000011111111111111111100100000100100000","rf");
 	letters.insert("9_10_001111110000111111000001000000001100000000110000000000000001001000000110111111111011111110", "rj");
 	letters.insert("10_8_00111111001111110001000000110000001100000010000011111110111111110010000100100001", "rt");
+	letters.insert("10_9_000100000011111111111111111100100000100100000000100000011111111111111111100100000100100000", "ff");
+	letters.insert("10_9_000100000011111111111111111100100000100100000000100000011111110011111111000100001000100001", "ft");
     return letters;
  }
 
@@ -411,7 +413,7 @@ QImage Utilities::fromCharToImg(QChar CharToImg){
 
 void Utilities::rotateImgToRight(QImage& imgToRotate, int timesToRotateRight){
 	QTransform rotating;
-	qreal degreeToRotateToRight = timesToRotateRight * 90;
+	qreal degreeToRotateToRight = (qreal)timesToRotateRight * 90;
 	rotating.rotate(degreeToRotateToRight,Qt::Axis::ZAxis);
 	imgToRotate = imgToRotate.transformed(rotating);
 }
@@ -537,6 +539,8 @@ QDir Utilities::getDirWithCrackerJackTmpFolder(FOLDERS_OF_TMP_FOLDER folderType)
 		nameOfSubFolder = "Profiles";
 	else if (folderType == Sub::Routes)
 		nameOfSubFolder = "Routes";
+	else if (folderType == Sub::TradeReports)
+		nameOfSubFolder = "Trading logs";
 
 	bool subFolderExist = dir.cd(nameOfSubFolder);
 	if (!subFolderExist) {
@@ -574,17 +578,22 @@ QMap<Utilities::FieldsOfIniFile, QString> Utilities::get_Field_NamesFromIni_map(
 }
 
 void Utilities::sendStringToGame(QString str, HWND handler){
-	WPARAM wParam; 
 	for each (QChar var in str)	{
-		if (var.isLetter())
-			wParam = var.toUpper().unicode();
-		else if (var.isSpace())
-			wParam = 0x20;
-		else if (var.isDigit())
-			continue;//can be problem cause player can have hotkey on letters
-		PostMessage(handler, WM_KEYDOWN, wParam, 1);
-		//PostMessage(handler, WM_KEYUP, wParam, lParam);
-		Sleep(1);
+		if (var.isLetter()) {
+			WPARAM wParam = var.toUpper().unicode();
+			PostMessage(handler, WM_KEYDOWN, wParam, 1);
+		}
+		else if (var.isSpace()) {
+			WPARAM wParam = 0x20;
+			PostMessage(handler, WM_KEYDOWN, wParam, 1);
+		}
+		else if (var.isDigit()) {
+			uint value = var.unicode() - 48;
+			WPARAM wParam = var.unicode();
+			LPARAM lParam = ((value + 1) << 16) + 1;
+			PostMessage(handler, WM_KEYDOWN, wParam, lParam);
+		}
+		Sleep(2);
 	}
 }
 

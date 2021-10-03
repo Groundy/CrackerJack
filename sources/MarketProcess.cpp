@@ -1,21 +1,28 @@
 #include "MarketProcess.h"
-
-MarketProcess::MarketProcess(VariablesClass* varToSet, QList<Offer> offersThatShouldBeSet){
+#include "ui_MarketProcess.h"
+MarketProcess::MarketProcess(VariablesClass* varToSet, QList<Offer> offersThatShouldBeSet, QWidget* parent = NULL) {
+	ui = new Ui::MarketProcess();
+	ui->setupUi(this);
+	this->setParent(parent);
 	this->var = varToSet;
-	this->offerThatShouldBe_BUY = offersThatShouldBeSet;
-	initPos();
+	this->userOfferList = offersThatShouldBeSet;
+	this->setWindowTitle("CrackerJack");
+	QString cancelButtonText = isPl ? "Anuluj" : "Cancel";
+	ui->cancelButton->setText(cancelButtonText);
+	ui->cancelButton->repaint();
+	QString runButtonText = "Start";
+	ui->runButton->setText(runButtonText);
+	ui->runButton->repaint();
 	handlerToGame = Utilities::getHandlerToGameWindow(var->var_pidOfGame, var->var_winTitleOfGame);
 	isPl = StringResource::languageIsPl();
-
-	mainLoop();
 }
 
 MarketProcess::~MarketProcess()
 {
 }
 
-void MarketProcess::recalculatePositions(QPoint pt){
-	QList<QRect*> rects; 
+void MarketProcess::recalculatePositions(QPoint pt) {
+	QList<QRect*> rects;
 	{
 		rects.push_back(&pos.itemListOnTheLeftOnWholeScreen);
 		rects.push_back(&pos.insertItemNameBar);
@@ -71,11 +78,13 @@ void MarketProcess::recalculatePositions(QPoint pt){
 		rects.push_back(&pos.myOffersWin_piecePriceColumn_BUY);
 		rects.push_back(&pos.myOffersWin_cancelOfferButton_BUY);
 
-		//rects.push_back(&pos.firstOffer_Name_Sell);
+
 		rects.push_back(&pos.firstOffer_Price_Sell);
 		rects.push_back(&pos.firstOffer_Amount_Sell);
+		rects.push_back(&pos.firstOffer_Price_Buy);
+		rects.push_back(&pos.firstOffer_Amount_Buy);
 	}
-	for each (QRect* rect in rects){
+	for each (QRect * rect in rects) {
 		int widthCpy = rect->width();
 		int heightCpy = rect->height();
 		int x = rect->x() + pt.x();
@@ -149,6 +158,7 @@ void MarketProcess::initPos(){
 }
 
 QPoint MarketProcess::findTopLeftCornerOfMarketWin(){
+	displayInfoOnInfoLabel(Actions::LOOKING_FOR_MARKET_WINDOW, NULL);
 	QString code = "44_9_#58#59#59_#144#144#144_#144#144#144_#144#144#144_#144#144#144_#144#144#144_#144#144#144_#144#144#144_#144#144#144_#51#51#51_#144#144#144_#144#144#144_#144#144#144_#64#64#64_#56#56#56_#53#53#53_#71#71#71_#61#61#61_#60#60#61_#53#53#53_#144#144#144_#144#144#144_#144#144#144_#59#59#59_#57#57#57_#49#49#49_#78#79#79_#55#55#55_#58#58#58_#52#52#52_#144#144#144_#144#144#144_#144#144#144_#61#61#61_#54#54#54_#58#58#58_#52#52#52_#50#51#51_#54#54#54_#58#58#58_#144#144#144_#52#52#52_#56#56#56_#59#59#59_#57#57#57_#57#58#58_#56#56#56_#55#55#55_#144#144#144_#58#58#58_#64#64#64_#53#53#53_#56#56#56_#62#62#63_#51#51#51_#55#55#55_#144#144#144_#144#144#144_#144#144#144_#144#144#144_#144#144#144_#144#144#144_#144#144#144_#52#52#52_#144#144#144_#144#144#144_#144#144#144_#144#144#144_#144#144#144_#144#144#144_#144#144#144_#144#144#144_#55#55#56_#61#61#61_#51#51#51_#54#55#55_#57#57#57_#52#52#52_#49#50#50_#47#48#48_#55#56#56_#61#61#61_#56#56#56_#56#57#56_#53#53#53_#60#60#59_#67#67#67_#53#54#53_#49#49#49_#66#67#66_#62#62#62_#55#55#55_#56#56#56_#58#58#58_#49#49#49_#52#52#52_#144#144#144_#144#144#144_#49#49#49_#53#53#53_#62#62#62_#55#55#55_#144#144#144_#56#56#56_#144#144#144_#144#144#144_#144#144#144_#144#144#144_#52#53#53_#56#56#56_#59#60#59_#144#144#144_#56#56#56_#144#144#144_#51#51#51_#58#58#59_#144#144#144_#62#62#62_#54#55#55_#61#61#61_#144#144#144_#53#53#53_#144#144#144_#58#59#59_#55#55#55_#144#144#144_#53#53#53_#59#60#59_#58#58#58_#144#144#144_#144#144#144_#144#144#144_#144#144#144_#144#144#144_#144#144#144_#55#55#55_#56#56#56_#57#57#57_#58#58#58_#144#144#144_#144#144#144_#144#144#144_#144#144#144_#144#144#144_#61#61#61_#51#52#51_#58#58#58_#55#56#56_#71#71#71_#56#56#56_#68#68#68_#61#61#61_#67#67#67_#55#55#55_#61#61#61_#58#58#58_#55#55#54_#55#55#54_#58#59#58_#66#66#66_#59#59#59_#56#56#56_#55#55#55_#57#57#56_#57#58#56_#144#144#144_#144#144#144_#144#144#144_#144#144#144_#144#144#144_#144#144#144_#55#55#55_#57#58#57_#58#58#57_#144#144#144_#144#144#144_#144#144#144_#144#144#144_#144#144#144_#144#144#144_#66#66#66_#58#58#58_#61#61#61_#54#55#54_#144#144#144_#51#51#51_#58#58#58_#58#58#58_#56#55#55_#55#55#55_#61#61#61_#59#59#59_#144#144#144_#144#144#144_#56#57#56_#59#59#59_#59#59#59_#52#53#53_#49#49#49_#58#58#58_#61#61#61_#144#144#144_#144#144#144_#55#55#54_#58#58#58_#57#57#56_#56#56#56_#54#54#55_#44#44#44_#49#49#49_#53#53#53_#67#68#67_#67#67#67_#60#61#60_#60#60#60_#55#55#55_#144#144#144_#144#144#144_#144#144#144_#144#144#144_#144#144#144_#144#144#144_#144#144#144_#144#144#144_#144#144#144_#144#144#144_#144#144#144_#144#144#144_#144#144#144_#144#144#144_#144#144#144_#144#144#144_#144#144#144_#144#144#144_#57#58#58_#55#55#55_#53#54#53_#49#49#49_#54#54#54_#144#144#144_#144#144#144_#58#58#57_#60#61#60_#55#55#55_#61#61#61_#58#58#58_#53#53#53_#144#144#144_#144#144#144_#144#144#144_#144#144#144_#57#57#57_#56#56#56_#57#58#57_#60#60#60_#144#144#144_#144#144#144_#62#62#62_#64#65#64_#144#144#144_#144#144#144_#55#55#55_#51#51#51_#49#49#49_#144#144#144_#56#57#56_#54#54#54_#48#48#48_#66#67#66_#144#144#144_#59#59#59_#56#56#56_#53#53#53_#49#49#48_#61#61#61_#50#50#49_#54#55#53_#49#49#49_#64#64#64_#59#60#60_#53#53#53_#56#57#56_#61#61#61_#55#55#55_#66#66#65_#59#59#59_#44#44#44_#61#61#61_#55#55#55_#61#61#61_#55#55#55_#58#58#58_#144#144#144_#144#144#144_#144#144#144_#144#144#144_#61#61#61_#54#54#54_#65#65#64_#61#61#61_#144#144#144_#144#144#144_#144#144#144_#144#144#144_#144#144#144_#144#144#144_#57#57#57_#53#53#53_#56#56#55_#144#144#144_#56#56#55_#144#144#144_#52#52#51_#58#58#58_#144#144#144_#61#61#61_#52#52#52_#55#55#55_#144#144#144_#64#64#64_#144#144#144_#47#47#46_#54#54#53_#144#144#144_#62#62#62_#55#55#55_#53#53#53_#144#144#144_#144#144#144_#144#144#144_#56#56#55_#45#45#44_#144#144#144_#62#62#62_#66#67#66_#63#64#63_#52#53#52_#144#144#144_#144#144#144_#65#65#65_#144#144#144_#55#55#54_#59#60#59_#49#49#49_#55#55#55_#61#61#61_#53#53#53_#49#49#49_#58#58#58_#64#64#65_#54#55#55_#55#56#55_#66#67#67_#53#53#53_#144#144#144_#49#49#49_#53#53#53_#55#55#54_#52#52#52_#68#68#68_#56#56#56_#144#144#144_#144#144#144_#144#144#144_#144#144#144_#144#144#144_#144#144#144_#144#144#144_#49#49#49_#58#59#58_#144#144#144_#144#144#144_#144#144#144_#144#144#144_#144#144#144_#144#144#144_#144#144#144_#144#144#144_#56#56#56_#58#58#58_#55#55#55_#144#144#144_#51#51#51_#59#59#59_#55#55#55_#56#56#56_#144#144#144_#62#62#62_#60#60#60_#57#58#58_#144#144#144_#56#56#56_#49#49#49_#57#57#56_#57#57#57_#144#144#144";
 	QImage marketTitleImg = Utilities::getImageFromAdvancedCode(code);
 	bool ok = askForScreenAndReadIt();
@@ -171,16 +181,10 @@ QPoint MarketProcess::findTopLeftCornerOfMarketWin(){
 }
 
 bool MarketProcess::askForScreenAndReadIt(){
-	/*tmp
-	QImage img;
-	img.load("C:\\Users\\ADMIN\\Desktop\\a.png");
-	currentImg = img;
-	return true;
-	tmp*/
-	
 	//todo poprawic bez pojawiwa sie tych procesow
 	ScreenSaver t(NULL, this->var);
 	t.sendScreenRequestToGame(Key::HOME);//todo change
+	Sleep(1500);
 	ScreenAnalyzer tt(NULL, this->var, NULL);
 	bool ok = tt.loadScreen(currentImg);
 	return ok;
@@ -193,100 +197,100 @@ void MarketProcess::mainLoop() {
 		return;
 
 	recalculatePositions(leftTopCorner);
-	Utilities::clickLeft(pos.myOffer_offerHistory_Button.center(),handlerToGame);
+	Utilities::clickLeft(pos.myOffer_offerHistory_Button.center(), handlerToGame);
 	Sleep(1000);
 
 	readAllMyOfferts();
 	Utilities::clickLeft(pos.Close_ReturnToMarket_Button.center(), handlerToGame);
-	for each (Offer var in offerThatShouldBe_BUY) {
+	Sleep(20);
+	Utilities::clickLeft(pos.makeOffer_anonymousBox.center(),handlerToGame);
+	for (size_t i = 0; i < userOfferList.size(); i++) {
+		Offer offer = userOfferList[i];
+		displayInfoOnInfoLabel(Actions::LOOKING_FOR_ITEM, offer.itemName);
+		int progress = (i*100) / userOfferList.size();
+		ui->progressBar->setValue(progress);
+		ui->progressBar->repaint();
+
 		Utilities::clickLeft(pos.clearItemNameButton.center(), handlerToGame);
 		Sleep(100);
 		Utilities::clickLeft(pos.insertItemNameBar.center(), handlerToGame);
 		Sleep(10);
-		Utilities::sendStringToGame(var.itemName, handlerToGame);
+		Utilities::sendStringToGame(offer.itemName, handlerToGame);
 		Sleep(1000);
 		Utilities::clickLeft(pos.firstItemOnListOnLeftSide.center(), handlerToGame);
 		Sleep(1100);
-		askForScreenAndReadIt();
 		bool breakLoop = false;
 		do {
-			int priceOfLastOffer, amountOfLastOffer;
-			readFirstOffertsOfCurrentItem(priceOfLastOffer, amountOfLastOffer, Type::SELL);
-			bool skip = priceOfLastOffer == 0 || amountOfLastOffer == 0;
-			if (skip)
-				break;
-			bool ItemHaveProperPriceToBeBought = priceOfLastOffer <= var.maxPrice;
-			QString itemNameWithoutSpaces = var.itemName.remove(" ");
-			bool lastOfferIsMyOffer = currentOfferIsMyOffer(itemNameWithoutSpaces, priceOfLastOffer, Type::SELL);
+			askForScreenAndReadIt();
+			int priceOfLastOffer_SELL = 0, amountOfLastOffer_SELL = 0, priceOfLastOffer_BUY = 0, amountOfLastOffer_BUY = 0;
+			readFirstOffertsOfCurrentItem(priceOfLastOffer_SELL, amountOfLastOffer_SELL, Type::SELL);
+			readFirstOffertsOfCurrentItem(priceOfLastOffer_BUY, amountOfLastOffer_BUY, Type::BUY);
+
 			int cash = howMuchMoneyDoIHave();
 			if (cash == 0)
 				break;
-			bool haveMoneyForAtLeastOneItem = cash >= priceOfLastOffer;
-			int howManyItemsICanBuy = min((cash / priceOfLastOffer), amountOfLastOffer);
-			bool amountToBuyIsOk = howManyItemsICanBuy >= 0 || howManyItemsICanBuy <= 64000;
 
-			bool buyItems = !lastOfferIsMyOffer && haveMoneyForAtLeastOneItem && ItemHaveProperPriceToBeBought;
-			bool placeOfferAndGoToNextItem = !lastOfferIsMyOffer && haveMoneyForAtLeastOneItem && !ItemHaveProperPriceToBeBought;
-			TradeAction actionToDo = decideWhatToDo(cash, 0, 0, 0, 0);
-			if (buyItems) {
-				QPoint pt = pos.moreItems_SELL.center();
-				for (size_t i = 0; i < howManyItemsICanBuy - 1; i++) {
-					Utilities::clickLeft(pt, handlerToGame);
-					Sleep(20);
-				}
-				pt = pos.acceptOffer_SELL.center();
-				QString str = QString("buying %1 for %2").arg(var.itemName, QString::number(priceOfLastOffer));
-				qDebug() << str;
-				//Utilities::clickLeft(pt, handlerToGame);
-			}
-			else if (!lastOfferIsMyOffer && haveMoneyForAtLeastOneItem && !ItemHaveProperPriceToBeBought) {
-				//place offer and go to next item
-			}
-			else//continue
+			TradeAction actionToDo = decideWhatToDo(cash, amountOfLastOffer_SELL, priceOfLastOffer_SELL, amountOfLastOffer_BUY, priceOfLastOffer_BUY, offer);
+			switch (actionToDo)
+			{
+			case MarketProcess::TradeAction::BUY_LAST_OFFER_ITEM:
+				buyLastOffer(cash, priceOfLastOffer_SELL, amountOfLastOffer_SELL, offer.itemName);
+				break;
+			case MarketProcess::TradeAction::PLACE_OFFER_TO_SELL:
+				displayInfoOnInfoLabel(Actions::PLACING_OFFER, offer.itemName);
+				setOffer(Type::SELL, priceOfLastOffer_SELL, cash, offer);
+				break;
+			case MarketProcess::TradeAction::PLACE_OFFER_TO_BUY:
+				displayInfoOnInfoLabel(Actions::PLACING_OFFER, offer.itemName);
+				setOffer(Type::BUY, priceOfLastOffer_BUY, cash, offer);
+				break;
+			case MarketProcess::TradeAction::CANCEL_OFFER_TO_SELL:
+				displayInfoOnInfoLabel(Actions::CANCELING_OFFER, offer.itemName);
+				cancelOffer(offer.itemName, Type::SELL);
+				break;
+			case MarketProcess::TradeAction::CANCEL_OFFER_TO_BUY:
+				displayInfoOnInfoLabel(Actions::CANCELING_OFFER, offer.itemName);
+				cancelOffer(offer.itemName, Type::BUY);
+				break; 
+			default:
 				breakLoop = true;
+				break; 
+			}
 		} while (!breakLoop);
 	}
+	ui->progressBar->setValue(100);
+	ui->progressBar->repaint();
+	displayInfoOnInfoLabel(Actions::FINISHED,NULL);
 }
 
 void MarketProcess::readAllMyOfferts() {
+	displayInfoOnInfoLabel(Actions::SCANNING_OFFER_LIST, NULL);
 	myCurrentOffers_BUY.clear();
 	myCurrentOffers_SELL.clear();
-	int addedPositions;
+	int addedPositions_Sell = 1, addedPositions_Buy = 1;
+	int i = 0;
 	do{
-		Sleep(1111);
 		askForScreenAndReadIt();
-		addedPositions = appendDisplayedOfferts(myCurrentOffers_SELL, Type::SELL);
-		for (size_t i = 0; i < 8; i++) {
-			Utilities::clickLeft(pos.myOffersWin_goDOWN_SELL.center(), handlerToGame);
-			Sleep(20);
+		if (addedPositions_Sell != 0) {
+			addedPositions_Sell = appendDisplayedOfferts(myCurrentOffers_SELL, Type::SELL);
+			scrollDownListOfmyOffers(Type::SELL);
 		}
-	}while (addedPositions > 0);
-
-	do {
-		Sleep(1111);
-		askForScreenAndReadIt();
-		addedPositions = appendDisplayedOfferts(myCurrentOffers_BUY, Type::BUY);
-		for (size_t i = 0; i < 8; i++) {
-			Utilities::clickLeft(pos.myOffersWin_goDOWN_BUY.center(), handlerToGame);
-			Sleep(20);
+		if (addedPositions_Buy != 0) {
+			addedPositions_Buy = appendDisplayedOfferts(myCurrentOffers_BUY, Type::BUY);
+			scrollDownListOfmyOffers(Type::BUY);
 		}
-	} while (addedPositions > 0);
-
+		i++;
+	} while ((addedPositions_Buy > 0 || addedPositions_Sell > 0) && i < 13);
 }
-
  
 bool MarketProcess::readFirstOffertsOfCurrentItem(int& price, int& amount, Type type){
-	QRect priceRect, amountRect;
-	if (type == Type::SELL) {
-		priceRect = pos.firstOffer_Price_Sell;
-		amountRect = pos.firstOffer_Amount_Sell;
-	}
-	else {
-		priceRect = pos.firstOffer_Price_Buy;
-		amountRect = pos.firstOffer_Amount_Buy;
-	}
+	bool sellType = type == Type::SELL;
+	QRect priceRect = sellType ? pos.firstOffer_Price_Sell : pos.firstOffer_Price_Buy;
+	QRect amountRect = sellType ? pos.firstOffer_Amount_Sell : pos.firstOffer_Amount_Buy;
 	QImage priceImg = currentImg.copy(priceRect);
 	QImage amountImg = currentImg.copy(amountRect);
+	Utilities::imgToBlackAndWhiteOneColor(priceImg, 170);
+	Utilities::imgToBlackAndWhiteOneColor(amountImg, 170);
 	QString priceStr = Utilities::imgWithStrToStr(priceImg);
 	QString amountStr = Utilities::imgWithStrToStr(amountImg);
 	amount = amountStr.toInt();
@@ -391,8 +395,8 @@ void MarketProcess::splitPicToBlackWhiteRows(QImage& imgToSplit, QList<QImage>& 
 	for (size_t y = 0; y < imgToSplit.height(); y++){
 		bool isFullBlack = true;
 		for (size_t x = 0; x < imgToSplit.width(); x++)	{
-			uint pixCol = imgToSplit.pixel(x, y);
-			if (pixCol != BLACK) {
+			bool isNotBlack = imgToSplit.pixel(x, y) != BLACK;
+			if (isNotBlack) {
 				isFullBlack = false;
 				break;
 			}
@@ -405,7 +409,6 @@ void MarketProcess::splitPicToBlackWhiteRows(QImage& imgToSplit, QList<QImage>& 
 		rows.push_back(imgToSplit);
 		return;
 	}
-
 
 	QList<QPair<int, int>> toCut;
 	toCut.push_back(QPair<int,int>(0, fullBlackRows.first()));
@@ -428,27 +431,79 @@ void MarketProcess::splitPicToBlackWhiteRows(QImage& imgToSplit, QList<QImage>& 
 	}
 }
 
-bool MarketProcess::currentOfferIsMyOffer(QString nameWithoustSpaces, int price, Type type){
-	nameWithoustSpaces = nameWithoustSpaces.toLower();
-	if (type == Type::SELL) {
-		for each (AlreadyPostedOffer var in myCurrentOffers_SELL) {
-			if (var.name != nameWithoustSpaces)
-				continue;
-			if (var.price != price)
-				continue;
+bool MarketProcess::currentOfferIsMyOffer(QString name, int price, Type type){
+	name = name.remove(" ").toLower();
+	QList<AlreadyPostedOffer>* list = (type == Type::SELL) ? &myCurrentOffers_SELL : &myCurrentOffers_BUY;
+	for each (AlreadyPostedOffer var in *list) {
+		if(var.name == name && var.price == price)
 			return true;
-		}
-	}
-	else if( type == Type::BUY ) {
-		for each (AlreadyPostedOffer var in myCurrentOffers_BUY) {
-			if (var.name != nameWithoustSpaces)
-				continue;
-			if (var.price != price)
-				continue;
-			return true;
-		}
 	}
 	return false;
+}
+
+void MarketProcess::cancelOffer(QString itemName, Type type){
+	QString itemNameModified = itemName.remove(" ").toLower();
+	bool sellType = type == Type::SELL;
+	QList<AlreadyPostedOffer>* offerList = sellType ? &myCurrentOffers_SELL : &myCurrentOffers_BUY;
+	QString priceOfOfferStr;
+	int indexInListOffer = -1;
+	for (size_t i = 0; i < offerList->size(); i++){
+		if (offerList->at(i).name == itemNameModified) {
+			indexInListOffer = i;
+			break;
+		}
+	}
+	Utilities::clickLeft(pos.myOffer_offerHistory_Button.center(), handlerToGame);
+
+	int i = 13;
+	while (i-->0) {
+		askForScreenAndReadIt();
+		QList<AlreadyPostedOffer> list;
+		appendDisplayedOfferts(list, type);
+		bool offerFound = false;
+		QPoint pointWithOffer;
+		for (int i = 0; i < list.size(); i++) {
+			offerFound = offerFound = itemNameModified == list[i].name;
+			if (offerFound) {
+				int xPosOnScreen = sellType ? pos.myOffersWin_amountColumn_SELL.x() : pos.myOffersWin_amountColumn_BUY.x();
+				int yPosOnScreen = sellType ? pos.myOffersWin_amountColumn_SELL.y() : pos.myOffersWin_amountColumn_BUY.y();
+				int heightOfAnyRow = pos.firstOffer_Amount_Sell.height();
+				yPosOnScreen += (i + 1.5) * heightOfAnyRow;
+				QString priceOfCanceledOfferStr = QString::number(list[i].price);
+				pointWithOffer = QPoint(xPosOnScreen, yPosOnScreen);
+				break;
+			}
+		}
+		if (offerFound) {
+			Utilities::clickLeft(pointWithOffer, handlerToGame);
+			QPoint cancelButtonPos = sellType ? pos.myOffersWin_cancelOfferButton_SELL.center() : pos.myOffersWin_cancelOfferButton_BUY.center();
+			Sleep(50);
+			Utilities::clickLeft(cancelButtonPos, handlerToGame);
+			{
+				QString textOfMsg;
+				QString priceStr = QString::number(offerList->at(indexInListOffer).price);
+				if (isPl) {
+					QString typeOfPlaceOffer = sellType? QString::fromLocal8Bit("sprzeda¿y") : QString::fromLocal8Bit("kupna");
+					textOfMsg = QString::fromLocal8Bit("Anulowanie oferty %1 %2 w cenie %3")
+						.arg(typeOfPlaceOffer, itemName, priceStr);
+				}
+				else {
+					QString typeOfPlaceOffer = sellType ? "sell" : "buy";
+					textOfMsg = QString::fromLocal8Bit("Canceled %1 %2 offer in price %3")
+						.arg(typeOfPlaceOffer, itemName, priceStr);
+				}
+				appendStrToTradeLog(textOfMsg);
+				ui->textBrowser->append(textOfMsg);
+			}
+			i = 0;
+			offerList->removeAt(indexInListOffer);
+			break;
+		}
+		else {
+			scrollDownListOfmyOffers(type);
+		}
+	}
+	Utilities::clickLeft(pos.Close_ReturnToMarket_Button.center(), handlerToGame);
 }
 
 int MarketProcess::howMuchMoneyDoIHave(){
@@ -458,6 +513,207 @@ int MarketProcess::howMuchMoneyDoIHave(){
 	return cashAsStr.toInt();
 }
 
-MarketProcess::TradeAction MarketProcess::decideWhatToDo(int currentCash, int amountOfLastSellOffer, int priceOfLastSellOffer, int amountOfLastBuyOffer, int priceOfLastBuyOffer){
-	return TradeAction();
+MarketProcess::TradeAction MarketProcess::decideWhatToDo(int currentCash, int amountOfLastSellOffer, int priceOfLastSellOffer, int amountOfLastBuyOffer, int priceOfLastBuyOffer, Offer offer){
+	if (offer.type == Offer::Type::BUY) {
+		bool lastSellOfferHasGoodPrice = priceOfLastSellOffer <= offer.maxPrice;
+		bool lastSellOfferIsMyOffer = currentOfferIsMyOffer(offer.itemName, priceOfLastSellOffer, Type::SELL);
+		bool haveMoneyForAtLeastOneItem = currentCash > priceOfLastSellOffer && priceOfLastSellOffer != 0;
+		bool buyLastItem = !lastSellOfferIsMyOffer && lastSellOfferHasGoodPrice && haveMoneyForAtLeastOneItem;
+
+		if (buyLastItem)
+			return TradeAction::BUY_LAST_OFFER_ITEM;
+	
+		if (offer.placeOffer) {
+			bool itemOfferAlreadyOnMarket = checkIfThisItemIscurrentlyOnMarket(offer.itemName, Type::BUY);
+			bool lastBuyOfferIsMine = currentOfferIsMyOffer(offer.itemName, priceOfLastBuyOffer, Type::BUY);
+			
+			bool shouldCancelOffer = itemOfferAlreadyOnMarket && !lastBuyOfferIsMine;
+			if (shouldCancelOffer)
+				return TradeAction::CANCEL_OFFER_TO_BUY;
+
+			bool lastBuyOfferHasGoodPrice = priceOfLastBuyOffer <= offer.maxPrice - 1;
+			bool iHaveMoneyToPostAtLeastOneOffer = currentCash >= (priceOfLastBuyOffer * 1.01) && priceOfLastBuyOffer != 0;
+			bool icanPlaceOffer = myCurrentOffers_SELL.size() + myCurrentOffers_BUY.size() < 100;
+			bool shouldPlaceOffer = lastBuyOfferHasGoodPrice && iHaveMoneyToPostAtLeastOneOffer && icanPlaceOffer && !lastBuyOfferIsMine;
+
+			if (shouldPlaceOffer)
+				return TradeAction::PLACE_OFFER_TO_BUY;
+		}
+	}
+	else {
+		bool lastSellOfferIsMineOffer = currentOfferIsMyOffer(offer.itemName, priceOfLastSellOffer, Type::SELL);
+		bool offerOnThisItemIsAlreadyOnMarket = checkIfThisItemIscurrentlyOnMarket(offer.itemName, Type::SELL);
+		
+		bool shouldCancelMySellOffer = !lastSellOfferIsMineOffer && offerOnThisItemIsAlreadyOnMarket;
+		if (shouldCancelMySellOffer)
+			return TradeAction::CANCEL_OFFER_TO_SELL;
+
+		bool lastOfferHaveAcceptablePrice = priceOfLastSellOffer >= offer.minPrice;
+		bool icanPlaceOffer = myCurrentOffers_SELL.size() + myCurrentOffers_BUY.size() < 100;
+		bool iHaveMoneyToPostAtLeastOneOffer = currentCash >= ((priceOfLastBuyOffer - 1.0) * 1.01) && priceOfLastBuyOffer != 0;
+
+		bool shouldPlaceOffer = lastOfferHaveAcceptablePrice && iHaveMoneyToPostAtLeastOneOffer && icanPlaceOffer && !lastSellOfferIsMineOffer;
+		if (shouldPlaceOffer)
+			return TradeAction::PLACE_OFFER_TO_SELL;
+	}
+	return TradeAction::GO_NEXT_ITEM;
+}
+
+void MarketProcess::scrollDownListOfmyOffers(Type type){
+	QPoint scrollDownPoint = type == Type::SELL ? pos.myOffersWin_goDOWN_SELL.center() : pos.myOffersWin_goDOWN_BUY.center();
+	for (size_t i = 0; i < 8; i++) {
+		Utilities::clickLeft(scrollDownPoint, handlerToGame);
+		Sleep(20);
+	}
+}
+
+bool MarketProcess::checkIfThisItemIscurrentlyOnMarket(QString itemName, Type type){
+	itemName = itemName.remove(" ").toLower();
+	QList<AlreadyPostedOffer>* list = (type == Type::SELL) ? &myCurrentOffers_SELL : &myCurrentOffers_BUY;
+	for each (AlreadyPostedOffer var in *list){
+		bool sameName = var.name == itemName;
+		if (sameName)
+			return true;
+	}
+	return false;
+}
+
+void MarketProcess::setOffer(Type typeOfOfferToSet, int lastOfferPrice, int cash, Offer offer){
+	QString modifiedItemName = offer.itemName.remove(" ").toLower();
+	bool isSellType = typeOfOfferToSet == Type::SELL;
+	QPoint moreItemsButtonPoint = pos.makeOffer_moreItems.center();
+	QPoint typeOfPlacedOffer = isSellType ? pos.makeOffer_button_SELL.center() : pos.makeOffer_button_BUY.center();
+	QPoint piecePriceBar = pos.makeOffer_piecePrice.center();
+	QPoint createOffer = pos.makeOffer_createButton.center();
+
+	int newPrice = isSellType ? lastOfferPrice - 1 : lastOfferPrice + 1;
+	if (isSellType)
+		newPrice = min(newPrice, offer.maxPrice);
+	else
+		newPrice = std::max(newPrice, offer.minPrice);
+	double factor = isSellType ? 0.01 : 1.01;
+	int howManyItemsICanTrade = (cash / (newPrice * factor));
+	int howManyItemsIShouldTrade = min(offer.amount, howManyItemsICanTrade);
+
+	Utilities::clickLeft(typeOfPlacedOffer, handlerToGame);
+	Sleep(20);
+	Utilities::clickLeft(piecePriceBar, handlerToGame);
+	Sleep(20);
+	QString priceStr = QString::number(newPrice);
+	Utilities::sendStringToGame(priceStr,handlerToGame);
+	Sleep(30);
+	for (size_t i = 0; i < howManyItemsIShouldTrade - 1; i++){
+		Utilities::clickLeft(moreItemsButtonPoint, handlerToGame);
+		Sleep(20);
+	}
+	Utilities::clickLeft(createOffer, handlerToGame);
+	QList<AlreadyPostedOffer>* listPtr = isSellType ? &myCurrentOffers_SELL : &myCurrentOffers_BUY;
+	AlreadyPostedOffer toAdd(modifiedItemName, newPrice, howManyItemsIShouldTrade);
+	listPtr->push_back(toAdd);
+
+	{
+		QString amountStr = QString::number(howManyItemsIShouldTrade);
+		QString priceStr = QString::number(newPrice);
+		QString textOfMsg;
+		if (isPl) {
+			QString typeOfPlaceOffer = isSellType ? QString::fromLocal8Bit("sprzeda¿y") : QString::fromLocal8Bit("kupna");
+			textOfMsg = QString::fromLocal8Bit("Wstawiono oferte %1 %2 %3 za cenê %4")
+			.arg(typeOfPlaceOffer, amountStr, modifiedItemName, priceStr);
+		}
+		else {
+			QString typeOfPlaceOffer = isSellType ? "sell" : "buy";
+			textOfMsg = QString::fromLocal8Bit("Placed offer to %1 %2 %3 for %4")
+				.arg(typeOfPlaceOffer, amountStr, modifiedItemName, priceStr);
+		}
+		appendStrToTradeLog(textOfMsg);
+		ui->textBrowser->append(textOfMsg);
+	}
+}
+
+void MarketProcess::appendStrToTradeLog(QString strToWrite){
+	QDir tmpFolder = Utilities::getDirWithCrackerJackTmpFolder(Utilities::FOLDERS_OF_TMP_FOLDER::TradeReports);
+	QString formatStrDate = "dd_MM_yyyy";
+	QString formatStrHour = "[hh:mm:ss]";
+	QString fileName = "//" + QDateTime::currentDateTimeUtc().toString(formatStrDate) + ".txt";
+	QString timeStamp = QDateTime::currentDateTimeUtc().toString(formatStrHour);
+	QString pathToFile = tmpFolder.absolutePath() + fileName;
+
+	QFile file(pathToFile);
+	file.open(QIODevice::Append);
+	file.write(timeStamp.toUtf8() + strToWrite.toUtf8() + "\n");
+	file.close();
+}
+
+void MarketProcess::buyLastOffer(int currentlyPossesedCash, int priceOfLastOffer_SELL, int amountOfLastOffer_SELL, QString itemName) {
+	int howManyItemsICanBuy = min((currentlyPossesedCash / priceOfLastOffer_SELL), amountOfLastOffer_SELL, QString itemName);
+	bool amountToBuyIsOk = howManyItemsICanBuy >= 1 || howManyItemsICanBuy <= 64000;
+
+	QPoint pt = pos.moreItems_SELL.center();
+	for (size_t i = 0; i < howManyItemsICanBuy - 1; i++) {
+		Utilities::clickLeft(pt, handlerToGame);
+		Sleep(20);
+	}
+	pt = pos.acceptOffer_SELL.center();
+	Utilities::clickLeft(pt, handlerToGame);
+	{
+		QString amountStr = QString::number(howManyItemsICanBuy);
+		QString priceStr = QString::number(priceOfLastOffer_SELL);
+		QString textOfMsg;
+		if (isPl) {
+			textOfMsg = QString::fromLocal8Bit("Kupiono %1 %2 za cenê %3")
+				.arg(amountStr, itemName, priceStr);
+		}
+		else {
+			textOfMsg = QString::fromLocal8Bit("Bought %1 %2 for %4")
+				.arg(amountStr, itemName, priceStr);
+		}
+		appendStrToTradeLog(textOfMsg);
+		ui->textBrowser->append(textOfMsg);
+	}
+}
+
+void MarketProcess::displayInfoOnInfoLabel(Actions action, QString itemName){
+	QString pl, eng;
+	switch (action)
+	{
+	case MarketProcess::Actions::LOOKING_FOR_MARKET_WINDOW:
+		pl = "Wyszukiwanie okna marketu.";
+		eng = "Searching for market Window.";
+		break;
+	case MarketProcess::Actions::SCANNING_OFFER_LIST:
+		pl = QString::fromLocal8Bit("Skanowanie listy wystawionych ju¿ ofert.");
+		eng = "Scanning list of already posted offers.";
+		break;
+	case MarketProcess::Actions::LOOKING_FOR_ITEM: 
+		pl = QString::fromLocal8Bit("Wyszukiwanie: %1").arg(itemName);
+		eng = QString("Searching: %1").arg(itemName);
+		break;
+	case MarketProcess::Actions::PLACING_OFFER:
+		pl = QString::fromLocal8Bit("Wystawianie oferty: %1").arg(itemName);
+		eng = QString("Placing offer: %1").arg(itemName);
+		break;
+	case MarketProcess::Actions::CANCELING_OFFER:
+		pl = QString::fromLocal8Bit("Anulowanie oferty %1").arg(itemName);
+		eng = QString("Canceling offer %1").arg(itemName);
+		break;
+	case MarketProcess::Actions::FINISHED:
+		pl = QString::fromLocal8Bit("Zakoñczono.");
+		break;
+	default:
+		break;
+	}
+	ui->itemNameLabel->setText(isPl ? pl : eng);
+	ui->itemNameLabel->repaint();
+}
+
+void MarketProcess::runButtonClicked(){
+	ui->progressBar->setValue(0);
+	ui->progressBar->repaint();
+	ui->runButton->setEnabled(false);
+	initPos();
+	mainLoop();
+	ui->runButton->setEnabled(true);
+}
+
+void MarketProcess::cancelButtonClicked(){
 }

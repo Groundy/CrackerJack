@@ -1,3 +1,4 @@
+51. w Utilities::sendStringToGame dodac opcje wysylania apostrofa
 50. Przy usuwaniu screenow, nalezy usuwac tylko te zrobione hotkeyem, nie nalezy usuwac screen automatycznych.
 48. Dodaæ obs³ugê przypadku gdy postaæ nie ma ustawionych zadnych ofert
 47. Dodac sprawdzanie czy trasa jest zrobiona dobrze w RouteCreator

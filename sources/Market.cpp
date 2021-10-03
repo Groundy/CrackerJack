@@ -6,7 +6,7 @@ Market::Market(VariablesClass* varToSet){
 	ui->setupUi(this);
 	var = varToSet;
 	JsonParser::readItemJson(this->allItems);
-	ui->showItemsButton_All->setChecked(true);
+	ui->buyTypeRadioButton->setChecked(true);
 	filtr_seller = Seller::ANY;
 	fillCategoryLists();
 	isPl = StringResource::languageIsPl();
@@ -17,19 +17,20 @@ Market::~Market(){
 	delete ui;
 }
 
-void Market::sellerGroupBoxChanged() {
-	if (ui->showItemsButton_Rashid->isChecked())
-		filtr_seller = Seller::RASHID;
-	else if (ui->showItemsButton_Blue->isChecked())
-		filtr_seller = Seller::BLUE_DJIN;
-	else if (ui->showItemsButton_Green->isChecked())
-		filtr_seller = Seller::GREEN_DJIN;
-	else if (ui->showItemsButton_Esrik->isChecked())
-		filtr_seller = Seller::ZAO;
-	else if (ui->showItemsButton_Yasir->isChecked())
-		filtr_seller = Seller::YASIR;
-	else if (ui->showItemsButton_All->isChecked())
+void Market::sellerFiltrChange() {
+	int indexOfMerchantFiltr = ui->merchantFiltr->currentIndex();
+	if (indexOfMerchantFiltr == 0)
 		filtr_seller = Seller::ANY;
+	else if (indexOfMerchantFiltr == 1)	
+		filtr_seller = Seller::GREEN_DJIN;
+	else if (indexOfMerchantFiltr == 2)
+		filtr_seller = Seller::BLUE_DJIN;
+	else if (indexOfMerchantFiltr == 3)
+		filtr_seller = Seller::ORAMOND;
+	else if (indexOfMerchantFiltr == 4)
+		filtr_seller = Seller::RASHID;
+	else if (indexOfMerchantFiltr == 5)
+		filtr_seller = Seller::ZAO;
 
 	fillCategoryLists();
 }
@@ -66,7 +67,11 @@ void Market::addItemButtonPressed(){
 	int minVal = ui->minPriceValue->value();
 	int maxVal = ui->maxPriceValue->value();
 	int amount = ui->amountValue->value();
-	
+	QString itemName = ui->itemNameInfoLabel->text();
+	itemName = itemName.right(itemName.size() - 6);
+	bool shouldPlaceOffers = ui->placeOfferCheckBox->isChecked();
+	Offer::Type typeToSet = ui->buyTypeRadioButton->isChecked() ? Offer::Type::BUY : Offer::Type::SELL;
+
 	bool valuesOk = minVal > 0 && maxVal > 0 && maxVal >= minVal;
 	if (!valuesOk) {
 		QString textToDisplayPl = QString::fromLocal8Bit("Obie wartoœci powinny byæ wiêksze od zera, wartoœæ maksymalna nie mo¿e byæ mniejsza ni¿ minimalna.");
@@ -85,7 +90,7 @@ void Market::addItemButtonPressed(){
 		Utilities::showMessageBox(StringResource::WindowTitle_CrackerJackProblem(), msgToDisplay, QMessageBox::Ok);
 		return;
 	}
-	bool itemEmpty = currentlyDisplayedItem.name.isEmpty();
+	bool itemEmpty = itemName.isEmpty();
 	if (itemEmpty) {
 		QString textToDisplayPl = QString::fromLocal8Bit("Nie wybrano przedmiotu");
 		QString textToDisplayEng = "Item not selected";
@@ -95,7 +100,7 @@ void Market::addItemButtonPressed(){
 		return;
 	}
 
-	Offer offer(currentlyDisplayedItem.name,minVal,maxVal,amount);
+	Offer offer(itemName, minVal, maxVal, amount, shouldPlaceOffers, typeToSet);
 	bool alreadyOnList = checkIfItemIsAlreadyOnList(offer);
 	if (!alreadyOnList) {
 		offersList.push_back(offer);
@@ -118,6 +123,7 @@ void Market::addItemButtonPressed(){
 		QString msgToDisplay = isPl ? textToDisplayPl : textToDisplayEng;
 		Utilities::showMessageBox(StringResource::WindowTitle_CrackerJackProblem(), msgToDisplay, QMessageBox::Ok);
 	}
+	setAndRepaintInfoLabel();
 }
 
 void Market::fillCategoryLists() {
@@ -206,28 +212,48 @@ void Market::fillItemList(Seller sellerFiltr, ItemType categoryFiltr){
 
 bool Market::checkIfItemIsAlreadyOnList(Offer& offerToCheck){
 	for each (auto var in offersList){
-		bool alreadyOnList = offerToCheck.itemName == var.itemName;
-		if (alreadyOnList)
+		if (var == offerToCheck)
 			return true;
 	}
 	return false;
 }
 
 void Market::repaitOfertsList(){
-	QListWidget* list = ui->listWidget;
+	QListWidget* list = ui->offerListWidget;
 	list->clear();
 	for each (auto var in offersList)
 		list->addItem(var.toString());
 	list->repaint();
 }
 
+bool Market::twoListAreTheSame(QList<Offer>& list1, QList<Offer>& list2){
+	bool sameSize = list1.size() == list2.size();
+	if (!sameSize)
+		return false;
+
+	for (size_t i = 0; i < list1.size(); i++){
+		bool thisIsTheSameOffer = list1[i] == list2[i];
+		if (!thisIsTheSameOffer)
+			return false;
+	}
+	return true;
+}
+
+void Market::setAndRepaintInfoLabel(){
+	QString sizeOfList = QString::number(offersList.size());
+	QString toDisplay = QString("%1(%2)").arg(listFileName, sizeOfList);
+	ui->itemListFileNameLabel->setText(toDisplay);
+	ui->itemListFileNameLabel->repaint();
+}
+
 void Market::saveListToJsonFile(){
 	QString msgToDiplasy = isPl ? QString::fromLocal8Bit("WprowadŸ nazwê pliku.") : "Insert file name.";
 	QString nameForFile;
-	SetNameWidnow win(this, "CrackerJack", msgToDiplasy, &nameForFile);
-	int retCode = win.exec();
-	bool accepted = retCode == QDialog::Accepted;
-	if (!accepted)
+	auto absolutePath = QFileDialog::getSaveFileName(this, "CrackerJack - save market list", ditWithSavedItemLists.absolutePath(), "*.json");
+	if (absolutePath.isEmpty())
+		return;
+	listFileName = absolutePath.section("/", -1, -1);
+	if (listFileName.isEmpty())
 		return;
 
 	QJsonArray arr;
@@ -239,13 +265,15 @@ void Market::saveListToJsonFile(){
 	QJsonDocument docToSave(mainObj);
 	
 	QString pathToFolder = ditWithSavedItemLists.absolutePath();
-	JsonParser::saveJsonFile(pathToFolder, nameForFile + ".json", docToSave);
+	JsonParser::saveJsonFile(pathToFolder, listFileName, docToSave);
+	setAndRepaintInfoLabel();
 }
 
 void Market::readListFromJsonFile(){
 	QStringList itemLists = ditWithSavedItemLists.entryList(QStringList("*.json"), QDir::Files | QDir::NoSymLinks);
 	bool moreThanOneFile = itemLists.size() != 1;
 	QString pathToFile;
+	QFileInfo info;
 
 	if (moreThanOneFile) {
 		QFileDialog fDial(this, NULL, ditWithSavedItemLists.absolutePath(), "*.json");
@@ -259,6 +287,8 @@ void Market::readListFromJsonFile(){
 	}
 	else
 		pathToFile = ditWithSavedItemLists.absoluteFilePath(itemLists.first());
+
+	listFileName = QFileInfo(pathToFile).fileName();
 
 	QJsonObject obj;	
 	JsonParser::openJsonFile(obj, pathToFile);
@@ -275,11 +305,12 @@ void Market::readListFromJsonFile(){
 	for each (QJsonValue var in arr)
 		offersList.append(Offer(var.toObject()));
 
+	setAndRepaintInfoLabel();
 	repaitOfertsList();
 }
 
 void Market::removeItem(){
-	QListWidget* list = ui->listWidget;
+	QListWidget* list = ui->offerListWidget;
 	int currentRow = list->currentRow();
 	int count = list->count();
 
@@ -289,12 +320,55 @@ void Market::removeItem(){
 
 	offersList.removeAt(currentRow);
 	repaitOfertsList();
+	setAndRepaintInfoLabel();
 }
 
 void Market::test() {
-	readListFromJsonFile();
-	MarketProcess t(var,offersList);
+	MarketProcess t(var,offersList,NULL);
+	t.exec();
+}
+
+void Market::offerTypeChanged(){
+	bool setSellOption = ui->sellTypeRadioButton->isChecked();
+	QString min, max;
+	if (setSellOption) {
+		min = isPl ? QString::fromLocal8Bit("Min cena sprzeda¿y") : "Min sell price";
+		max = isPl ? QString::fromLocal8Bit("Max cena sprzeda¿y") : "Max sell price";
+	}
+	else {
+		min = isPl ? QString::fromLocal8Bit("Min cena kupna") : "Min buy price";
+		max = isPl ? QString::fromLocal8Bit("Max cena kupna") : "Max buy price";
+	}
+	ui->maxPriceLabel->setText(max);
+	ui->minPriceLabel->setText(min);
+	ui->maxPriceLabel->repaint();
+	ui->minPriceLabel->repaint();
 }
 
 void Market::startTradingProcess(){
+}
+
+void Market::editItemButtonClicked(){
+	auto listPtr = ui->offerListWidget;
+	int index = listPtr->currentRow();
+	bool isInRange = index >= 0 && index < offersList.size();
+	if (!isInRange)
+		return;
+	Offer offer = offersList[index];
+	ui->minPriceValue->setValue(offer.minPrice);
+	ui->minPriceValue->repaint();
+	ui->maxPriceValue->setValue(offer.maxPrice);
+	ui->maxPriceValue->repaint();
+	ui->amountValue->setValue(offer.amount);
+	ui->amountValue->repaint();
+	offerTypeChanged();
+	ui->placeOfferCheckBox->setChecked(offer.placeOffer);
+	ui->placeOfferCheckBox->repaint();
+	for each (Item var in allItems){
+		if (var.name == offer.itemName) {
+			fillLabels(&var);
+			break;
+		}
+	}
+	removeItem();
 }

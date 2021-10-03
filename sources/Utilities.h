@@ -18,7 +18,7 @@
 #include "Logger.h"
 class Utilities {
 public:
-	enum class FOLDERS_OF_TMP_FOLDER {Logs, Profiles, Main, Routes, MarketLists};
+	enum class FOLDERS_OF_TMP_FOLDER {Logs, Profiles, TradeReports, Main, Routes, MarketLists};
 	enum class FieldsOfIniFile {
 		LANGUAGE,
 		LAST_USED_LOGIN,
@@ -73,7 +73,6 @@ public:
 	static QStringList TOOL_getCodesOfAllInFolder_regular(QString pathToInputFolder, QString pathToOutputFolder);
 	static QStringList TOOL_getCodesOfAllInFolder_bottom(QString pathToInputFolder);
 	static void TOOL_saveImgToOutPutFolder(QImage& img, QString extraName);
-
 	static void cutImgWithLettersToSingleLettersImgList(QImage& img, QList<QImage>& list);
 	static QMap<QString, QString> getQmapWithCodes();
 	static QString getPathToSettingsFile();
@@ -84,6 +83,22 @@ public:
 	static QString letterImgToLetterCodeStr(QImage* SingleLetterImg);
 
 	static void TOOL_clearBaseMent(VariablesClass* var);
+	static void TOOL_manaSit(int pid,QString winTitle){
+		int i = 0;
+		while (true) {
+			Key key;
+			if (i == 0)
+				key = Key::F7;
+			else if (i == 1)
+				key = Key::END;
+			else
+				key = Key::F11;
+			Utilities::sendKeyStrokeToProcess(key, pid, winTitle);
+			Sleep(125 * 100);
+			i++;
+			i = i % 3;
+		} 
+	}
 	/*
 	static void UNSUED_findBoredersOfFrames(QImage fullScreen);
 	static void UNUSED_imgToOneColor(QImage& img, QRgb minimalColorValues, QRgb maxColorValues, QRgb colorToSet, bool allOfThem);

@@ -20,7 +20,7 @@ typedef Item::TYPE_OF_ITEM ItemType;
 class Market : public QDialog{
 	Q_OBJECT
 public slots:
-	void sellerGroupBoxChanged();
+	void sellerFiltrChange();
 	void categoryChanged();
 	void itemChanged();
 	void addItemButtonPressed();
@@ -28,7 +28,9 @@ public slots:
 	void readListFromJsonFile();
 	void removeItem();
 	void test();
+	void offerTypeChanged();
 	void startTradingProcess();
+	void editItemButtonClicked();
 public:
 	Market(VariablesClass* varToSet);
 	~Market();
@@ -40,9 +42,8 @@ private:
 	QList<Item> allItems;
 	QList<Offer> offersList;
 	Item currentlyDisplayedItem;
-
+	QString listFileName;
 	Seller filtr_seller;
-
 	bool isPl;
 
 	void fillCategoryLists();
@@ -50,4 +51,6 @@ private:
 	void fillItemList(Seller sellerFiltr, ItemType categoryFiltr);
 	bool checkIfItemIsAlreadyOnList(Offer& offerToCheck);
 	void repaitOfertsList();
+	bool twoListAreTheSame(QList<Offer> &list1, QList<Offer> &list2);
+	void setAndRepaintInfoLabel();
 };

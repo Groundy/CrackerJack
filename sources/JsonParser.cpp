@@ -174,6 +174,7 @@ bool JsonParser::getPotionsForProf(QList<Potion>& potions, Profile::PROFESSION* 
 }
 
 bool JsonParser::readItemJson(QList<Item>& items){
+	items.clear();
 	QJsonObject obj;
 	const QString itemsFilePath = "C:\\Users\\ADMIN\\source\\repos\\CrackerJackClient\\Resources\\items.json";//todo
 	bool res = openJsonFile(obj, itemsFilePath);
@@ -182,46 +183,20 @@ bool JsonParser::readItemJson(QList<Item>& items){
 		return false;
 	}
 
-	QJsonArray arr;
 	QStringList listOfCategoryNames = Item::getListOfCategories();
-	for each (QString var in listOfCategoryNames) {
-		QJsonArray toAdd = obj[var].toArray();
-		for each (QJsonValue val in toAdd)
-			arr.push_back(val);
+	for each (QString nameOfJsonObj in listOfCategoryNames) {
+		QJsonArray itemsOfOneCategory = obj[nameOfJsonObj].toArray();
+		for each (QJsonValue itemAsJsonObj in itemsOfOneCategory)
+			items.push_back(Item(itemAsJsonObj));
 	}
 
-	if (arr.size() == 0) {
+
+	if (items.size() == 0) {
 		Logger::logPotenialBug("No items in json file", "JsonParser", "readSpellsJson");
 		return false;
 	}
-
-	QList<Item> itemToRet;
-	for (size_t i = 0; i < arr.size(); i++) {
-		QJsonValue val = arr[i];
-		Item objToAdd;
-		objToAdd.name = val["name"].toString();
-		objToAdd.price = val["price"].toInt();
-		objToAdd.weight = val["weight"].toDouble();
-		//todo zamienic te if/elseif na mape
-		if (val["sell_blue_dijn"].toBool())
-			objToAdd.seller = Item::SELLER::BLUE_DJIN;
-		else if (val["sell_green_dijn"].toBool())
-			objToAdd.seller = Item::SELLER::GREEN_DJIN;
-		else if (val["sell_yasir"].toBool())
-			objToAdd.seller = Item::SELLER::YASIR;
-		else if (val["sell_zao"].toBool())
-			objToAdd.seller = Item::SELLER::ZAO;
-		else if (val["sell_other"].toBool())
-			objToAdd.seller = Item::SELLER::OTHER_SELLER;
-		else if (val["sell_rashid"].toBool())
-			objToAdd.seller = Item::SELLER::RASHID;
-
-		QString typeOfItemStr = val["type"].toString();
-		Item::TYPE_OF_ITEM typeOfItem = Item::typesStrUsedInJson.key(typeOfItemStr);
-		objToAdd.type = typeOfItem;
-		items.push_back(objToAdd);
-	}
-	return true;
+	else
+		return true;
 }
 
 bool JsonParser::getHealthRestoreMethodes(QStringList incantationsAndSpellsList, QList<Utilities::RestoreMethode>& spellsAndPotionsObjects) {

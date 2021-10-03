@@ -1,17 +1,21 @@
 #pragma once
-#include <QObject>
+#include <QDialog>
 #include <qrect.h>
 #include "Utilities.h"
 #include "ScreenSaver.h"
 #include "ScreenAnalyzer.h"
 #include "Offer.h"
-
 struct AlreadyPostedOffer {
+	AlreadyPostedOffer() {};
+	AlreadyPostedOffer(QString nameToSet, int priceToSet, int amountToSet) {
+		name = nameToSet;
+		price = priceToSet;
+		amount = amountToSet;
+	};
 	QString name;
 	int price;
 	int amount;
 };
-
 struct Pos {
 	QRect itemListOnTheLeftOnWholeScreen;
 	QRect insertItemNameBar;
@@ -74,21 +78,28 @@ struct Pos {
 	QRect firstOffer_Price_Buy;
 	QRect firstOffer_Amount_Buy;
 };
-class MarketProcess : public QObject {
+namespace Ui { class MarketProcess; };
+
+class MarketProcess : public QDialog {
+	Q_OBJECT
 public:
-	MarketProcess(VariablesClass* var, QList<Offer> offersThatShouldBe);
+	MarketProcess(VariablesClass* var, QList<Offer> offersThatShouldBe, QWidget* parent);
 	~MarketProcess();
 	enum class Type { BUY, SELL };
+	enum class Actions { LOOKING_FOR_MARKET_WINDOW,SCANNING_OFFER_LIST, LOOKING_FOR_ITEM, PLACING_OFFER, CANCELING_OFFER, FINISHED };
 	enum class TradeAction {
+		GO_NEXT_ITEM,
 		BUY_LAST_OFFER_ITEM,
 		PLACE_OFFER_TO_SELL,
 		PLACE_OFFER_TO_BUY,
 		CANCEL_OFFER_TO_SELL,
-		CANCEL_OFFER_TO_BUY,
-		GO_NEXT_ITEM
+		CANCEL_OFFER_TO_BUY
 	};
-
+public slots:
+	void runButtonClicked();
+	void cancelButtonClicked();
 private:
+	Ui::MarketProcess* ui;
 	Pos pos;
 	bool isPl;
 	void recalculatePositions(QPoint leftTopCorner);
@@ -99,8 +110,7 @@ private:
 	const int HEIGH_OF_OFFER_ROW = 16 ;
 	const int HEIGH_OF_OFFER_FIELD = 177;
 	QList<AlreadyPostedOffer> myCurrentOffers_SELL, myCurrentOffers_BUY;
-	QList<Offer> offerThatShouldBe_BUY;
-
+	QList<Offer> userOfferList;
 
 	QPoint findTopLeftCornerOfMarketWin();
 	bool askForScreenAndReadIt();
@@ -110,13 +120,21 @@ private:
 	int appendDisplayedOfferts(QList<AlreadyPostedOffer>& set, Type type);
 	void splitPicToBlackWhiteRows(QImage& imgToSplit, QList<QImage>& rows);
 	bool currentOfferIsMyOffer(QString nameWithoustSpaces, int price, Type type);
+	void cancelOffer(QString name, Type type);
 	int howMuchMoneyDoIHave();
 	TradeAction decideWhatToDo(
 		int currentCash,
 		int amountOfLastSellOffer,
 		int priceOfLastSellOffer,
 		int amountOfLastBuyOffer,
-		int priceOfLastBuyOffer
+		int priceOfLastBuyOffer,
+		Offer offer
 	);
+	void scrollDownListOfmyOffers(Type type);
+	bool checkIfThisItemIscurrentlyOnMarket(QString itemName, Type type);
+	void setOffer(Type type, int lastOfferPrice, int cash, Offer offer);
+	void appendStrToTradeLog(QString strToWrite);
+	void buyLastOffer(int currentlyPossesedCash, int priceOfLastOffer_SELL,int amountOfLastOffer_SELL, QString itemName);
+	void displayInfoOnInfoLabel(Actions action, QString itemName);
 };
 
