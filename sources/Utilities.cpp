@@ -593,6 +593,18 @@ void Utilities::sendStringToGame(QString str, HWND handler){
 			LPARAM lParam = ((value + 1) << 16) + 1;
 			PostMessage(handler, WM_KEYDOWN, wParam, lParam);
 		}
+		else if (var.unicode() == 39) {
+			//apostrophe mark
+			WPARAM wParam = 0xDE;
+			LPARAM lParam = 0x00280001;
+			PostMessage(handler, WM_KEYDOWN, wParam, lParam);
+		}
+		else if (var.unicode() == 45) {
+			//dash mark
+			WPARAM wParam = 0xBD;
+			LPARAM lParam = 0x000C001;
+			PostMessage(handler, WM_KEYDOWN, wParam, lParam);
+		}
 		Sleep(2);
 	}
 }

@@ -136,5 +136,6 @@ private:
 	void appendStrToTradeLog(QString strToWrite);
 	void buyLastOffer(int currentlyPossesedCash, int priceOfLastOffer_SELL,int amountOfLastOffer_SELL, QString itemName);
 	void displayInfoOnInfoLabel(Actions action, QString itemName);
+	void repaintProgressBar(int currentValue, int maxValue);
 };
 

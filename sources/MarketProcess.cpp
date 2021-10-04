@@ -207,9 +207,7 @@ void MarketProcess::mainLoop() {
 	for (size_t i = 0; i < userOfferList.size(); i++) {
 		Offer offer = userOfferList[i];
 		displayInfoOnInfoLabel(Actions::LOOKING_FOR_ITEM, offer.itemName);
-		int progress = (i*100) / userOfferList.size();
-		ui->progressBar->setValue(progress);
-		ui->progressBar->repaint();
+		repaintProgressBar(i, userOfferList.size());
 
 		Utilities::clickLeft(pos.clearItemNameButton.center(), handlerToGame);
 		Sleep(100);
@@ -258,8 +256,7 @@ void MarketProcess::mainLoop() {
 			}
 		} while (!breakLoop);
 	}
-	ui->progressBar->setValue(100);
-	ui->progressBar->repaint();
+	repaintProgressBar(100,100);
 	displayInfoOnInfoLabel(Actions::FINISHED,NULL);
 }
 
@@ -704,6 +701,12 @@ void MarketProcess::displayInfoOnInfoLabel(Actions action, QString itemName){
 	}
 	ui->itemNameLabel->setText(isPl ? pl : eng);
 	ui->itemNameLabel->repaint();
+}
+
+void MarketProcess::repaintProgressBar(int currentValue, int maxValue){
+	int progress = (currentValue * 100) / maxValue;
+	ui->progressBar->setValue(progress);
+	ui->progressBar->repaint();
 }
 
 void MarketProcess::runButtonClicked(){

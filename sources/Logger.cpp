@@ -68,6 +68,6 @@ void Logger::logPotenialBug(const QString textToSave){
 
 QString Logger::getTimeStamp(){
 	QDateTime time = QDateTime::currentDateTime();
-	return "[" + time.toString("dd/MM/yyyy hh:mm:ss:zzz")+ "] ";
+	return "[" + time.toString("hh:mm:ss:zzz")+ "] ";
 }
 
