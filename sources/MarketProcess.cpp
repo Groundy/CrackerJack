@@ -4,15 +4,6 @@ MarketProcess::MarketProcess(VariablesClass* varToSet, QList<Offer> offersThatSh
 	this->setParent(parent);
 	this->var = varToSet;
 	this->userOfferList = offersThatShouldBeSet;
-	/*
-	this->setWindowTitle("CrackerJack");
-	QString cancelButtonText = isPl ? "Anuluj" : "Cancel";
-	ui->cancelButton->setText(cancelButtonText);
-	ui->cancelButton->repaint();
-	QString runButtonText = "Start";
-	ui->runButton->setText(runButtonText);
-	ui->runButton->repaint();
-	*/
 	handlerToGame = Utilities::getHandlerToGameWindow(var->var_pidOfGame, var->var_winTitleOfGame);
 }
 
@@ -479,14 +470,9 @@ void MarketProcess::cancelOffer(QString itemName, Type type){
 			Utilities::clickLeft(cancelButtonPos, handlerToGame);
 			{
 				QString priceStr = QString::number(offerList->at(indexInListOffer).price);
+				QString amountStr = QString::number(offerList->at(indexInListOffer).amount);
 				QString typeOfPlaceOffer = sellType ? tr("sell") : tr("buy");
-				QString forWord = tr("for");
-				QString textOfMsg =
-					tr("Canceled ") +
-					typeOfPlaceOffer + " " +
-					itemName + " " +
-					forWord + " " +
-					priceStr;
+				QString textOfMsg = tr("Canceled %1  %2  %3 offer for %4 each").arg(typeOfPlaceOffer, amountStr, itemName, priceOfOfferStr);
 				appendStrToTradeLog(textOfMsg);
 				addTextToDisplayOnList(textOfMsg);
 			}
@@ -499,10 +485,7 @@ void MarketProcess::cancelOffer(QString itemName, Type type){
 		}
 		else if (!offerFound) {
 			QString arg = sellType ? tr("sell") : tr("buy");
-			QString text = 
-				tr("Failed founding: ")+
-				arg+
-				tr(" offer in already posted offers.");
+			QString text = tr("Failed in founding %1 offer in already posted offers.").arg(arg);
 			appendStrToTradeLog(text);
 		}
 	}
@@ -622,11 +605,7 @@ void MarketProcess::setOffer(Type typeOfOfferToSet, int lastOfferPrice, int cash
 		QString amountStr = QString::number(howManyItemsIShouldTrade);
 		QString priceStr = QString::number(newPrice);
 		QString typeOfPlacedOfferStr = isSellType ? tr("sell") : tr("buy");
-		QString forWord = tr("for");
-		QString textOfMsg =
-			tr("Placed offer to ") +
-			typeOfPlacedOfferStr +
-			QString("%1 %2 %3 %4").arg(amountStr, offer.itemName, forWord, priceStr);
+		QString textOfMsg = tr("Placed offer to %1 %2 %3 for %4 each").arg(typeOfPlacedOfferStr, amountStr, offer.itemName, priceStr);
 		appendStrToTradeLog(textOfMsg);
 		addTextToDisplayOnList(textOfMsg);
 	}
@@ -660,7 +639,7 @@ void MarketProcess::buyLastOffer(int currentlyPossesedCash, int priceOfLastOffer
 	{
 		QString amountStr = QString::number(howManyItemsICanBuy);
 		QString priceStr = QString::number(priceOfLastOffer_SELL);
-		QString textOfMsg = tr("Bought") + amountStr + " " + itemName + tr("for") + priceStr;
+		QString textOfMsg = tr("Bought %1 %2 for %3 each").arg(amountStr, itemName, priceStr);
 		appendStrToTradeLog(textOfMsg);
 		emit addTextToDisplayOnList(textOfMsg);
 	}

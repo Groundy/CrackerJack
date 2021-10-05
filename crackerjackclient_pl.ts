@@ -36,7 +36,7 @@
     <message>
         <location filename="sources/LoginWindow.cpp" line="101"/>
         <source>Version </source>
-        <translation type="unfinished"></translation>
+        <translation>Wersja</translation>
     </message>
 </context>
 <context>
@@ -90,7 +90,7 @@
         <location filename="sources/MainMenu.ui" line="274"/>
         <location filename="sources/MainMenu.ui" line="281"/>
         <source>TextLabel</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">&quot;&quot;</translation>
     </message>
     <message>
         <location filename="sources/MainMenu.ui" line="97"/>
@@ -508,22 +508,21 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="sources/MarketProcessGui.ui" line="14"/>
         <source>CrackerJack - Market</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
-        <location filename="sources/MarketProcessGui.ui" line="20"/>
         <source>TextLabel</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">&quot;&quot;</translation>
     </message>
     <message>
         <location filename="sources/MarketProcessGui.ui" line="45"/>
         <source>Start</source>
-        <translation type="unfinished"></translation>
+        <translation>Start</translation>
     </message>
     <message>
         <location filename="sources/MarketProcessGui.ui" line="52"/>
         <source>Cancel</source>
-        <translation type="unfinished">Anuluj</translation>
+        <translation>Anuluj</translation>
     </message>
 </context>
 <context>
@@ -1114,7 +1113,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="sources/RouteCreator.ui" line="639"/>
         <source>TextLabel</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">&quot;&quot;</translation>
     </message>
     <message>
         <location filename="sources/RouteCreator.cpp" line="205"/>
@@ -1302,7 +1301,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="sources/SetNameWidnow.ui" line="41"/>
         <source>TextLabel</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">&quot;&quot;</translation>
     </message>
     <message>
         <location filename="sources/SetNameWidnow.ui" line="51"/>
