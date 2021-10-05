@@ -14,7 +14,6 @@ MarketProcess::MarketProcess(VariablesClass* varToSet, QList<Offer> offersThatSh
 	ui->runButton->repaint();
 	*/
 	handlerToGame = Utilities::getHandlerToGameWindow(var->var_pidOfGame, var->var_winTitleOfGame);
-	isPl = StringResource::languageIsPl();
 }
 
 MarketProcess::~MarketProcess()
@@ -170,12 +169,10 @@ QPoint MarketProcess::findTopLeftCornerOfMarketWin(){
 		return toRet;
 	}
 	else {
-		QString textPl = QString::fromLocal8Bit("Nie znaleziono otwartego okna marketu.");
-		QString textEng = "Market window not detected.";
-		QString text = isPl ? textPl : textEng;
+		QString text = tr("Market window not detected.");
 		Logger::logPotenialBug(text,"MarketProcess","findTopLeftCornerOfMarketWin");
 		//QThread nie mzoe pokazywac messageBoxow, przeniesc to do gui
-		Utilities::showMessageBox("CrackerJack", text, QMessageBox::Ok);
+		Utilities::showMessageBox_INFO(text);
 		return QPoint();
 	}
 }
@@ -257,8 +254,8 @@ void MarketProcess::mainLoop() {
 		} while (!breakLoop);
 	}
 	emit paintProgressOnBar(100,100);
-	QString text = isPl ? QString::fromLocal8Bit("Zakoñczono.") : "Finished";
-	appendStrToTradeLog(text);
+	QString text = tr("Finished");
+	//appendStrToTradeLog(tr("Finished."));
 	sendTextToDisplay(Actions::FINISHED,NULL);
 }
 
@@ -481,18 +478,15 @@ void MarketProcess::cancelOffer(QString itemName, Type type){
 			Sleep(50);
 			Utilities::clickLeft(cancelButtonPos, handlerToGame);
 			{
-				QString textOfMsg;
 				QString priceStr = QString::number(offerList->at(indexInListOffer).price);
-				if (isPl) {
-					QString typeOfPlaceOffer = sellType ? QString::fromLocal8Bit("sprzeda¿y") : QString::fromLocal8Bit("kupna");
-					textOfMsg = QString::fromLocal8Bit("Anulowanie oferty %1 %2 w cenie %3")
-						.arg(typeOfPlaceOffer, itemName, priceStr);
-				}
-				else {
-					QString typeOfPlaceOffer = sellType ? "sell" : "buy";
-					textOfMsg = QString::fromLocal8Bit("Canceled %1 %2 offer in price %3")
-						.arg(typeOfPlaceOffer, itemName, priceStr);
-				}
+				QString typeOfPlaceOffer = sellType ? tr("sell") : tr("buy");
+				QString forWord = tr("for");
+				QString textOfMsg =
+					tr("Canceled ") +
+					typeOfPlaceOffer + " " +
+					itemName + " " +
+					forWord + " " +
+					priceStr;
 				appendStrToTradeLog(textOfMsg);
 				addTextToDisplayOnList(textOfMsg);
 			}
@@ -504,15 +498,12 @@ void MarketProcess::cancelOffer(QString itemName, Type type){
 			timesScrolled++;
 		}
 		else if (!offerFound) {
-			QString strArg;
-			if (isPl && sellType) strArg = QString::fromLocal8Bit("sprzeda¿y");
-			else if (isPl && !sellType) strArg = "kupna";
-			else if (!isPl && sellType) strArg = "sell";
-			else if (!isPl && !sellType) strArg = "buy";
-
-			QString pl = QString::fromLocal8Bit("Nie znaleziono oferty %1 w istniejacych juz ofertach").arg(strArg);
-			QString eng = QString("Failed founding %1 offer in already posted offers.").arg(strArg);
-			appendStrToTradeLog(isPl ? pl : eng);
+			QString arg = sellType ? tr("sell") : tr("buy");
+			QString text = 
+				tr("Failed founding: ")+
+				arg+
+				tr(" offer in already posted offers.");
+			appendStrToTradeLog(text);
 		}
 	}
 	Utilities::clickLeft(pos.Close_ReturnToMarket_Button.center(), handlerToGame);
@@ -630,17 +621,12 @@ void MarketProcess::setOffer(Type typeOfOfferToSet, int lastOfferPrice, int cash
 	{
 		QString amountStr = QString::number(howManyItemsIShouldTrade);
 		QString priceStr = QString::number(newPrice);
-		QString textOfMsg;
-		if (isPl) {
-			QString typeOfPlaceOffer = isSellType ? QString::fromLocal8Bit("sprzeda¿y") : QString::fromLocal8Bit("kupna");
-			textOfMsg = QString::fromLocal8Bit("Wstawiono oferte %1 %2 %3 za cenê %4")
-			.arg(typeOfPlaceOffer, amountStr, modifiedItemName, priceStr);
-		}
-		else {
-			QString typeOfPlaceOffer = isSellType ? "sell" : "buy";
-			textOfMsg = QString::fromLocal8Bit("Placed offer to %1 %2 %3 for %4")
-				.arg(typeOfPlaceOffer, amountStr, modifiedItemName, priceStr);
-		}
+		QString typeOfPlacedOfferStr = isSellType ? tr("sell") : tr("buy");
+		QString forWord = tr("for");
+		QString textOfMsg =
+			tr("Placed offer to ") +
+			typeOfPlacedOfferStr +
+			QString("%1 %2 %3 %4").arg(amountStr, offer.itemName, forWord, priceStr);
 		appendStrToTradeLog(textOfMsg);
 		addTextToDisplayOnList(textOfMsg);
 	}
@@ -674,56 +660,41 @@ void MarketProcess::buyLastOffer(int currentlyPossesedCash, int priceOfLastOffer
 	{
 		QString amountStr = QString::number(howManyItemsICanBuy);
 		QString priceStr = QString::number(priceOfLastOffer_SELL);
-		QString textOfMsg;
-		if (isPl) {
-			textOfMsg = QString::fromLocal8Bit("Kupiono %1 %2 za cenê %3")
-				.arg(amountStr, itemName, priceStr);
-		}
-		else {
-			textOfMsg = QString::fromLocal8Bit("Bought %1 %2 for %4")
-				.arg(amountStr, itemName, priceStr);
-		}
+		QString textOfMsg = tr("Bought") + amountStr + " " + itemName + tr("for") + priceStr;
 		appendStrToTradeLog(textOfMsg);
 		emit addTextToDisplayOnList(textOfMsg);
 	}
 }
 
 void MarketProcess::sendTextToDisplay(Actions action, QString itemName){
-	QString pl, eng;
+	QString text;
 	switch (action)
 	{
 	case MarketProcess::Actions::LOOKING_FOR_MARKET_WINDOW:
-		pl = "Wyszukiwanie okna marketu.";
-		eng = "Searching for market Window.";
+		text = tr("Searching for market Window.");
 		break;
 	case MarketProcess::Actions::SCANNING_OFFER_LIST:
-		pl = QString::fromLocal8Bit("Skanowanie listy wystawionych ju¿ ofert.");
-		eng = "Scanning list of already posted offers.";
+		text = tr("Scanning list of already posted offers.");
 		break;
 	case MarketProcess::Actions::LOOKING_FOR_ITEM: 
-		pl = QString::fromLocal8Bit("Wyszukiwanie: %1").arg(itemName);
-		eng = QString("Searching: %1").arg(itemName);
+		text = tr("Searching: ") + itemName;
 		break;
 	case MarketProcess::Actions::PLACING_OFFER:
-		pl = QString::fromLocal8Bit("Wystawianie oferty: %1").arg(itemName);
-		eng = QString("Placing offer: %1").arg(itemName);
+		text = tr("Placing offer: ") + itemName;
 		break;
 	case MarketProcess::Actions::CANCELING_OFFER:
-		pl = QString::fromLocal8Bit("Anulowanie oferty %1").arg(itemName);
-		eng = QString("Canceling offer %1").arg(itemName);
+		text = tr("Canceling offer ") + itemName;
 		break;
 	case MarketProcess::Actions::FINISHED:
-		pl = QString::fromLocal8Bit("Zakoñczono.");
-		eng = "Finished.";
+		text = tr("Finished.");
 		break;
 	case MarketProcess::Actions::CANCELING:
-		pl = QString::fromLocal8Bit("Zatrzymywanie procesu.");
-		eng = "Stopping process.";
+		text = tr("Stopping process.");
 		break;
 	default:
 		break;
 	}
-	emit repaintLabelInGui(isPl ? pl : eng);
+	emit repaintLabelInGui(text);
 }
 
 void MarketProcess::run(){	

@@ -3,7 +3,7 @@
 #include <QtCore/qsettings.h>
 #include <Calibrator.h>
 
-int Utilities::showMessageBox(QString title = "CrackerJack", QString text = "", QFlags<QMessageBox::StandardButton> buttons = QMessageBox::Ok) {
+int Utilities::showMessageBox(QString title, QString text = "", QFlags<QMessageBox::StandardButton> buttons = QMessageBox::Ok) {
 	QMessageBox box;
 	box.setText(text);
 	box.setWindowTitle(title);
@@ -13,10 +13,18 @@ int Utilities::showMessageBox(QString title = "CrackerJack", QString text = "", 
 	return ret;
 }
 
-bool Utilities::showMessageBox_NO_YES(QString title, QString text)
+void Utilities::showMessageBox_INFO(QString text){
+	QMessageBox box;
+	box.setText(text);
+	box.setWindowTitle("CrackerJack");
+	box.setStandardButtons(QMessageBox::StandardButton::Ok);
+	box.exec();
+}
+
+bool Utilities::showMessageBox_NO_YES(QString text)
  {
     QFlags<QMessageBox::StandardButton> flags = { QMessageBox::StandardButton::Yes, QMessageBox::StandardButton::No };
-    int res = Utilities::showMessageBox(title, text, flags);
+    int res = Utilities::showMessageBox("CrakerJack", text, flags);
     bool toRet = res == QMessageBox::StandardButton::Yes;
     return toRet;
  }

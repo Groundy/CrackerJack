@@ -240,7 +240,7 @@ bool ManaHealthStateAnalyzer::checkIfEverythingIsCorrectToProcess(){
 	int res = changeImgsToStrings();
 	if (res != OK) {
 		emit demandReCalibration();
-		QString wordToSend = StringResource::languageIsPl() ? QString::fromLocal8Bit("Kalibracja") : "Calibrating";
+		QString wordToSend = tr("Calibrating");
 		emit sendValueToMainThread(wordToSend, wordToSend, wordToSend);
 		msleep(miliSecBetweenCheckingForNewValuesImg*5);
 		return false;

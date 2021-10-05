@@ -202,31 +202,31 @@ void RouteCreator::TRANSLATE_addNamesOfFieldTypesToList(){
 	QComboBox* box = ui->fieldTypesBox;
 	QString text;
 
-	text = isPl ? QString::fromLocal8Bit("[01] Zwyk³e pole") : "[01] Regular Field";
+	text = tr("[01] Regular Field");
 	box->addItem(text);
-	text = isPl ? QString::fromLocal8Bit("[02] Schody do góry") : "[02] Stairs-up";
+	text = tr("[02] Stairs-up");
 	box->addItem(text);
-	text = isPl ? QString::fromLocal8Bit("[03] Schody do do³u") : "[03] Stairs-down";
+	text = tr("[03] Stairs-down");
 	box->addItem(text);
-	text = isPl ? QString::fromLocal8Bit("[04] Pole liny") : "[04] Rope field";
+	text = tr("[04] Rope field");
 	box->addItem(text);
-	text = isPl ? QString::fromLocal8Bit("[05] Dziura, otwarta") : "[05] Hole, open";
+	text = tr("[05] Hole, open");
 	box->addItem(text);
-	text = isPl ? QString::fromLocal8Bit("[06] Dziura, zamknieta") : "[06] Hole, close";
+	text = tr("[06] Hole, close");
 	box->addItem(text);
-	text = isPl ? QString::fromLocal8Bit("[07] Drabina w górê") : "[07] Ladder up";
+	text = tr("[07] Ladder up");
 	box->addItem(text);
-	text = isPl ? QString::fromLocal8Bit("[08] Drabian w dó³") : "[08] Ladder down";
+	text = tr("[08] Ladder down");
 	box->addItem(text);
-	text = isPl ? QString::fromLocal8Bit("[09] Teleport") : "[09] Teleport";
+	text = tr("[09] Teleport");
 	box->addItem(text);
-	text = isPl ? QString::fromLocal8Bit("[10] Punkt wyjscia : ") : "[10] Log out point";
+	text = tr("[10] Log out point");
 	box->addItem(text);
 	box->repaint();
 }
 
 void RouteCreator::TRANSLATE_gui(){
-	QString left = isPl ? QString::fromLocal8Bit("lewo") : "left";
+	QString left = tr("left");
 	ui->moveMapLeft_1->setText(left);
 	ui->moveMapLeft_2->setText(left + " 5x");
 	ui->moveMapLeft_3->setText(left + " 100x");
@@ -234,7 +234,7 @@ void RouteCreator::TRANSLATE_gui(){
 	ui->moveMapLeft_2->repaint();
 	ui->moveMapLeft_3->repaint();
 
-	QString up = isPl ? QString::fromLocal8Bit("góra") : "up";
+	QString up = tr("up");
 	ui->moveMapUp_1->setText(up);
 	ui->moveMapUp_2->setText(up + " 5x");
 	ui->moveMapUp_3->setText(up + " 100x");
@@ -242,7 +242,7 @@ void RouteCreator::TRANSLATE_gui(){
 	ui->moveMapUp_2->repaint();
 	ui->moveMapUp_3->repaint();
 
-	QString down = isPl ? QString::fromLocal8Bit("dó³") : "down";
+	QString down = tr("down");
 	ui->moveMapDown_1->setText(down);
 	ui->moveMapDown_2->setText(down + " 5x");
 	ui->moveMapDown_3->setText(down + " 100x");
@@ -250,7 +250,7 @@ void RouteCreator::TRANSLATE_gui(){
 	ui->moveMapDown_2->repaint();
 	ui->moveMapDown_3->repaint();
 
-	QString right = isPl ? QString::fromLocal8Bit("prawo") : "right";
+	QString right = tr("right");
 	ui->moveMapRight_1->setText(right);
 	ui->moveMapRight_2->setText(right + " 5x");
 	ui->moveMapRight_3->setText(right + " 100x");
@@ -258,47 +258,47 @@ void RouteCreator::TRANSLATE_gui(){
 	ui->moveMapRight_2->repaint();
 	ui->moveMapRight_3->repaint();
 
-	QString floorDown = isPl ? QString::fromLocal8Bit("piêtro ni¿ej") : "floor down";
+	QString floorDown = tr("floor down");
 	ui->lowerFloor->setText(floorDown);
 	ui->lowerFloor->repaint();
 
-	QString floorUp = isPl ? QString::fromLocal8Bit("piêtro wy¿ej") : "floor up";
+	QString floorUp = tr("floor up");
 	ui->upFloor->setText(floorUp);
 	ui->upFloor->repaint();
 
-	QString pointUp = isPl ? QString::fromLocal8Bit("w górê") : "move up";
+	QString pointUp = tr("move up");
 	ui->movePointUpButton->setText(pointUp);
 	ui->movePointUpButton->repaint();
 
-	QString pointDown = isPl ? QString::fromLocal8Bit("w dó³") : "move down";
+	QString pointDown = tr("move down");
 	ui->movePointDownButton->setText(pointDown);
 	ui->movePointDownButton->repaint();
 
-	QString deletePoint = isPl ? QString::fromLocal8Bit("usuñ punkt") : "delete point";
+	QString deletePoint = tr("delete point");
 	ui->deletePointButton->setText(deletePoint);
 	ui->deletePointButton->repaint();
 
-	QString addPoint = isPl ? QString::fromLocal8Bit("dodaj punkt") : "add point";
+	QString addPoint = tr("add point");
 	ui->addPointButton->setText(addPoint);
 	ui->addPointButton->repaint();
 
-	QString cancelButton = isPl ? QString::fromLocal8Bit("Anuluj") : "Cancel";
+	QString cancelButton = tr("Cancel");
 	ui->cancelButton->setText(cancelButton);
 	ui->cancelButton->repaint();
 
-	QString finishButton = isPl ? QString::fromLocal8Bit("Zakoñcz") : "Finish";
+	QString finishButton = tr("Finish");
 	ui->finishButton->setText(finishButton);
 	ui->finishButton->repaint();
 
-	QString loadButton = isPl ? QString::fromLocal8Bit("Wczytaj trase") : "Load route";
+	QString loadButton = tr("Load route");
 	ui->loadRouteButton->setText(loadButton);
 	ui->loadRouteButton->repaint();
 
-	QString helpButton = isPl ? QString::fromLocal8Bit("Pomoc") : "Help";
+	QString helpButton = tr("Help");
 	ui->helpButton->setText(helpButton);
 	ui->helpButton->repaint();
 
-	QString checkRouteButton = isPl ? QString::fromLocal8Bit("SprawdŸ poprawnoœæ trasy") : "Check route correctness";
+	QString checkRouteButton = tr("Check route correctness");
 	ui->checkButton->setText(checkRouteButton);
 	ui->checkButton->repaint();
 
@@ -324,10 +324,8 @@ bool RouteCreator::repaintMap(){
 	return true;
 }
 
-void RouteCreator::zoomChanged(){
-	zoom*=2;
-	if (zoom == 8)
-		zoom = 1;
+void RouteCreator::zoomChanged(){ 
+	zoom = (2 * zoom == 8) ? 1 : (2 * zoom);
 	QString textOnButton = QString("Zoom %1x").arg(QString::number(zoom));
 	ui->zoomButton->setText(textOnButton);
 	repaintMap();
@@ -335,9 +333,9 @@ void RouteCreator::zoomChanged(){
 
 void RouteCreator::refreshPositionLabel(){
 	bool isWalkable = currentPixIsWalkable();
-	QString textBase = isPl ? QString::fromLocal8Bit("   Pole przechodnie: ") : "   Walkable field: ";
-	QString toAppendYes = isPl ? "Tak" : "Yes";
-	QString toAppendNo = isPl ? "Nie" : "No";
+	QString textBase = tr("   Walkable field: ");
+	QString toAppendYes = tr("Yes");
+	QString toAppendNo = tr("No");
 	QString pointWakabilityStr = isWalkable ? (textBase + toAppendYes) : (textBase + toAppendNo);
 
 
@@ -374,7 +372,7 @@ void RouteCreator::finishButtonPressed(){
 	if (!routeOk)
 		return;
 
-	QString textToDisplay = isPl ? QString::fromLocal8Bit("Wybierz nazwê dla nowej trasy.") : "Set name for new route.";
+	QString textToDisplay = tr("Set name for new route.");
 	QString title = "CrackerJack";
 	QString fileName;
 	SetNameWidnow nameWindow(this, title, textToDisplay, &fileName);
@@ -411,8 +409,8 @@ bool RouteCreator::checkRouteButtonPressed(){
 	QString textToDisplayToUser;
 	bool routeCorrect = route.checkRouteCorectness(textToDisplayToUser);
 	if (routeCorrect)
-		textToDisplayToUser = isPl ? QString::fromLocal8Bit("Trasa jest w porz¹dku.") : "Route is correct.";
-	Utilities::showMessageBox("CrackerJack", textToDisplayToUser, QMessageBox::Ok);
+		textToDisplayToUser = tr("Route is correct.");
+	Utilities::showMessageBox_INFO(textToDisplayToUser);
 	return routeCorrect;
 }
 

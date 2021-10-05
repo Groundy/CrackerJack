@@ -1,6 +1,6 @@
 #pragma once
 #include <QDialog>
-#include "StringResource.h"
+#include <qtranslator.h>
 namespace Ui { class MarketProcessGui; };
 
 class MarketProcessGui : public QDialog
@@ -22,5 +22,4 @@ public slots:
 	void startButtonClicker();
 private:
 	Ui::MarketProcessGui *ui;
-	bool isPl = StringResource::languageIsPl();
 };

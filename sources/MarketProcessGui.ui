@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>CrackerJack - Market</string>
   </property>
   <layout class="QGridLayout" name="gridLayout_2">
    <item row="1" column="0">
@@ -42,7 +42,7 @@
      <item>
       <widget class="QPushButton" name="startButton">
        <property name="text">
-        <string>PushButton</string>
+        <string>Start</string>
        </property>
       </widget>
      </item>

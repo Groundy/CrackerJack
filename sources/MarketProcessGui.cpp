@@ -9,9 +9,6 @@ MarketProcessGui::MarketProcessGui(QDialog *parent)
 	ui->startButton->repaint();
 	ui->label->setText("");
 	ui->label->repaint();
-	QString cancelButtonText = isPl ? QString::fromLocal8Bit("Anuluj") : "Cancel";
-	ui->cancelButton->setText(cancelButtonText);
-	ui->cancelButton->repaint();
 }
 
 MarketProcessGui::~MarketProcessGui()

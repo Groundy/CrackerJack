@@ -11,7 +11,6 @@
 #include "ScreenAnalyzer.h"
 #include "memory"
 #include "Calibrator.h"
-#include "StringResource.h"
 #include "SelectProfileWindow.h"
 #include "RouteCreator.h"
 #include "Market.h"
@@ -47,7 +46,7 @@ private:
 	QString gameWindowTitle;
 	Ui::MainMenu *ui;
 	Profile* prof;
-	bool isPl;
+
 
 	ScreenSaver* screenSaverThread;
 	activeGameThread* activityThread;
@@ -59,7 +58,6 @@ private:
 	void setProblemsWindow(QStringList problemsToShow);
 	void threadStarter();
 	void signalSlotConnector();
-	void TRANSLATE_setUpGui();
 
 	const QString CALIBRATION_STRING_PL = QString::fromLocal8Bit("Kalibracja");
 	const QString CALIBRATION_STRING_ENG = "Calibrating";

@@ -4,7 +4,7 @@
 LoginWindow::LoginWindow(QWidget* parent) :
 	QDialog(parent) {
 	ui.setupUi(this);
-	bool isPl = StringResource::languageIsPl();
+
 	ui.laungageComboBox->addItem("eng");
 	ui.laungageComboBox->addItem("pl");
 
@@ -15,11 +15,13 @@ LoginWindow::LoginWindow(QWidget* parent) :
 	ui.loginLine->repaint();
 	ui.remeberLoginChecbox->repaint();
 
+	/*to do wyswietlic aktualnie uzywany jezyk TODO
 	int index = isPl ? 1 : 0;
 	ui.laungageComboBox->setCurrentIndex(index);
 	ui.laungageComboBox->repaint();
 	QString strToSave = ui.laungageComboBox->itemText(index);
 	Utilities::writeIniFile(Utilities::FieldsOfIniFile::LANGUAGE, strToSave);
+	*/
 	setUpGUI();
 }
 
@@ -64,7 +66,7 @@ void LoginWindow::checkLogInPossibility() {
 }
 
 void LoginWindow::showThatPasswordFailed() {
-	QString msg = StringResource::LoginWindow_WrongLoginPasword();
+	QString msg = tr("That combination of login and password doesn't exist.");
 	ui.wrongPasswordLabel->setText(msg);
 	ui.wrongPasswordLabel->setVisible(true);
 	ui.passwordLine->clear();
@@ -76,35 +78,27 @@ bool LoginWindow::checkPasswordCorrectness() {
 }
 
 void LoginWindow::setUpGUI() {
-	bool isPl = StringResource::languageIsPl();
-
-	QString passwordLabelText;
-	passwordLabelText = isPl ? QString::fromLocal8Bit("Has³o") : "Password";
+	QString passwordLabelText = tr("Password");
 	ui.passwordLabel->setText(passwordLabelText);
 	ui.passwordLabel->repaint();
 
-	QString checkBoxText;
-	checkBoxText = isPl ? QString::fromLocal8Bit("Zapamiêtaj login") : "Remember password";
+	QString checkBoxText = tr("Remember password");
 	ui.remeberLoginChecbox->setText(checkBoxText);
 	ui.remeberLoginChecbox->repaint();
 
-	QString LogInText;
-	LogInText = isPl ? QString::fromLocal8Bit("Zaloguj") : "Log in";
+	QString LogInText = tr("Log in");
 	ui.logInButton->setText(LogInText);
 	ui.logInButton->repaint();
 
-	QString SignUpText;
-	SignUpText = isPl ? QString::fromLocal8Bit("Zarejestruj siê") : "Sign up";
+	QString SignUpText = tr("Sign up");
 	ui.signUPButton->setText(SignUpText);
 	ui.signUPButton->repaint();
 
-	QString forgotPassText;
-	forgotPassText = isPl ? QString::fromLocal8Bit("Zapomnia³eœ has³a?") : "Forgot your password?";
+	QString forgotPassText = tr("Forgot your password?");
 	ui.forgetPassButton->setText(forgotPassText);
 	ui.forgetPassButton->repaint();
 
-	QString textToSet;
-	textToSet = isPl ? QString::fromLocal8Bit("Wersja ") : "Version ";
+	QString textToSet = tr("Version ");
 	QString verVal = VER_FILEVERSION_STR;
 	textToSet += verVal;
 	ui.versionLabel->setText(textToSet);

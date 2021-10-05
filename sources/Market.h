@@ -3,13 +3,12 @@
 #include <QDialog>
 #include "JsonParser.h"
 #include "Item.h"
-#include "StringResource.h"
 #include "SetNameWidnow.h"
 #include "qfiledialog.h"
 #include "MarketProcess.h"
 #include "Calibrator.h"
 #include "Offer.h"
-
+#include <QTranslator>
 ///test
 #include "activeGameThread.h"
 namespace Ui { class Market; };
@@ -44,7 +43,6 @@ private:
 	Item currentlyDisplayedItem;
 	QString listFileName;
 	Seller filtr_seller;
-	bool isPl;
 
 	void fillCategoryLists();
 	void fillLabels(Item* item);

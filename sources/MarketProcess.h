@@ -105,7 +105,6 @@ signals:
 	void addTextToDisplayOnList(QString str);
 private:
 	Pos pos;
-	bool isPl;
 	void initPos();
 	VariablesClass* var;
 	QImage currentImg;

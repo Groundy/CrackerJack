@@ -1,6 +1,6 @@
 #include <QtWidgets/QApplication>
 #include "MainMenu.h"
-
+#include <qtranslator.h>
 #include "Market.h"
 
 QString makeRandomProccessName();
@@ -11,6 +11,9 @@ void initSettings(QApplication& a);
 int main(int argc, char *argv[])
 {
 	QApplication a(argc, argv);
+	QTranslator translator;
+	bool ok1 = translator.load("Debug\\crackerjackclient_pl");
+	bool ok2 = a.installTranslator(&translator);
 	initSettings(a);
 	test();
    /*

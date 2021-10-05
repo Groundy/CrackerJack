@@ -15,7 +15,7 @@
 #include "Logger.h"
 #include "Utilities.h"
 #include "qfileinfo.h"
-#include "StringResource.h"
+#include "qtranslator.h"
 class Cryptography{
 public:
 	Cryptography();

@@ -22,6 +22,11 @@
       <Extensions>qrc;*</Extensions>
       <ParseFiles>false</ParseFiles>
     </Filter>
+    <Filter Include="Translation Files">
+      <UniqueIdentifier>{639EADAA-A684-42e4-A9AD-28FC9BCB8F7C}</UniqueIdentifier>
+      <Extensions>ts</Extensions>
+      <ParseFiles>false</ParseFiles>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <QtRcc Include="CrackerJackClient.qrc">
@@ -56,9 +61,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="sources\ProfileDataBaseManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="sources\StringResource.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="sources\ScreenSaver.cpp">
@@ -208,9 +210,6 @@
     <ClInclude Include="sources\Key.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="sources\StringResource.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="version.h">
       <Filter>Resource Files</Filter>
     </ClInclude>
@@ -265,5 +264,10 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="sources\ZZ___TO____DO.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtTranslation Include="crackerjackclient_pl.ts">
+      <Filter>Translation Files</Filter>
+    </QtTranslation>
   </ItemGroup>
 </Project>

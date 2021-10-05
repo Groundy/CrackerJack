@@ -85,6 +85,9 @@ xcopy /y /d ".\dependencies\32-bit\libcrypto-1_1.dll" "$(OutDir)"
 
 </Command>
     </PostBuildEvent>
+    <QtTranslation>
+      <BuildAction>lupdate_lrelease</BuildAction>
+    </QtTranslation>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -117,6 +120,9 @@ xcopy /y /d ".\dependencies\32-bit\libcrypto-1_1.dll" "$(OutDir)"
       <AdditionalDependencies>libssl.lib;libcrypto.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>./dependencies/\32-bit;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
+    <QtTranslation>
+      <BuildAction>lupdate_lrelease</BuildAction>
+    </QtTranslation>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -248,7 +254,6 @@ xcopy /y /d ".\dependencies\64-bit\libcrypto-1_1-x64.dll" "$(OutDir)"
     <ClCompile Include="sources\ServerConnector.cpp" />
     <ClCompile Include="sources\SetNameWidnow.cpp" />
     <ClCompile Include="sources\Utilities.cpp" />
-    <ClCompile Include="sources\StringResource.cpp" />
     <ClCompile Include="sources\VariablesClass.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -289,7 +294,6 @@ xcopy /y /d ".\dependencies\64-bit\libcrypto-1_1-x64.dll" "$(OutDir)"
     <ClInclude Include="sources\JsonParser.h" />
     <ClInclude Include="sources\Calibrator.h" />
     <ClInclude Include="sources\Logger.h" />
-    <ClInclude Include="sources\StringResource.h" />
     <QtMoc Include="sources\NewProfileConfiguartor.h" />
     <ClInclude Include="sources\Key.h" />
     <ClInclude Include="resource.h" />
@@ -303,6 +307,11 @@ xcopy /y /d ".\dependencies\64-bit\libcrypto-1_1-x64.dll" "$(OutDir)"
   </ItemGroup>
   <ItemGroup>
     <Text Include="sources\ZZ___TO____DO.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtTranslation Include="crackerjackclient_pl.ts">
+      <BuildAction Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">lupdate_lrelease</BuildAction>
+    </QtTranslation>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

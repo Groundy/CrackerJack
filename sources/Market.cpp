@@ -9,7 +9,6 @@ Market::Market(VariablesClass* varToSet){
 	ui->buyTypeRadioButton->setChecked(true);
 	filtr_seller = Seller::ANY;
 	fillCategoryLists();
-	isPl = StringResource::languageIsPl();
 	ditWithSavedItemLists = Utilities::getDirWithCrackerJackTmpFolder(Utilities::FOLDERS_OF_TMP_FOLDER::MarketLists);
 }
 
@@ -74,29 +73,22 @@ void Market::addItemButtonPressed(){
 
 	bool valuesOk = minVal > 0 && maxVal > 0 && maxVal >= minVal;
 	if (!valuesOk) {
-		QString textToDisplayPl = QString::fromLocal8Bit("Obie wartoœci powinny byæ wiêksze od zera, wartoœæ maksymalna nie mo¿e byæ mniejsza ni¿ minimalna.");
-		QString textToDisplayEng = "Both values have to be greater than zero, max value has to be same or greater than min value.";
-		Logger::logPotenialBug(textToDisplayEng,"Market","addItemButtonPressed");
-		QString msgToDisplay = isPl ? textToDisplayPl : textToDisplayEng;
-		Utilities::showMessageBox(StringResource::WindowTitle_CrackerJackProblem(), msgToDisplay, QMessageBox::Ok);
-		return;
+		QString text = tr("Both values have to be greater than zero, max value has to be same or greater than min value.");
+		Logger::logPotenialBug(text,"Market","addItemButtonPressed");
+		Utilities::showMessageBox_INFO(text);		return;
 	}
 	bool amountOk = amount > 0 && amount <= 64000;
 	if (!amountOk) {
-		QString textToDisplayPl = QString::fromLocal8Bit("Iloœæ przedmiotów powinna byæ w przedziale od 1 do 64.000");
-		QString textToDisplayEng = "Amount of items should be number between 1 and 640000";
-		Logger::logPotenialBug(textToDisplayEng, "Market", "addItemButtonPressed");
-		QString msgToDisplay = isPl ? textToDisplayPl : textToDisplayEng;
-		Utilities::showMessageBox(StringResource::WindowTitle_CrackerJackProblem(), msgToDisplay, QMessageBox::Ok);
+		QString text = tr("Amount of items should be number between 1 and 640000.");
+		Logger::logPotenialBug(text, "Market", "addItemButtonPressed");
+		Utilities::showMessageBox_INFO(text);
 		return;
 	}
 	bool itemEmpty = itemName.isEmpty();
 	if (itemEmpty) {
-		QString textToDisplayPl = QString::fromLocal8Bit("Nie wybrano przedmiotu");
-		QString textToDisplayEng = "Item not selected";
-		Logger::logPotenialBug(textToDisplayEng, "Market", "addItemButtonPressed");
-		QString msgToDisplay = isPl ? textToDisplayPl : textToDisplayEng;
-		Utilities::showMessageBox(StringResource::WindowTitle_CrackerJackProblem(), msgToDisplay, QMessageBox::Ok);
+		QString text = tr("Item not selected.");
+		Logger::logPotenialBug(text, "Market", "addItemButtonPressed");
+		Utilities::showMessageBox_INFO(text);
 		return;
 	}
 
@@ -117,11 +109,9 @@ void Market::addItemButtonPressed(){
 		ui->itemList->repaint();
 	}
 	else {
-		QString textToDisplayPl = QString::fromLocal8Bit("Przedmiot ju¿ jest na liœcie.");
-		QString textToDisplayEng = "Item is already on the list";
-		Logger::logPotenialBug(textToDisplayEng, "Market", "addItemButtonPressed");
-		QString msgToDisplay = isPl ? textToDisplayPl : textToDisplayEng;
-		Utilities::showMessageBox(StringResource::WindowTitle_CrackerJackProblem(), msgToDisplay, QMessageBox::Ok);
+		QString text = tr("Item is already on the list");
+		Logger::logPotenialBug(text, "Market", "addItemButtonPressed");
+		Utilities::showMessageBox_INFO(text);
 	}
 	setAndRepaintInfoLabel();
 }
@@ -156,11 +146,11 @@ void Market::fillCategoryLists() {
 
 void Market::fillLabels(Item* item){
 
-	QString itemName = isPl ? QString::fromLocal8Bit("Nazwa: ") : "Name: ";
-	QString priceStr = isPl ? QString::fromLocal8Bit("Cena: ") : "Price: ";
-	QString weightStr = isPl ? QString::fromLocal8Bit("Waga: ") : "Weight: ";
-	QString ratioStr = isPl ? QString::fromLocal8Bit("Cena/waga: ") : "Price/weight: ";
-	QString buyerStr = isPl ? QString::fromLocal8Bit("Kupiec: ") : "Buyer: ";
+	QString itemName = tr("Name: ");
+	QString priceStr = tr("Price: ");
+	QString weightStr = tr("Weight: ");
+	QString ratioStr = tr("Price/weight: ");
+	QString buyerStr = tr("Buyer: ");
 
 	if (item != NULL) {
 		itemName += item->name;
@@ -247,7 +237,7 @@ void Market::setAndRepaintInfoLabel(){
 }
 
 void Market::saveListToJsonFile(){
-	QString msgToDiplasy = isPl ? QString::fromLocal8Bit("WprowadŸ nazwê pliku.") : "Insert file name.";
+	QString msgToDiplasy = tr("Insert file name.");
 	QString nameForFile;
 	auto absolutePath = QFileDialog::getSaveFileName(this, "CrackerJack - save market list", ditWithSavedItemLists.absolutePath(), "*.json");
 	if (absolutePath.isEmpty())
@@ -294,11 +284,9 @@ void Market::readListFromJsonFile(){
 	JsonParser::openJsonFile(obj, pathToFile);
 	QJsonArray arr = obj["offers"].toArray();
 	if (arr.count() == 0) {
-		QString textToDisplayPl = QString::fromLocal8Bit("Plik nie jest poprawny lub jest pusty.");
-		QString textToDisplayEng = "File is uncorrect or empty.";
-		Logger::logPotenialBug(textToDisplayEng, "Market", "readListFromJsonFile");
-		QString msgToDisplay = isPl ? textToDisplayPl : textToDisplayEng;
-		Utilities::showMessageBox(StringResource::WindowTitle_CrackerJackProblem(), msgToDisplay, QMessageBox::Ok);
+		QString text = tr("File is uncorrect or empty.");
+		Logger::logPotenialBug(text, "Market", "readListFromJsonFile");
+		Utilities::showMessageBox_INFO(text);
 		return;
 	}
 	offersList.clear();
@@ -344,16 +332,9 @@ void Market::test() {
 }
 
 void Market::offerTypeChanged(){
-	bool setSellOption = ui->sellTypeRadioButton->isChecked();
-	QString min, max;
-	if (setSellOption) {
-		min = isPl ? QString::fromLocal8Bit("Min cena sprzeda¿y") : "Min sell price";
-		max = isPl ? QString::fromLocal8Bit("Max cena sprzeda¿y") : "Max sell price";
-	}
-	else {
-		min = isPl ? QString::fromLocal8Bit("Min cena kupna") : "Min buy price";
-		max = isPl ? QString::fromLocal8Bit("Max cena kupna") : "Max buy price";
-	}
+	bool sellType = ui->sellTypeRadioButton->isChecked();
+	QString min = sellType ? tr("Min. sell price") : tr("Min. buy price");
+	QString max = sellType ? tr("Max. sell price") : tr("Max. buy price");
 	ui->maxPriceLabel->setText(max);
 	ui->minPriceLabel->setText(min);
 	ui->maxPriceLabel->repaint();

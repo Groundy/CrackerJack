@@ -1,5 +1,4 @@
 #pragma once
-#include "StringResource.h"
 #include <QThread>
 #include "VariablesClass.h"
 #include "qimage.h"

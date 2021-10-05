@@ -2,7 +2,6 @@
 #include "qdialog.h"
 #include "ui_LoginWindow.h"
 #include "SelectProfileWindow.h"
-#include "StringResource.h"
 #include "version.h"
 class LoginWindow : public QDialog
 {

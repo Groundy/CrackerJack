@@ -1,5 +1,4 @@
 #include "ProfileDataBaseManager.h"
-#include "StringResource.h"
 ProfileDataBaseManager::ProfileDataBaseManager(){
 	setProfFolder();
 }
