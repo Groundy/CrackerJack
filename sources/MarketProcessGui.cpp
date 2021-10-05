@@ -5,10 +5,6 @@ MarketProcessGui::MarketProcessGui(QDialog *parent)
 	: QDialog(parent){
 	ui = new Ui::MarketProcessGui();
 	ui->setupUi(this);
-	ui->startButton->setText("Start");
-	ui->startButton->repaint();
-	ui->label->setText("");
-	ui->label->repaint();
 }
 
 MarketProcessGui::~MarketProcessGui()
@@ -30,6 +26,10 @@ void MarketProcessGui::repaintLabel(QString str){
 void MarketProcessGui::addTextToDisplayList(QString str){
 	ui->listWidget->addItem(str);
 	ui->listWidget->repaint();
+}
+
+void MarketProcessGui::displayNoMarketSignFoundEffect(QString text) {
+	Utilities::showMessageBox_INFO(text);
 }
 
 void MarketProcessGui::cancelButtonClicked(){

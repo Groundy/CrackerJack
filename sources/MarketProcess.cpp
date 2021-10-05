@@ -161,9 +161,8 @@ QPoint MarketProcess::findTopLeftCornerOfMarketWin(){
 	}
 	else {
 		QString text = tr("Market window not detected.");
-		Logger::logPotenialBug(text,"MarketProcess","findTopLeftCornerOfMarketWin");
-		//QThread nie mzoe pokazywac messageBoxow, przeniesc to do gui
-		Utilities::showMessageBox_INFO(text);
+		Logger::logPotenialBug(text,"MarketProcess","findTopLeftCornerOfMarketWin");;
+		emit noMarketSignFound(text);
 		return QPoint();
 	}
 }

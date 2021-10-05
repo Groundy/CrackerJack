@@ -321,10 +321,13 @@ void Market::test() {
 	bool ok3 = connect(&marketProcess, SIGNAL(repaintLabelInGui(QString)), &marketProcessGui, SLOT(repaintLabel(QString)), Qt::UniqueConnection);
 	bool ok4 = connect(&marketProcess, SIGNAL(paintProgressOnBar(int, int)), &marketProcessGui, SLOT(printValueToProgressBar(int,int)), Qt::UniqueConnection);
 	bool ok5 = connect(&marketProcess, SIGNAL(addTextToDisplayOnList(QString)), &marketProcessGui, SLOT(addTextToDisplayList(QString)), Qt::UniqueConnection);
-	bool allThingsAreConnected = ok1 && ok2 && ok3 && ok4 && ok5;
+	bool ok6 = connect(&marketProcess, SIGNAL(noMarketSignFound(QString)), &marketProcessGui, SLOT(displayNoMarketSignFoundEffect(QString)), Qt::UniqueConnection);
+	bool allThingsAreConnected = ok1 && ok2 && ok3 && ok4 && ok5 && ok6;
 
 	if (!allThingsAreConnected) {
-		//todo log //user info
+		QString textUser = tr("Unexpected error occured, trading process will not begin.");
+		QString textLog = "Error in connecting signals/slots";
+		Logger::logPotenialBug(textLog, "Market", "test");
 		return;
 	}
 

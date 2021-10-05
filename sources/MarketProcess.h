@@ -103,9 +103,9 @@ signals:
 	void repaintLabelInGui(QString str);
 	void paintProgressOnBar(int currValue, int maxValue);
 	void addTextToDisplayOnList(QString str);
+	void noMarketSignFound(QString str);
 private:
 	Pos pos;
-	void initPos();
 	VariablesClass* var;
 	QImage currentImg;
 	HWND handlerToGame;
@@ -115,6 +115,7 @@ private:
 	QList<Offer> userOfferList;
 	bool loopEnabled = true;
 
+	void initPos();
 	void recalculatePositions(QPoint leftTopCorner);
 	QPoint findTopLeftCornerOfMarketWin();
 	bool askForScreenAndReadIt();
