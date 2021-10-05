@@ -389,22 +389,27 @@ p, li { white-space: pre-wrap; }
         <translation>Plik jest pusty lub niepoprawny.</translation>
     </message>
     <message>
-        <location filename="sources/Market.cpp" line="336"/>
+        <location filename="sources/Market.cpp" line="328"/>
+        <source>Unexpected error occured, trading process will not begin.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="sources/Market.cpp" line="339"/>
         <source>Min. sell price</source>
         <translation>Min. cena sprzedaży</translation>
     </message>
     <message>
-        <location filename="sources/Market.cpp" line="336"/>
+        <location filename="sources/Market.cpp" line="339"/>
         <source>Min. buy price</source>
         <translation>Min. cena kupna</translation>
     </message>
     <message>
-        <location filename="sources/Market.cpp" line="337"/>
+        <location filename="sources/Market.cpp" line="340"/>
         <source>Max. sell price</source>
         <translation>Max. cena sprzedaży</translation>
     </message>
     <message>
-        <location filename="sources/Market.cpp" line="337"/>
+        <location filename="sources/Market.cpp" line="340"/>
         <source>Max. buy price</source>
         <translation>Max. cena kupna</translation>
     </message>
@@ -412,93 +417,81 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>MarketProcess</name>
     <message>
-        <location filename="sources/MarketProcess.cpp" line="663"/>
-        <source>Bought</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="sources/MarketProcess.cpp" line="483"/>
-        <location filename="sources/MarketProcess.cpp" line="625"/>
-        <location filename="sources/MarketProcess.cpp" line="663"/>
-        <source>for</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="sources/MarketProcess.cpp" line="172"/>
+        <location filename="sources/MarketProcess.cpp" line="163"/>
         <source>Market window not detected.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="sources/MarketProcess.cpp" line="257"/>
+        <location filename="sources/MarketProcess.cpp" line="247"/>
         <source>Finished</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="sources/MarketProcess.cpp" line="482"/>
-        <location filename="sources/MarketProcess.cpp" line="501"/>
-        <location filename="sources/MarketProcess.cpp" line="624"/>
+        <location filename="sources/MarketProcess.cpp" line="473"/>
+        <location filename="sources/MarketProcess.cpp" line="486"/>
+        <location filename="sources/MarketProcess.cpp" line="606"/>
         <source>sell</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="sources/MarketProcess.cpp" line="482"/>
-        <location filename="sources/MarketProcess.cpp" line="501"/>
-        <location filename="sources/MarketProcess.cpp" line="624"/>
+        <location filename="sources/MarketProcess.cpp" line="473"/>
+        <location filename="sources/MarketProcess.cpp" line="486"/>
+        <location filename="sources/MarketProcess.cpp" line="606"/>
         <source>buy</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="sources/MarketProcess.cpp" line="485"/>
-        <source>Canceled </source>
+        <location filename="sources/MarketProcess.cpp" line="474"/>
+        <source>Canceled %1  %2  %3 offer for %4 each</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="sources/MarketProcess.cpp" line="503"/>
-        <source>Failed founding: </source>
+        <location filename="sources/MarketProcess.cpp" line="487"/>
+        <source>Failed in founding %1 offer in already posted offers.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="sources/MarketProcess.cpp" line="505"/>
-        <source> offer in already posted offers.</source>
+        <location filename="sources/MarketProcess.cpp" line="607"/>
+        <source>Placed offer to %1 %2 %3 for %4 each</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="sources/MarketProcess.cpp" line="627"/>
-        <source>Placed offer to </source>
+        <location filename="sources/MarketProcess.cpp" line="641"/>
+        <source>Bought %1 %2 for %3 each</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="sources/MarketProcess.cpp" line="674"/>
+        <location filename="sources/MarketProcess.cpp" line="652"/>
         <source>Searching for market Window.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="sources/MarketProcess.cpp" line="677"/>
+        <location filename="sources/MarketProcess.cpp" line="655"/>
         <source>Scanning list of already posted offers.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="sources/MarketProcess.cpp" line="680"/>
+        <location filename="sources/MarketProcess.cpp" line="658"/>
         <source>Searching: </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="sources/MarketProcess.cpp" line="683"/>
+        <location filename="sources/MarketProcess.cpp" line="661"/>
         <source>Placing offer: </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="sources/MarketProcess.cpp" line="686"/>
+        <location filename="sources/MarketProcess.cpp" line="664"/>
         <source>Canceling offer </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="sources/MarketProcess.cpp" line="689"/>
+        <location filename="sources/MarketProcess.cpp" line="667"/>
         <source>Finished.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="sources/MarketProcess.cpp" line="692"/>
+        <location filename="sources/MarketProcess.cpp" line="670"/>
         <source>Stopping process.</source>
         <translation type="unfinished"></translation>
     </message>
