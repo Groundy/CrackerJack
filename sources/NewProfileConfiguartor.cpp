@@ -6,10 +6,8 @@ NewProfileConfiguartor::NewProfileConfiguartor(Profile* prof, QWidget *parent)	:
 	QDialog(parent) {
 	ui = new Ui::NewProfileConfiguartor();
 	ui->setupUi(this); 
-	isPl = StringResource::languageIsPl();
 	MAX_PAGE = ui->stackedWidget->count();
 	ui->stackedWidget->setCurrentIndex(0);
-	setUpGUITranslation();
 	fillGuiPtrs();
 	additionalGuiSettings();
 	profToEdit = prof;
@@ -21,7 +19,7 @@ NewProfileConfiguartor::~NewProfileConfiguartor(){
 }
 
 void NewProfileConfiguartor::refreshGUI(){
-	QString page = isPl ? "Strona " : "Page ";
+	QString page = tr("Page ");
 	QString labelPageInfoText = page + QString::number(pageNumber) + "/" + QString::number(MAX_PAGE);
 	ui->pageLabel->setText(labelPageInfoText);
 	ui->pageLabel->repaint();
@@ -30,19 +28,14 @@ void NewProfileConfiguartor::refreshGUI(){
 	ui->previousButton->setEnabled(!firstPage);
 
 	bool lastPage = pageNumber == MAX_PAGE;
-	QString strToSet;
-	if (lastPage) 
-		strToSet = isPl ? QString::fromLocal8Bit("Zakoñcz") : "Finish";
-	else 
-		strToSet = isPl ? QString::fromLocal8Bit("Dalej") : "Next page";
+	QString strToSet = lastPage ? tr("Finish") : tr("Next page");
 	ui->nextButton->setText(strToSet);
 	ui->stackedWidget->repaint();
 }
 
 bool NewProfileConfiguartor::finishAddingNewProfile(){
-	QString titleOfWindow = StringResource::NewProfileConfig_finishCreatingNewProfile_WindowTitle();
-	QString msg = StringResource::NewProfileConfig_finishCreatingNewProfile_BoxMsg();
-	bool accepted = Utilities::showMessageBox_NO_YES(titleOfWindow, msg);
+	QString text = tr("Are you sure that you want finish creating new profile?");
+	bool accepted = Utilities::showMessageBox_NO_YES(text);
 	if (accepted) {
 		saveDataToProfile(profToEdit);
 		this->accept();
@@ -225,15 +218,18 @@ bool NewProfileConfiguartor::checkCorrectnessOfPage_1(){
 	}
 
 	if (nameisTooLong) {
-		Utilities::showMessageBox(StringResource::WindowTitle_CrackerJackProblem(), StringResource::NewProfileConfig_1_TooLongName(), QMessageBox::Ok);
+		QString text = tr("Profile name can't be longer than 50 characters.");
+		Utilities::showMessageBox_INFO(text);
 		return false;
 	}
 	if (nameIsTooShort) {
-		Utilities::showMessageBox(StringResource::WindowTitle_CrackerJackProblem(), StringResource::NewProfileConfig_1_TooShortName(), QMessageBox::Ok);
+		QString text = tr("Profile name can't be shorter than 3 characters.");
+		Utilities::showMessageBox_INFO(text);
 		return false;
 	}
 	if (nameConsistForbiddenChars) {
-		Utilities::showMessageBox(StringResource::WindowTitle_CrackerJackProblem(), StringResource::NewProfileConfig_1_ForbiddenChars(), QMessageBox::Ok);
+		QString text = tr("Profile name can't have any special characters, please use only letters, numbers or spaces.");
+		Utilities::showMessageBox_INFO(text);
 		return false;
 	}
 	return true;
@@ -257,7 +253,8 @@ bool NewProfileConfiguartor::checkCorrectnessOfPage_2(){
 	if (oneOfButtonsIsChecked)
 		return true;
 	else {
-		Utilities::showMessageBox(StringResource::WindowTitle_CrackerJackProblem(), StringResource::NewProfileConfig_2_anyProfIsChecked(), QMessageBox::Ok);
+		QString text = tr("You have to choose profession.");
+		Utilities::showMessageBox("CrackerJack", text, QMessageBox::Ok);
 		return false;
 	}
 
@@ -348,39 +345,48 @@ bool NewProfileConfiguartor::checkCorrectnessOfPage_3(){
 	}
 
 	if (!everySliderHasDiffrentValue) {
-		Utilities::showMessageBox(StringResource::WindowTitle_CrackerJackProblem(), StringResource::NewProfileConfig_3_SlidersAreInTheSamePosition(), QMessageBox::Ok);
+		QString text = tr("Two sliders can't be in the same position.");
+		Utilities::showMessageBox_INFO(text);
 		return false;
 	}
 	if (!slidersAreInCorrectOrder) {
-		Utilities::showMessageBox(StringResource::WindowTitle_CrackerJackProblem(), StringResource::NewProfileConfig_3_SlidersAreInWrongOrder(), QMessageBox::Ok);
+		QString text = tr("Sliders are in wrong order, please set it from biggest value to lowest.");
+		Utilities::showMessageBox_INFO(text);
 		return false;
 	}
 	if (oneOfKeyFieldsHasManyValues) {
-		Utilities::showMessageBox(StringResource::WindowTitle_CrackerJackProblem(), StringResource::NewProfileConfig_3_ShortcutManyValue(), QMessageBox::Ok);
+		QString text = tr("One of key field has more than one hotkey assigned to itself.");
+		Utilities::showMessageBox_INFO(text);
 		return false;
 	}
 	if (lastSliderIsZero) {
-		Utilities::showMessageBox(StringResource::WindowTitle_CrackerJackProblem(), StringResource::NewProfileConfig_3_LastSliderIsZero(), QMessageBox::Ok);
+		QString text = tr("Last slider has to have value above zero.");
+		Utilities::showMessageBox_INFO(text);
 		return false;
 	}
 	if (oneOfKeyFieldsHasNoValue) {
-		Utilities::showMessageBox(StringResource::WindowTitle_CrackerJackProblem(), StringResource::NewProfileConfig_3_ShortcutNoValue(), QMessageBox::Ok);
+		QString text = tr("One of key field doesn't have hotkey assigned to itself.");
+		Utilities::showMessageBox_INFO(text);
 		return false;
 	}
 	if (oneOfKeyFieldsHasForbiddenChars) {
-		Utilities::showMessageBox(StringResource::WindowTitle_CrackerJackProblem(), StringResource::NewProfileConfig_3_ShortCutHasForbiddenChars(), QMessageBox::Ok);
+		QString text = tr("Key field has wrong value.");
+		Utilities::showMessageBox_INFO(text);
 		return false;
 	}
 	if (comboBoxHasNotChoosenValue) {
-		Utilities::showMessageBox(StringResource::WindowTitle_CrackerJackProblem(), StringResource::NewProfileConfig_3_comboBoxNoValue(), QMessageBox::Ok);
+		QString text = tr("Methode field can't be empty.");
+		Utilities::showMessageBox_INFO(text);
 		return false;
 	}
 	if (theSameValueIsAssignedToMoreThanOneBox) {
-		Utilities::showMessageBox(StringResource::WindowTitle_CrackerJackProblem(), StringResource::NewProfileConfig_3_comboBoxShareTheSameValue(), QMessageBox::Ok);
+		QString text = tr("Two  fields can't share the same value.");
+		Utilities::showMessageBox_INFO(text);
 		return false;
 	}
 	if (theSameKeyIsAssignedToMoreThanOneKeyShortCut) {
-		Utilities::showMessageBox(StringResource::WindowTitle_CrackerJackProblem(), StringResource::NewProfileConfig_3_TwoShortKeysShareSameValue(), QMessageBox::Ok);
+		QString text = tr("Two key fields can't share the same key.");
+		Utilities::showMessageBox_INFO(text);
 		return false;
 	}
 	return true;
@@ -470,39 +476,48 @@ bool NewProfileConfiguartor::checkCorrectnessOfPage_4(){
 	}
 
 	if (!everySliderHasDiffrentValue) {
-		Utilities::showMessageBox(StringResource::WindowTitle_CrackerJackProblem(), StringResource::NewProfileConfig_3_SlidersAreInTheSamePosition(), QMessageBox::Ok);
+		QString text = tr("Two sliders can't be in the same position.");
+		Utilities::showMessageBox_INFO(text);
 		return false;
 	}
 	if (!slidersAreInCorrectOrder) {
-		Utilities::showMessageBox(StringResource::WindowTitle_CrackerJackProblem(), StringResource::NewProfileConfig_3_SlidersAreInWrongOrder(), QMessageBox::Ok);
+		QString text = tr("Sliders are in wrong order, please set it from biggest value to lowest.");
+		Utilities::showMessageBox_INFO(text);
 		return false;
 	}
 	if (oneOfKeyFieldsHasManyValues) {
-		Utilities::showMessageBox(StringResource::WindowTitle_CrackerJackProblem(), StringResource::NewProfileConfig_3_ShortcutManyValue(), QMessageBox::Ok);
+		QString text = tr("One of key field has more than one hotkey assigned to itself.");
+		Utilities::showMessageBox_INFO(text);
 		return false;
 	}
 	if (lastSliderIsZero) {
-		Utilities::showMessageBox(StringResource::WindowTitle_CrackerJackProblem(), StringResource::NewProfileConfig_3_LastSliderIsZero(), QMessageBox::Ok);
+		QString text = tr("Last slider has to have value above zero.");
+		Utilities::showMessageBox_INFO(text);
 		return false;
 	}
 	if (oneOfKeyFieldsHasNoValue) {
-		Utilities::showMessageBox(StringResource::WindowTitle_CrackerJackProblem(), StringResource::NewProfileConfig_3_ShortcutNoValue(), QMessageBox::Ok);
+		QString text = tr("One of key field doesn't have hotkey assigned to itself.");
+		Utilities::showMessageBox_INFO(text);
 		return false;
 	}
 	if (oneOfKeyFieldsHasForbiddenChars) {
-		Utilities::showMessageBox(StringResource::WindowTitle_CrackerJackProblem(), StringResource::NewProfileConfig_3_ShortCutHasForbiddenChars(), QMessageBox::Ok);
+		QString text = tr("Key field has wrong value.");
+		Utilities::showMessageBox_INFO(text);
 		return false;
 	}
 	if (comboBoxHasNotChoosenValue) {
-		Utilities::showMessageBox(StringResource::WindowTitle_CrackerJackProblem(), StringResource::NewProfileConfig_3_comboBoxNoValue(), QMessageBox::Ok);
+		QString text = tr("Methode field can't be empty.");
+		Utilities::showMessageBox_INFO(text);
 		return false;
 	}
 	if (theSameValueIsAssignedToMoreThanOneBox) {
-		Utilities::showMessageBox(StringResource::WindowTitle_CrackerJackProblem(), StringResource::NewProfileConfig_3_comboBoxShareTheSameValue(), QMessageBox::Ok);
+		QString text = tr("Two  fields can't share the same value.");
+		Utilities::showMessageBox_INFO(text);
 		return false;
 	}
 	if (theSameKeyIsAssignedToMoreThanOneKeyShortCut) {
-		Utilities::showMessageBox(StringResource::WindowTitle_CrackerJackProblem(), StringResource::NewProfileConfig_3_TwoShortKeysShareSameValue(), QMessageBox::Ok);
+		QString text = tr("Two key fields can't share the same key.");
+		Utilities::showMessageBox_INFO(text);
 		return false;
 	}
 	return true;
@@ -522,7 +537,7 @@ bool NewProfileConfiguartor::checkCorrectnessOfPage_5(){
 
 QStringList NewProfileConfiguartor::getNamesOfHealthRestoringMethodes(Profile::PROFESSION prof){
 	JsonParser parser;
-	QList<Utilities::Potion> potions;
+	QList<Potion> potions;
 	QList<Utilities::Spell> spells;
 	parser.readSpellsJson(spells);
 	auto typeOfSpell = Utilities::Spell::TYPE_OF_SPELL::HEALING;
@@ -540,7 +555,7 @@ QStringList NewProfileConfiguartor::getNamesOfHealthRestoringMethodes(Profile::P
 
 QStringList NewProfileConfiguartor::getNamesOfManaRestoringMethodes(Profile::PROFESSION prof){
 	JsonParser parser;
-	QList<Utilities::Potion> potions;
+	QList<Potion> potions;
 	parser.getPotionsForProf(potions, &prof, JsonParser::TypeOfPotion::MANA);
 
 	QStringList namesOfAvaibleManaRestoreMethodes;
@@ -605,51 +620,6 @@ Profile::PROFESSION NewProfileConfiguartor::getProfessionFromRadioButtonOnPage2(
 	else if (ui->_2_RadButt_RP->isChecked())
 		toRet = Profile::PROFESSION::RP;
 	return toRet;
-}
-
-void NewProfileConfiguartor::setUpGUITranslation(){
-	// = isPl ? QString::fromLocal8Bit("") : "";
-	QString previousPageButtonText = isPl ? QString::fromLocal8Bit("Wstecz") : "Back";
-	QString nextPageButtonText = isPl ? QString::fromLocal8Bit("Dalej") : "Next page";
-	QString helpButtonText = isPl ? QString::fromLocal8Bit("Pomoc") : "Help";
-	QString skipPageButtonText = isPl ? QString::fromLocal8Bit("Pomiñ reszte stron") : "Skip other pages";
-	QString cancelButtonText = isPl ? QString::fromLocal8Bit("Anuluj") : "Cancel";
-	QString _1_labelInfo = isPl ? QString::fromLocal8Bit("Wybierz nazwê dla profilu.") : "Choose name for your profile.";
-	QString _2_labelInfo = isPl ? QString::fromLocal8Bit("Wybierz profesie.") : "Choose vocation.";
-	QString _3_labelInfo= isPl ? QString::fromLocal8Bit("Automatyczne leczenie") : "Automatic healing";
-	QString _4_labelInfo= isPl ? QString::fromLocal8Bit("Automatyczna regeneracja many") : "Automatic mana regeneration";
-	QString _5_automaticLootLabel = isPl ? QString::fromLocal8Bit("Auto loot") : "Auto loot";
-	QString _5_leftBarsLabel = isPl ? QString::fromLocal8Bit("Dodatkowe lewe paski") : "Additional left bars";
-	QString _5_rightBarsLabel = isPl ? QString::fromLocal8Bit("Dodatkowe prawe paski") : "Additional right bars";
-	QString windowTitle = isPl ? QString::fromLocal8Bit("CrackerJack - Kreator profilu") : "CrackerJack - profile creator";
-
-	this->ui->previousButton->setText(previousPageButtonText);
-	this->ui->nextButton->setText(nextPageButtonText);
-	this->ui->helpButton->setText(helpButtonText);
-	this->ui->pushButton->setText(skipPageButtonText);
-	this->ui->cancelButton->setText(cancelButtonText);
-	this->ui->_1_namePageInfoLabel->setText(_1_labelInfo);
-	this->ui->_2_infoLabel->setText(_2_labelInfo);
-	this->ui->_3_enableAutoHealing->setText(_3_labelInfo);
-	this->ui->_4_enableManaRestore->setText(_4_labelInfo);
-	this->ui->autoLootLabel->setText(_5_automaticLootLabel);
-	this->ui->addedLeftBarsLeft->setText(_5_leftBarsLabel);
-	this->ui->addedLeftBarsRight->setText(_5_rightBarsLabel);
-	this->setWindowTitle(windowTitle);
-
-	this->ui->previousButton->repaint();
-	this->ui->nextButton->repaint();
-	this->ui->helpButton->repaint();
-	this->ui->pushButton->repaint();
-	this->ui->cancelButton->repaint();
-	this->ui->_1_namePageInfoLabel->repaint();
-	this->ui->_2_infoLabel->repaint();
-	this->ui->_3_enableAutoHealing->repaint();
-	this->ui->_4_enableManaRestore->repaint();
-	this->ui->autoLootLabel->repaint();
-	this->ui->addedLeftBarsLeft->repaint();
-	this->ui->addedLeftBarsRight->repaint();
-	this->repaint();
 }
 
 void NewProfileConfiguartor::fillGuiPtrs() {
@@ -851,17 +821,42 @@ void NewProfileConfiguartor::previousPageButtonAction(){
 }
 
 void NewProfileConfiguartor::cancelButtonAction() {
-	QFlags<QMessageBox::StandardButton> flags = {QMessageBox::StandardButton::Yes, QMessageBox::StandardButton::No};
-	QString winTitle = StringResource::NewProfileConfig_cancelCreatingNewProfile_WindowTitle();
-	QString msg = StringResource::NewProfileConfig_cancelCreatingNewProfile_BoxMsg();
-	int res = Utilities::showMessageBox(winTitle, msg, flags);
-	if(res == QMessageBox::StandardButton::Yes)
+	QString text = tr("Are you sure that you want cancel adding new profile?");
+	bool accepted = Utilities::showMessageBox_NO_YES(text);
+	if(accepted)
 		this->reject();
 }
 
 void NewProfileConfiguartor::helpButtonAction() {
-	QString helpText = StringResource::NewProfileConfigHelp(pageNumber);
-	Utilities::showMessageBox("CrackerJack help", helpText, QMessageBox::StandardButton::Ok);
+	QString helpText;
+	switch (pageNumber)
+	{
+	case 1:
+		helpText = tr("Enter profile name.");
+		break;
+	case 2:
+		helpText = tr("Choose your profession.");
+		break;
+	case 3:
+		helpText = tr("Choose how many methodes of restoring health do want, up to 5 diffrent methodes. ");
+		helpText.append(tr("Move sliders to set value of missing health that will be used to auto heal. "));
+		helpText.append(tr("First Slider should be used for smallest healing, last for biggest. "));
+		helpText.append(tr("If healing would be needed, program will use appropriate healing to your remaining health. "));
+		helpText.append(tr("To all used sliders you have to add the same hotkey that use in game. "));
+		helpText.append(tr("If most effective healing methode is not avaible(no enough mana, no potion), program will try to another, less efficient methode."));
+		break;
+	case 4:
+		helpText = (tr("Choose how many methodes of restoring mana do want, up to 5 diffrent methodes. "));
+		helpText.append(tr("Move sliders to set value of missing mana that will be used to auto mana restore. "));
+		helpText.append(tr("First Slider should be used for smallest mana regeneration, last for biggest. "));
+		helpText.append(tr("If mana will be low, program will use appropriate methode to regenerate it. "));
+		helpText.append(tr("To all used sliders you have to add the same hotkey that use in game. "));
+		helpText.append(tr("Healing potions have priority over mana potions. "));
+		break;
+	default:
+		break;
+	}
+	Utilities::showMessageBox_INFO(helpText);
 }
 
 void NewProfileConfiguartor::_3_healingEnabledChanged(){

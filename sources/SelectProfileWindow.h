@@ -1,7 +1,6 @@
 #pragma once
 #include <QDialog>
 #include "ProfileDataBaseManager.h"
-#include "StringResource.h"
 namespace Ui { class SelectProfileWindow; };
 
 class SelectProfileWindow : public QDialog
@@ -19,7 +18,6 @@ public slots:
 	void selectListAction();
 	void profSelected();
 private:
-	bool isPl;
 	Ui::SelectProfileWindow *ui;
 	void prepareProfiles();
 	void setUpGui();

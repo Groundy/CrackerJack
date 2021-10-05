@@ -1,6 +1,5 @@
 #pragma once
 #include <QDialog>
-#include "StringResource.h"
 namespace Ui { class SetNameWidnow; };
 
 class SetNameWidnow : public QDialog

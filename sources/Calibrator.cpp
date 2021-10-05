@@ -825,7 +825,7 @@ void Calibrator::TEST_setPositionHealthImhs(QString pathToFolderWithDiffrentPosi
 
 		Utilities::rotateImgToRight(health, howTheyShouldBeRotated);
 		Utilities::imgToBlackAndWhiteAllColors(health, 240);
-		healthStr = Utilities::imgWithStrToStr(&health);
+		healthStr = Utilities::imgWithStrToStr(health);
 		qDebug() << "Health: " + healthStr;
 
 		bool thereIsCombinedBox = indCombined != -1;
@@ -837,7 +837,7 @@ void Calibrator::TEST_setPositionHealthImhs(QString pathToFolderWithDiffrentPosi
 
 			Utilities::rotateImgToRight(combined, howTheyShouldBeRotated);
 			Utilities::imgToBlackAndWhiteAllColors(combined, 240);
-			QString combinedStr = Utilities::imgWithStrToStr(&combined);
+			QString combinedStr = Utilities::imgWithStrToStr(combined);
 			qDebug() << "combinedStr: " + combinedStr;
 		}
 		else if (!thereIsCombinedBox && manaShieldFound && manaFound) {
@@ -848,12 +848,12 @@ void Calibrator::TEST_setPositionHealthImhs(QString pathToFolderWithDiffrentPosi
 
 			Utilities::rotateImgToRight(mana, howTheyShouldBeRotated);
 			Utilities::imgToBlackAndWhiteAllColors(mana, 240);
-			QString manaStr = Utilities::imgWithStrToStr(&mana);
+			QString manaStr = Utilities::imgWithStrToStr(mana);
 			qDebug() << "manaStr: " + manaStr;
 
 			Utilities::rotateImgToRight(manaShield, howTheyShouldBeRotated);
 			Utilities::imgToBlackAndWhiteAllColors(manaShield, 240);
-			QString ManaShieldStr = Utilities::imgWithStrToStr(&manaShield);
+			QString ManaShieldStr = Utilities::imgWithStrToStr(manaShield);
 			qDebug() << "ManaShieldStr: " + ManaShieldStr;
 		}
 		else if (!thereIsCombinedBox && !manaShieldFound && manaFound) {
@@ -862,7 +862,7 @@ void Calibrator::TEST_setPositionHealthImhs(QString pathToFolderWithDiffrentPosi
 
 			Utilities::rotateImgToRight(mana, howTheyShouldBeRotated);
 			Utilities::imgToBlackAndWhiteAllColors(mana, 240);
-			QString manaStr = Utilities::imgWithStrToStr(&mana);
+			QString manaStr = Utilities::imgWithStrToStr(mana);
 			qDebug() << "manaStr: " + manaStr;
 		}
 		else

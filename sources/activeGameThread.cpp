@@ -39,14 +39,11 @@ void activeGameThread::run(){
 unsigned int activeGameThread::getPIDofProcess(QString nameOfProcess) {
     QList<QString> names;
     QList<unsigned int> ids;
-    unsigned int toRet;
     getListOfProcess(names, ids);
     for (int i = 0; i < names.size(); i++) {
         if (names[i].contains(nameOfProcess)) {
-            if (ids.size() >= i)
-                return ids[i];
-            else
-                return 0;
+            unsigned int toRet = ids.size() >= i ? ids[i] : 0;
+            return toRet;
         }
     }
     return 0;
@@ -90,10 +87,9 @@ QString activeGameThread::getGameWindowTitile(){
 unsigned int activeGameThread::getPIDofProcess(QString nameOfProcess, QList<QString> names, QList<unsigned int> pids){
     for (int i = 0; i < names.size(); i++) {
         if (names[i].contains(nameOfProcess)) {
-            if (pids.size() >= i)
-                return pids[i];
-            else
-                return 0;
+            bool listNotEmpty = pids.size() >= i;
+            unsigned int toRet = listNotEmpty ? pids[i] : 0;
+            return toRet;
         }
     }
     return 0;

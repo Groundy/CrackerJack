@@ -1,6 +1,5 @@
 #pragma once
 #include "Point3D.h"
-#include "StringResource.h"
 #include <qdir.h>
 #include "JsonParser.h"
 #include <qmap.h>
@@ -26,5 +25,4 @@ public:
 private:
 	QList<QPair<Point3D, FIELDS_TYPE>> route;
 	void fillMaps();
-	bool isPl = StringResource::languageIsPl();
 };

@@ -127,11 +127,12 @@ void ScreenAnalyzer::notifyOtherProcessOfStateOfAnalyzer(bool worksGood){
 
 void ScreenAnalyzer::deleteScreenShotFolder(){
 	QDir dir(pathToScreenFolder);
-	dir.setNameFilters(QStringList() << "*.*");
-	if (dir.entryList().size() == 0)
-		return;
+	QStringList filterPatter("*_*_*_Hotkey.png");//yyyy-MM-dd_hhmmsszzzz_CharNick_Methode.png
+	dir.setNameFilters(filterPatter);
 	dir.setFilter(QDir::Files);
-	foreach(QString dirFile, dir.entryList())
+
+	QStringList namesOfFoundFiles = dir.entryList();
+	foreach(QString dirFile, namesOfFoundFiles)
 		dir.remove(dirFile);
 }
 

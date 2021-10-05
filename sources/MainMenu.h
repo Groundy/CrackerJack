@@ -11,9 +11,9 @@
 #include "ScreenAnalyzer.h"
 #include "memory"
 #include "Calibrator.h"
-#include "StringResource.h"
 #include "SelectProfileWindow.h"
 #include "RouteCreator.h"
+#include "Market.h"
 namespace Ui { class MainMenu; };
 
 class MainMenu : public QDialog
@@ -24,6 +24,10 @@ public:
 	MainMenu(Profile* prof, QWidget *parent = Q_NULLPTR);
 	~MainMenu();
 	activeGameThread::gameActivityStates gameActivitystate;
+	void test() {
+		Market t(&var);
+		t.exec();
+	};
 public slots:
 	void helpButtonAction();
 	void changeProfileButtonAction();
@@ -42,7 +46,7 @@ private:
 	QString gameWindowTitle;
 	Ui::MainMenu *ui;
 	Profile* prof;
-	bool isPl;
+
 
 	ScreenSaver* screenSaverThread;
 	activeGameThread* activityThread;
@@ -54,7 +58,6 @@ private:
 	void setProblemsWindow(QStringList problemsToShow);
 	void threadStarter();
 	void signalSlotConnector();
-	void TRANSLATE_setUpGui();
 
 	const QString CALIBRATION_STRING_PL = QString::fromLocal8Bit("Kalibracja");
 	const QString CALIBRATION_STRING_ENG = "Calibrating";

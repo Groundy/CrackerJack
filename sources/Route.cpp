@@ -68,24 +68,19 @@ bool Route::movePointDown(int index){
 
 bool Route::loadFromJsonFile(QString pathToFile){
 	QJsonObject obj;
-	JsonParser jsonParser;
-	bool fileFound = jsonParser.openJsonFile(obj, pathToFile);
+	bool fileFound = JsonParser::openJsonFile(obj, pathToFile);
 	if (!fileFound) {
 		Logger::logPotenialBug("Can't find file " + pathToFile, "loadFromJsonFile", "Route");
-		QString textPl = QString::fromLocal8Bit("Plik: %1 nie istnieje.").arg(pathToFile);
-		QString textEng = QString("File: %1 does not exist.").arg(pathToFile);
-		QString textToDisplay = isPl ? textPl : textEng;
-		Utilities::showMessageBox("CrackerJack", textToDisplay, QMessageBox::Ok);
+		QString text = QObject::tr("File: ") + pathToFile + QObject::tr(" doesn't exist.");
+		Utilities::showMessageBox_INFO(text);
 		return false;
 	}
 
 	QJsonArray pointsArray = obj["points"].toArray();
 	if (pointsArray.isEmpty()) {
 		Logger::logPotenialBug(QString("file has wrong structure.").arg(pathToFile), "loadFromJsonFile", "Route");
-		QString textPl = QString::fromLocal8Bit("Plik: %1 ma z³¹ strukturê.").arg(pathToFile);
-		QString textEng = QString("File: %1 has wrong structure.").arg(pathToFile);
-		QString textToDisplay = isPl ? textPl : textEng;
-		Utilities::showMessageBox("CrackerJack", textToDisplay, QMessageBox::Ok);
+		QString text = QObject::tr("File: ") + pathToFile + QObject::tr(" has wrong structure.");
+		Utilities::showMessageBox_INFO(text);
 		return false;
 	}
 
@@ -132,9 +127,8 @@ bool Route::writeToJsonFile(QString pathToDir, QString fileNameWithExtension){
 }
 
 bool Route::checkRouteCorectness(QString& errorTextToDisplay){
-	bool isPl = StringResource::languageIsPl();
 	if (route.size() < 2) {
-		errorTextToDisplay = isPl ? QString::fromLocal8Bit("Trasa jest za krótka.") : "Route is too short.";
+		errorTextToDisplay = QObject::tr("Route is too short.");
 		return false;
 	}
 
@@ -142,7 +136,7 @@ bool Route::checkRouteCorectness(QString& errorTextToDisplay){
 	bool sameType = route.first().second == route.last().second;
 	bool twoPointsAreSame = sameType && samePoint;
 	if (!twoPointsAreSame) {
-		errorTextToDisplay = isPl ? QString::fromLocal8Bit("Trasa powinna zaczynaæ siê i koñczyæ w tym samym punkcie.") : "Route should start and end in the same point.";
+		errorTextToDisplay = QObject::tr("Route should start and end in the same point.");
 		return false;
 	}
 
@@ -192,51 +186,52 @@ bool Route::checkRouteCorectness(QString& errorTextToDisplay){
 		if (canGoToNextPoint)
 			continue;
 
-		QString firstPointStr = QString::number(i);
-		QString secondPointStr = QString::number(i+1);
+		QString mainText =
+			QObject::tr("Can't find a way from point") +
+			QString(" [%1]").arg(QString::number(i)) +
+			QObject::tr("to point")+ 
+			QString(" [%1]").arg(QString::number(i + 1));
+
+
 		QString typeStr = TRANSLATE_getPointTypeDescription(currentType);
-		if (isPl) {
-			QString argumentText = flChange == FLOOR_CHANGE::DOWN ? "ni¿ej" : "wy¿ej";
-			QString text = QString::fromLocal8Bit("Nie mo¿na ustaliæ trasy z punktu [%1] do punktu [%2]").arg(firstPointStr, secondPointStr);
-			QString reason = QString::fromLocal8Bit(", poniewa¿ typ %1, nie mo¿e przenieœæ poziom %2.").arg(typeStr, argumentText);
-			errorTextToDisplay = text + reason;
-		}
-		else {
-			QString argumentText = flChange == FLOOR_CHANGE::DOWN ? "down" : "up";
-			QString text = QString("Can't find a way from point [%1] to point [%2]").arg(firstPointStr, secondPointStr);
-			QString reason = QString::fromLocal8Bit(", because type %1, can't move to %2 floor.").arg(typeStr, argumentText);
-			errorTextToDisplay = text + reason;
-		}
+		QString argumentText = flChange == FLOOR_CHANGE::DOWN ? QObject::tr("down") : QObject::tr("up");
+		QString reason =
+			QObject::tr(", because type ") +
+			typeStr +
+			QObject::tr(", can't move to ") +
+			argumentText +
+			QObject::tr(" floor.");
+		errorTextToDisplay = mainText + reason;
+		
 		return false;
 	}
 	return true;
 }
 
 QString Route::TRANSLATE_getPointTypeDescription(FIELDS_TYPE type) {
-	bool isPl = StringResource::languageIsPl();
 	switch (type)
 	{
 	case Route::FIELDS_TYPE::REGULAR:
-		return isPl ? QString::fromLocal8Bit("Zwyk³e pole") : "Regular field";
+		return QObject::tr("Regular field");
 	case Route::FIELDS_TYPE::STAIRS_UP:
-		return isPl ? QString::fromLocal8Bit("Schody do góry") : "Stairs-up";
+		return QObject::tr("Stairs-up");
 	case Route::FIELDS_TYPE::STAIRS_DOWN: 
-		return isPl ? QString::fromLocal8Bit("Schody do do³u") : "Stairs-down";
+		return QObject::tr("Stairs-down");
 	case Route::FIELDS_TYPE::ROPE_FIELD:
-		return isPl ? QString::fromLocal8Bit("Pole liny") : "Rope field";
+		return QObject::tr("Rope field");
 	case Route::FIELDS_TYPE::SHOVEL_HOLE_ALWAYS_OPEN:
-		return isPl ? QString::fromLocal8Bit("Dziura, otwarta") : "Hole, open";
+		return QObject::tr("Hole, open");
 	case Route::FIELDS_TYPE::SHOVEL_HOLE_NEED_SHOVEL:
-		return isPl ? QString::fromLocal8Bit("Dziura, zamknieta") : "Hole, close";
+		return QObject::tr("Hole, close");
 	case Route::FIELDS_TYPE::LADDER_UP:
-		return isPl ? QString::fromLocal8Bit("Drabina w górê") : "Ladder up";
+		return QObject::tr("Ladder up");
 	case Route::FIELDS_TYPE::LADDER_DOWN:
-		return isPl ? QString::fromLocal8Bit("Drabina w dó³") : "Ladder down";
+		return QObject::tr("Ladder down");
 	case Route::FIELDS_TYPE::TELEPORT:
-		return isPl ? QString::fromLocal8Bit("Teleport") : "Teleport";
+		return QObject::tr("Teleport");
 	case Route::FIELDS_TYPE::EXIT_POINT:
-		return isPl ? QString::fromLocal8Bit("Punkt wyjscia") : "Log out point";
+		return QObject::tr("Log out point");
 	default:
-		return isPl ? QString::fromLocal8Bit("") : "";
+		return "";
 	}
 }

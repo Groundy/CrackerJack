@@ -4,7 +4,6 @@
 SelectProfileWindow::SelectProfileWindow(QWidget *parent, Profile* prof) : QDialog(parent){
 	ui = new Ui::SelectProfileWindow();
 	ui->setupUi(this);
-	isPl = StringResource::languageIsPl();
 	setFixedSize(this->size());
 	setUpGui();
 	prepareProfiles();
@@ -30,30 +29,22 @@ void SelectProfileWindow::prepareProfiles(){
 }
 
 void SelectProfileWindow::setUpGui(){
-	QString addProfileButtonText = isPl ? QString::fromLocal8Bit("Dodaj profil") : "Add profile";
-	ui->addProfileButton->setText(addProfileButtonText);
+	ui->addProfileButton->setText(tr("Add profile"));
 	ui->addProfileButton->repaint();
 
 
-	QString editProfileButtonText = isPl ? QString::fromLocal8Bit("Edytuj profil") : "Edit profile";
-	ui->editProfileButton->setText(editProfileButtonText);
+	ui->editProfileButton->setText(tr("Edit profile"));
 	ui->editProfileButton->repaint();
 
 
-	QString deleteProfileButtonText = isPl ? QString::fromLocal8Bit("Usuñ profil") : "Delete profile";
-	ui->deleteProfileButton->setText(deleteProfileButtonText);
+	ui->deleteProfileButton->setText(tr("Delete profile"));
 	ui->deleteProfileButton->repaint();
 
-
-	QString labelText = isPl ? QString::fromLocal8Bit("Wybierz profil.") : "Select Profile";
-	ui->label->setText(labelText);
+	ui->label->setText(tr("Select Profile"));
 	ui->label->repaint();
 
-
-	QString windowTitleText = isPl ? QString::fromLocal8Bit("CrackerJack - Okno Wyboru Profilu") : "CrackerJack - Select Profile Window";
-	this->setWindowTitle(windowTitleText);
+	this->setWindowTitle("CrackerJack - Select Profile Window");
 	this->repaint();
-
 }
 
 void SelectProfileWindow::readAndSetLastUsedProFromINI(){
@@ -128,11 +119,9 @@ void SelectProfileWindow::deleteProfileButtonAction(){
 		return;
 	}
 	
-	QString msgText = StringResource::SelectProfileWindow_sureToDeleteProfile() + onlyProfileName  + " ?";
-	auto buttons = QMessageBox::StandardButton::Yes | QMessageBox::StandardButton::No;
-	int retCode = Utilities::showMessageBox("CrackerJack", msgText, buttons);
-	bool shouldBeDeleted = retCode == QMessageBox::StandardButton::Yes;
-	if (shouldBeDeleted) {
+	QString msgText = QObject::tr("Do you really want to delete profile ") + onlyProfileName  + " ?";
+	bool accepted = Utilities::showMessageBox_NO_YES(msgText);
+	if (accepted) {
 		ProfileDataBaseManager dbManager;
 		dbManager.deleteProfile(onlyProfileName);
 		prepareProfiles();

@@ -18,28 +18,34 @@
 #include "Logger.h"
 class Utilities {
 public:
+	enum class FOLDERS_OF_TMP_FOLDER {Logs, Profiles, TradeReports, Main, Routes, MarketLists};
+	enum class FieldsOfIniFile {
+		LANGUAGE,
+		LAST_USED_LOGIN,
+		LAST_USED_PROFILE_NAME,
+	};
 
 	static int showMessageBox(QString title, QString text, QFlags<QMessageBox::StandardButton> buttons);
-	static bool showMessageBox_NO_YES(QString title, QString text);
+	static void showMessageBox_INFO(QString text);
+	static bool showMessageBox_NO_YES(QString text);
 	static bool sendKeyStrokeToProcess(Key key, unsigned int PID, QString WindowName);
 	static void imgToBlackAndWhiteAllColors(QImage& img, int threshold);
-	static QString imgWithStrToStr(QImage* img);
+	static QString imgWithStrToStr(QImage& img);
 	static QImage fromCharToImg(QChar CharToImg);
 	static void rotateImgToRight(QImage& imgToRotate, int timesToRotateRight);
 	static bool isItPixelFromFrame(uint color, int minValueAcceptable, int maxValueAcceptable, bool requireSameValuesOfRGB);
 	static LONG64 getCurrentTimeInMiliSeconds();
 	static QImage getImageFromAdvancedCode(QString codeOfImg);
 	static int getNumberFromBottomBar(QImage& bottomBar);
-
-	enum class FieldsOfIniFile {
-		LANGUAGE,
-		LAST_USED_LOGIN,
-		LAST_USED_PROFILE_NAME,
-	};
+	static QDir getDirWithCrackerJackTmpFolder(FOLDERS_OF_TMP_FOLDER folderType);
+	static void clickLeft(QPoint pt, HWND handler);
+	static void clickRight(QPoint pt, HWND handler);
+	static void sendStringToGame(QString str, HWND handler);
+	static HWND getHandlerToGameWindow(unsigned int PID, QString WindowName);
 	static QMap<FieldsOfIniFile, QString> get_Field_NamesFromIni_map();
 	static QString readFromIniFile(FieldsOfIniFile nameOfField);
 	static void writeIniFile(FieldsOfIniFile nameOfField, QString value);
-	
+
 	class RestoreMethode {
 	public:
 		enum class TypeOfMethode{ POTION, SPELL };
@@ -63,49 +69,37 @@ public:
 			toRet.type = RestoreMethode::TypeOfMethode::SPELL;
 			return toRet;
 		}
-	};
-	class Item {
-	public:
-		enum class TYPE_OF_ITEM { ARMOR, AMULETS, BOOTS, CREATURE, HELMETS, LEGS, OTHER, POTIONS, RINGS, RUNES, SHIELDS, VALUABLES, AMMO, AXES, SWORDS, CLUBS, DISTANCES, ROD, WANDS };
-		enum class SELLER {BLUE_DJIN, GREEN_DJIN, YASIR, ZAO, OTHER_SELLER, RASHID};
-		QString name;
-		int price, weight;
-		TYPE_OF_ITEM type;
-		SELLER seller;
-		RestoreMethode toRestoreMethode() {
-			bool isPotion = this->type == TYPE_OF_ITEM::POTIONS;
-			RestoreMethode toRet;
-			if (isPotion) {
-				toRet.name = this->name;
-				toRet.mana = 0;//manaNeededToUsePotion
-				toRet.cd = 1;//potions have 1 sec cooldown, for all potions
-				toRet.cdGroup = 1;
-				toRet.type = RestoreMethode::TypeOfMethode::POTION;
-			}
-			else
-				Logger::logPotenialBug("Tried to convert object _Item_ to _RestoreMethode_ but it's not a potion!, returning empty _RestoreMethode_","Utilites/Item","toRestoreMethode()");
-			return toRet;
-		}
-	};
-	class Potion : public Item {
-	public:
-		int manaReg, healthReg;
-		bool forMage, forRp, forEk;
-	};
-	
+	};	
 
 	static QStringList TOOL_getCodesOfAllInFolder_regular(QString pathToInputFolder, QString pathToOutputFolder);
 	static QStringList TOOL_getCodesOfAllInFolder_bottom(QString pathToInputFolder);
-	static void TOOL_saveImgToOutPutFolder(QImage& img, QString* extraName);
-
+	static void TOOL_saveImgToOutPutFolder(QImage& img, QString extraName);
 	static void cutImgWithLettersToSingleLettersImgList(QImage& img, QList<QImage>& list);
-	static QMap<QString, QChar> getQmapWithCodes();
+	static QMap<QString, QString> getQmapWithCodes();
 	static QString getPathToSettingsFile();
 	static void getMapWithNumbersFromBottomBar(QMap<QString, int>& lightToRet, QMap<QString, int>& darkToRet);
 	static void imgToBlackAndWhiteOneColor(QImage& img, int threshold);
-	static QChar StrCodeToQChar(QString code);
+	static QString StrCodeToLetter(QString code);
 	static void cutBlackBordersOfImg(QImage& img);
 	static QString letterImgToLetterCodeStr(QImage* SingleLetterImg);
+
+	static void TOOL_clearBaseMent(VariablesClass* var);
+	static void TOOL_manaSit(int pid,QString winTitle){
+		int i = 0;
+		while (true) {
+			Key key;
+			if (i == 0)
+				key = Key::F7;
+			else if (i == 1)
+				key = Key::END;
+			else
+				key = Key::F11;
+			Utilities::sendKeyStrokeToProcess(key, pid, winTitle);
+			Sleep(125 * 100);
+			i++;
+			i = i % 3;
+		} 
+	}
 	/*
 	static void UNSUED_findBoredersOfFrames(QImage fullScreen);
 	static void UNUSED_imgToOneColor(QImage& img, QRgb minimalColorValues, QRgb maxColorValues, QRgb colorToSet, bool allOfThem);

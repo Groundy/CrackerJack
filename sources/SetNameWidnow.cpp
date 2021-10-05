@@ -10,8 +10,8 @@ SetNameWidnow::SetNameWidnow(QDialog *parent, QString title, QString textToDispl
 	ui->textLabel->setText(textToDisplay);
 	this->setWindowTitle(title);
 	ui->okButton->setEnabled(false);
-	bool isPl = StringResource::languageIsPl();
-	QString cancelButtonText = isPl ? QString::fromLocal8Bit("Anuluj") : "Cancel";
+
+	QString cancelButtonText = tr("Cancel");
 	ui->cancelButton->setText(cancelButtonText);
 	this->repaint();
 }

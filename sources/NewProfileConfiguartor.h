@@ -4,7 +4,6 @@
 #include "ui_NewProfileConfiguartor.h"
 #include "Utilities.h"
 #include "qstring.h"
-#include "StringResource.h"
 #include "Profile.h"
 #include "JsonParser.h"
 #include "Key.h"
@@ -56,8 +55,6 @@ private:
 	void fillGuiElementsWithNamesRestoreMethodes_Health(Profile::PROFESSION prof);
 	void fillGuiElementsWithNamesRestoreMethodes_Mana(Profile::PROFESSION prof);
 	Profile::PROFESSION getProfessionFromRadioButtonOnPage2();
-	void setUpGUITranslation();
-	bool isPl;
 	void fillGuiPtrs();
 
 	struct guiPointers {

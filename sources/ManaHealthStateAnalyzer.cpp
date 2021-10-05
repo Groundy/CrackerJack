@@ -75,22 +75,22 @@ void ManaHealthStateAnalyzer::mainLoop(){
 int ManaHealthStateAnalyzer::changeImgsToStrings(){
 	QString healthStr, manaStr, manaShieldStr, combinedStr, tmp;
 	if (healthFound) {
-		healthStr = Utilities::imgWithStrToStr(&healthImg);
+		healthStr = Utilities::imgWithStrToStr(healthImg);
 		tmp = healthStr.remove("\0");
 		healthStr = tmp;
 	}
 	if (manaFound) {
-		manaStr = Utilities::imgWithStrToStr(&manaImg);
+		manaStr = Utilities::imgWithStrToStr(manaImg);
 		tmp = manaStr.remove("\0");
 		manaStr = tmp;
 	}
 	if (manaShieldFound) {
-		manaShieldStr = Utilities::imgWithStrToStr(&manaShieldImg);
+		manaShieldStr = Utilities::imgWithStrToStr(manaShieldImg);
 		tmp = manaShieldStr.remove("\0");
 		manaShieldStr = tmp;
 	}
 	if (combinedFound) {
-		combinedStr = Utilities::imgWithStrToStr(&combinedImg);
+		combinedStr = Utilities::imgWithStrToStr(combinedImg);
 		tmp = combinedStr.remove("\0");
 		combinedStr = tmp;
 	}
@@ -240,7 +240,7 @@ bool ManaHealthStateAnalyzer::checkIfEverythingIsCorrectToProcess(){
 	int res = changeImgsToStrings();
 	if (res != OK) {
 		emit demandReCalibration();
-		QString wordToSend = StringResource::languageIsPl() ? QString::fromLocal8Bit("Kalibracja") : "Calibrating";
+		QString wordToSend = tr("Calibrating");
 		emit sendValueToMainThread(wordToSend, wordToSend, wordToSend);
 		msleep(miliSecBetweenCheckingForNewValuesImg*5);
 		return false;
@@ -265,7 +265,7 @@ void ManaHealthStateAnalyzer::writeDataToVariableClass(){
 void ManaHealthStateAnalyzer::setupRestorationMethodes(QStringList listOfRestorationMethode_Health, QStringList listOfRestorationMethode_Mana){
 	JsonParser parser;
 	QList<Utilities::RestoreMethode> spellsAndPotions;
-	QList<Utilities::Item> manaPotions;
+	QList<Item> manaPotions;
 
 	parser.getHealthRestoreMethodes(listOfRestorationMethode_Health, spellsAndPotions);
 	parser.getManaRestoreMethodes(listOfRestorationMethode_Mana, manaPotions);

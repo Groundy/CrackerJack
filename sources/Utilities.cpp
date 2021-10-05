@@ -3,7 +3,7 @@
 #include <QtCore/qsettings.h>
 #include <Calibrator.h>
 
-int Utilities::showMessageBox(QString title = "CrackerJack", QString text = "", QFlags<QMessageBox::StandardButton> buttons = QMessageBox::Ok) {
+int Utilities::showMessageBox(QString title, QString text = "", QFlags<QMessageBox::StandardButton> buttons = QMessageBox::Ok) {
 	QMessageBox box;
 	box.setText(text);
 	box.setWindowTitle(title);
@@ -13,12 +13,20 @@ int Utilities::showMessageBox(QString title = "CrackerJack", QString text = "", 
 	return ret;
 }
 
-bool Utilities::showMessageBox_NO_YES(QString title, QString text)
+void Utilities::showMessageBox_INFO(QString text){
+	QMessageBox box;
+	box.setText(text);
+	box.setWindowTitle("CrackerJack");
+	box.setStandardButtons(QMessageBox::StandardButton::Ok);
+	box.exec();
+}
+
+bool Utilities::showMessageBox_NO_YES(QString text)
  {
-	 QFlags<QMessageBox::StandardButton> flags = { QMessageBox::StandardButton::Yes, QMessageBox::StandardButton::No };
-	 int res = Utilities::showMessageBox(title, text, flags);
-	 bool toRet = res == QMessageBox::StandardButton::Yes;
-	 return toRet;
+    QFlags<QMessageBox::StandardButton> flags = { QMessageBox::StandardButton::Yes, QMessageBox::StandardButton::No };
+    int res = Utilities::showMessageBox("CrakerJack", text, flags);
+    bool toRet = res == QMessageBox::StandardButton::Yes;
+    return toRet;
  }
 
 bool Utilities::sendKeyStrokeToProcess(Key key, unsigned int PID, QString nameOfWindow) {
@@ -81,269 +89,304 @@ void Utilities::imgToBlackAndWhiteAllColors(QImage& img, int threshold) {
  }
 
 void Utilities::cutBlackBordersOfImg(QImage& img) {
-	 int linesOfBlackRows_TOP = 0, linesOfBlackRows_DOWN = 0, linesOfBlackRows_RIGHT = 0, linesOfBlackRows_LEFT = 0;
-	 const int WIDTH = img.width();
-	 const int HEIGHT = img.height();
-	 const uint BLACK = qRgb(0, 0, 0);
-	 for (int x = 0; x < WIDTH; x++) {
-		 for (int y = 0; y < HEIGHT; y++) {
-			 bool isBlack = img.pixel(x, y) == BLACK;
-			 if (!isBlack) {
-				 linesOfBlackRows_LEFT = x;
-				 x = WIDTH; //endOfLoop
-				 y = HEIGHT; //endOfLoop
-			 }
-		 }
-	 }
+    int linesOfBlackRows_TOP = 0, linesOfBlackRows_DOWN = 0, linesOfBlackRows_RIGHT = 0, linesOfBlackRows_LEFT = 0;
+    const int WIDTH = img.width();
+    const int HEIGHT = img.height();
+    const uint BLACK = qRgb(0, 0, 0);
+    for (int x = 0; x < WIDTH; x++) {
+	    for (int y = 0; y < HEIGHT; y++) {
+		    bool isBlack = img.pixel(x, y) == BLACK;
+		    if (!isBlack) {
+			    linesOfBlackRows_LEFT = x;
+			    x = WIDTH; //endOfLoop
+			    y = HEIGHT; //endOfLoop
+		    }
+	    }
+    }
 
-	 for (int x = WIDTH - 1; x >= linesOfBlackRows_LEFT; x--) {
-		 for (int y = 0; y < HEIGHT; y++) {
-			 bool isBlack = img.pixel(x, y) == BLACK;
-			 if (!isBlack) {
-				 linesOfBlackRows_RIGHT = WIDTH - x - 1;
-				 x = -1;//endOfLoop
-				 y = HEIGHT;//endOfLoop
-			 }
-		 }
-	 }
+    for (int x = WIDTH - 1; x >= linesOfBlackRows_LEFT; x--) {
+	    for (int y = 0; y < HEIGHT; y++) {
+		    bool isBlack = img.pixel(x, y) == BLACK;
+		    if (!isBlack) {
+			    linesOfBlackRows_RIGHT = WIDTH - x - 1;
+			    x = -1;//endOfLoop
+			    y = HEIGHT;//endOfLoop
+		    }
+	    }
+    }
 
-	 for (int y = 0; y < HEIGHT; y++) {
-		 for (int x = linesOfBlackRows_LEFT; x < linesOfBlackRows_RIGHT; x++) {
-			 bool isBlack = img.pixel(x, y) == BLACK;
-			 if (!isBlack) {
-				 linesOfBlackRows_TOP = y;
-				 x = WIDTH;//endOfLoop
-				 y = HEIGHT;//endOfLoop
-			 }
-		 }
-	 }
+    for (int y = 0; y < HEIGHT; y++) {
+	    for (int x = linesOfBlackRows_LEFT; x < WIDTH - linesOfBlackRows_RIGHT; x++) {
+		    bool isBlack = img.pixel(x, y) == BLACK;
+		    if (!isBlack) {
+			    linesOfBlackRows_TOP = y;
+			    x = WIDTH;//endOfLoop
+			    y = HEIGHT;//endOfLoop
+		    }
+	    }
+    }
 
-	 for (int y = HEIGHT - 1; y >= linesOfBlackRows_TOP; y--) {
-		 for (int x = linesOfBlackRows_LEFT; x < linesOfBlackRows_RIGHT; x++) {
-			 bool isBlack = img.pixel(x, y) == BLACK;
-			 if (!isBlack) {
-				 linesOfBlackRows_DOWN = HEIGHT - y - 1;
-				 x = WIDTH;//endOfLoop
-				 y = -1;//endOfLoop
-			 }
-		 }
-	 }
-	 //tmp to return if modifed algorithm was working wrong
-	 /*
-	 * 	 for (int x = 0; x < WIDTH; x++) {
-		 for (int y = 0; y < HEIGHT; y++) {
-			 bool isBlack = img.pixel(x, y) == BLACK;
-			 if (!isBlack) {
-				 linesOfBlackRows_LEFT = x;
-				 x = WIDTH; //endOfLoop
-				 y = WIDTH; //endOfLoop
-			 }
-		 }
-	 }
+    for (int y = HEIGHT - 1; y >= linesOfBlackRows_TOP; y--) {
+	    for (int x = linesOfBlackRows_LEFT; x < WIDTH - linesOfBlackRows_RIGHT; x++) {
+		    bool isBlack = img.pixel(x, y) == BLACK;
+		    if (!isBlack) {
+			    linesOfBlackRows_DOWN = HEIGHT - y - 1;
+			    x = WIDTH;//endOfLoop
+			    y = -1;//endOfLoop
+		    }
+	    }
+    }
+    //tmp to return if modifed algorithm was working wrong
+    /*
+    *     for (int x = 0; x < WIDTH; x++) {
+	    for (int y = 0; y < HEIGHT; y++) {
+		    bool isBlack = img.pixel(x, y) == BLACK;
+		    if (!isBlack) {
+			    linesOfBlackRows_LEFT = x;
+			    x = WIDTH; //endOfLoop
+			    y = WIDTH; //endOfLoop
+		    }
+	    }
+    }
 
-	 for (int x = WIDTH - 1; x >= 0; x--) {
-		 for (int y = 0; y < HEIGHT; y++) {
-			 bool isBlack = img.pixel(x, y) == BLACK;
-			 if (!isBlack) {
-				 linesOfBlackRows_RIGHT = WIDTH - x - 1;
-				 x = -1;//endOfLoop
-				 y = HEIGHT;//endOfLoop
-			 }
-		 }
-	 }
+    for (int x = WIDTH - 1; x >= 0; x--) {
+	    for (int y = 0; y < HEIGHT; y++) {
+		    bool isBlack = img.pixel(x, y) == BLACK;
+		    if (!isBlack) {
+			    linesOfBlackRows_RIGHT = WIDTH - x - 1;
+			    x = -1;//endOfLoop
+			    y = HEIGHT;//endOfLoop
+		    }
+	    }
+    }
 
-	 for (int y = 0; y < HEIGHT; y++) {
-		 for (int x = 0; x < WIDTH; x++) {
-			 bool isBlack = img.pixel(x, y) == BLACK;
-			 if (!isBlack) {
-				 linesOfBlackRows_TOP = y;
-				 x = WIDTH;//endOfLoop
-				 y = HEIGHT;//endOfLoop
-			 }
-		 }
-	 }
+    for (int y = 0; y < HEIGHT; y++) {
+	    for (int x = 0; x < WIDTH; x++) {
+		    bool isBlack = img.pixel(x, y) == BLACK;
+		    if (!isBlack) {
+			    linesOfBlackRows_TOP = y;
+			    x = WIDTH;//endOfLoop
+			    y = HEIGHT;//endOfLoop
+		    }
+	    }
+    }
 
-	 for (int y = HEIGHT - 1; y >= 0; y--) {
-		 for (int x = 0; x < WIDTH; x++) {
-			 bool isBlack = img.pixel(x, y) == BLACK;
-			 if (!isBlack) {
-				 linesOfBlackRows_DOWN = HEIGHT - y - 1;
-				 x = WIDTH;//endOfLoop
-				 y = -1;//endOfLoop
-			 }
-		 }
-	 }
-	 */
+    for (int y = HEIGHT - 1; y >= 0; y--) {
+	    for (int x = 0; x < WIDTH; x++) {
+		    bool isBlack = img.pixel(x, y) == BLACK;
+		    if (!isBlack) {
+			    linesOfBlackRows_DOWN = HEIGHT - y - 1;
+			    x = WIDTH;//endOfLoop
+			    y = -1;//endOfLoop
+		    }
+	    }
+    }
+    */
 
-	 int anotherParametr_x = WIDTH - linesOfBlackRows_RIGHT - linesOfBlackRows_LEFT;
-	 int anotherParametr_y = HEIGHT - linesOfBlackRows_TOP - linesOfBlackRows_DOWN;
+    int anotherParametr_x = WIDTH - linesOfBlackRows_RIGHT - linesOfBlackRows_LEFT;
+    int anotherParametr_y = HEIGHT - linesOfBlackRows_TOP - linesOfBlackRows_DOWN;
 
-	 int widthToCut = anotherParametr_x >= 0 ? anotherParametr_x : 0;
-	 int heightToCut = anotherParametr_y >= 0 ? anotherParametr_y : 0;
-	 img = img.copy(linesOfBlackRows_LEFT, linesOfBlackRows_TOP, widthToCut, heightToCut);
+    int widthToCut = anotherParametr_x >= 0 ? anotherParametr_x : 0;
+    int heightToCut = anotherParametr_y >= 0 ? anotherParametr_y : 0;
+    img = img.copy(linesOfBlackRows_LEFT, linesOfBlackRows_TOP, widthToCut, heightToCut);
  }
 
 void Utilities::cutImgWithLettersToSingleLettersImgList(QImage& img, QList<QImage>& letterImages) {
-	 QList<int> colThatAreNotBlack;
-	 const int WIDTH = img.width();
-	 const int HEIGHT = img.height();
-	 const uint BLACK = qRgb(0, 0, 0);
-	 for (int x = 0; x < HEIGHT; x++) {
-		 for (int y = 0; y < HEIGHT; y++) {
-			 bool isNotEmptyLine = img.pixel(x, y) != BLACK;
-			 if (isNotEmptyLine) {
-				 colThatAreNotBlack.push_back(x);
-				 break;
-			 }
-		 }
-	 }
-	 if (colThatAreNotBlack.isEmpty()) {
-		 letterImages.push_back(img);
-		 return;
-	 }
+	QList<int> colThatAreNotBlack;
+	const int WIDTH = img.width();
+    const int HEIGHT = img.height();
+    const uint BLACK = qRgb(0, 0, 0);
+    for (int x = 0; x < WIDTH; x++) {
+       for (int y = 0; y < HEIGHT; y++) {
+	       bool isNotEmptyLine = img.pixel(x, y) != BLACK;
+	       if (isNotEmptyLine) {
+		       colThatAreNotBlack.push_back(x);
+			   y = HEIGHT;
+	       }
+       }
+    }
+    if (colThatAreNotBlack.isEmpty()) {
+       //letterImages.push_back(img);
+       return;
+    }
 
-	 QList<int> indexesOfStartOfLetter, indexesOfEndsOfLetters;
-	 indexesOfStartOfLetter.push_back(0);
-	 for (int i = 0; i < colThatAreNotBlack.size() - 1; i++) {
-		 if (colThatAreNotBlack[i + 1] - colThatAreNotBlack[i] > 1) {
-			 indexesOfEndsOfLetters.push_back(colThatAreNotBlack[i]);
-		 }
-	 }
-	 for (int i = 1; i < colThatAreNotBlack.size(); i++) {
-		 if (colThatAreNotBlack[i] - colThatAreNotBlack[i - 1] > 1) {
-			 indexesOfStartOfLetter.push_back(colThatAreNotBlack[i]);
-		 }
-	 }
-	 indexesOfEndsOfLetters.push_back(colThatAreNotBlack.last());
-	 QList<int> widths;
+    QList<int> indexesOfStartOfLetter, indexesOfEndsOfLetters;
+    indexesOfStartOfLetter.push_back(0);
+    for (int i = 0; i < colThatAreNotBlack.size() - 1; i++) {
+       if (colThatAreNotBlack[i + 1] - colThatAreNotBlack[i] > 1) {
+	       indexesOfEndsOfLetters.push_back(colThatAreNotBlack[i]);
+       }
+    }
+    for (int i = 1; i < colThatAreNotBlack.size(); i++) {
+       if (colThatAreNotBlack[i] - colThatAreNotBlack[i - 1] > 1) {
+	       indexesOfStartOfLetter.push_back(colThatAreNotBlack[i]);
+       }
+    }
+    indexesOfEndsOfLetters.push_back(colThatAreNotBlack.last());
+    QList<int> widths;
 
-	 for (size_t i = 0; i < indexesOfStartOfLetter.size(); i++)
-		 widths.push_back(indexesOfEndsOfLetters[i] - indexesOfStartOfLetter[i] + 1);
+    for (size_t i = 0; i < indexesOfStartOfLetter.size(); i++)
+       widths.push_back(indexesOfEndsOfLetters[i] - indexesOfStartOfLetter[i] + 1);
 
-	 for (size_t i = 0; i < indexesOfStartOfLetter.size(); i++) {
-		 QImage letter = img.copy(indexesOfStartOfLetter[i], 0, widths[i], img.height());
-		 letterImages.push_back(letter);
-	 }
+    for (size_t i = 0; i < indexesOfStartOfLetter.size(); i++) {
+		QRect rectToCut(indexesOfStartOfLetter[i], 0, widths[i], img.height());
+		QImage letter = img.copy(rectToCut);
+		letterImages.push_back(letter);
+    }
  }
 
-QString Utilities::imgWithStrToStr(QImage* img) {
-	 imgToBlackAndWhiteAllColors(*img, 240);
-	 cutBlackBordersOfImg(*img);
-	 QList<QImage>* imgs = new QList<QImage>;
-	 cutImgWithLettersToSingleLettersImgList(*img, *imgs);
-	 QString toRet;
-	 for (size_t i = 0; i < imgs->size(); i++) {
-		 QImage tmp = imgs->at(i);
-		 QImage* tmpPointer = &tmp;
-		 cutBlackBordersOfImg(*tmpPointer);
-		 QString letterCode = letterImgToLetterCodeStr(tmpPointer);
-		 QChar letter = StrCodeToQChar(letterCode);
-		 toRet.append(letter);
-	 }
-	 delete imgs;
-	 return toRet;
+QString Utilities::imgWithStrToStr(QImage& img) {
+	imgToBlackAndWhiteAllColors(img, 240);
+	cutBlackBordersOfImg(img);
+    QList<QImage> imgs;
+	cutImgWithLettersToSingleLettersImgList(img, imgs);
+    QString toRet;
+    for (size_t i = 0; i < imgs.size(); i++) {
+		QImage tmp = imgs.at(i);
+	    cutBlackBordersOfImg(tmp);
+	    QString letterCode = letterImgToLetterCodeStr(&tmp);
+	    QString letter = StrCodeToLetter(letterCode);
+		if(letter != '\0')
+			toRet.append(letter);
+    }
+    return toRet;
  }
 
 QString Utilities::letterImgToLetterCodeStr(QImage* SingleLetterImg) {
-	 const int WIDTH = SingleLetterImg->width();
-	 const int HEIGHT = SingleLetterImg->height();
-	 const QString FLOOR = QString("_");
-	 const QString ZERO = QString("0"), ONE = QString("1");
-	 QString toRet = QString::number(WIDTH) + FLOOR + QString::number(HEIGHT) + FLOOR;
-	 for (size_t x = 0; x < WIDTH; x++) {
-		 for (size_t y = 0; y < HEIGHT; y++) {
-			 uint pixelColor = SingleLetterImg->pixel(x, y);
-			 RGBstruct rgb(pixelColor);
-			 int sum = rgb.b + rgb.r + rgb.g;
-			 QString toAppend = sum == 0 ? ZERO : ONE;
-			 toRet.append(toAppend);
-		 }
-	 }
-	 return toRet;
+    const int WIDTH = SingleLetterImg->width();
+    const int HEIGHT = SingleLetterImg->height();
+    const QString FLOOR = QString("_");
+    const QString ZERO = QString("0"), ONE = QString("1");
+    QString toRet = QString::number(WIDTH) + FLOOR + QString::number(HEIGHT) + FLOOR;
+    for (size_t x = 0; x < WIDTH; x++) {
+	    for (size_t y = 0; y < HEIGHT; y++) {
+		    uint pixelColor = SingleLetterImg->pixel(x, y);
+		    RGBstruct rgb(pixelColor);
+		    int sum = rgb.b + rgb.r + rgb.g;
+		    QString toAppend = sum == 0 ? ZERO : ONE;
+		    toRet.append(toAppend);
+	    }
+    }
+    return toRet;
  }
 
-QChar Utilities::StrCodeToQChar(QString code){
-	 //todo, it's terrible solution, it has to be changed
-	QMap<QString, QChar> letters = getQmapWithCodes();
+void Utilities::TOOL_clearBaseMent(VariablesClass* var){
+	QPoint pt(800,330);//topleft
+	int width = 60;
+	Key key(Key::F1);
+	QList<QPoint> pts;
+	pts.push_back(QPoint(pt.x() + 0 * width, pt.y() + 0 * width));
+	pts.push_back(QPoint(pt.x() + 0 * width, pt.y() + 1 * width));
+	//pts.push_back(QPoint(pt.x() + 0 * width, pt.y() + 2 * width));
+	pts.push_back(QPoint(pt.x() + 1 * width, pt.y() + 0 * width));
+	pts.push_back(QPoint(pt.x() + 1 * width, pt.y() + 1 * width));
+	//pts.push_back(QPoint(pt.x() + 1 * width, pt.y() + 2 * width));
+	pts.push_back(QPoint(pt.x() + 2 * width, pt.y() + 0 * width));
+	pts.push_back(QPoint(pt.x() + 2 * width, pt.y() + 1 * width));
+	//pts.push_back(QPoint(pt.x() + 2 * width, pt.y() + 2 * width));
+	HWND handler = getHandlerToGameWindow(var->var_pidOfGame, var->var_winTitleOfGame);
+	//pt = QPoint(pt.x() + 1 * width, pt.y() + 1 * width);
+	while (true){
+		for each (QPoint pt in pts){
+			Sleep(999);
+			Utilities::sendKeyStrokeToProcess(Key::F1, var->var_pidOfGame, var->var_winTitleOfGame);
+			Utilities::clickLeft(pt, handler);
+		}
+/*
+		Sleep(1250);
+		Utilities::sendKeyStrokeToProcess(Key::F1, var->var_pidOfGame, var->var_winTitleOfGame);
+		Utilities::clickLeft(pt, handler);
+		*/
+	}
+}
+
+QString Utilities::StrCodeToLetter(QString code){
+    //todo, it's terrible solution, it has to be changed
+	QMap<QString, QString> letters = getQmapWithCodes();
 	return letters[code];
  }
 
-QMap<QString, QChar>  Utilities::getQmapWithCodes() {
-	 QMap<QString, QChar> letters;
-	 letters.insert("6_8_011111101111111110000001100000011111111101111110", '0');
-	 letters.insert("4_8_01000001111111111111111100000001", '1');
-	 letters.insert("6_8_010000111100011110001101100110011111000101100001", '2');
-	 letters.insert("6_8_010000101100001110010001100100011111111101101110", '3');
-	 letters.insert("6_8_000011000001010000100100011111111111111100000100", '4');
-	 letters.insert("6_8_000000101111001111110001100100011001111110001110", '5');
-	 letters.insert("6_8_001111100111111111010001100100011001111100001110", '6');
-	 letters.insert("6_8_100000001000001110001111101111001111000011000000", '7');
-	 letters.insert("6_8_011011101111111110010001100100011111111101101110", '8');
-	 letters.insert("6_8_011100001111100110001001100010111111111001111100", '9');
-	 letters.insert("6_6_000110101111101001101001111111011111", 'a');
-	 letters.insert("6_9_111111111111111111000100001000100001000111111000011110", 'b');
-	 letters.insert("5_6_011110111111100001100001100001", 'c');
-	 letters.insert("6_9_000011110000111111000100001000100001111111111111111111", 'd');
-	 letters.insert("6_6_011110111111101001101001111001011010", 'e');
-	 letters.insert("5_9_000100000011111111111111111100100000100100000", 'f');
-	 letters.insert("6_8_011110001111110110000101100001011111111111111110", 'g');
-	 letters.insert("6_9_111111111111111111000100000000100000000111111000011111", 'h');
-	 letters.insert("2_8_1011111110111111", 'i');
-	 letters.insert("4_10_0000000001001000000110111111111011111110", 'j');
-	 letters.insert("6_9_111111111111111111000001100000011110000110011000100001", 'k');
-	 letters.insert("2_9_111111111111111111", 'l');
-	 letters.insert("10_6_111111111111100000100000111111011111100000100000111111011111", 'm');
-	 letters.insert("6_6_111111111111100000100000111111011111", 'n');
-	 letters.insert("6_6_011110111111100001100001111111011110", 'o');
-	 letters.insert("6_8_111111111111111110000100100001001111110001111000", 'p');
-	 letters.insert("5_6_111111111111010000110000110000", 'r');
-	 letters.insert("5_6_011001111101101101101111100110", 's');
-	 letters.insert("5_8_0010000011111110111111110010000100100001", 't');
-	 letters.insert("6_6_111110111111000001000001111111111111", 'u');
-	 letters.insert("6_6_111000111110000111000111111110111000", 'v');
-	 letters.insert("8_6_111100111111000011111100111100000011111111111100", 'w');
-	 letters.insert("6_6_110011111111001100001100111111110011", 'x');
-	 letters.insert("6_8_110000001111001100111111001111001111000011000000", 'y');
-	 letters.insert("5_6_100011100111101101111001110001", 'z');
-	 letters.insert("7_8_00000111001111111111110011000100111111000011111100000111", 'A');
-	 letters.insert("6_8_111111111111111110010001100100011111111101101110", 'B');
-	 letters.insert("6_8_011111101111111110000001100000011000000101000010", 'C');
-	 letters.insert("7_8_11111111111111111000000110000001110000110111111000111100", 'D');
-	 letters.insert("6_8_111111111111111110010001100100011001000110010001", 'E');
-	 letters.insert("6_8_111111111111111110010000100100001001000010010000", 'F');
-	 letters.insert("7_8_01111110111111111000000110000001100010011000111101001111", 'G');
-	 letters.insert("7_8_11111111111111110001000000010000000100001111111111111111", 'H');
-	 letters.insert("4_8_10000001111111111111111110000001", 'I');
-	 letters.insert("5_8_0000000110000001100000011111111111111110", 'J');
-	 letters.insert("6_8_111111111111111100111100011001101100001110000001", 'K');
-	 letters.insert("6_8_111111111111111100000001000000010000000100000001", 'L');
-	 letters.insert("8_8_1111111111100000011100000011100000010000001000000111111111111111", 'M');
-	 letters.insert("7_8_11111111011000000011000000011000000011000000011011111111", 'N');
-	 letters.insert("7_8_01111110111111111000000110000001100000011111111101111110", 'O');
-	 letters.insert("6_8_111111111111111110001000100010001111100001110000", 'P');
-	 letters.insert("7_8_11111111111111111000100010001100111111100111001100000001", 'R');
-	 letters.insert("6_8_011100101111100110011001100110011001111101001110", 'S');
-	 letters.insert("8_8_1000000010000000100000001111111111111111100000001000000010000000", 'T');
-	 letters.insert("7_8_11111110111111110000000100000001000000011111111111111110", 'U');
-	 letters.insert("6_8_111000001111110000011111000111111111110011100000", 'V');
-	 letters.insert("0_8_11100000111111000001111100001111111110001111100000001111000111111111110011100000", 'W');
-	 letters.insert("6_8_110000111110011100111100001111001110011111000011", 'X');
-	 letters.insert("6_8_110000001111000000111111001111111111000011000000", 'Y');
-	 letters.insert("6_8_100001111000111110011101101110011111000111100001", 'Z');
-	 //slash, in program it's slash between current health and max health
-	 letters.insert("11_6_110000110000011000011000001100001100001100000110000110000011000011", QChar(47));
-	 //backslash char but in program it's slash above but rotated
-	 letters.insert("6_11_000000000110000000111100001111100001111100001111000000011000000000", QChar(92));
-	 //opening bracket
-	 letters.insert("4_11_00011111000011111111101110000011110000000001", QChar(40));
-	 //closing bracket
-	 letters.insert("4_11_10000000001111000001110111111111000011111000", QChar(41));
-	 //char 200 it's some weird char but here it's symbol of healthIcon
-	 letters.insert("9_9_101110000011111000111111100111111110011111111111111110111111100111111000011110000",QChar(200));
-	 //char 201 it's some weird char but here it's symbol of manaIcon
-	 letters.insert("10_9_000100001001100111001111111111111110111111100111111100111110000111110000100100000100000000", QChar(201));
-	 
-	 return letters;
+QMap<QString, QString>  Utilities::getQmapWithCodes() {
+    QMap<QString, QString> letters;
+    letters.insert("6_8_011111101111111110000001100000011111111101111110", "0");
+    letters.insert("4_8_01000001111111111111111100000001", "1");
+    letters.insert("6_8_010000111100011110001101100110011111000101100001", "2");
+    letters.insert("6_8_010000101100001110010001100100011111111101101110", "3");
+    letters.insert("6_8_000011000001010000100100011111111111111100000100", "4");
+    letters.insert("6_8_000000101111001111110001100100011001111110001110", "5");
+    letters.insert("6_8_001111100111111111010001100100011001111100001110", "6");
+    letters.insert("6_8_100000001000001110001111101111001111000011000000", "7");
+    letters.insert("6_8_011011101111111110010001100100011111111101101110", "8");
+    letters.insert("6_8_011100001111100110001001100010111111111001111100", "9");
+    letters.insert("6_6_000110101111101001101001111111011111", "a");
+    letters.insert("6_9_111111111111111111000100001000100001000111111000011110", "b");
+    letters.insert("5_6_011110111111100001100001100001", "c");
+    letters.insert("6_9_000011110000111111000100001000100001111111111111111111", "d");
+    letters.insert("6_6_011110111111101001101001111001011010", "e");
+    letters.insert("5_9_000100000011111111111111111100100000100100000", "f");
+    letters.insert("6_8_011110001111110110000101100001011111111111111110", "g");
+    letters.insert("6_9_111111111111111111000100000000100000000111111000011111", "h");
+    letters.insert("2_8_1011111110111111", "i");
+    letters.insert("4_10_0000000001001000000110111111111011111110", "j");
+    letters.insert("6_9_111111111111111111000001100000011110000110011000100001", "k");
+    letters.insert("2_9_111111111111111111", "l");
+    letters.insert("10_6_111111111111100000100000111111011111100000100000111111011111", "m");
+    letters.insert("6_6_111111111111100000100000111111011111", "n");
+    letters.insert("6_6_011110111111100001100001111111011110", "o");
+    letters.insert("6_8_111111111111111110000100100001001111110001111000", "p");
+    letters.insert("5_6_111111111111010000110000110000", "r");
+    letters.insert("5_6_011001111101101101101111100110", "s");
+    letters.insert("5_8_0010000011111110111111110010000100100001", "t");
+    letters.insert("6_6_111110111111000001000001111111111111", "u");
+    letters.insert("6_6_111000111110000111000111111110111000", "v");
+    letters.insert("8_6_111100111111000011111100111100000011111111111100", "w");
+    letters.insert("6_6_110011111111001100001100111111110011", "x");
+    letters.insert("6_8_110000001111001100111111001111001111000011000000", "y");
+    letters.insert("5_6_100011100111101101111001110001", "z");
+    letters.insert("7_8_00000111001111111111110011000100111111000011111100000111", "A");
+    letters.insert("6_8_111111111111111110010001100100011111111101101110", "B");
+    letters.insert("6_8_011111101111111110000001100000011000000101000010", "C");
+    letters.insert("7_8_11111111111111111000000110000001110000110111111000111100", "D");
+    letters.insert("6_8_111111111111111110010001100100011001000110010001", "E");
+    letters.insert("6_8_111111111111111110010000100100001001000010010000", "F");
+    letters.insert("7_8_01111110111111111000000110000001100010011000111101001111", "G");
+    letters.insert("7_8_11111111111111110001000000010000000100001111111111111111", "H");
+    letters.insert("4_8_10000001111111111111111110000001", "I");
+    letters.insert("5_8_0000000110000001100000011111111111111110", "J");
+    letters.insert("6_8_111111111111111100111100011001101100001110000001", "K");
+    letters.insert("6_8_111111111111111100000001000000010000000100000001", "L");
+    letters.insert("8_8_1111111111100000011100000011100000010000001000000111111111111111", "M");
+    letters.insert("7_8_11111111011000000011000000011000000011000000011011111111", "N");
+    letters.insert("7_8_01111110111111111000000110000001100000011111111101111110", "O");
+    letters.insert("6_8_111111111111111110001000100010001111100001110000", "P");
+    letters.insert("7_8_11111111111111111000100010001100111111100111001100000001", "R");
+    letters.insert("6_8_011100101111100110011001100110011001111101001110", "S");
+    letters.insert("8_8_1000000010000000100000001111111111111111100000001000000010000000", "T");
+    letters.insert("7_8_11111110111111110000000100000001000000011111111111111110", "U");
+    letters.insert("6_8_111000001111110000011111000111111111110011100000", "V");
+    letters.insert("0_8_11100000111111000001111100001111111110001111100000001111000111111111110011100000", "W");
+    letters.insert("6_8_110000111110011100111100001111001110011111000011", "X");
+    letters.insert("6_8_110000001111000000111111001111111111000011000000", "Y");
+    letters.insert("6_8_100001111000111110011101101110011111000111100001", "Z");
+    //slash, in program it"s slash between current health and max health
+    letters.insert("11_6_110000110000011000011000001100001100001100000110000110000011000011", QChar(47));
+    //backslash char but in program it"s slash above but rotated
+    letters.insert("6_11_000000000110000000111100001111100001111100001111000000011000000000", QChar(92));
+    //opening bracket
+    letters.insert("4_11_00011111000011111111101110000011110000000001", QChar(40));
+    //closing bracket
+    letters.insert("4_11_10000000001111000001110111111111000011111000", QChar(41));
+    //char 200 it"s some weird char but here it"s symbol of healthIcon
+    letters.insert("9_9_101110000011111000111111100111111110011111111111111110111111100111111000011110000",QChar(200));
+    //char 201 it"s some weird char but here it"s symbol of manaIcon
+    letters.insert("10_9_000100001001100111001111111111111110111111100111111100111110000111110000100100000100000000", QChar(201));
+    //there are no empty line between letter r and next letter in those cases;
+	letters.insert("10_9_000111111000111111000010000000110000000110000000100000011111111111111111100100000100100000","rf");
+	letters.insert("9_10_001111110000111111000001000000001100000000110000000000000001001000000110111111111011111110", "rj");
+	letters.insert("10_8_00111111001111110001000000110000001100000010000011111110111111110010000100100001", "rt");
+	letters.insert("10_9_000100000011111111111111111100100000100100000000100000011111111111111111100100000100100000", "ff");
+	letters.insert("10_9_000100000011111111111111111100100000100100000000100000011111110011111111000100001000100001", "ft");
+    return letters;
  }
 
 QImage Utilities::fromCharToImg(QChar CharToImg){
@@ -378,7 +421,7 @@ QImage Utilities::fromCharToImg(QChar CharToImg){
 
 void Utilities::rotateImgToRight(QImage& imgToRotate, int timesToRotateRight){
 	QTransform rotating;
-	qreal degreeToRotateToRight = timesToRotateRight * 90;
+	qreal degreeToRotateToRight = (qreal)timesToRotateRight * 90;
 	rotating.rotate(degreeToRotateToRight,Qt::Axis::ZAxis);
 	imgToRotate = imgToRotate.transformed(rotating);
 }
@@ -475,8 +518,60 @@ int Utilities::getNumberFromBottomBar(QImage& imgToShearchWithin){
 	QString strToRe;
 	for each (auto key in anotherMap.keys())
 		strToRe.push_back(QString::number(anotherMap[key]));
-	 
+    
 	return strToRe.toInt();
+}
+
+QDir Utilities::getDirWithCrackerJackTmpFolder(FOLDERS_OF_TMP_FOLDER folderType){
+	typedef FOLDERS_OF_TMP_FOLDER Sub;
+	QDir dir = QDir::tempPath();
+	dir.cdUp();
+	bool crackerJackFolderExist = dir.cd("CrackerJack");
+	if (!crackerJackFolderExist) {
+		bool dirCreationFailed = dir.mkdir("CrackerJack");
+		if (dirCreationFailed) {
+			QString text = QString("Failed to create sub-dir %1 in %2").arg("CrackerJack", dir.absolutePath());
+			Logger::logPotenialBug(text, "Utilities", "getDirWithCrackerJackTmpFolder");
+			return QDir::current();
+		}
+	}
+	if (folderType == Sub::Main)
+		return dir;
+
+	QString nameOfSubFolder;
+	if (folderType == Sub::Logs)
+		nameOfSubFolder = "Logs";
+	else if (folderType == Sub::MarketLists)
+		nameOfSubFolder = "MarketLists";
+	else if (folderType == Sub::Profiles)
+		nameOfSubFolder = "Profiles";
+	else if (folderType == Sub::Routes)
+		nameOfSubFolder = "Routes";
+	else if (folderType == Sub::TradeReports)
+		nameOfSubFolder = "Trading logs";
+
+	bool subFolderExist = dir.cd(nameOfSubFolder);
+	if (!subFolderExist) {
+		bool dirCreationFailed = dir.mkdir(nameOfSubFolder);
+		if (dirCreationFailed) {
+			QString text = QString("Failed to create sub-dir %1 in %2").arg(nameOfSubFolder, dir.absolutePath());
+			Logger::logPotenialBug(text, "Utilities", "getDirWithCrackerJackTmpFolder");
+			return QDir::current();
+		}
+	}
+	return dir;
+}
+
+void Utilities::clickLeft(QPoint pt, HWND handler){
+	LPARAM lParam = (pt.y() << 16) + pt.x();
+	PostMessage(handler, WM_LBUTTONDOWN , 5, lParam);
+	PostMessage(handler, WM_LBUTTONUP, 4, lParam);
+}
+
+void Utilities::clickRight(QPoint pt, HWND handler) {
+	LPARAM lParam = (pt.y() << 16) + pt.x();
+	PostMessage(handler, WM_RBUTTONDOWN, 5, lParam);
+	PostMessage(handler, WM_RBUTTONUP, 4, lParam);
 }
 
 QMap<Utilities::FieldsOfIniFile, QString> Utilities::get_Field_NamesFromIni_map(){
@@ -490,6 +585,38 @@ QMap<Utilities::FieldsOfIniFile, QString> Utilities::get_Field_NamesFromIni_map(
 	return toRet;
 }
 
+void Utilities::sendStringToGame(QString str, HWND handler){
+	for each (QChar var in str)	{
+		if (var.isLetter()) {
+			WPARAM wParam = var.toUpper().unicode();
+			PostMessage(handler, WM_KEYDOWN, wParam, 1);
+		}
+		else if (var.isSpace()) {
+			WPARAM wParam = 0x20;
+			PostMessage(handler, WM_KEYDOWN, wParam, 1);
+		}
+		else if (var.isDigit()) {
+			uint value = var.unicode() - 48;
+			WPARAM wParam = var.unicode();
+			LPARAM lParam = ((value + 1) << 16) + 1;
+			PostMessage(handler, WM_KEYDOWN, wParam, lParam);
+		}
+		else if (var.unicode() == 39) {
+			//apostrophe mark
+			WPARAM wParam = 0xDE;
+			LPARAM lParam = 0x00280001;
+			PostMessage(handler, WM_KEYDOWN, wParam, lParam);
+		}
+		else if (var.unicode() == 45) {
+			//dash mark
+			WPARAM wParam = 0xBD;
+			LPARAM lParam = 0x000C001;
+			PostMessage(handler, WM_KEYDOWN, wParam, lParam);
+		}
+		Sleep(2);
+	}
+}
+
 QString Utilities::readFromIniFile(FieldsOfIniFile nameOfField){
 	QString filePath = getPathToSettingsFile();
 	QSettings setttings(filePath, QSettings::IniFormat);
@@ -497,6 +624,24 @@ QString Utilities::readFromIniFile(FieldsOfIniFile nameOfField){
 	QString nameOfFieldAsStr = map[nameOfField];
 	QString readVal = setttings.value(nameOfFieldAsStr).toString();
 	return readVal;
+}
+
+HWND Utilities::getHandlerToGameWindow(unsigned int PID, QString WindowName){
+	LPCWSTR nameOfWindowLPCWSTR = (const wchar_t*)WindowName.utf16();
+	HWND handler = FindWindow(NULL, nameOfWindowLPCWSTR);
+	if (handler == NULL) {
+		Logger::logPotenialBug("Can't get handler to window: " + WindowName, "Utilities", "clickRight");
+		return HWND();
+	}
+	DWORD tmp = PID;
+	DWORD hThread = GetWindowThreadProcessId(handler, &tmp);
+
+	if (hThread != NULL)
+		return handler;
+	else {
+		Logger::logPotenialBug("Can't get thread PID for used handler", "Utilities", "clickRight");
+		return HWND();
+	}
 }
 
 void Utilities::writeIniFile(FieldsOfIniFile nameOfField, QString value){
@@ -507,16 +652,12 @@ void Utilities::writeIniFile(FieldsOfIniFile nameOfField, QString value){
 	setttings.setValue(nameOfFieldAsStr, value);
 }
 
-
-
-
-
-void Utilities::TOOL_saveImgToOutPutFolder(QImage& img, QString *extraName){
+void Utilities::TOOL_saveImgToOutPutFolder(QImage& img, QString extraName){
 	QString prefixOfName;
-	if (extraName->isNull())
+	if (extraName.isEmpty())
 		prefixOfName = QDateTime::currentDateTime().toString("mm_ss_zzz");
 	else
-		prefixOfName = *extraName;
+		prefixOfName = extraName;
 	QString fullname = "C:\\Users\\ADMIN\\Desktop\\output\\_" + prefixOfName + ".png";
 	img.save(fullname);
 }
@@ -573,28 +714,26 @@ QString Utilities::getPathToSettingsFile() {
 }
 
 QStringList Utilities::TOOL_getCodesOfAllInFolder_regular(QString pathToInputFolder, QString pathToOutputFolder) {
-	 QDir directory(pathToInputFolder);
-	 QStringList litOfFIles = directory.entryList(QStringList() << "*.png", QDir::Files);
-	 QList<QString> list;
-	 for (size_t i = 0; i < litOfFIles.size(); i++) {
-		 QString pathToFile = pathToInputFolder + "\\" + litOfFIles[i];
-		 QImage img = QImage(pathToFile);
-		 Utilities::imgToBlackAndWhiteOneColor(img, 200);
-		 QString name = pathToOutputFolder + "\\" + litOfFIles[i];
-		 img.save(name);
-		 QString code = letterImgToLetterCodeStr(&img);
+    QDir directory(pathToInputFolder);
+    QStringList litOfFIles = directory.entryList(QStringList() << "*.png", QDir::Files);
+    QList<QString> list;
+    for (size_t i = 0; i < litOfFIles.size(); i++) {
+	    QString pathToFile = pathToInputFolder + "\\" + litOfFIles[i];
+	    QImage img = QImage(pathToFile);
+	    Utilities::imgToBlackAndWhiteOneColor(img, 200);
+		QString name = pathToOutputFolder + "\\" + litOfFIles[i];
+		TOOL_saveImgToOutPutFolder(img,name);
+	    QString code = letterImgToLetterCodeStr(&img);
 
-		 //changing "slash.png" to "slash"
-		 QString tmp = litOfFIles[i].left(litOfFIles[i].size() - 4);
-		 litOfFIles[i] = tmp;
+	    //changing "slash.png" to "slash"
+	    QString tmp = litOfFIles[i].left(litOfFIles[i].size() - 4);
+	    litOfFIles[i] = tmp;
 
-		 list.push_back(litOfFIles[i] + QString("___") + code);
-	 }
-
-	 for each (QString var in list) {
-		 qDebug() << var;
-	 }
-	 return list;
+		QString codeToDisplay = litOfFIles[i] + QString("___") + code;
+	    list.push_back(codeToDisplay);
+		qDebug() << codeToDisplay;
+    }
+    return list;
  }
 
 /*
@@ -728,72 +867,72 @@ void convertMapToNoise(QImage& img, quint32 seed) {
 }
 
 void Utilities::UNUSED_imgToOneColor(QImage& img, QRgb minimalColorValues, QRgb maxColorValues, QRgb colorToSet, bool allOfThem){
-	 int width = img.width();
-	 int height = img.height();
-	 auto black = qRgb(0, 0, 0);
-	 uint minValue = (uint)minimalColorValues;
-	 uint maxValue = (uint)maxColorValues;
-	 RGBstruct minV(minValue);
-	 RGBstruct maxV(maxValue);
-	 bool setGiveColor;
+    int width = img.width();
+    int height = img.height();
+    auto black = qRgb(0, 0, 0);
+    uint minValue = (uint)minimalColorValues;
+    uint maxValue = (uint)maxColorValues;
+    RGBstruct minV(minValue);
+    RGBstruct maxV(maxValue);
+    bool setGiveColor;
 
-	 for (size_t x = 0; x < width; x++) {
-		 for (size_t y = 0; y < height; y++) {
-			 QRgb colorOfPixel = img.pixel(x, y);
-			 RGBstruct current(colorOfPixel);
+    for (size_t x = 0; x < width; x++) {
+	    for (size_t y = 0; y < height; y++) {
+		    QRgb colorOfPixel = img.pixel(x, y);
+		    RGBstruct current(colorOfPixel);
 
-			 bool redIsEnough = (current.r >= minV.r) && (current.r <= maxV.r);
-			 bool greenIsEnough = (current.g >= minV.g) && (current.g <= maxV.g);
-			 bool blueIsEnough = (current.b >= minV.b) && (current.b <= maxV.b);
-			 
-			 if (allOfThem)
-				 setGiveColor = (redIsEnough && greenIsEnough && blueIsEnough);
-			 else
-				 setGiveColor = (redIsEnough || greenIsEnough || blueIsEnough);
-		 
-			 if (setGiveColor)
-				 img.setPixel(x, y, colorToSet);
-			 else
-				 img.setPixel(x, y, black);
-		 }
-	 }
+		    bool redIsEnough = (current.r >= minV.r) && (current.r <= maxV.r);
+		    bool greenIsEnough = (current.g >= minV.g) && (current.g <= maxV.g);
+		    bool blueIsEnough = (current.b >= minV.b) && (current.b <= maxV.b);
+		    
+		    if (allOfThem)
+			    setGiveColor = (redIsEnough && greenIsEnough && blueIsEnough);
+		    else
+			    setGiveColor = (redIsEnough || greenIsEnough || blueIsEnough);
+	    
+		    if (setGiveColor)
+			    img.setPixel(x, y, colorToSet);
+		    else
+			    img.setPixel(x, y, black);
+	    }
+    }
  }
  
 void Utilities::UNUSED_imgAvoideOneColor(QImage& img, QRgb minimalColorValues, QRgb maxColorValues, bool allOfThem){
-	 int width = img.width();
-	 int height = img.height();
-	 RGBstruct minV((uint)minimalColorValues);
-	 RGBstruct maxV((uint)maxColorValues);
+    int width = img.width();
+    int height = img.height();
+    RGBstruct minV((uint)minimalColorValues);
+    RGBstruct maxV((uint)maxColorValues);
 
-	 for (size_t x = 0; x < width; x++) {
-		 for (size_t y = 0; y < height; y++) {
-			 QRgb colorOfPixel = img.pixel(x, y);
-			 RGBstruct current(colorOfPixel);
+    for (size_t x = 0; x < width; x++) {
+	    for (size_t y = 0; y < height; y++) {
+		    QRgb colorOfPixel = img.pixel(x, y);
+		    RGBstruct current(colorOfPixel);
 
-			 bool redIsEnough = (current.r >= minV.r) && (current.r <= maxV.r);
-			 bool greenIsEnough = (current.g >= minV.g) && (current.g <= maxV.g);
-			 bool blueIsEnough = (current.b >= minV.b) && (current.b <= maxV.b);
+		    bool redIsEnough = (current.r >= minV.r) && (current.r <= maxV.r);
+		    bool greenIsEnough = (current.g >= minV.g) && (current.g <= maxV.g);
+		    bool blueIsEnough = (current.b >= minV.b) && (current.b <= maxV.b);
 
-			 bool setGiveColor;
-			 allOfThem = allOfThem ? (redIsEnough && greenIsEnough && blueIsEnough) : (redIsEnough || greenIsEnough || blueIsEnough);
+		    bool setGiveColor;
+		    allOfThem = allOfThem ? (redIsEnough && greenIsEnough && blueIsEnough) : (redIsEnough || greenIsEnough || blueIsEnough);
 
-			 if (setGiveColor)
-				 img.setPixel(x, y, qRgb(0, 0, 0));
-		 }
-	 }
+		    if (setGiveColor)
+			    img.setPixel(x, y, qRgb(0, 0, 0));
+	    }
+    }
  }
 
 void Utilities::UNUSED_changeGreyPixelsToBlack(QImage& img, int minGreyVal, int maxGreyVal) {
-	 int width = img.width();
-	 int height = img.height();
-	 for (size_t x = 0; x < width; x++) {
-		 for (size_t y = 0; y < height; y++) {
-			 uint pixVal = img.pixel(x,y);
-			 bool shouldBeBlacked = RGBstruct::isPixelInRangeOfGrey(pixVal, minGreyVal, maxGreyVal);
-			 if (shouldBeBlacked)
-				 img.setPixel(x, y, qRgb(0,0,0));
-		 }
-	 }
+    int width = img.width();
+    int height = img.height();
+    for (size_t x = 0; x < width; x++) {
+	    for (size_t y = 0; y < height; y++) {
+		    uint pixVal = img.pixel(x,y);
+		    bool shouldBeBlacked = RGBstruct::isPixelInRangeOfGrey(pixVal, minGreyVal, maxGreyVal);
+		    if (shouldBeBlacked)
+			    img.setPixel(x, y, qRgb(0,0,0));
+	    }
+    }
  }
 
  int Utilities::UNUSED_modifyBit(int numberToEdit, int postition, int zeroOrOne){

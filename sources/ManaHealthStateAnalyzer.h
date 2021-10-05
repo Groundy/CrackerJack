@@ -1,5 +1,4 @@
 #pragma once
-#include "StringResource.h"
 #include <QThread>
 #include "VariablesClass.h"
 #include "qimage.h"
@@ -48,7 +47,7 @@ private:
 	QList<Key> manaKeys;
 
 	QList<Utilities::RestoreMethode> healthMethodes;
-	QList<Utilities::Item> manaMethodes;
+	QList<Item> manaMethodes;
 	LONG64 lastTimeAnalyzed = 0;
 
 	int extraTimeToWaitBetweenManaPotUse = 1400;

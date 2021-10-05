@@ -10,6 +10,7 @@
 #include "NewProfileConfiguartor.h"
 #include "qdatetime.h"
 #include "qstring.h"
+#include "qsettings.h"
 class ProfileDataBaseManager{
 public:
 	ProfileDataBaseManager();

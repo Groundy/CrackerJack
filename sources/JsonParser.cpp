@@ -8,28 +8,6 @@ JsonParser::~JsonParser()
 {
 }
 
-QMap<Utilities::Item::TYPE_OF_ITEM, QString> JsonParser::itemType_itemStr_map = {
-	{Utilities::Item::TYPE_OF_ITEM::ARMOR, "armors"},
-	{Utilities::Item::TYPE_OF_ITEM::AMULETS, "amulets"},
-	{Utilities::Item::TYPE_OF_ITEM::BOOTS, "boots"},
-	{Utilities::Item::TYPE_OF_ITEM::CREATURE, "creature"},
-	{Utilities::Item::TYPE_OF_ITEM::HELMETS, "helmets"},
-	{Utilities::Item::TYPE_OF_ITEM::LEGS, "legs"},
-	{Utilities::Item::TYPE_OF_ITEM::OTHER, "other"},
-	{Utilities::Item::TYPE_OF_ITEM::POTIONS, "potions"},
-	{Utilities::Item::TYPE_OF_ITEM::RINGS, "rings"},
-	{Utilities::Item::TYPE_OF_ITEM::RUNES, "runes"},
-	{Utilities::Item::TYPE_OF_ITEM::SHIELDS, "shields"},
-	{Utilities::Item::TYPE_OF_ITEM::VALUABLES, "valuables"},
-	{Utilities::Item::TYPE_OF_ITEM::AMMO, "ammo"},
-	{Utilities::Item::TYPE_OF_ITEM::AXES, "axes"},
-	{Utilities::Item::TYPE_OF_ITEM::SWORDS, "swords"},
-	{Utilities::Item::TYPE_OF_ITEM::CLUBS, "clubs"},
-	{Utilities::Item::TYPE_OF_ITEM::DISTANCES, "distance"},
-	{Utilities::Item::TYPE_OF_ITEM::ROD, "rod"},
-	{Utilities::Item::TYPE_OF_ITEM::WANDS, "wands"}
-};
-
 bool JsonParser::openJsonFile(QJsonObject& jsonDoc, QString pathToFile){
 	QFile file;
 	file.setFileName(pathToFile);
@@ -51,6 +29,8 @@ bool JsonParser::openJsonFile(QJsonObject& jsonDoc, QString pathToFile){
 
 bool JsonParser::readSpellsJson(QList<Spell>& spells){
 	QJsonObject obj;
+	static const QString spellFilePath = "C:\\Users\\ADMIN\\source\\repos\\CrackerJackClient\\Resources\\spells.json";//todo
+
 	bool res = openJsonFile(obj, spellFilePath);
 	if (!res) {
 		Logger::logPotenialBug("Problem with Json reading", "JsonParser", "readSpellsJson");
@@ -132,9 +112,9 @@ bool JsonParser::filtrSpells(QList<Spell>& spells, Profile::PROFESSION* prof, Sp
 	return true;
 }
 
-bool JsonParser::getPotionsForProf(QList<Utilities::Potion>& potions, Profile::PROFESSION* prof, TypeOfPotion type){
-	typedef Utilities::Potion Potion;
+bool JsonParser::getPotionsForProf(QList<Potion>& potions, Profile::PROFESSION* prof, TypeOfPotion type){
 	QJsonObject obj;
+	const QString itemsFilePath = "C:\\Users\\ADMIN\\source\\repos\\CrackerJackClient\\Resources\\items.json";//todo
 	bool res = openJsonFile(obj, itemsFilePath);
 	if (!res) {
 		Logger::logPotenialBug("Problem with Json reading", "JsonParser", "getPotionsForProf");
@@ -143,7 +123,7 @@ bool JsonParser::getPotionsForProf(QList<Utilities::Potion>& potions, Profile::P
 
 	QJsonArray arr = obj["potions"].toArray();
 	if (arr.size() == 0) {
-		Logger::logPotenialBug("No spells in json file", "JsonParser", "getPotionsForProf");
+		Logger::logPotenialBug("No potions in json file", "JsonParser", "getPotionsForProf");
 		return false;
 	}
 
@@ -151,7 +131,7 @@ bool JsonParser::getPotionsForProf(QList<Utilities::Potion>& potions, Profile::P
 	for each (QJsonValue var in arr) {
 		Potion potionToAdd;
 		potionToAdd.name = var["name"].toString();
-		potionToAdd.type = Utilities::Item::TYPE_OF_ITEM::POTIONS;
+		potionToAdd.type = Item::TYPE_OF_ITEM::POTIONS;
 		potionToAdd.manaReg = var["mana"].toInt();
 		potionToAdd.healthReg = var["health"].toInt();
 		potionToAdd.forMage = var["for_mage"].toBool();
@@ -193,100 +173,30 @@ bool JsonParser::getPotionsForProf(QList<Utilities::Potion>& potions, Profile::P
 	return true;
 }
 
-bool JsonParser::readItemJson(QList<Utilities::Item>* items){
-	typedef Utilities::Item Item;
+bool JsonParser::readItemJson(QList<Item>& items){
+	items.clear();
 	QJsonObject obj;
+	const QString itemsFilePath = "C:\\Users\\ADMIN\\source\\repos\\CrackerJackClient\\Resources\\items.json";//todo
 	bool res = openJsonFile(obj, itemsFilePath);
 	if (!res) {
 		Logger::logPotenialBug("Problem with Json reading", "JsonParser", "readSpellsJson");
 		return false;
 	}
 
-	QJsonArray arr;
-	QStringList listOfCategoryNames = { "armors","amulets","boots","creature","helmets",
-		"legs","other","potions","rings","runes","shields","valuables","ammo","axes","swords",
-		"clubs","distance","rod","wands"
-	};
-	for each (QString var in listOfCategoryNames) {
-		QJsonArray toAdd = obj[var].toArray();
-		for each (QJsonValue val in toAdd)
-			arr.push_back(val);
+	QStringList listOfCategoryNames = Item::getListOfCategories();
+	for each (QString nameOfJsonObj in listOfCategoryNames) {
+		QJsonArray itemsOfOneCategory = obj[nameOfJsonObj].toArray();
+		for each (QJsonValue itemAsJsonObj in itemsOfOneCategory)
+			items.push_back(Item(itemAsJsonObj));
 	}
 
-	if (arr.size() == 0) {
+
+	if (items.size() == 0) {
 		Logger::logPotenialBug("No items in json file", "JsonParser", "readSpellsJson");
 		return false;
 	}
-
-	QList<Item> itemToRet;
-	for (size_t i = 0; i < arr.size(); i++) {
-		QJsonValue val = arr[i];
-		Item objToAdd;
-		objToAdd.name = val["name"].toString();
-		objToAdd.price = val["price"].toInt();
-		objToAdd.weight = val["weight"].toInt();
-		if (val["sell_blue_dijn"].toBool())
-			objToAdd.seller = Item::SELLER::BLUE_DJIN;
-		else if (val["sell_green_dijn"].toBool())
-			objToAdd.seller = Item::SELLER::GREEN_DJIN;
-		else if (val["sell_yasir"].toBool())
-			objToAdd.seller = Item::SELLER::YASIR;
-		else if (val["sell_zao"].toBool())
-			objToAdd.seller = Item::SELLER::ZAO;
-		else if (val["sell_other"].toBool())
-			objToAdd.seller = Item::SELLER::OTHER_SELLER;
-		else if (val["sell_rashid"].toBool())
-			objToAdd.seller = Item::SELLER::RASHID;
-		else {
-			Logger::logPotenialBug("Seller value read from json file is other than allowed and defined sellers", "JsonParser", "readItemJson");
-			return false;
-		}
-
-		QString typeOfItem = val["type"].toString();
-		
-		if (typeOfItem == QString("ARMOR"))
-			objToAdd.type = Item::TYPE_OF_ITEM::ARMOR;
-		else if (typeOfItem == QString("AMULET"))
-			objToAdd.type = Item::TYPE_OF_ITEM::AMULETS;
-		else if (typeOfItem == QString("BOOTS"))
-			objToAdd.type = Item::TYPE_OF_ITEM::BOOTS;
-		else if (typeOfItem == QString("CREATURE"))
-			objToAdd.type = Item::TYPE_OF_ITEM::CREATURE;
-		else if (typeOfItem == QString("HELMET"))
-			objToAdd.type = Item::TYPE_OF_ITEM::HELMETS;
-		else if (typeOfItem == QString("LEGS"))
-			objToAdd.type = Item::TYPE_OF_ITEM::LEGS;
-		else if (typeOfItem == QString("OTHER"))
-			objToAdd.type = Item::TYPE_OF_ITEM::OTHER;
-		else if (typeOfItem == QString("POTION"))
-			objToAdd.type = Item::TYPE_OF_ITEM::POTIONS;
-		else if (typeOfItem == QString("RING"))
-			objToAdd.type = Item::TYPE_OF_ITEM::RINGS;
-		else if (typeOfItem == QString("RUNE"))
-			objToAdd.type = Item::TYPE_OF_ITEM::RUNES;
-		else if (typeOfItem == QString("SHIELD"))
-			objToAdd.type = Item::TYPE_OF_ITEM::SHIELDS;
-		else if (typeOfItem == QString("AMMO"))
-			objToAdd.type = Item::TYPE_OF_ITEM::AMMO;
-		else if (typeOfItem == QString("AXE"))
-			objToAdd.type = Item::TYPE_OF_ITEM::AXES;
-		else if (typeOfItem == QString("SWORD"))
-			objToAdd.type = Item::TYPE_OF_ITEM::SWORDS;
-		else if (typeOfItem == QString("CLUB"))
-			objToAdd.type = Item::TYPE_OF_ITEM::CLUBS;
-		else if (typeOfItem == QString("DISTANCE"))
-			objToAdd.type = Item::TYPE_OF_ITEM::DISTANCES;
-		else if (typeOfItem == QString("ROD"))
-			objToAdd.type = Item::TYPE_OF_ITEM::ROD;
-		else if (typeOfItem == QString("WAND"))
-			objToAdd.type = Item::TYPE_OF_ITEM::WANDS;
-		else
-			return false;
-
-		itemToRet.push_back(objToAdd);
-	}
-	*items = itemToRet;
-	return true;
+	else
+		return true;
 }
 
 bool JsonParser::getHealthRestoreMethodes(QStringList incantationsAndSpellsList, QList<Utilities::RestoreMethode>& spellsAndPotionsObjects) {
@@ -358,7 +268,7 @@ bool JsonParser::getManaRestoreMethodes(QStringList potionNameToBeFound, QList<I
 
 bool JsonParser::getItemsFromCategory(QList<Item>& itemsToRet, Item::TYPE_OF_ITEM type){
 	QList<Item> readItems, itemsTmp;
-	bool sucess = readItemJson(&readItems);
+	bool sucess = readItemJson(readItems);
 	if (!sucess)
 		return false;
 

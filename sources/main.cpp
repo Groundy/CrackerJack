@@ -1,22 +1,8 @@
 #include <QtWidgets/QApplication>
 #include "MainMenu.h"
-/*
-#include "LoginWindow.h"
-#include "ScreenSaver.h"
-#include <memory.h>
-#include "JsonParser.h"
-#include "qsettings.h"
-#include "VariablesClass.h"
-#include "Calibrator.h"
-#include "Logger.h"
-#include "Cryptography.h"
-#include "ServerConnector.h"
-#include "qjsondocument.h"
-#include "qjsonobject.h"
-#include "qjsonvalue.h"
-#include "MinimapAnalyzer.h"
-#include "RouteCreator.h"
-*/
+#include <qtranslator.h>
+#include "Market.h"
+
 QString makeRandomProccessName();
 void test();
 QIcon getIcon();
@@ -25,6 +11,9 @@ void initSettings(QApplication& a);
 int main(int argc, char *argv[])
 {
 	QApplication a(argc, argv);
+	QTranslator translator;
+	bool ok1 = translator.load("Debug\\crackerjackclient_pl");
+	bool ok2 = a.installTranslator(&translator);
 	initSettings(a);
 	test();
    /*
@@ -33,11 +22,14 @@ int main(int argc, char *argv[])
 	if (result != QDialog::Accepted)
 		return 0;
 	*/
+
 	Profile* prof = new Profile();
+	/*
 	SelectProfileWindow win(NULL, prof);
 	bool accepted = win.exec() == QDialog::Accepted;
 	if (!accepted)
 		return 0;
+	*/
 	MainMenu* mainMenu = new MainMenu(prof, NULL);
 	bool accepted2 = mainMenu->exec() == QDialog::Accepted;
 	if (!accepted2) {
@@ -49,9 +41,6 @@ int main(int argc, char *argv[])
 }
 
 void test(){
-	RouteCreator t;
-	Route tt;
-	t.exec();
 };
 
 
