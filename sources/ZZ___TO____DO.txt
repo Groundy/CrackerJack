@@ -1,4 +1,4 @@
-51. w Utilities::sendStringToGame dodac opcje wysylania apostrofa
+52. w przypadku nie odnalezienia slowa "Market" na ekranie, program probuje wyswietlic messageboxa, przeniesc tego msgboxa z MarketProcess do MarketProcessGui
 48. Dodaæ obs³ugê przypadku gdy postaæ nie ma ustawionych zadnych ofert
 47. Dodac sprawdzanie czy trasa jest zrobiona dobrze w RouteCreator
 44. Zrobiæ clean-up polegaj¹cy na oznaczeniu funkcji translate
@@ -21,6 +21,7 @@
 
 
 //DONE
+51. w Utilities::sendStringToGame dodac opcje wysylania apostrofa
 50. Przy usuwaniu screenow, nalezy usuwac tylko te zrobione hotkeyem, nie nalezy usuwac screen automatycznych.
 49. dodaæ obs³ugê znaku "rt" i "rf" gdy¿ nie s¹ one rozdzielone;
 48. W RouteCreator po wczytaniu trasy krótszej niz aktaulna, punkty nie sa kasowane

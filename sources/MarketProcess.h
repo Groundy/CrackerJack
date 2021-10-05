@@ -1,10 +1,11 @@
 #pragma once
-#include <QDialog>
+#include <QThread>
 #include <qrect.h>
 #include "Utilities.h"
 #include "ScreenSaver.h"
 #include "ScreenAnalyzer.h"
 #include "Offer.h"
+#include "MarketProcessGui.h";
 struct AlreadyPostedOffer {
 	AlreadyPostedOffer() {};
 	AlreadyPostedOffer(QString nameToSet, int priceToSet, int amountToSet) {
@@ -80,13 +81,13 @@ struct Pos {
 };
 namespace Ui { class MarketProcess; };
 
-class MarketProcess : public QDialog {
+class MarketProcess : public QThread {
 	Q_OBJECT
 public:
 	MarketProcess(VariablesClass* var, QList<Offer> offersThatShouldBe, QWidget* parent);
 	~MarketProcess();
 	enum class Type { BUY, SELL };
-	enum class Actions { LOOKING_FOR_MARKET_WINDOW,SCANNING_OFFER_LIST, LOOKING_FOR_ITEM, PLACING_OFFER, CANCELING_OFFER, FINISHED };
+	enum class Actions { LOOKING_FOR_MARKET_WINDOW,SCANNING_OFFER_LIST, LOOKING_FOR_ITEM, PLACING_OFFER, CANCELING_OFFER, FINISHED, CANCELING };
 	enum class TradeAction {
 		GO_NEXT_ITEM,
 		BUY_LAST_OFFER_ITEM,
@@ -96,13 +97,15 @@ public:
 		CANCEL_OFFER_TO_BUY
 	};
 public slots:
-	void runButtonClicked();
-	void cancelButtonClicked();
+	void startThread();
+	void endProcess();
+signals:
+	void repaintLabelInGui(QString str);
+	void paintProgressOnBar(int currValue, int maxValue);
+	void addTextToDisplayOnList(QString str);
 private:
-	Ui::MarketProcess* ui;
 	Pos pos;
 	bool isPl;
-	void recalculatePositions(QPoint leftTopCorner);
 	void initPos();
 	VariablesClass* var;
 	QImage currentImg;
@@ -111,7 +114,9 @@ private:
 	const int HEIGH_OF_OFFER_FIELD = 177;
 	QList<AlreadyPostedOffer> myCurrentOffers_SELL, myCurrentOffers_BUY;
 	QList<Offer> userOfferList;
+	bool loopEnabled = true;
 
+	void recalculatePositions(QPoint leftTopCorner);
 	QPoint findTopLeftCornerOfMarketWin();
 	bool askForScreenAndReadIt();
 	void mainLoop();
@@ -135,7 +140,7 @@ private:
 	void setOffer(Type type, int lastOfferPrice, int cash, Offer offer);
 	void appendStrToTradeLog(QString strToWrite);
 	void buyLastOffer(int currentlyPossesedCash, int priceOfLastOffer_SELL,int amountOfLastOffer_SELL, QString itemName);
-	void displayInfoOnInfoLabel(Actions action, QString itemName);
-	void repaintProgressBar(int currentValue, int maxValue);
+	void sendTextToDisplay(Actions action, QString itemName);
+	void run();
 };
 

@@ -229,6 +229,7 @@ xcopy /y /d ".\dependencies\64-bit\libcrypto-1_1-x64.dll" "$(OutDir)"
     <ClCompile Include="sources\ManaHealthStateAnalyzer.cpp" />
     <ClCompile Include="sources\Market.cpp" />
     <ClCompile Include="sources\MarketProcess.cpp" />
+    <ClCompile Include="sources\MarketProcessGui.cpp" />
     <ClCompile Include="sources\MinimapAnalyzer.cpp" />
     <ClCompile Include="sources\NewProfileConfiguartor.cpp" />
     <ClCompile Include="sources\Key.cpp" />
@@ -256,7 +257,7 @@ xcopy /y /d ".\dependencies\64-bit\libcrypto-1_1-x64.dll" "$(OutDir)"
   <ItemGroup>
     <QtUic Include="sources\MainMenu.ui" />
     <QtUic Include="sources\Market.ui" />
-    <QtUic Include="sources\MarketProcess.ui" />
+    <QtUic Include="sources\MarketProcessGui.ui" />
     <QtUic Include="sources\NewProfileConfiguartor.ui" />
     <QtUic Include="sources\LoginWindow.ui" />
     <QtUic Include="sources\RouteCreator.ui" />
@@ -267,6 +268,7 @@ xcopy /y /d ".\dependencies\64-bit\libcrypto-1_1-x64.dll" "$(OutDir)"
     <ClInclude Include="sources\Cryptography.h" />
     <ClInclude Include="sources\Item.h" />
     <QtMoc Include="sources\MarketProcess.h" />
+    <QtMoc Include="sources\MarketProcessGui.h" />
     <ClInclude Include="sources\Offer.h" />
     <ClInclude Include="sources\ServerConnector.h" />
     <QtMoc Include="sources\ClientServerApi.h" />

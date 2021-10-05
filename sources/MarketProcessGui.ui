@@ -1,24 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>MarketProcess</class>
- <widget class="QDialog" name="MarketProcess">
+ <class>MarketProcessGui</class>
+ <widget class="QWidget" name="MarketProcessGui">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>442</width>
-    <height>300</height>
+    <width>447</width>
+    <height>456</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
-  <layout class="QGridLayout" name="gridLayout">
+  <layout class="QGridLayout" name="gridLayout_2">
    <item row="1" column="0">
-    <widget class="QTextBrowser" name="textBrowser"/>
-   </item>
-   <item row="3" column="0">
-    <widget class="QLabel" name="itemNameLabel">
+    <widget class="QLabel" name="label">
      <property name="text">
       <string>TextLabel</string>
      </property>
@@ -27,7 +24,7 @@
      </property>
     </widget>
    </item>
-   <item row="6" column="0" colspan="3">
+   <item row="3" column="0">
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
       <spacer name="horizontalSpacer_2">
@@ -43,16 +40,16 @@
       </spacer>
      </item>
      <item>
-      <widget class="QPushButton" name="runButton">
+      <widget class="QPushButton" name="startButton">
        <property name="text">
-        <string>run</string>
+        <string>PushButton</string>
        </property>
       </widget>
      </item>
      <item>
       <widget class="QPushButton" name="cancelButton">
        <property name="text">
-        <string>cancel</string>
+        <string>Cancel</string>
        </property>
       </widget>
      </item>
@@ -71,64 +68,61 @@
      </item>
     </layout>
    </item>
-   <item row="4" column="0">
+   <item row="2" column="0">
     <widget class="QProgressBar" name="progressBar">
      <property name="value">
       <number>0</number>
      </property>
      <property name="alignment">
-      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-     </property>
-     <property name="textVisible">
-      <bool>true</bool>
-     </property>
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-     <property name="invertedAppearance">
-      <bool>false</bool>
+      <set>Qt::AlignCenter</set>
      </property>
     </widget>
+   </item>
+   <item row="0" column="0">
+    <widget class="QListWidget" name="listWidget"/>
    </item>
   </layout>
  </widget>
  <resources/>
  <connections>
   <connection>
-   <sender>runButton</sender>
+   <sender>cancelButton</sender>
    <signal>clicked()</signal>
-   <receiver>MarketProcess</receiver>
-   <slot>runButtonClicked()</slot>
+   <receiver>MarketProcessGui</receiver>
+   <slot>cancelButtonClicked()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>86</x>
-     <y>278</y>
+     <x>264</x>
+     <y>434</y>
     </hint>
     <hint type="destinationlabel">
-     <x>127</x>
-     <y>149</y>
+     <x>223</x>
+     <y>227</y>
     </hint>
    </hints>
   </connection>
   <connection>
-   <sender>cancelButton</sender>
+   <sender>startButton</sender>
    <signal>clicked()</signal>
-   <receiver>MarketProcess</receiver>
-   <slot>cancelButtonClicked()</slot>
+   <receiver>MarketProcessGui</receiver>
+   <slot>startButtonClicker()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>167</x>
-     <y>278</y>
+     <x>183</x>
+     <y>434</y>
     </hint>
     <hint type="destinationlabel">
-     <x>127</x>
-     <y>149</y>
+     <x>223</x>
+     <y>227</y>
     </hint>
    </hints>
   </connection>
  </connections>
  <slots>
-  <slot>runButtonClicked()</slot>
   <slot>cancelButtonClicked()</slot>
+  <slot>startButtonClicker()</slot>
+  <slot>addTextToDisplayList(QString)</slot>
+  <slot>repaintLabel(QString)</slot>
+  <slot>printValueToProgressBar(int,int)</slot>
  </slots>
 </ui>

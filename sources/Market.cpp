@@ -324,8 +324,23 @@ void Market::removeItem(){
 }
 
 void Market::test() {
-	MarketProcess t(var,offersList,NULL);
-	t.exec();
+	MarketProcess marketProcess(var,offersList,NULL);
+	MarketProcessGui marketProcessGui;
+	
+
+	bool ok1 = connect(&marketProcessGui, SIGNAL(startMarketProcess()), &marketProcess, SLOT(startThread()), Qt::UniqueConnection);
+	bool ok2 = connect(&marketProcessGui, SIGNAL(stopMarketProcess()), &marketProcess, SLOT(endProcess()), Qt::UniqueConnection);
+	bool ok3 = connect(&marketProcess, SIGNAL(repaintLabelInGui(QString)), &marketProcessGui, SLOT(repaintLabel(QString)), Qt::UniqueConnection);
+	bool ok4 = connect(&marketProcess, SIGNAL(paintProgressOnBar(int, int)), &marketProcessGui, SLOT(printValueToProgressBar(int,int)), Qt::UniqueConnection);
+	bool ok5 = connect(&marketProcess, SIGNAL(addTextToDisplayOnList(QString)), &marketProcessGui, SLOT(addTextToDisplayList(QString)), Qt::UniqueConnection);
+	bool allThingsAreConnected = ok1 && ok2 && ok3 && ok4 && ok5;
+
+	if (!allThingsAreConnected) {
+		//todo log //user info
+		return;
+	}
+
+	marketProcessGui.exec();
 }
 
 void Market::offerTypeChanged(){
