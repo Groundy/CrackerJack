@@ -85,35 +85,35 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="sources/MainMenu.ui" line="81"/>
-        <location filename="sources/MainMenu.ui" line="267"/>
-        <location filename="sources/MainMenu.ui" line="274"/>
-        <location filename="sources/MainMenu.ui" line="281"/>
+        <location filename="sources/MainMenu.ui" line="56"/>
+        <location filename="sources/MainMenu.ui" line="116"/>
+        <location filename="sources/MainMenu.ui" line="123"/>
+        <location filename="sources/MainMenu.ui" line="130"/>
         <source>TextLabel</source>
         <translation type="unfinished">&quot;&quot;</translation>
     </message>
     <message>
-        <location filename="sources/MainMenu.ui" line="97"/>
+        <location filename="sources/MainMenu.ui" line="72"/>
         <source>change profile</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="sources/MainMenu.ui" line="110"/>
+        <location filename="sources/MainMenu.ui" line="85"/>
         <source>Edit Profile</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="sources/MainMenu.ui" line="123"/>
+        <location filename="sources/MainMenu.ui" line="98"/>
         <source>Help</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="sources/MainMenu.ui" line="260"/>
+        <location filename="sources/MainMenu.ui" line="109"/>
         <source>Auto Heal and Mana</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="sources/MainMenu.ui" line="290"/>
+        <location filename="sources/MainMenu.ui" line="43"/>
         <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
@@ -122,47 +122,47 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="sources/MainMenu.ui" line="303"/>
+        <location filename="sources/MainMenu.ui" line="221"/>
         <source>Trading</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="sources/MainMenu.ui" line="310"/>
+        <location filename="sources/MainMenu.ui" line="228"/>
         <source>Hunting manually</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="sources/MainMenu.ui" line="317"/>
+        <location filename="sources/MainMenu.ui" line="235"/>
         <source>Hunting automatically</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="sources/MainMenu.ui" line="324"/>
+        <location filename="sources/MainMenu.ui" line="242"/>
         <source>Skilling</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="sources/MainMenu.ui" line="331"/>
+        <location filename="sources/MainMenu.ui" line="249"/>
         <source>what do you want to do?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="sources/MainMenu.ui" line="357"/>
+        <location filename="sources/MainMenu.ui" line="153"/>
         <source>manaShield: </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="sources/MainMenu.ui" line="376"/>
+        <location filename="sources/MainMenu.ui" line="172"/>
         <source>health: </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="sources/MainMenu.ui" line="395"/>
+        <location filename="sources/MainMenu.ui" line="191"/>
         <source>game status: </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="sources/MainMenu.ui" line="414"/>
+        <location filename="sources/MainMenu.ui" line="210"/>
         <source>mana: </source>
         <translation type="unfinished"></translation>
     </message>
@@ -284,7 +284,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <location filename="sources/Market.ui" line="225"/>
-        <location filename="sources/Market.cpp" line="153"/>
+        <location filename="sources/Market.cpp" line="155"/>
         <source>Buyer: </source>
         <translation>Kupiec: </translation>
     </message>
@@ -339,77 +339,77 @@ p, li { white-space: pre-wrap; }
         <translation>Przedmiot:</translation>
     </message>
     <message>
-        <location filename="sources/Market.cpp" line="76"/>
+        <location filename="sources/Market.cpp" line="78"/>
         <source>Both values have to be greater than zero, max value has to be same or greater than min value.</source>
         <translation>Obie wartości powinny być większe od zera, wartość maksymalna nie może być mniejsza niż minimalna.</translation>
     </message>
     <message>
-        <location filename="sources/Market.cpp" line="82"/>
+        <location filename="sources/Market.cpp" line="84"/>
         <source>Amount of items should be number between 1 and 640000.</source>
         <translation>Ilość przedmiotów powinna być w przedziale od 1 do 64.000.</translation>
     </message>
     <message>
-        <location filename="sources/Market.cpp" line="89"/>
+        <location filename="sources/Market.cpp" line="91"/>
         <source>Item not selected.</source>
         <translation>Nie wybrano przedmiotu z listy.</translation>
     </message>
     <message>
-        <location filename="sources/Market.cpp" line="112"/>
+        <location filename="sources/Market.cpp" line="114"/>
         <source>Item is already on the list</source>
         <translation>Przedmiot jest już na liście.</translation>
     </message>
     <message>
-        <location filename="sources/Market.cpp" line="149"/>
+        <location filename="sources/Market.cpp" line="151"/>
         <source>Name: </source>
         <translation>Nazwa: </translation>
     </message>
     <message>
-        <location filename="sources/Market.cpp" line="150"/>
+        <location filename="sources/Market.cpp" line="152"/>
         <source>Price: </source>
         <translation>Cena: </translation>
     </message>
     <message>
-        <location filename="sources/Market.cpp" line="151"/>
+        <location filename="sources/Market.cpp" line="153"/>
         <source>Weight: </source>
         <translation>Waga: </translation>
     </message>
     <message>
-        <location filename="sources/Market.cpp" line="152"/>
+        <location filename="sources/Market.cpp" line="154"/>
         <source>Price/weight: </source>
         <translation>Cena/waga: </translation>
     </message>
     <message>
-        <location filename="sources/Market.cpp" line="240"/>
+        <location filename="sources/Market.cpp" line="242"/>
         <source>Insert file name.</source>
         <translation>Wprowadź nazwę pliku.</translation>
     </message>
     <message>
-        <location filename="sources/Market.cpp" line="287"/>
+        <location filename="sources/Market.cpp" line="289"/>
         <source>File is uncorrect or empty.</source>
         <translation>Plik jest pusty lub niepoprawny.</translation>
     </message>
     <message>
-        <location filename="sources/Market.cpp" line="328"/>
+        <location filename="sources/Market.cpp" line="330"/>
         <source>Unexpected error occured, trading process will not begin.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="sources/Market.cpp" line="339"/>
+        <location filename="sources/Market.cpp" line="341"/>
         <source>Min. sell price</source>
         <translation>Min. cena sprzedaży</translation>
     </message>
     <message>
-        <location filename="sources/Market.cpp" line="339"/>
+        <location filename="sources/Market.cpp" line="341"/>
         <source>Min. buy price</source>
         <translation>Min. cena kupna</translation>
     </message>
     <message>
-        <location filename="sources/Market.cpp" line="340"/>
+        <location filename="sources/Market.cpp" line="342"/>
         <source>Max. sell price</source>
         <translation>Max. cena sprzedaży</translation>
     </message>
     <message>
-        <location filename="sources/Market.cpp" line="340"/>
+        <location filename="sources/Market.cpp" line="342"/>
         <source>Max. buy price</source>
         <translation>Max. cena kupna</translation>
     </message>
@@ -422,76 +422,76 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="sources/MarketProcess.cpp" line="247"/>
+        <location filename="sources/MarketProcess.cpp" line="248"/>
         <source>Finished</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="sources/MarketProcess.cpp" line="473"/>
-        <location filename="sources/MarketProcess.cpp" line="486"/>
-        <location filename="sources/MarketProcess.cpp" line="606"/>
+        <location filename="sources/MarketProcess.cpp" line="448"/>
+        <location filename="sources/MarketProcess.cpp" line="461"/>
+        <location filename="sources/MarketProcess.cpp" line="581"/>
         <source>sell</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="sources/MarketProcess.cpp" line="473"/>
-        <location filename="sources/MarketProcess.cpp" line="486"/>
-        <location filename="sources/MarketProcess.cpp" line="606"/>
+        <location filename="sources/MarketProcess.cpp" line="448"/>
+        <location filename="sources/MarketProcess.cpp" line="461"/>
+        <location filename="sources/MarketProcess.cpp" line="581"/>
         <source>buy</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="sources/MarketProcess.cpp" line="474"/>
+        <location filename="sources/MarketProcess.cpp" line="449"/>
         <source>Canceled %1  %2  %3 offer for %4 each</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="sources/MarketProcess.cpp" line="487"/>
+        <location filename="sources/MarketProcess.cpp" line="462"/>
         <source>Failed in founding %1 offer in already posted offers.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="sources/MarketProcess.cpp" line="607"/>
+        <location filename="sources/MarketProcess.cpp" line="582"/>
         <source>Placed offer to %1 %2 %3 for %4 each</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="sources/MarketProcess.cpp" line="641"/>
+        <location filename="sources/MarketProcess.cpp" line="616"/>
         <source>Bought %1 %2 for %3 each</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="sources/MarketProcess.cpp" line="652"/>
+        <location filename="sources/MarketProcess.cpp" line="627"/>
         <source>Searching for market Window.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="sources/MarketProcess.cpp" line="655"/>
+        <location filename="sources/MarketProcess.cpp" line="630"/>
         <source>Scanning list of already posted offers.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="sources/MarketProcess.cpp" line="658"/>
+        <location filename="sources/MarketProcess.cpp" line="633"/>
         <source>Searching: </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="sources/MarketProcess.cpp" line="661"/>
+        <location filename="sources/MarketProcess.cpp" line="636"/>
         <source>Placing offer: </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="sources/MarketProcess.cpp" line="664"/>
+        <location filename="sources/MarketProcess.cpp" line="639"/>
         <source>Canceling offer </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="sources/MarketProcess.cpp" line="667"/>
+        <location filename="sources/MarketProcess.cpp" line="642"/>
         <source>Finished.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="sources/MarketProcess.cpp" line="670"/>
+        <location filename="sources/MarketProcess.cpp" line="645"/>
         <source>Stopping process.</source>
         <translation type="unfinished"></translation>
     </message>

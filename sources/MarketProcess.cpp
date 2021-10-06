@@ -163,6 +163,7 @@ QPoint MarketProcess::findTopLeftCornerOfMarketWin(){
 		QString text = tr("Market window not detected.");
 		Logger::logPotenialBug(text,"MarketProcess","findTopLeftCornerOfMarketWin");;
 		emit noMarketSignFound(text);
+		emit endProcess();
 		return QPoint();
 	}
 }
@@ -288,15 +289,12 @@ bool MarketProcess::readFirstOffertsOfCurrentItem(int& price, int& amount, Type 
 }
 
 int MarketProcess::appendDisplayedOfferts(QList<AlreadyPostedOffer>& set, Type type){
-	int x, y, w = 358, h = HEIGH_OF_OFFER_FIELD;
-	if (type == Type::SELL) {
-		x = pos.myOffersWin_nameColumn_SELL.x();
-		y = pos.myOffersWin_nameColumn_SELL.y() + HEIGH_OF_OFFER_ROW;
-	}
-	else {
-		x = pos.myOffersWin_nameColumn_BUY.x();
-		y = pos.myOffersWin_nameColumn_BUY.y() + HEIGH_OF_OFFER_ROW;
-	}
+	bool sellType = type == Type::SELL;
+	int x = sellType ? pos.myOffersWin_nameColumn_SELL.x() : pos.myOffersWin_nameColumn_BUY.x();
+	int y = sellType ? pos.myOffersWin_nameColumn_SELL.y() : pos.myOffersWin_nameColumn_BUY.y();
+	y += HEIGH_OF_OFFER_ROW;
+	int w = 358;
+	int h = (int)HEIGH_OF_OFFER_FIELD;
 	QRect fieldArea(x, y, w, h);
 	QImage allDisplayedOffers = currentImg.copy(fieldArea);
 	QList<QImage> rows;
@@ -305,38 +303,21 @@ int MarketProcess::appendDisplayedOfferts(QList<AlreadyPostedOffer>& set, Type t
 	for each (QImage var in rows){
 		h = var.height();
 		y = 0;
-		QImage nameImg, amountImg, priceImg;
-		if (type == Type::SELL) {
-			x = 0;
-			w = pos.myOffersWin_nameColumn_SELL.width();
-			nameImg = var.copy(QRect(x,y,w,h));
 
-			x = pos.myOffersWin_nameColumn_SELL.width();
-			w = pos.myOffersWin_amountColumn_SELL.width();
-			amountImg = var.copy(QRect(x, y, w, h));
+		x = 0;
+		w = sellType ? pos.myOffersWin_nameColumn_SELL.width() : pos.myOffersWin_nameColumn_BUY.width();
+		QImage nameImg = var.copy(QRect(x,y,w,h));
+		x = sellType ? pos.myOffersWin_nameColumn_SELL.width() : pos.myOffersWin_nameColumn_BUY.width();
+		w = sellType ? pos.myOffersWin_amountColumn_SELL.width() : pos.myOffersWin_amountColumn_BUY.width();
+		QImage amountImg = var.copy(QRect(x, y, w, h));
+		x += sellType ? pos.myOffersWin_amountColumn_SELL.width() : pos.myOffersWin_amountColumn_BUY.width();
+		w = sellType ? pos.myOffersWin_piecePriceColumn_SELL.width() : pos.myOffersWin_piecePriceColumn_BUY.width();
+		QImage priceImg = var.copy(QRect(x, y, w, h));
 
-			x += pos.myOffersWin_amountColumn_SELL.width();
-			w = pos.myOffersWin_piecePriceColumn_SELL.width();
-			priceImg = var.copy(QRect(x, y, w, h));
-		}
-		else {
-			x = 0;
-			w = pos.myOffersWin_nameColumn_BUY.width();
-			nameImg = var.copy(QRect(x, y, w, h));
-
-			x = pos.myOffersWin_nameColumn_BUY.width();
-			w = pos.myOffersWin_amountColumn_BUY.width();
-			amountImg = var.copy(QRect(x, y, w, h));
-
-			x += pos.myOffersWin_amountColumn_BUY.width();
-			w = pos.myOffersWin_piecePriceColumn_BUY.width();
-			priceImg = var.copy(QRect(x, y, w, h));
-		}
-
-		bool nameSizeOk = nameImg.width() >= 4 && nameImg.height() >= 4;
-		bool amountSizeOk = amountImg.width() >= 4 && amountImg.height() >= 4;
-		bool priceSizeOk = priceImg.width() >= 4 && priceImg.height() >= 4;
-		bool atLeatOneImgIsEmpty = !nameSizeOk || !amountSizeOk || !priceSizeOk;
+		bool nameSizeErr = nameImg.width() < 4 || nameImg.height() < 4;
+		bool amountSizeErr = amountImg.width() < 4 || amountImg.height() < 4;
+		bool priceSizeErr = priceImg.width() < 4 || priceImg.height() < 4;
+		bool atLeatOneImgIsEmpty = nameSizeErr || amountSizeErr || priceSizeErr;
 		if (atLeatOneImgIsEmpty)
 			continue;
 
@@ -344,14 +325,11 @@ int MarketProcess::appendDisplayedOfferts(QList<AlreadyPostedOffer>& set, Type t
 		int amount = Utilities::imgWithStrToStr(amountImg).toInt();
 		int price = Utilities::imgWithStrToStr(priceImg).toInt();
 
-		bool readCorrectly = !name.isEmpty() && amount > 0 && price > 0;
+		bool readCorrectly = name.size() > 0 && amount > 0 && price > 0;
 		if (!readCorrectly)
 			continue;
 
-		AlreadyPostedOffer offerToAdd;
-		offerToAdd.amount = amount;
-		offerToAdd.price = price;
-		offerToAdd.name = name;
+		AlreadyPostedOffer offerToAdd(name, price, amount);
 		offers.append(offerToAdd);
 	}
 
@@ -359,10 +337,7 @@ int MarketProcess::appendDisplayedOfferts(QList<AlreadyPostedOffer>& set, Type t
 	for each (AlreadyPostedOffer tmpListOffer in offers) {
 		bool isAlreadyOnList = false;
 		for each (AlreadyPostedOffer permListOffer in set) {
-			bool sameName = tmpListOffer.name == permListOffer.name;
-			bool samePrice = tmpListOffer.price == permListOffer.price;
-			bool sameAmount = tmpListOffer.amount == permListOffer.amount;
-			if (sameName && samePrice && sameAmount) {
+			if (tmpListOffer == permListOffer) {
 				isAlreadyOnList = true;
 				break;
 			}
@@ -471,7 +446,7 @@ void MarketProcess::cancelOffer(QString itemName, Type type){
 				QString priceStr = QString::number(offerList->at(indexInListOffer).price);
 				QString amountStr = QString::number(offerList->at(indexInListOffer).amount);
 				QString typeOfPlaceOffer = sellType ? tr("sell") : tr("buy");
-				QString textOfMsg = tr("Canceled %1  %2  %3 offer for %4 each").arg(typeOfPlaceOffer, amountStr, itemName, priceOfOfferStr);
+				QString textOfMsg = tr("Canceled %1  %2  %3 offer for %4 each").arg(typeOfPlaceOffer, amountStr, itemName, priceStr);
 				appendStrToTradeLog(textOfMsg);
 				addTextToDisplayOnList(textOfMsg);
 			}
@@ -625,7 +600,7 @@ void MarketProcess::appendStrToTradeLog(QString strToWrite){
 }
 
 void MarketProcess::buyLastOffer(int currentlyPossesedCash, int priceOfLastOffer_SELL, int amountOfLastOffer_SELL, QString itemName) {
-	int howManyItemsICanBuy = min((currentlyPossesedCash / priceOfLastOffer_SELL), amountOfLastOffer_SELL, QString itemName);
+	int howManyItemsICanBuy = min((currentlyPossesedCash / priceOfLastOffer_SELL), amountOfLastOffer_SELL);
 	bool amountToBuyIsOk = howManyItemsICanBuy >= 1 || howManyItemsICanBuy <= 64000;
 
 	QPoint pt = pos.moreItems_SELL.center();

@@ -66,8 +66,10 @@ void Market::addItemButtonPressed(){
 	int minVal = ui->minPriceValue->value();
 	int maxVal = ui->maxPriceValue->value();
 	int amount = ui->amountValue->value();
-	QString itemName = ui->itemNameInfoLabel->text();
-	itemName = itemName.right(itemName.size() - 6);
+	QString itemNameFieldValue = ui->itemNameInfoLabel->text();
+	const QString pattern = ": ";
+	int index = itemNameFieldValue.indexOf(pattern);
+	QString itemName = itemNameFieldValue.mid(index + pattern.size());
 	bool shouldPlaceOffers = ui->placeOfferCheckBox->isChecked();
 	Offer::Type typeToSet = ui->buyTypeRadioButton->isChecked() ? Offer::Type::BUY : Offer::Type::SELL;
 

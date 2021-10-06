@@ -5,7 +5,7 @@
 #include "ScreenSaver.h"
 #include "ScreenAnalyzer.h"
 #include "Offer.h"
-#include "MarketProcessGui.h";
+#include "MarketProcessGui.h"
 struct AlreadyPostedOffer {
 	AlreadyPostedOffer() {};
 	AlreadyPostedOffer(QString nameToSet, int priceToSet, int amountToSet) {
@@ -13,6 +13,12 @@ struct AlreadyPostedOffer {
 		price = priceToSet;
 		amount = amountToSet;
 	};
+	bool operator ==(const AlreadyPostedOffer &offToComp) {
+		bool sameName = this->name == offToComp.name;
+		bool samePrice = this->price == offToComp.price;
+		bool sameAmount = this->amount == offToComp.amount;
+		return sameName && samePrice && sameAmount;
+	}
 	QString name;
 	int price;
 	int amount;
