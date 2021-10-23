@@ -2,7 +2,7 @@
 #include "MainMenu.h"
 #include <qtranslator.h>
 #include "Market.h"
-
+#include "LoginWindow.h"
 QString makeRandomProccessName();
 void test();
 QIcon getIcon();
@@ -16,20 +16,20 @@ int main(int argc, char *argv[])
 	bool ok2 = a.installTranslator(&translator);
 	initSettings(a);
 	test();
-   /*
-	LoginWindow w;
-	int result = w.exec();
-	if (result != QDialog::Accepted)
-		return 0;
-	*/
+	if(false){
+		LoginWindow w;
+		int result = w.exec();
+		if (result != QDialog::Accepted)
+			return 0;
+	}
 
 	Profile* prof = new Profile();
-	/*
-	SelectProfileWindow win(NULL, prof);
-	bool accepted = win.exec() == QDialog::Accepted;
-	if (!accepted)
-		return 0;
-	*/
+	if (true) {
+		SelectProfileWindow win(NULL, prof);
+		bool accepted = win.exec() == QDialog::Accepted;
+		if (!accepted)
+			return 0;
+	}
 	MainMenu* mainMenu = new MainMenu(prof, NULL);
 	bool accepted2 = mainMenu->exec() == QDialog::Accepted;
 	if (!accepted2) {

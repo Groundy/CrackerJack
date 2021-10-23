@@ -32,21 +32,15 @@ void ManaHealthStateAnalyzer::setThreadEnabilityToRun(bool stateToSet) {
 	shouldThisThreadBeActive = stateToSet;
 }
 
-bool ManaHealthStateAnalyzer::getInfoFromVarClass() {
-	if (var->newData) {
-		var->newData = false;
-		healthImg = var->var_healthPieceImg;
-		manaImg = var->var_manaPieceImg;
-		manaShieldImg = var->var_manaShieldPieceImg;
-		combinedImg = var->var_combinedBoxPieceImg;
-		healthFound = var->healthFound;
-		manaFound = var->manaFound;
-		manaShieldFound = var->manaShieldFound;
-		combinedFound = var->combinedFound;
-		return true;
-	}
-	else
-		return false;
+void ManaHealthStateAnalyzer::getInfoFromVarClass() {
+	healthImg = var->var_healthPieceImg;
+	manaImg = var->var_manaPieceImg;
+	manaShieldImg = var->var_manaShieldPieceImg;
+	combinedImg = var->var_combinedBoxPieceImg;
+	healthFound = var->healthFound;
+	manaFound = var->manaFound;
+	manaShieldFound = var->manaShieldFound;
+	combinedFound = var->combinedFound;
 }
 
 void ManaHealthStateAnalyzer::mainLoop(){
@@ -121,9 +115,16 @@ void ManaHealthStateAnalyzer::getValuesFromStringsToGlobablVariables(){
 }
 
 void ManaHealthStateAnalyzer::PreapareAndSendInfoToGuiInMainThread(){
-	QString healthStr,manaStr,manaShieldStr;
-	makeStringsForSignalToSend(&healthStr, &manaStr, &manaShieldStr);
-	emit sendValueToMainThread(healthStr, manaStr, manaShieldStr);
+	bool healthHasProperValues = health <= maxHealth && health >= 0 && maxHealth > 0;
+	double healthPerToSend = healthHasProperValues ? ((100.0 * health) / maxHealth) : NULL;
+
+	bool manaHasProperValues = mana <= maxMana && mana >= 0 && maxMana > 0;
+	double manaPerToSend = manaHasProperValues ? ((100.0 * mana) / maxMana) : NULL;
+
+	bool manaShieldHasProperValue = manaShield <= maxManaShield && manaShield >= 0 && maxManaShield > 0;
+	double manaShieldPerToSend = manaShieldHasProperValue ? ((100.0 * manaShield) / maxManaShield) : NULL;
+
+	emit sendValueToMainThread(healthPerToSend, manaPerToSend, manaShieldPerToSend);
 }
 
 int ManaHealthStateAnalyzer::getValuesFromStringRegularCase(QString in, int& current, int& max){
@@ -174,31 +175,6 @@ int ManaHealthStateAnalyzer::getValuesFromStringOfCombinedBox(QString in, int* c
 	return OK;
 }
 
-int ManaHealthStateAnalyzer::makeStringsForSignalToSend(QString* healthOut, QString* manaOut, QString* manaShieldOut){
-	if (maxHealth == 0 || maxMana == 0)
-		return ZERO_AS_MAX_VALUE;
-	float value = (health * 100.0f) / maxHealth;
-	healthPercentage = value;
-	QString healthPercentageToRet = QString::number(value,'f',1) + "%";
-	value = (mana * 100.0f) / maxMana;
-	manaPercentage = value;
-	QString manaPercentageToRet = QString::number(value, 'f', 1) + "%";
-	QString manaShieldPercentageToRet;
-	if (maxManaShield <= 0)
-		manaShieldPercentageToRet = "not found or zero";
-	else {
-		if (maxManaShield == 0)
-			return ZERO_AS_MAX_VALUE;
-		value = (manaShield * 100.0f) / maxManaShield;
-		manaShieldPercentage = value;
-		manaShieldPercentageToRet = QString::number(value, 'f', 1) + "%";
-	}
-	*healthOut = healthPercentageToRet;
-	*manaOut = manaPercentageToRet;
-	*manaShieldOut = manaShieldPercentageToRet;
-	return OK;
-}
-
 int ManaHealthStateAnalyzer::findNearestThresholdIndex(int currentValue, QList<int> thresholds, int& out_index){
 	int listSize = thresholds.size();
 	bool wrongInput = currentValue < 0 || currentValue > 100 || listSize > 5 || listSize < 0;
@@ -234,14 +210,11 @@ bool ManaHealthStateAnalyzer::checkIfEverythingIsCorrectToProcess(){
 		msleep(miliSecBetweenCheckingForNewValuesImg * 5);
 		return false;
 	}
-	bool dataReady = getInfoFromVarClass();
-	if (!dataReady)
-		return false;
+	getInfoFromVarClass();
 	int res = changeImgsToStrings();
 	if (res != OK) {
 		emit demandReCalibration();
-		QString wordToSend = tr("Calibrating");
-		emit sendValueToMainThread(wordToSend, wordToSend, wordToSend);
+		emit sendValueToMainThread(NULL, NULL, NULL);
 		msleep(miliSecBetweenCheckingForNewValuesImg*5);
 		return false;
 	}
@@ -251,11 +224,7 @@ bool ManaHealthStateAnalyzer::checkIfEverythingIsCorrectToProcess(){
 void ManaHealthStateAnalyzer::writeDataToVariableClass(){
 	float healthInfoToSend = (100.0f * health)/maxHealth;
 	float manaInfoToSend = (100.0f * mana) / maxMana;
-	float manaShieldInfoToSend;
-	if (maxManaShield != 0)
-		manaShieldInfoToSend = (100.0f * manaShield) / maxManaShield;
-	else
-	manaShieldInfoToSend = 0;
+	float manaShieldInfoToSend = (maxManaShield != 0) ? (100.0f * manaShield) / maxManaShield : 0;
 	var->health = healthInfoToSend;
 	var->mana = manaInfoToSend;
 	var->manashield = manaShieldInfoToSend;

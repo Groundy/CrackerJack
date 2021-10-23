@@ -24,10 +24,6 @@ public:
 	MainMenu(Profile* prof, QWidget *parent = Q_NULLPTR);
 	~MainMenu();
 	activeGameThread::gameActivityStates gameActivitystate;
-	void test() {
-		Market t(&var);
-		t.exec();
-	};
 public slots:
 	void helpButtonAction();
 	void changeProfileButtonAction();
@@ -40,7 +36,7 @@ public slots:
 	//from threads
 	void autoHealAndManaRegCheckBoxChanged();
 	void onGameStateChanged(int state);
-	void changedValueOfCharHealthOrMana(QString healthPercentage, QString manaPercentage, QString manaShieldPercentage0);
+	void changedValueOfCharHealthOrMana(double healthPercentage, double manaPercentage, double manaShieldPercentage0);
 private:
 	unsigned int pidOfGame;
 	QString gameWindowTitle;
@@ -58,7 +54,4 @@ private:
 	void setProblemsWindow(QStringList problemsToShow);
 	void threadStarter();
 	void signalSlotConnector();
-
-	const QString CALIBRATION_STRING_PL = QString::fromLocal8Bit("Kalibracja");
-	const QString CALIBRATION_STRING_ENG = "Calibrating";
 };

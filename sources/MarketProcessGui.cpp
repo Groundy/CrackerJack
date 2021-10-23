@@ -14,6 +14,8 @@ MarketProcessGui::~MarketProcessGui()
 
 void MarketProcessGui::printValueToProgressBar(int currentVal, int maxVal){
 	int progressInt = (100 * currentVal / maxVal);
+	ui->progressBar->setValue(progressInt);
+	ui->progressBar->repaint();
 	if(progressInt == 100)
 		ui->startButton->setEnabled(true);
 }

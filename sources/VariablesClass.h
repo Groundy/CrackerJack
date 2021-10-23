@@ -10,7 +10,6 @@ public:
 
 	bool HealthAndManaRestorationShouldBeActive = false;
 	QImage wholeImg;
-	
 	QImage var_healthPieceImg;
 	QImage var_manaPieceImg;
 	QImage var_manaShieldPieceImg;

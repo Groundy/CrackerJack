@@ -42,9 +42,6 @@ void SelectProfileWindow::setUpGui(){
 
 	ui->label->setText(tr("Select Profile"));
 	ui->label->repaint();
-
-	this->setWindowTitle("CrackerJack - Select Profile Window");
-	this->repaint();
 }
 
 void SelectProfileWindow::readAndSetLastUsedProFromINI(){

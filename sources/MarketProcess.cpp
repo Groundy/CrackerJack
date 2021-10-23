@@ -170,11 +170,11 @@ QPoint MarketProcess::findTopLeftCornerOfMarketWin(){
 
 bool MarketProcess::askForScreenAndReadIt(){
 	//todo poprawic bez pojawiwa sie tych procesow
-	ScreenSaver t(NULL, this->var);
-	t.sendScreenRequestToGame(Key::HOME);//todo change
+	ScreenSaver::sendScreenRequestToGame(Key::HOME,var);
 	Sleep(1500);
-	ScreenAnalyzer tt(NULL, this->var, NULL);
-	bool ok = tt.loadScreen(currentImg);
+	ScreenAnalyzer screenLoader(NULL, this->var, NULL);
+	bool ok = screenLoader.loadScreen(currentImg);
+	screenLoader.deleteScreenShotFolder();
 	return ok;
 }
 
@@ -246,7 +246,7 @@ void MarketProcess::mainLoop() {
 	}
 	emit paintProgressOnBar(100,100);
 	QString text = tr("Finished");
-	//appendStrToTradeLog(tr("Finished."));
+	appendStrToTradeLog(tr("Finished."));
 	sendTextToDisplay(Actions::FINISHED,NULL);
 }
 
@@ -254,10 +254,12 @@ void MarketProcess::readAllMyOfferts() {
 	sendTextToDisplay(Actions::SCANNING_OFFER_LIST, NULL);
 	myCurrentOffers_BUY.clear();
 	myCurrentOffers_SELL.clear();
-	int possibleScrollsLeft = 13;
-	bool addedNewItems;
+	int timesScrolled = 0;
+	const int MAX_SCROLL_TIMES = 13;
 	int addedPositions_Sell = 1, addedPositions_Buy = 1;
+	bool addedNewItems;
 	do{
+		emit paintProgressOnBar(timesScrolled, MAX_SCROLL_TIMES);
 		askForScreenAndReadIt();
 		if (addedPositions_Sell != 0) {
 			addedPositions_Sell = appendDisplayedOfferts(myCurrentOffers_SELL, Type::SELL);
@@ -267,9 +269,9 @@ void MarketProcess::readAllMyOfferts() {
 			addedPositions_Buy = appendDisplayedOfferts(myCurrentOffers_BUY, Type::BUY);
 			scrollDownListOfmyOffers(Type::BUY);
 		}
-		possibleScrollsLeft--;
+		timesScrolled++;
 		addedNewItems = addedPositions_Buy > 0 || addedPositions_Sell > 0;
-	} while (addedNewItems && possibleScrollsLeft > 0 && loopEnabled);
+	} while (addedNewItems && (timesScrolled < MAX_SCROLL_TIMES) && loopEnabled);
 }
  
 bool MarketProcess::readFirstOffertsOfCurrentItem(int& price, int& amount, Type type){
@@ -428,8 +430,9 @@ void MarketProcess::cancelOffer(QString itemName, Type type){
 		for (int i = 0; i < list.size(); i++) {
 			offerFound = offerFound = itemNameModified == list[i].name;
 			if (offerFound) {
-				int xPosOnScreen = sellType ? pos.myOffersWin_amountColumn_SELL.x() : pos.myOffersWin_amountColumn_BUY.x();
-				int yPosOnScreen = sellType ? pos.myOffersWin_amountColumn_SELL.y() : pos.myOffersWin_amountColumn_BUY.y();
+				QRect amountColumnTopLeft = sellType ? pos.myOffersWin_amountColumn_SELL : pos.myOffersWin_amountColumn_BUY;
+				int xPosOnScreen = amountColumnTopLeft.x();
+				int yPosOnScreen = amountColumnTopLeft.y();
 				int heightOfAnyRow = pos.firstOffer_Amount_Sell.height();
 				yPosOnScreen += (i + 1.5) * heightOfAnyRow;
 				QString priceOfCanceledOfferStr = QString::number(list[i].price);
@@ -459,7 +462,9 @@ void MarketProcess::cancelOffer(QString itemName, Type type){
 		}
 		else if (!offerFound) {
 			QString arg = sellType ? tr("sell") : tr("buy");
-			QString text = tr("Failed in founding %1 offer in already posted offers.").arg(arg);
+			QString priceStr = QString::number(offerList->at(indexInListOffer).price);
+			QString amountStr = QString::number(offerList->at(indexInListOffer).amount);
+			QString text = tr("Failed in founding %1 %2 %3 offer in already posted offers.").arg(arg,amountStr,priceStr);
 			appendStrToTradeLog(text);
 		}
 	}

@@ -4,37 +4,37 @@
 <context>
     <name>LoginWindow</name>
     <message>
-        <location filename="sources/LoginWindow.cpp" line="69"/>
+        <location filename="sources/LoginWindow.cpp" line="65"/>
         <source>That combination of login and password doesn&apos;t exist.</source>
-        <translation type="unfinished"></translation>
+        <translation>To hasło nie pasuje do podanego loginu.</translation>
+    </message>
+    <message>
+        <location filename="sources/LoginWindow.cpp" line="77"/>
+        <source>Password</source>
+        <translation>Hasło</translation>
     </message>
     <message>
         <location filename="sources/LoginWindow.cpp" line="81"/>
-        <source>Password</source>
-        <translation type="unfinished"></translation>
+        <source>Remember password</source>
+        <translation>Przypomnij hasło</translation>
     </message>
     <message>
         <location filename="sources/LoginWindow.cpp" line="85"/>
-        <source>Remember password</source>
-        <translation type="unfinished"></translation>
+        <source>Log in</source>
+        <translation>Zaloguj</translation>
     </message>
     <message>
         <location filename="sources/LoginWindow.cpp" line="89"/>
-        <source>Log in</source>
-        <translation type="unfinished"></translation>
+        <source>Sign up</source>
+        <translation>Zarejestruj</translation>
     </message>
     <message>
         <location filename="sources/LoginWindow.cpp" line="93"/>
-        <source>Sign up</source>
-        <translation type="unfinished"></translation>
+        <source>Forgot your password?</source>
+        <translation>Zapomniałeś hasła?</translation>
     </message>
     <message>
         <location filename="sources/LoginWindow.cpp" line="97"/>
-        <source>Forgot your password?</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="sources/LoginWindow.cpp" line="101"/>
         <source>Version </source>
         <translation>Wersja</translation>
     </message>
@@ -44,37 +44,47 @@
     <message>
         <location filename="sources/LoginWindow.ui" line="35"/>
         <source>CrackerJackClient</source>
-        <translation type="unfinished"></translation>
+        <translation>CrackerJack</translation>
     </message>
     <message>
-        <location filename="sources/LoginWindow.ui" line="65"/>
+        <location filename="sources/LoginWindow.ui" line="58"/>
         <source>Password</source>
-        <translation type="unfinished"></translation>
+        <translation>Hasło</translation>
+    </message>
+    <message>
+        <location filename="sources/LoginWindow.ui" line="83"/>
+        <source>Log in</source>
+        <translation>Zaloguj</translation>
+    </message>
+    <message>
+        <location filename="sources/LoginWindow.ui" line="90"/>
+        <source>Sign up</source>
+        <translation>Zarejestruj</translation>
     </message>
     <message>
         <location filename="sources/LoginWindow.ui" line="97"/>
-        <source>CheckBox</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="sources/LoginWindow.ui" line="119"/>
-        <source>Log in</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="sources/LoginWindow.ui" line="126"/>
-        <source>Sign up</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="sources/LoginWindow.ui" line="133"/>
         <source>Forgot your password?</source>
-        <translation type="unfinished"></translation>
+        <translation>Zapomniałeś hasła?</translation>
     </message>
     <message>
-        <location filename="sources/LoginWindow.ui" line="292"/>
+        <location filename="sources/LoginWindow.ui" line="259"/>
         <source>Login</source>
-        <translation type="unfinished"></translation>
+        <translation>Login</translation>
+    </message>
+    <message>
+        <location filename="sources/LoginWindow.ui" line="291"/>
+        <source>Remember password</source>
+        <translation>Przypomnij hasło</translation>
+    </message>
+    <message>
+        <location filename="sources/LoginWindow.ui" line="320"/>
+        <source>eng</source>
+        <translation>eng</translation>
+    </message>
+    <message>
+        <location filename="sources/LoginWindow.ui" line="325"/>
+        <source>pl</source>
+        <translation>pl</translation>
     </message>
 </context>
 <context>
@@ -85,32 +95,28 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="sources/MainMenu.ui" line="56"/>
-        <location filename="sources/MainMenu.ui" line="116"/>
-        <location filename="sources/MainMenu.ui" line="123"/>
-        <location filename="sources/MainMenu.ui" line="130"/>
         <source>TextLabel</source>
-        <translation type="unfinished">&quot;&quot;</translation>
+        <translation type="obsolete">&quot;&quot;</translation>
     </message>
     <message>
         <location filename="sources/MainMenu.ui" line="72"/>
         <source>change profile</source>
-        <translation type="unfinished"></translation>
+        <translation>Zmień profil</translation>
     </message>
     <message>
         <location filename="sources/MainMenu.ui" line="85"/>
         <source>Edit Profile</source>
-        <translation type="unfinished"></translation>
+        <translation>Edytuj profil</translation>
     </message>
     <message>
         <location filename="sources/MainMenu.ui" line="98"/>
         <source>Help</source>
-        <translation type="unfinished"></translation>
+        <translation>Pomoc</translation>
     </message>
     <message>
         <location filename="sources/MainMenu.ui" line="109"/>
         <source>Auto Heal and Mana</source>
-        <translation type="unfinished"></translation>
+        <translation>Automatyczne leczenie</translation>
     </message>
     <message>
         <location filename="sources/MainMenu.ui" line="43"/>
@@ -122,29 +128,36 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="sources/MainMenu.ui" line="221"/>
+        <location filename="sources/MainMenu.ui" line="56"/>
+        <source>Profile:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="sources/MainMenu.ui" line="116"/>
+        <location filename="sources/MainMenu.ui" line="123"/>
+        <location filename="sources/MainMenu.ui" line="130"/>
+        <source>Resource: </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="sources/MainMenu.ui" line="241"/>
         <source>Trading</source>
-        <translation type="unfinished"></translation>
+        <translation>Handel</translation>
     </message>
     <message>
-        <location filename="sources/MainMenu.ui" line="228"/>
+        <location filename="sources/MainMenu.ui" line="221"/>
         <source>Hunting manually</source>
-        <translation type="unfinished"></translation>
+        <translation>polowanie ręczne</translation>
     </message>
     <message>
-        <location filename="sources/MainMenu.ui" line="235"/>
+        <location filename="sources/MainMenu.ui" line="268"/>
         <source>Hunting automatically</source>
-        <translation type="unfinished"></translation>
+        <translation>polowanie automatyczne</translation>
     </message>
     <message>
-        <location filename="sources/MainMenu.ui" line="242"/>
+        <location filename="sources/MainMenu.ui" line="248"/>
         <source>Skilling</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="sources/MainMenu.ui" line="249"/>
-        <source>what do you want to do?</source>
-        <translation type="unfinished"></translation>
+        <translation>Skillowanie</translation>
     </message>
     <message>
         <location filename="sources/MainMenu.ui" line="153"/>
@@ -154,65 +167,57 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="sources/MainMenu.ui" line="172"/>
         <source>health: </source>
-        <translation type="unfinished"></translation>
+        <translation>Życie: </translation>
     </message>
     <message>
         <location filename="sources/MainMenu.ui" line="191"/>
         <source>game status: </source>
-        <translation type="unfinished"></translation>
+        <translation>Status gry: </translation>
     </message>
     <message>
         <location filename="sources/MainMenu.ui" line="210"/>
         <source>mana: </source>
-        <translation type="unfinished"></translation>
+        <translation>Mana</translation>
     </message>
     <message>
-        <location filename="sources/MainMenu.cpp" line="28"/>
+        <location filename="sources/MainMenu.cpp" line="27"/>
         <source>Game status: </source>
-        <translation type="unfinished"></translation>
+        <translation>Status gry: </translation>
     </message>
     <message>
-        <location filename="sources/MainMenu.cpp" line="35"/>
+        <location filename="sources/MainMenu.cpp" line="34"/>
         <source>Game active, Logged</source>
-        <translation type="unfinished"></translation>
+        <translation>Gra włączona, gracz zalogowany</translation>
     </message>
     <message>
-        <location filename="sources/MainMenu.cpp" line="38"/>
+        <location filename="sources/MainMenu.cpp" line="37"/>
         <source>Game not found</source>
-        <translation type="unfinished"></translation>
+        <translation>Gra nie znaleziona</translation>
     </message>
     <message>
-        <location filename="sources/MainMenu.cpp" line="41"/>
+        <location filename="sources/MainMenu.cpp" line="40"/>
         <source>Game found but no access</source>
-        <translation type="unfinished"></translation>
+        <translation>Gra znaleziona, brak dostępu</translation>
     </message>
     <message>
-        <location filename="sources/MainMenu.cpp" line="44"/>
+        <location filename="sources/MainMenu.cpp" line="43"/>
         <source>Game active but no char logged</source>
-        <translation type="unfinished"></translation>
+        <translation>Gra znaleziona, gracz niezalogowany</translation>
     </message>
     <message>
-        <location filename="sources/MainMenu.cpp" line="47"/>
+        <location filename="sources/MainMenu.cpp" line="46"/>
         <source>Game is loading</source>
-        <translation type="unfinished"></translation>
+        <translation>Gra jest wczytywana</translation>
     </message>
     <message>
-        <location filename="sources/MainMenu.cpp" line="50"/>
+        <location filename="sources/MainMenu.cpp" line="49"/>
         <source>Error</source>
-        <translation type="unfinished"></translation>
+        <translation>Błąd</translation>
     </message>
     <message>
-        <location filename="sources/MainMenu.cpp" line="67"/>
-        <source>Health: </source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>ManaHealthStateAnalyzer</name>
-    <message>
-        <location filename="sources/ManaHealthStateAnalyzer.cpp" line="243"/>
-        <source>Calibrating</source>
-        <translation type="unfinished"></translation>
+        <location filename="sources/MainMenu.cpp" line="62"/>
+        <source>No data to display</source>
+        <translation>Brak danych</translation>
     </message>
 </context>
 <context>
@@ -391,7 +396,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="sources/Market.cpp" line="330"/>
         <source>Unexpected error occured, trading process will not begin.</source>
-        <translation type="unfinished"></translation>
+        <translation>Wystąpił nieoczekiwany błąd, proces handlu anulowany.</translation>
     </message>
     <message>
         <location filename="sources/Market.cpp" line="341"/>
@@ -419,81 +424,82 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="sources/MarketProcess.cpp" line="163"/>
         <source>Market window not detected.</source>
-        <translation type="unfinished"></translation>
+        <translation>Nie wykryto okna marketu.</translation>
     </message>
     <message>
         <location filename="sources/MarketProcess.cpp" line="248"/>
         <source>Finished</source>
-        <translation type="unfinished"></translation>
+        <translation>Zakończono.</translation>
     </message>
     <message>
-        <location filename="sources/MarketProcess.cpp" line="448"/>
-        <location filename="sources/MarketProcess.cpp" line="461"/>
-        <location filename="sources/MarketProcess.cpp" line="581"/>
+        <location filename="sources/MarketProcess.cpp" line="451"/>
+        <location filename="sources/MarketProcess.cpp" line="464"/>
+        <location filename="sources/MarketProcess.cpp" line="586"/>
         <source>sell</source>
-        <translation type="unfinished"></translation>
+        <translation>sprzedaży</translation>
     </message>
     <message>
-        <location filename="sources/MarketProcess.cpp" line="448"/>
-        <location filename="sources/MarketProcess.cpp" line="461"/>
-        <location filename="sources/MarketProcess.cpp" line="581"/>
+        <location filename="sources/MarketProcess.cpp" line="451"/>
+        <location filename="sources/MarketProcess.cpp" line="464"/>
+        <location filename="sources/MarketProcess.cpp" line="586"/>
         <source>buy</source>
-        <translation type="unfinished"></translation>
+        <translation>kupna</translation>
     </message>
     <message>
-        <location filename="sources/MarketProcess.cpp" line="449"/>
+        <location filename="sources/MarketProcess.cpp" line="452"/>
         <source>Canceled %1  %2  %3 offer for %4 each</source>
-        <translation type="unfinished"></translation>
+        <translation>Anulowanie oferty %1 %2 %3 po cenie %4</translation>
     </message>
     <message>
-        <location filename="sources/MarketProcess.cpp" line="462"/>
-        <source>Failed in founding %1 offer in already posted offers.</source>
-        <translation type="unfinished"></translation>
+        <location filename="sources/MarketProcess.cpp" line="467"/>
+        <source>Failed in founding %1 %2 %3 offer in already posted offers.</source>
+        <translation>Nie udało się znaleźć oferty %1 %2 w cenie %3</translation>
     </message>
     <message>
-        <location filename="sources/MarketProcess.cpp" line="582"/>
+        <location filename="sources/MarketProcess.cpp" line="587"/>
         <source>Placed offer to %1 %2 %3 for %4 each</source>
-        <translation type="unfinished"></translation>
+        <translation>Wystawiono oferte %1 %2 %3 za cene %4</translation>
     </message>
     <message>
-        <location filename="sources/MarketProcess.cpp" line="616"/>
+        <location filename="sources/MarketProcess.cpp" line="621"/>
         <source>Bought %1 %2 for %3 each</source>
-        <translation type="unfinished"></translation>
+        <translation>Kupiono %1 %2 po cenie %3</translation>
     </message>
     <message>
-        <location filename="sources/MarketProcess.cpp" line="627"/>
+        <location filename="sources/MarketProcess.cpp" line="632"/>
         <source>Searching for market Window.</source>
-        <translation type="unfinished"></translation>
+        <translation>Wyszukiwanie pozycji okna marketu.</translation>
     </message>
     <message>
-        <location filename="sources/MarketProcess.cpp" line="630"/>
+        <location filename="sources/MarketProcess.cpp" line="635"/>
         <source>Scanning list of already posted offers.</source>
-        <translation type="unfinished"></translation>
+        <translation>Przeszukiwanie listy już zamieszczonych ofert.</translation>
     </message>
     <message>
-        <location filename="sources/MarketProcess.cpp" line="633"/>
+        <location filename="sources/MarketProcess.cpp" line="638"/>
         <source>Searching: </source>
-        <translation type="unfinished"></translation>
+        <translation>Szukanie: </translation>
     </message>
     <message>
-        <location filename="sources/MarketProcess.cpp" line="636"/>
+        <location filename="sources/MarketProcess.cpp" line="641"/>
         <source>Placing offer: </source>
-        <translation type="unfinished"></translation>
+        <translation>Wstawianie oferty: </translation>
     </message>
     <message>
-        <location filename="sources/MarketProcess.cpp" line="639"/>
+        <location filename="sources/MarketProcess.cpp" line="644"/>
         <source>Canceling offer </source>
-        <translation type="unfinished"></translation>
+        <translation>Anulowanie oferty: </translation>
     </message>
     <message>
-        <location filename="sources/MarketProcess.cpp" line="642"/>
+        <location filename="sources/MarketProcess.cpp" line="249"/>
+        <location filename="sources/MarketProcess.cpp" line="647"/>
         <source>Finished.</source>
-        <translation type="unfinished"></translation>
+        <translation>Zakończono.</translation>
     </message>
     <message>
-        <location filename="sources/MarketProcess.cpp" line="645"/>
+        <location filename="sources/MarketProcess.cpp" line="650"/>
         <source>Stopping process.</source>
-        <translation type="unfinished"></translation>
+        <translation>Zatrzymawanie.</translation>
     </message>
 </context>
 <context>
@@ -611,7 +617,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="sources/NewProfileConfiguartor.ui" line="1320"/>
         <source>Help</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Pomoc</translation>
     </message>
     <message>
         <location filename="sources/NewProfileConfiguartor.ui" line="1333"/>
@@ -961,7 +967,7 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="sources/SelectProfileWindow.cpp" line="122"/>
+        <location filename="sources/SelectProfileWindow.cpp" line="119"/>
         <source>Do you really want to delete profile </source>
         <translation type="unfinished"></translation>
     </message>
@@ -1095,7 +1101,7 @@ p, li { white-space: pre-wrap; }
         <location filename="sources/RouteCreator.ui" line="609"/>
         <location filename="sources/RouteCreator.cpp" line="297"/>
         <source>Help</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Pomoc</translation>
     </message>
     <message>
         <location filename="sources/RouteCreator.ui" line="616"/>
@@ -1235,6 +1241,14 @@ p, li { white-space: pre-wrap; }
     </message>
 </context>
 <context>
+    <name>ScreenAnalyzer</name>
+    <message>
+        <location filename="sources/ScreenAnalyzer.cpp" line="104"/>
+        <source>Could not find game screenshot folder.</source>
+        <translation>Nie odnaleziono folderu z rzutami ekranu z gry.</translation>
+    </message>
+</context>
+<context>
     <name>SelectProfileWindow</name>
     <message>
         <location filename="sources/SelectProfileWindow.ui" line="14"/>
@@ -1245,37 +1259,37 @@ p, li { white-space: pre-wrap; }
         <location filename="sources/SelectProfileWindow.ui" line="38"/>
         <location filename="sources/SelectProfileWindow.cpp" line="43"/>
         <source>Select Profile</source>
-        <translation type="unfinished"></translation>
+        <translation>Wybierz profil</translation>
     </message>
     <message>
         <location filename="sources/SelectProfileWindow.ui" line="117"/>
         <source>Add Profile</source>
-        <translation type="unfinished"></translation>
+        <translation>Dodaj profil</translation>
     </message>
     <message>
         <location filename="sources/SelectProfileWindow.ui" line="124"/>
         <source>Edit Profile</source>
-        <translation type="unfinished"></translation>
+        <translation>edytuj profil</translation>
     </message>
     <message>
         <location filename="sources/SelectProfileWindow.ui" line="131"/>
         <source>Delete Profile</source>
-        <translation type="unfinished"></translation>
+        <translation>usuń profil</translation>
     </message>
     <message>
         <location filename="sources/SelectProfileWindow.cpp" line="32"/>
         <source>Add profile</source>
-        <translation type="unfinished"></translation>
+        <translation>dodaj profil</translation>
     </message>
     <message>
         <location filename="sources/SelectProfileWindow.cpp" line="36"/>
         <source>Edit profile</source>
-        <translation type="unfinished"></translation>
+        <translation>edytuj profil</translation>
     </message>
     <message>
         <location filename="sources/SelectProfileWindow.cpp" line="40"/>
         <source>Delete profile</source>
-        <translation type="unfinished"></translation>
+        <translation>usuń profil</translation>
     </message>
 </context>
 <context>
@@ -1289,7 +1303,7 @@ p, li { white-space: pre-wrap; }
         <location filename="sources/SetNameWidnow.ui" line="22"/>
         <location filename="sources/SetNameWidnow.cpp" line="14"/>
         <source>Cancel</source>
-        <translation type="unfinished">Anuluj</translation>
+        <translation>Anuluj</translation>
     </message>
     <message>
         <location filename="sources/SetNameWidnow.ui" line="41"/>
@@ -1299,7 +1313,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="sources/SetNameWidnow.ui" line="51"/>
         <source>Ok</source>
-        <translation type="unfinished"></translation>
+        <translation>OK</translation>
     </message>
 </context>
 </TS>

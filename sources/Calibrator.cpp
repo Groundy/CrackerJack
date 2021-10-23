@@ -648,21 +648,18 @@ int Calibrator::categorizeWindows(QImage& fullscreen, QList<QRect>& importantRec
 
 	//game Frame
 	{
-		QList<int> surphacesOfFrames;
-		for each (QRect var in importantRectangles) {
-			int surf = var.width() * var.height();
-			surphacesOfFrames.push_back(surf);
-		}
-
-		int indexOfBiggestValue = 0, previousBiggestValue = 0;
-		for (size_t i = 0; i < surphacesOfFrames.size(); i++) {
-			if (surphacesOfFrames[i] > previousBiggestValue) {
-				previousBiggestValue = surphacesOfFrames[i];
-				indexOfBiggestValue = i;
+		int indexOfBiggestWindow = 0;
+		int biggestSurface = 0;
+		for (size_t i = 0; i < importantRectangles.size(); i++){
+			QRect rect = importantRectangles[i];
+			int surf = rect.width() * rect.height();
+			if (surf > biggestSurface) {
+				biggestSurface = surf;
+				indexOfBiggestWindow = i;
 			}
 		}
-		profile->frames.gameFrame = importantRectangles[indexOfBiggestValue];
-		importantRectangles.removeAt(indexOfBiggestValue);
+		profile->frames.gameFrame = importantRectangles[indexOfBiggestWindow];
+		importantRectangles.removeAt(indexOfBiggestWindow);
 	}
 
 	//indexOfHealth, indexOfMana, indexOfManaShield, howTheyShouldBeRotated, indexOfCombinedBox;

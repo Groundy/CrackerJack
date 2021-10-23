@@ -4,10 +4,6 @@
 LoginWindow::LoginWindow(QWidget* parent) :
 	QDialog(parent) {
 	ui.setupUi(this);
-
-	ui.laungageComboBox->addItem("eng");
-	ui.laungageComboBox->addItem("pl");
-
 	QString login = Utilities::readFromIniFile(Utilities::FieldsOfIniFile::LAST_USED_LOGIN);
 	bool setChecked = login.size() > 0;
 	ui.loginLine->setText(login);

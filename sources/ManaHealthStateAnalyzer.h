@@ -28,7 +28,7 @@ public slots:
 	void setThreadEnabilityToRun(bool stateToSet);
 signals:
 	void demandReCalibration();
-	void sendValueToMainThread(QString, QString, QString);
+	void sendValueToMainThread(double, double, double);
 	void sendInfoAboutPotAmountsToGUI(QStringList);
 
 private:
@@ -51,15 +51,13 @@ private:
 	LONG64 lastTimeAnalyzed = 0;
 
 	int extraTimeToWaitBetweenManaPotUse = 1400;
-	bool getInfoFromVarClass();
+	void getInfoFromVarClass();
 	void mainLoop();
 	int changeImgsToStrings();
 	void getValuesFromStringsToGlobablVariables();
 	void PreapareAndSendInfoToGuiInMainThread();
 	int getValuesFromStringRegularCase(QString in, int& min, int& max);
-	int getValuesFromStringOfCombinedBox(QString in, int* minMana, int* maxMana, int* minManaShield, int* maxManaShield);
-	int makeStringsForSignalToSend(QString* health, QString* mana, QString* manaShield);
-	int findNearestThresholdIndex(int value, QList<int> thresholds, int& out_index);
+	int getValuesFromStringOfCombinedBox(QString in, int* minMana, int* maxMana, int* minManaShield, int* maxManaShield);	int findNearestThresholdIndex(int value, QList<int> thresholds, int& out_index);
 	bool checkIfEverythingIsCorrectToProcess();
 	void writeDataToVariableClass();
 	void setupRestorationMethodes(QStringList listOfRestorationMethode_Health, QStringList listOfRestorationMethode_Mana);

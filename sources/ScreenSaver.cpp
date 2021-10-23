@@ -2,14 +2,15 @@
 
 ScreenSaver::ScreenSaver(QObject* parent, VariablesClass* varClass)
 	: QThread(parent){
-	var = varClass;
+	variables = varClass;
 }
 
 ScreenSaver::~ScreenSaver(){
 	this->terminate();
 }
 
-void ScreenSaver::sendScreenRequestToGame(Key keyCodeForScreen){
+
+void ScreenSaver::sendScreenRequestToGame(Key keyCodeForScreen, VariablesClass* var){
 	uint pid = var->var_pidOfGame;
 	QString winTitle = var->var_winTitleOfGame;
 	bool wrongParameters = pid == 0 || winTitle.isEmpty();
@@ -27,7 +28,7 @@ void ScreenSaver::screenLoop(){
 			msleep(5 * timeBetweenScreens);
 			continue;
 		}
-		sendScreenRequestToGame(Key::HOME);
+		sendScreenRequestToGame(Key::HOME, variables);
 		msleep(timeBetweenScreens);
 	}
 }

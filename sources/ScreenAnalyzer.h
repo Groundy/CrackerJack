@@ -29,11 +29,9 @@ public:
 	void run();
 	bool enableScreenAnalyzer = true;
 	int loadScreen(QImage& img);
+	void deleteScreenShotFolder();
 signals:
 	void sendAllowenceToAnalyze(bool state);
-
-
-
 private:
 	VariablesClass* var;
 	Profile* profile;
@@ -43,10 +41,9 @@ private:
 
 	void mainLoop();
 	int cutImportantImgsFromWholeScreenAndSendThemToVarClass(QImage& fullscreen);
-	void deleteScreenShotFolder();
 	QString getNameOfLastTakenScreenShot();
-	int getNameOfLastTakenScreenShotForSure(QString& toRet, int maxTries);
-	QString pathToScreenFolder;
-	void setUpScreenFolder();
+	int getNameOfLastTakenScreenshotWithTries(QString& toRet, const int maxTries);
+	QDir screenShotFolder;
+	QDir setUpScreenFolder();
 	void notifyOtherProcessOfStateOfAnalyzer(bool worksGood);
 };

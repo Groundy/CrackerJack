@@ -11,7 +11,6 @@ MainMenu::MainMenu(Profile* selectedProf, QWidget* parent)
 	threadStarter();
 	signalSlotConnector();
 	this->activityThread->exit();
-	test();
 }
 
 MainMenu::~MainMenu(){
@@ -59,31 +58,23 @@ void MainMenu::onGameStateChanged(int state){
 	
 }
 
-void MainMenu::changedValueOfCharHealthOrMana(QString healthPercentage, QString manaPercentage, QString manaShieldPercentage){
-	if(healthPercentage == CALIBRATION_STRING_ENG || healthPercentage == CALIBRATION_STRING_PL)
-		ui->healthInfoLabel->setText(healthPercentage);
-	else {
-		QString tmpHealth = healthPercentage.rightJustified(3, ' ');
-		QString healthFinal = tr("Health: ") + tmpHealth;
-		ui->healthInfoLabel->setText(healthFinal);
-	}
-
-	if (manaPercentage == CALIBRATION_STRING_ENG || manaPercentage == CALIBRATION_STRING_PL)
-		ui->healthInfoLabel->setText(manaPercentage);
-	else {
-		QString tmpMana = manaPercentage.rightJustified(3, ' ');
-		QString manaFinal = "Mana: " + tmpMana;
-		ui->manaInfoLabel->setText(manaFinal);
-	}
-
-	if (manaShieldPercentage == CALIBRATION_STRING_ENG || manaShieldPercentage == CALIBRATION_STRING_PL)
-		ui->healthInfoLabel->setText(manaShieldPercentage);
-	else {
-		QString tmpManaShield = manaShieldPercentage.rightJustified(3, ' ');
-		QString manaShieldFinal = "Mana shield: " + tmpManaShield;
-		ui->manaShieldLabel->setText(manaShieldFinal);
-	}
-
+void MainMenu::changedValueOfCharHealthOrMana(double healthPercentage, double manaPercentage, double manaShieldPercentage){
+	const QString NO_DATA_INFO = tr("No data to display");
+	bool thereIsHealthData = healthPercentage >= 0 && healthPercentage <= 100 && healthPercentage != NULL;
+	bool thereIsManaData = manaPercentage >= 0 && manaPercentage <= 100 && manaPercentage != NULL;
+	bool thereIsManaShieldData = manaShieldPercentage >= 0 && manaShieldPercentage <= 100 && manaShieldPercentage != NULL;
+	QString tmpHealth = QString::number(healthPercentage, 'g', 3) + "%";
+	QString tmpMana = QString::number(manaPercentage, 'g', 3) + "%";
+	QString tmpManaShield = QString::number(manaShieldPercentage, 'g', 3) + "%";
+	QString lifeStr = thereIsHealthData ? tmpHealth : NO_DATA_INFO;
+	QString manaStr = thereIsManaData ? tmpMana : NO_DATA_INFO;
+	QString mShield = thereIsManaShieldData ? tmpManaShield : NO_DATA_INFO;
+	lifeStr.push_front("Health: ");
+	manaStr.push_front("Mana: ");
+	mShield.push_front("Mana shield: ");
+	ui->healthInfoLabel->setText(lifeStr);
+	ui->manaInfoLabel->setText(manaStr);
+	ui->manaShieldLabel->setText(mShield);
 	ui->healthInfoLabel->repaint();
 	ui->manaInfoLabel->repaint();
 	ui->manaShieldLabel->repaint();
@@ -114,8 +105,8 @@ void MainMenu::signalSlotConnector(){
 
 	sigSender = healthManaStateAnalyzer;
 	slotRec = this;
-	sig = SIGNAL(sendValueToMainThread(QString, QString, QString));
-	slot = SLOT(changedValueOfCharHealthOrMana(QString, QString, QString));
+	sig = SIGNAL(sendValueToMainThread(double, double, double));
+	slot = SLOT(changedValueOfCharHealthOrMana(double, double, double));
 	bool connectionAccepted_2 = connect(sigSender, sig, slotRec, slot, Qt::UniqueConnection);
 
 	sigSender = this->screenAnalyzer;
@@ -175,6 +166,8 @@ void MainMenu::autoHuntAction(){
 }
 
 void MainMenu::tradingAction(){
+	Market market(&var);
+	market.exec();
 }
 
 void MainMenu::skillingAction(){
@@ -188,10 +181,9 @@ void MainMenu::getAndDisplayPotionAmountInfo(QStringList list){
 	labels.push_back(ui->potion_label_3);
 
 	for (size_t i = 0; i < MAX_POSIBLE_LIST_LENGTH; i++){
-		QString textToSet;
 		bool shouldBeDisplayed = i < list.size();
 		if (shouldBeDisplayed) {
-			textToSet = shouldBeDisplayed ? list[i] : "";
+			QString textToSet = shouldBeDisplayed ? list[i] : QString();
 			labels[i]->setText(textToSet);	
 		}
 		labels[i]->setVisible(shouldBeDisplayed);

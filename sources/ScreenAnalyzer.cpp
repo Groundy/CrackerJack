@@ -4,7 +4,7 @@ ScreenAnalyzer::ScreenAnalyzer(QObject *parent, VariablesClass *varClass, Profil
 	: QThread(parent){
 	var = varClass;
 	profile = profToSet;
-	setUpScreenFolder();
+	screenShotFolder = setUpScreenFolder();
 	/*
 	[CHANGE]
 	QStringList listOfPotionNamesToLookFor;
@@ -40,18 +40,20 @@ void ScreenAnalyzer::run() {
 
 int ScreenAnalyzer::loadScreen(QImage& img){
 	QString nameOfImgToCapture;
-	ERROR_CODE code = (ERROR_CODE)getNameOfLastTakenScreenShotForSure(nameOfImgToCapture, 55);
+	ERROR_CODE code = (ERROR_CODE)getNameOfLastTakenScreenshotWithTries(nameOfImgToCapture, 55);
 	if (code != OK)
 		return code;
-	QString pathToImg = pathToScreenFolder + QString("\\") + nameOfImgToCapture;
-	auto openCorrectly = img.load(pathToImg);
+	QString pathToImg = screenShotFolder.absoluteFilePath(nameOfImgToCapture);
+	bool openCorrectly = img.load(pathToImg);
 	int toRet = openCorrectly ? OK : CANT_LOAD_SCREEN_FROM_SCREENSHOT_FOLDER;
 	return toRet;
 }
 
+
 QString ScreenAnalyzer::getNameOfLastTakenScreenShot(){
-	QDir directory(pathToScreenFolder);
-	QStringList litOfFIles = directory.entryList(QStringList() << "*.png", QDir::Files);
+	QStringList filtr = QStringList() << "*_*_*_Hotkey.png";
+	screenShotFolder.refresh();
+	QStringList litOfFIles = screenShotFolder.entryList(filtr, QDir::Files);
 	if (litOfFIles.isEmpty())
 		return QString();
 
@@ -76,8 +78,8 @@ QString ScreenAnalyzer::getNameOfLastTakenScreenShot(){
 	return toRet;
 }
 
-int ScreenAnalyzer::getNameOfLastTakenScreenShotForSure(QString& toRet, int MaxTries) {
-	for (int tries = 0; tries < MaxTries; tries++) {
+int ScreenAnalyzer::getNameOfLastTakenScreenshotWithTries(QString& toRet, const int MAX_TRIES) {
+	for (int tries = 0; tries < MAX_TRIES; tries++) {
 		toRet = getNameOfLastTakenScreenShot();
 		if (!toRet.isEmpty())
 			return ERROR_CODE::OK;
@@ -88,26 +90,23 @@ int ScreenAnalyzer::getNameOfLastTakenScreenShotForSure(QString& toRet, int MaxT
 	return CANT_LOAD_SCREEN_FROM_SCREENSHOT_FOLDER;
 }
 
-void ScreenAnalyzer::setUpScreenFolder(){
+QDir ScreenAnalyzer::setUpScreenFolder(){
 	QDir dir = QDir::tempPath();
-	dir.cdUp();
-	QString pathToTmpFolder = dir.path();
-
-	QString pathToTibiaDir = pathToTmpFolder + "/Tibia";
-	bool TibiaDirExist = QDir(pathToTibiaDir).exists();
-	if (!TibiaDirExist) {
-		//TODO tu jest fatal error
-		Logger::logPotenialBug("Can't find game instalation directory", "ScreenAnalyzer", "setUpScreenFolder");
-		return;
+	bool ok1 = dir.cdUp();
+	bool ok2 = dir.cd("Tibia");
+	bool ok3 = dir.cd("packages");
+	bool ok4 = dir.cd("Tibia");
+	bool ok5 = dir.cd("screenshots");
+	bool ok = ok1 && ok2 && ok3 && ok4 && ok5;
+	if (ok)
+		return dir;
+	else {
+		QString textToUser = tr("Could not find game screenshot folder.");
+		QString logText = "Could not find game screenshot folder.";
+		Logger::logPotenialBug(logText, "ScreenAnalyzer", "setUpScreenFolder");
+		Utilities::showMessageBox_INFO(textToUser);
+		return QDir();
 	}
-	QString wholePathToScreenFolder = pathToTibiaDir + "/packages/Tibia/screenshots";
-	bool screenFolderExist = QDir(wholePathToScreenFolder).exists();
-	if (!screenFolderExist) {
-		//TODO tu jest fatal error
-		Logger::logPotenialBug("Screenshot folder inside game directory does not exist", "ScreenAnalyzer", "setUpScreenFolder");
-		return;
-	}
-	pathToScreenFolder = wholePathToScreenFolder;
 }
 
 void ScreenAnalyzer::notifyOtherProcessOfStateOfAnalyzer(bool worksGood){
@@ -126,14 +125,13 @@ void ScreenAnalyzer::notifyOtherProcessOfStateOfAnalyzer(bool worksGood){
 }
 
 void ScreenAnalyzer::deleteScreenShotFolder(){
-	QDir dir(pathToScreenFolder);
 	QStringList filterPatter("*_*_*_Hotkey.png");//yyyy-MM-dd_hhmmsszzzz_CharNick_Methode.png
-	dir.setNameFilters(filterPatter);
-	dir.setFilter(QDir::Files);
+	screenShotFolder.setNameFilters(filterPatter);
+	screenShotFolder.setFilter(QDir::Files);
 
-	QStringList namesOfFoundFiles = dir.entryList();
+	QStringList namesOfFoundFiles = screenShotFolder.entryList();
 	foreach(QString dirFile, namesOfFoundFiles)
-		dir.remove(dirFile);
+		screenShotFolder.remove(dirFile);
 }
 
 void ScreenAnalyzer::mainLoop(){
