@@ -270,36 +270,6 @@ QString Utilities::letterImgToLetterCodeStr(QImage* SingleLetterImg) {
     return toRet;
  }
 
-void Utilities::TOOL_clearBaseMent(VariablesClass* var){
-	QPoint pt(800,330);//topleft
-	int width = 60;
-	Key key(Key::F1);
-	QList<QPoint> pts;
-	pts.push_back(QPoint(pt.x() + 0 * width, pt.y() + 0 * width));
-	pts.push_back(QPoint(pt.x() + 0 * width, pt.y() + 1 * width));
-	//pts.push_back(QPoint(pt.x() + 0 * width, pt.y() + 2 * width));
-	pts.push_back(QPoint(pt.x() + 1 * width, pt.y() + 0 * width));
-	pts.push_back(QPoint(pt.x() + 1 * width, pt.y() + 1 * width));
-	//pts.push_back(QPoint(pt.x() + 1 * width, pt.y() + 2 * width));
-	pts.push_back(QPoint(pt.x() + 2 * width, pt.y() + 0 * width));
-	pts.push_back(QPoint(pt.x() + 2 * width, pt.y() + 1 * width));
-	//pts.push_back(QPoint(pt.x() + 2 * width, pt.y() + 2 * width));
-	HWND handler = getHandlerToGameWindow(var->var_pidOfGame, var->var_winTitleOfGame);
-	//pt = QPoint(pt.x() + 1 * width, pt.y() + 1 * width);
-	while (true){
-		for each (QPoint pt in pts){
-			Sleep(999);
-			Utilities::sendKeyStrokeToProcess(Key::F1, var->var_pidOfGame, var->var_winTitleOfGame);
-			Utilities::clickLeft(pt, handler);
-		}
-/*
-		Sleep(1250);
-		Utilities::sendKeyStrokeToProcess(Key::F1, var->var_pidOfGame, var->var_winTitleOfGame);
-		Utilities::clickLeft(pt, handler);
-		*/
-	}
-}
-
 QString Utilities::StrCodeToLetter(QString code){
     //todo, it's terrible solution, it has to be changed
 	QMap<QString, QString> letters = getQmapWithCodes();

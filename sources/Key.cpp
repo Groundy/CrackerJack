@@ -1,97 +1,56 @@
 #include "Key.h"
 
-bool Key::checkIfnumberIsAloowed(int keyNumber){
-	for (size_t i = 0; i < 256; i++) {
-		if (KEYS(i) == KEYS(keyNumber))
-			return true;
-	}
-	return false;
+QStringList Key::getListOfAllPossibleKeys(){
+	return KeysAndCodesMap.keys();
+}
+
+Key::Key(int codeOfKey){
+	bool thereIsSuchCode = KeysAndCodesMap.values().contains(codeOfKey);
+	this->number = thereIsSuchCode ? codeOfKey : -1;
+}
+
+Key::Key(QString keyCodeAsStr){
+	this->number = KeysAndCodesMap.value(keyCodeAsStr, -1);
 }
 
 Key::Key(){
-	number = endOfEnum;
+	this->number = -1;
 }
 
-Key::Key(int numberToSet){
-	bool isAllowed = checkIfnumberIsAloowed(numberToSet);
-	numberToSet = isAllowed ? numberToSet : -1;
-	this->number = numberToSet;
-	if (this->number == -1)
-		Logger::logPotenialBug("Empty key was created", "Key", "Key(constructor)");
-}
-
-Key::Key(QKeySequence qsec){
-	QString str = qsec.toString();
-	int keyValue;
-	if (str == "F1") keyValue = KEYS(F1);
-	else if (str == "F2") keyValue = KEYS(F2);
-	else if (str == "F3") keyValue = KEYS(F3);
-	else if (str == "F4") keyValue = KEYS(F4);
-	else if (str == "F5") keyValue = KEYS(F5);
-	else if (str == "F6") keyValue = KEYS(F6);
-	else if (str == "F7") keyValue = KEYS(F7);
-	else if (str == "F8") keyValue = KEYS(F8);
-	else if (str == "F9") keyValue = KEYS(F9);
-	else if (str == "F10") keyValue = KEYS(F10);
-	else if (str == "F11") keyValue = KEYS(F11);
-	else if (str == "F12") keyValue = KEYS(F12);
-	else if (str == "0") keyValue = KEYS(n0);
-	else if (str == "1") keyValue = KEYS(n1);
-	else if (str == "2") keyValue = KEYS(n2);
-	else if (str == "3") keyValue = KEYS(n3);
-	else if (str == "4") keyValue = KEYS(n4);
-	else if (str == "5") keyValue = KEYS(n5);
-	else if (str == "6") keyValue = KEYS(n6);
-	else if (str == "7") keyValue = KEYS(n7);
-	else if (str == "8") keyValue = KEYS(n8);
-	else if (str == "9") keyValue = KEYS(n9);
-	else if (str == "Esc") keyValue = KEYS(ESC);
-	else if (str == "Ins") keyValue = KEYS(INSERT);
-	else if (str == "Del") keyValue = KEYS(DELETE_);
-	else if (str == "Home") keyValue = KEYS(HOME);
-	else if (str == "End") keyValue = KEYS(END);
-	else if (str == "PgUp") keyValue = KEYS(PAGEUP);
-	else if (str == "PgDown") keyValue = KEYS(PAGEDOWN);
-	else if (str == "ScrollLock") keyValue = KEYS(ScrollLock);
-	else if (str == "Pause") keyValue = KEYS(PauseBreak);
-	else if (str == "/") keyValue = KEYS(SLASH);
-	else if (str == "*") keyValue = KEYS(ASTERIX);
-	else if (str == "-") keyValue = KEYS(MINUS);
-	else if (str == "+") keyValue = KEYS(PLUS);
-	else  keyValue = KEYS(endOfEnum);
-	number = keyValue;
-}
-
-QKeySequence Key::toQKeySequence(Key key){
-	int keyValue = key.number;
-	QString toRetStr;
-	bool isFKey = keyValue >= F1 && keyValue <= F12;
-	bool isNumber = keyValue >= n0 && keyValue <= n9;
-	if (isFKey) {
-		toRetStr = "F";
-		int fkey = keyValue - F1 + 1;
-		toRetStr.append(QString::number(fkey));
-	}
-	else if (isNumber) {
-		int key = keyValue - n0 + 1;
-		const int codeOfValueZeroInDataBase = 57;
-		bool zeroValueShouldBeDisplayed = keyValue == codeOfValueZeroInDataBase;
-		toRetStr = zeroValueShouldBeDisplayed ? QString::number(0) : QString::number(key);
-	}
-	else if (keyValue == ESC) toRetStr = "Esc";
-	else if (keyValue == INSERT) toRetStr = "Ins";
-	else if (keyValue == DELETE_) toRetStr = "Del";
-	else if (keyValue == HOME) toRetStr = "Home";
-	else if (keyValue == END) toRetStr = "End";
-	else if (keyValue == PAGEUP) toRetStr = "PgUp";
-	else if (keyValue == PAGEDOWN) toRetStr = "PgDown";
-	else if (keyValue == ScrollLock) toRetStr = "ScrollLock";
-	else if (keyValue == PauseBreak) toRetStr = "Pause";
-	else if (keyValue == SLASH) toRetStr = "/";
-	else if (keyValue == ASTERIX) toRetStr = "*";
-	else if (keyValue == MINUS) toRetStr = "-";
-	else if (keyValue == PLUS) toRetStr =  "+";
-	else toRetStr = "";
-
-	return QKeySequence(toRetStr);
-}
+QMap<QString, int> Key::KeysAndCodesMap = {
+	{"F1", 0x70},
+	{"F2", 0x71},
+	{"F3", 0x72},
+	{"F4", 0x73},
+	{"F5", 0x74},
+	{"F6", 0x75},
+	{"F7", 0x76},
+	{"F8", 0x77},
+	{"F9", 0x78},
+	{"F10", 0x79},
+	{"F11", 0x7A},
+	{"F12", 0x7B},
+	{"0", 48},
+	{"1", 49},
+	{"2", 50},
+	{"3", 51},
+	{"4", 52},
+	{"5", 53},
+	{"6", 54},
+	{"7", 55},
+	{"8", 56},
+	{"9", 57},
+	{"ESC", 27},
+	{"INSERT", 45},
+	{"DELETE", 46},
+	{"HOME", 36},
+	{"END", 35},
+	{"PAGEUP", 33},
+	{"PAGEDOWN", 34},
+	{"ScrollLock", 91},
+	{"PauseBreak", 19},
+	{"/", 111},
+	{"*", 106},
+	{"-", 100},
+	{"+", 107}
+};

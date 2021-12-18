@@ -170,7 +170,7 @@ QPoint MarketProcess::findTopLeftCornerOfMarketWin(){
 
 bool MarketProcess::askForScreenAndReadIt(){
 	//todo poprawic bez pojawiwa sie tych procesow
-	ScreenSaver::sendScreenRequestToGame(Key::HOME,var);
+	ScreenSaver::sendScreenRequestToGame(Key("HOME"),var);
 	Sleep(1500);
 	ScreenAnalyzer screenLoader(NULL, this->var, NULL);
 	bool ok = screenLoader.loadScreen(currentImg);

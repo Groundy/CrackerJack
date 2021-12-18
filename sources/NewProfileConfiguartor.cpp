@@ -20,7 +20,9 @@ NewProfileConfiguartor::~NewProfileConfiguartor(){
 
 void NewProfileConfiguartor::refreshGUI(){
 	QString page = tr("Page ");
-	QString labelPageInfoText = page + QString::number(pageNumber) + "/" + QString::number(MAX_PAGE);
+	QString currentPageStr = QString::number(pageNumber);
+	QString maxPageStr = QString::number(MAX_PAGE);
+	QString labelPageInfoText = page + currentPageStr + "/" + maxPageStr;
 	ui->pageLabel->setText(labelPageInfoText);
 	ui->pageLabel->repaint();
 
@@ -46,19 +48,23 @@ bool NewProfileConfiguartor::finishAddingNewProfile(){
 void NewProfileConfiguartor::additionalGuiSettings(){
 	ui->_3_spinGetNumberOfMethodes->setMinimum(0);
 	ui->_3_spinGetNumberOfMethodes->setMaximum(5);
-
+	QStringList allPossibleKeys = Key::getListOfAllPossibleKeys();
 	for (size_t i = 0; i < MAX_NUMBER_OF_ACTIVE_WIDGETS; i++) {
 		guiPtrs.sliderOnPage_3[i]->setEnabled(false);
 		guiPtrs.labelsOnPage_3[i]->setEnabled(false);
 		guiPtrs.labelsOnPage_3[i]->setText("       ");
 		guiPtrs.boxesOnPage_3[i]->setEnabled(false);
+		guiPtrs.keyShortCutsOnPage_3[i]->addItems(allPossibleKeys);
 		guiPtrs.keyShortCutsOnPage_3[i]->setEnabled(false);
+		guiPtrs.keyShortCutsOnPage_3[i]->repaint();
 		guiPtrs.boxesOnPage_3[i]->setCurrentIndex(-1);
 
 		guiPtrs.sliderOnPage_4[i]->setEnabled(false);
 		guiPtrs.labelsOnPage_4[i]->setText("       ");
 		guiPtrs.labelsOnPage_4[i]->setEnabled(false);
 		guiPtrs.boxesOnPage_4[i]->setEnabled(false);
+		guiPtrs.keyShortCutsOnPage_4[i]->addItems(allPossibleKeys);
+		guiPtrs.keyShortCutsOnPage_4[i]->repaint();
 		guiPtrs.keyShortCutsOnPage_4[i]->setEnabled(false);
 		guiPtrs.boxesOnPage_4[i]->setCurrentIndex(-1);
 	}
@@ -141,16 +147,16 @@ void NewProfileConfiguartor::saveDataToProfile(Profile* prof) {
 			prof->healthRestorePercentages.push_back(thresholdOfSlider);
 		}
 
-		QList<QKeySequence> keys;
-		keys.push_back(ui->_3_shortKey_1->keySequence());
-		keys.push_back(ui->_3_shortKey_2->keySequence());
-		keys.push_back(ui->_3_shortKey_3->keySequence());
-		keys.push_back(ui->_3_shortKey_4->keySequence());
-		keys.push_back(ui->_3_shortKey_5->keySequence());
+		QList<QComboBox*> keysPtrs;
+		keysPtrs.push_back(ui->_3_shortKey_1);
+		keysPtrs.push_back(ui->_3_shortKey_2);
+		keysPtrs.push_back(ui->_3_shortKey_3);
+		keysPtrs.push_back(ui->_3_shortKey_4);
+		keysPtrs.push_back(ui->_3_shortKey_5);
 
 		prof->healthKeys.clear();
 		for (size_t i = 0; i < size; i++)
-			prof->healthKeys.push_back(keys[i]);
+			prof->healthKeys.push_back(keysPtrs[i]->currentText());
 
 		QList<QString> helathRestorationNames;
 		helathRestorationNames.push_back(ui->_3_comboBox->currentText());
@@ -180,16 +186,16 @@ void NewProfileConfiguartor::saveDataToProfile(Profile* prof) {
 		}
 
 
-		QList<QKeySequence> keys;
-		keys.push_back(ui->_4_shortKey_1->keySequence());
-		keys.push_back(ui->_4_shortKey_2->keySequence());
-		keys.push_back(ui->_4_shortKey_3->keySequence());
-		keys.push_back(ui->_4_shortKey_4->keySequence());
-		keys.push_back(ui->_4_shortKey_5->keySequence());
+		QList<QComboBox*> keysPtrs;
+		keysPtrs.push_back(ui->_4_shortKey_1);
+		keysPtrs.push_back(ui->_4_shortKey_2);
+		keysPtrs.push_back(ui->_4_shortKey_3);
+		keysPtrs.push_back(ui->_4_shortKey_4);
+		keysPtrs.push_back(ui->_4_shortKey_5);
 
 		prof->ManaKeys.clear();
 		for (size_t i = 0; i < size; i++)
-			prof->ManaKeys.push_back(keys[i]);
+			prof->ManaKeys.push_back(keysPtrs[i]->currentText());
 
 		QList<QString> manaRestoreNames;
 		manaRestoreNames.push_back(ui->_4_comboBox->currentText());
@@ -292,17 +298,11 @@ bool NewProfileConfiguartor::checkCorrectnessOfPage_3(){
 	bool oneOfKeyFieldsHasForbiddenChars = false;
 	{
 		for (size_t i = 0; i < guiPtrs.activeElementsOnPage_3; i++){
-			QKeySequence keySequence = guiPtrs.keyShortCutsOnPage_3[i]->keySequence();
-			if (keySequence.count() == 0)
+			QString keyText = guiPtrs.keyShortCutsOnPage_3[i]->currentText();
+			int number = Key(keyText).number;
+			bool error = number == -1;
+			if (error)
 				oneOfKeyFieldsHasNoValue = true;
-			else if (keySequence.count() > 1)
-				oneOfKeyFieldsHasManyValues = true;
-
-			int keyValueToCheck = Key(keySequence).number;
-			bool isProperKey = Key::checkIfnumberIsAloowed(keyValueToCheck);
-			if (!isProperKey)
-				oneOfKeyFieldsHasForbiddenChars = true;
-		
 		}
 	}
 
@@ -320,27 +320,29 @@ bool NewProfileConfiguartor::checkCorrectnessOfPage_3(){
 
 	bool theSameValueIsAssignedToMoreThanOneBox = false;
 	if (guiPtrs.activeElementsOnPage_3 > 0) {
-		QMap<int, int> mapToDeleteReplicatedValues;
-		int maxWidgetIndex = guiPtrs.activeElementsOnPage_3;
-		for (size_t i = 0; i < maxWidgetIndex; i++) {
-			QKeySequence keySeq = guiPtrs.keyShortCutsOnPage_3[i]->keySequence();
-			int valueOfKey = Key(keySeq).number;
-			mapToDeleteReplicatedValues.insert(valueOfKey, 0);
+		QSet<int> setToPreventDuplicates;
+		const int MAX_INDEX = guiPtrs.activeElementsOnPage_3;
+		for (size_t i = 0; i < MAX_INDEX; i++) {
+			QString keySrt = guiPtrs.keyShortCutsOnPage_3[i]->currentText();
+			int valueOfKey = Key(keySrt).number;
+			setToPreventDuplicates.insert(valueOfKey);
 		}
-		bool allWidgetsAreDiffrent = mapToDeleteReplicatedValues.size() == maxWidgetIndex;
-		bool AtLeastOneIsActive = maxWidgetIndex > 0;
+
+		bool allWidgetsAreDiffrent = setToPreventDuplicates.size() == MAX_INDEX;
+		bool AtLeastOneIsActive = MAX_INDEX > 0;
 		if(AtLeastOneIsActive)
 			theSameValueIsAssignedToMoreThanOneBox = !allWidgetsAreDiffrent;
 	}
 
 	bool theSameKeyIsAssignedToMoreThanOneKeyShortCut = false;
 	if(guiPtrs.activeElementsOnPage_3 > 0){
-		QMap<int, int> keyNumber_noImportnat_map;
+		QSet<int> setToPreventDuplicates;
 		for (size_t i = 0; i < guiPtrs.activeElementsOnPage_3; i++){
-			int keyNumber = Key(guiPtrs.keyShortCutsOnPage_3[i]->keySequence()).number;
-			keyNumber_noImportnat_map.insert(keyNumber,0);
+			QString codeStr = guiPtrs.keyShortCutsOnPage_3[i]->currentText();
+			int code = Key::KeysAndCodesMap.value(codeStr, -1);
+			setToPreventDuplicates.insert(code);
 		}
-		bool allKeysAreDiffrent = keyNumber_noImportnat_map.size() == guiPtrs.activeElementsOnPage_3;
+		bool allKeysAreDiffrent = setToPreventDuplicates.size() == guiPtrs.activeElementsOnPage_3;
 		theSameKeyIsAssignedToMoreThanOneKeyShortCut = !allKeysAreDiffrent;
 	}
 
@@ -423,17 +425,11 @@ bool NewProfileConfiguartor::checkCorrectnessOfPage_4(){
 	bool oneOfKeyFieldsHasForbiddenChars = false;
 	{
 		for (size_t i = 0; i < guiPtrs.activeElementsOnPage_4; i++) {
-			QKeySequence keySequence = guiPtrs.keyShortCutsOnPage_4[i]->keySequence();
-			if (keySequence.count() == 0)
+			QString keyText = guiPtrs.keyShortCutsOnPage_3[i]->currentText();
+			int number = Key(keyText).number;
+			bool error = number == -1;
+			if (error)
 				oneOfKeyFieldsHasNoValue = true;
-			else if (keySequence.count() > 1)
-				oneOfKeyFieldsHasManyValues = true;
-
-			int keyValueToCheck = Key(keySequence).number;
-			bool isProperKey = Key::checkIfnumberIsAloowed(keyValueToCheck);
-			if (!isProperKey)
-				oneOfKeyFieldsHasForbiddenChars = true;
-
 		}
 	}
 
@@ -451,27 +447,28 @@ bool NewProfileConfiguartor::checkCorrectnessOfPage_4(){
 
 	bool theSameValueIsAssignedToMoreThanOneBox = false;
 	if (guiPtrs.activeElementsOnPage_4 > 0) {
-		QMap<int, int> mapToDeleteReplicatedValues;
-		int maxWidgetIndex = guiPtrs.activeElementsOnPage_4;
-		for (size_t i = 0; i < maxWidgetIndex; i++) {
-			QKeySequence keySeq = guiPtrs.keyShortCutsOnPage_4[i]->keySequence();
-			int valueOfKey = Key(keySeq).number;
-			mapToDeleteReplicatedValues.insert(valueOfKey, 0);
+		QSet<int> setToPreventDuplicates;
+		int MAX_INDEX = guiPtrs.activeElementsOnPage_4;
+		for (size_t i = 0; i < MAX_INDEX; i++) {
+			QString keyStr = guiPtrs.keyShortCutsOnPage_4[i]->currentText();
+			int valueOfKey = Key(keyStr).number;
+			setToPreventDuplicates.insert(valueOfKey);
 		}
-		bool allWidgetsAreDiffrent = mapToDeleteReplicatedValues.size() == maxWidgetIndex;
-		bool AtLeastOneIsActive = maxWidgetIndex > 0;
+		bool allWidgetsAreDiffrent = setToPreventDuplicates.size() == MAX_INDEX;
+		bool AtLeastOneIsActive = MAX_INDEX > 0;
 		if (AtLeastOneIsActive)
 			theSameValueIsAssignedToMoreThanOneBox = !allWidgetsAreDiffrent;
 	}
 
 	bool theSameKeyIsAssignedToMoreThanOneKeyShortCut = false;
 	if(guiPtrs.activeElementsOnPage_4 > 0){
-		QMap<int, int> keyNumber_noImportnat_map;
+		QSet<int> setToPreventDuplicates;
 		for (size_t i = 0; i < guiPtrs.activeElementsOnPage_4; i++) {
-			int keyNumber = Key(guiPtrs.keyShortCutsOnPage_4[i]->keySequence()).number;
-			keyNumber_noImportnat_map.insert(keyNumber, 0);
+			QString codeStr = Key(guiPtrs.keyShortCutsOnPage_4[i]->currentText()).number;
+			int code = Key::KeysAndCodesMap.value(codeStr, -1);
+			setToPreventDuplicates.insert(code);
 		}
-		bool allKeysAreDiffrent = keyNumber_noImportnat_map.size() == guiPtrs.activeElementsOnPage_4;
+		bool allKeysAreDiffrent = setToPreventDuplicates.size() == guiPtrs.activeElementsOnPage_4;
 		theSameKeyIsAssignedToMoreThanOneKeyShortCut = !allKeysAreDiffrent;
 	}
 
@@ -610,46 +607,19 @@ void NewProfileConfiguartor::fillGuiElementsWithNamesRestoreMethodes_Mana(Profil
 }
 
 Profile::PROFESSION NewProfileConfiguartor::getProfessionFromRadioButtonOnPage2(){
-	Profile::PROFESSION toRet;
 	if (ui->_2_RadButt_ED->isChecked())
-		toRet = Profile::PROFESSION::ED;
-	else if (ui->_2_RadButt_EK->isChecked())
-		toRet = Profile::PROFESSION::EK;
-	else if (ui->_2_RadButt_MS->isChecked())
-		toRet = Profile::PROFESSION::MS;
-	else if (ui->_2_RadButt_RP->isChecked())
-		toRet = Profile::PROFESSION::RP;
-	return toRet;
+		return Profile::PROFESSION::ED;
+	if (ui->_2_RadButt_EK->isChecked())
+		return Profile::PROFESSION::EK;
+	if (ui->_2_RadButt_MS->isChecked())
+		return Profile::PROFESSION::MS;
+	if (ui->_2_RadButt_RP->isChecked())
+		return Profile::PROFESSION::RP;
+
+	return Profile::PROFESSION::RP;
 }
 
 void NewProfileConfiguartor::fillGuiPtrs() {
-	int tmpNumberOfActiveWidgets = 0;
-	if (ui->_4_horizontalSlider_1->isEnabled())
-		tmpNumberOfActiveWidgets++;
-	if (ui->_4_horizontalSlider_2->isEnabled())
-		tmpNumberOfActiveWidgets++;
-	if (ui->_4_horizontalSlider_3->isEnabled())
-		tmpNumberOfActiveWidgets++;
-	if (ui->_4_horizontalSlider_4->isEnabled())
-		tmpNumberOfActiveWidgets++;
-	if (ui->_4_horizontalSlider_5->isEnabled())
-		tmpNumberOfActiveWidgets++;
-	this->guiPtrs.activeElementsOnPage_4 = tmpNumberOfActiveWidgets;
-
-	tmpNumberOfActiveWidgets = 0;
-	if (ui->_3_horizontalSlider_1->isEnabled())
-		tmpNumberOfActiveWidgets++;
-	if (ui->_3_horizontalSlider_2->isEnabled())
-		tmpNumberOfActiveWidgets++;
-	if (ui->_3_horizontalSlider_3->isEnabled())
-		tmpNumberOfActiveWidgets++;
-	if (ui->_3_horizontalSlider_4->isEnabled())
-		tmpNumberOfActiveWidgets++;
-	if (ui->_3_horizontalSlider_5->isEnabled())
-		tmpNumberOfActiveWidgets++;
-	this->guiPtrs.activeElementsOnPage_3 = tmpNumberOfActiveWidgets;
-
-
 	guiPtrs.sliderOnPage_3.push_back(ui->_3_horizontalSlider_1);
 	guiPtrs.sliderOnPage_3.push_back(ui->_3_horizontalSlider_2);
 	guiPtrs.sliderOnPage_3.push_back(ui->_3_horizontalSlider_3);
@@ -698,6 +668,12 @@ void NewProfileConfiguartor::fillGuiPtrs() {
 	guiPtrs.keyShortCutsOnPage_4.push_back(ui->_4_shortKey_3);
 	guiPtrs.keyShortCutsOnPage_4.push_back(ui->_4_shortKey_4);
 	guiPtrs.keyShortCutsOnPage_4.push_back(ui->_4_shortKey_5);
+
+	for each (QAbstractSlider* var in guiPtrs.sliderOnPage_4)
+		guiPtrs.activeElementsOnPage_4 += var->isEnabled();
+	
+	for each (QAbstractSlider * var in guiPtrs.sliderOnPage_3)
+		guiPtrs.activeElementsOnPage_3 += var->isEnabled();
 }
 
 void NewProfileConfiguartor::fillWidgetsWithDataFromProf(Profile* profToEdit) {
@@ -709,11 +685,21 @@ void NewProfileConfiguartor::fillWidgetsWithDataFromProf(Profile* profToEdit) {
 	{
 	Profile::PROFESSION prof = Profile::PROFESSION(profToEdit->profession);
 	switch (prof) {
-	case Profile::RP:	ui->_2_RadButt_RP->setChecked(true);	break;
-	case Profile::EK:	ui->_2_RadButt_EK->setChecked(true);	break;
-	case Profile::ED:	ui->_2_RadButt_ED->setChecked(true);	break;
-	case Profile::MS:	ui->_2_RadButt_MS->setChecked(true);	break;
-	default:	ui->_2_RadButt_RP->setChecked(true);	break;
+	case Profile::RP:	
+		ui->_2_RadButt_RP->setChecked(true);
+		break;
+	case Profile::EK:
+		ui->_2_RadButt_EK->setChecked(true);
+		break;
+	case Profile::ED:
+		ui->_2_RadButt_ED->setChecked(true);
+		break;
+	case Profile::MS:
+		ui->_2_RadButt_MS->setChecked(true);
+		break;
+	default:	
+		ui->_2_RadButt_RP->setChecked(true);
+		break;
 	}
 	}
 	//3
@@ -742,8 +728,9 @@ void NewProfileConfiguartor::fillWidgetsWithDataFromProf(Profile* profToEdit) {
 				guiPtrs.sliderOnPage_3[i]->setValue(profToEdit->healthRestorePercentages[i]);
 				int indexToSet = profToEdit->healthRestoreMethodeNames.indexOf(profToEdit->healthRestoreMethodeNames[i]);
 				guiPtrs.boxesOnPage_3[i]->setCurrentIndex(indexToSet);
-				QKeySequence toSet(profToEdit->healthKeys[i].toQKeySequence(profToEdit->healthKeys[i]));
-				guiPtrs.keyShortCutsOnPage_3[i]->setKeySequence(toSet);
+				int codeOfKey = profToEdit->healthKeys[i].number;
+				QString textOfKey = Key::KeysAndCodesMap.key(codeOfKey, tr("Error"));
+				guiPtrs.keyShortCutsOnPage_3[i]->setCurrentText(textOfKey);
 			}
 		}
 		_3_slidersChanged();//setting proper text on labels;
@@ -772,8 +759,10 @@ void NewProfileConfiguartor::fillWidgetsWithDataFromProf(Profile* profToEdit) {
 				guiPtrs.sliderOnPage_4[i]->setValue(profToEdit->healthRestorePercentages[i]);
 				int indexToSet = profToEdit->healthRestoreMethodeNames.indexOf(profToEdit->healthRestoreMethodeNames[i]);
 				guiPtrs.boxesOnPage_4[i]->setCurrentIndex(indexToSet);
-				QKeySequence toSet(profToEdit->healthKeys[i].toQKeySequence(profToEdit->healthKeys[i]));
-				guiPtrs.keyShortCutsOnPage_4[i]->setKeySequence(toSet);
+				int keyCode = profToEdit->healthKeys[i].number;
+				QString textToFind = Key::KeysAndCodesMap.key(keyCode, tr("Error"));
+				int index = guiPtrs.keyShortCutsOnPage_4[i]->findText(textToFind, Qt::MatchExactly);
+				guiPtrs.keyShortCutsOnPage_4[i]->setCurrentIndex(index);
 			}
 		}
 		_4_slidersChanged();//set proper text on labels;
@@ -827,38 +816,6 @@ void NewProfileConfiguartor::cancelButtonAction() {
 		this->reject();
 }
 
-void NewProfileConfiguartor::helpButtonAction() {
-	QString helpText;
-	switch (pageNumber)
-	{
-	case 1:
-		helpText = tr("Enter profile name.");
-		break;
-	case 2:
-		helpText = tr("Choose your profession.");
-		break;
-	case 3:
-		helpText = tr("Choose how many methodes of restoring health do want, up to 5 diffrent methodes. ");
-		helpText.append(tr("Move sliders to set value of missing health that will be used to auto heal. "));
-		helpText.append(tr("First Slider should be used for smallest healing, last for biggest. "));
-		helpText.append(tr("If healing would be needed, program will use appropriate healing to your remaining health. "));
-		helpText.append(tr("To all used sliders you have to add the same hotkey that use in game. "));
-		helpText.append(tr("If most effective healing methode is not avaible(no enough mana, no potion), program will try to another, less efficient methode."));
-		break;
-	case 4:
-		helpText = (tr("Choose how many methodes of restoring mana do want, up to 5 diffrent methodes. "));
-		helpText.append(tr("Move sliders to set value of missing mana that will be used to auto mana restore. "));
-		helpText.append(tr("First Slider should be used for smallest mana regeneration, last for biggest. "));
-		helpText.append(tr("If mana will be low, program will use appropriate methode to regenerate it. "));
-		helpText.append(tr("To all used sliders you have to add the same hotkey that use in game. "));
-		helpText.append(tr("Healing potions have priority over mana potions. "));
-		break;
-	default:
-		break;
-	}
-	Utilities::showMessageBox_INFO(helpText);
-}
-
 void NewProfileConfiguartor::_3_healingEnabledChanged(){
 	bool enabled = ui->_3_enableAutoHealing->isChecked();
 	ui->_3_spinGetNumberOfMethodes->setEnabled(enabled);
@@ -881,7 +838,7 @@ void NewProfileConfiguartor::_3_spinChanged() {
 			guiPtrs.sliderOnPage_3[i]->setValue(0);
 			guiPtrs.labelsOnPage_3[i]->setText("");
 			guiPtrs.boxesOnPage_3[i]->setCurrentIndex(-1);
-			guiPtrs.keyShortCutsOnPage_3[i]->clear();
+			//guiPtrs.keyShortCutsOnPage_3[i]->clear();
 		}
 	}
 }
@@ -937,7 +894,7 @@ void NewProfileConfiguartor::_4_spinChanged() {
 			guiPtrs.sliderOnPage_4[i]->setValue(0);
 			guiPtrs.labelsOnPage_4[i]->setText("");
 			guiPtrs.boxesOnPage_4[i]->setCurrentIndex(-1);
-			guiPtrs.keyShortCutsOnPage_4[i]->clear();
+			//guiPtrs.keyShortCutsOnPage_4[i]->clear();
 		}
 	}
 }

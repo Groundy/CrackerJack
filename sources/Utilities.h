@@ -83,17 +83,16 @@ public:
 	static void cutBlackBordersOfImg(QImage& img);
 	static QString letterImgToLetterCodeStr(QImage* SingleLetterImg);
 
-	static void TOOL_clearBaseMent(VariablesClass* var);
 	static void TOOL_manaSit(int pid,QString winTitle){
 		int i = 0;
 		while (true) {
 			Key key;
 			if (i == 0)
-				key = Key::F7;
+				key = Key("F7");
 			else if (i == 1)
-				key = Key::END;
+				key = Key("END");
 			else
-				key = Key::F11;
+				key = Key("F11");
 			Utilities::sendKeyStrokeToProcess(key, pid, winTitle);
 			Sleep(125 * 100);
 			i++;

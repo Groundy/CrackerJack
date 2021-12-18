@@ -109,12 +109,11 @@
         <translation>Edytuj profil</translation>
     </message>
     <message>
-        <location filename="sources/MainMenu.ui" line="98"/>
         <source>Help</source>
-        <translation>Pomoc</translation>
+        <translation type="vanished">Pomoc</translation>
     </message>
     <message>
-        <location filename="sources/MainMenu.ui" line="109"/>
+        <location filename="sources/MainMenu.ui" line="96"/>
         <source>Auto Heal and Mana</source>
         <translation>Automatyczne leczenie</translation>
     </message>
@@ -133,49 +132,49 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="sources/MainMenu.ui" line="116"/>
-        <location filename="sources/MainMenu.ui" line="123"/>
-        <location filename="sources/MainMenu.ui" line="130"/>
+        <location filename="sources/MainMenu.ui" line="103"/>
+        <location filename="sources/MainMenu.ui" line="110"/>
+        <location filename="sources/MainMenu.ui" line="117"/>
         <source>Resource: </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="sources/MainMenu.ui" line="241"/>
+        <location filename="sources/MainMenu.ui" line="228"/>
         <source>Trading</source>
         <translation>Handel</translation>
     </message>
     <message>
-        <location filename="sources/MainMenu.ui" line="221"/>
+        <location filename="sources/MainMenu.ui" line="208"/>
         <source>Hunting manually</source>
         <translation>polowanie ręczne</translation>
     </message>
     <message>
-        <location filename="sources/MainMenu.ui" line="268"/>
+        <location filename="sources/MainMenu.ui" line="255"/>
         <source>Hunting automatically</source>
         <translation>polowanie automatyczne</translation>
     </message>
     <message>
-        <location filename="sources/MainMenu.ui" line="248"/>
+        <location filename="sources/MainMenu.ui" line="235"/>
         <source>Skilling</source>
         <translation>Skillowanie</translation>
     </message>
     <message>
-        <location filename="sources/MainMenu.ui" line="153"/>
+        <location filename="sources/MainMenu.ui" line="140"/>
         <source>manaShield: </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="sources/MainMenu.ui" line="172"/>
+        <location filename="sources/MainMenu.ui" line="159"/>
         <source>health: </source>
         <translation>Życie: </translation>
     </message>
     <message>
-        <location filename="sources/MainMenu.ui" line="191"/>
+        <location filename="sources/MainMenu.ui" line="178"/>
         <source>game status: </source>
         <translation>Status gry: </translation>
     </message>
     <message>
-        <location filename="sources/MainMenu.ui" line="210"/>
+        <location filename="sources/MainMenu.ui" line="197"/>
         <source>mana: </source>
         <translation>Mana</translation>
     </message>
@@ -185,37 +184,37 @@ p, li { white-space: pre-wrap; }
         <translation>Status gry: </translation>
     </message>
     <message>
-        <location filename="sources/MainMenu.cpp" line="34"/>
+        <location filename="sources/MainMenu.cpp" line="32"/>
         <source>Game active, Logged</source>
         <translation>Gra włączona, gracz zalogowany</translation>
     </message>
     <message>
-        <location filename="sources/MainMenu.cpp" line="37"/>
+        <location filename="sources/MainMenu.cpp" line="35"/>
         <source>Game not found</source>
         <translation>Gra nie znaleziona</translation>
     </message>
     <message>
-        <location filename="sources/MainMenu.cpp" line="40"/>
+        <location filename="sources/MainMenu.cpp" line="38"/>
         <source>Game found but no access</source>
         <translation>Gra znaleziona, brak dostępu</translation>
     </message>
     <message>
-        <location filename="sources/MainMenu.cpp" line="43"/>
+        <location filename="sources/MainMenu.cpp" line="41"/>
         <source>Game active but no char logged</source>
         <translation>Gra znaleziona, gracz niezalogowany</translation>
     </message>
     <message>
-        <location filename="sources/MainMenu.cpp" line="46"/>
+        <location filename="sources/MainMenu.cpp" line="44"/>
         <source>Game is loading</source>
         <translation>Gra jest wczytywana</translation>
     </message>
     <message>
-        <location filename="sources/MainMenu.cpp" line="49"/>
+        <location filename="sources/MainMenu.cpp" line="47"/>
         <source>Error</source>
         <translation>Błąd</translation>
     </message>
     <message>
-        <location filename="sources/MainMenu.cpp" line="62"/>
+        <location filename="sources/MainMenu.cpp" line="60"/>
         <source>No data to display</source>
         <translation>Brak danych</translation>
     </message>
@@ -534,276 +533,242 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="sources/NewProfileConfiguartor.ui" line="126"/>
         <source>Choose name for your new profile.</source>
-        <translation type="unfinished"></translation>
+        <translation>Podaje nazwe profilu</translation>
     </message>
     <message>
         <location filename="sources/NewProfileConfiguartor.ui" line="177"/>
         <source>ED</source>
-        <translation type="unfinished"></translation>
+        <translation>ED</translation>
     </message>
     <message>
         <location filename="sources/NewProfileConfiguartor.ui" line="184"/>
         <source>RP</source>
-        <translation type="unfinished"></translation>
+        <translation>RP</translation>
     </message>
     <message>
         <location filename="sources/NewProfileConfiguartor.ui" line="191"/>
         <source>EK</source>
-        <translation type="unfinished"></translation>
+        <translation>EK</translation>
     </message>
     <message>
         <location filename="sources/NewProfileConfiguartor.ui" line="198"/>
         <source>MS</source>
-        <translation type="unfinished"></translation>
+        <translation>MS</translation>
     </message>
     <message>
         <location filename="sources/NewProfileConfiguartor.ui" line="252"/>
         <source>Choose your vocation</source>
-        <translation type="unfinished"></translation>
+        <translation>Wybierz profesję</translation>
     </message>
     <message>
-        <location filename="sources/NewProfileConfiguartor.ui" line="342"/>
-        <location filename="sources/NewProfileConfiguartor.ui" line="530"/>
-        <location filename="sources/NewProfileConfiguartor.ui" line="552"/>
-        <location filename="sources/NewProfileConfiguartor.ui" line="702"/>
-        <location filename="sources/NewProfileConfiguartor.ui" line="923"/>
-        <location filename="sources/NewProfileConfiguartor.ui" line="968"/>
-        <location filename="sources/NewProfileConfiguartor.ui" line="1038"/>
-        <location filename="sources/NewProfileConfiguartor.ui" line="1075"/>
-        <location filename="sources/NewProfileConfiguartor.ui" line="1085"/>
+        <location filename="sources/NewProfileConfiguartor.ui" line="391"/>
+        <location filename="sources/NewProfileConfiguartor.ui" line="616"/>
+        <location filename="sources/NewProfileConfiguartor.ui" line="844"/>
+        <location filename="sources/NewProfileConfiguartor.ui" line="872"/>
+        <location filename="sources/NewProfileConfiguartor.ui" line="909"/>
+        <location filename="sources/NewProfileConfiguartor.ui" line="922"/>
+        <location filename="sources/NewProfileConfiguartor.ui" line="935"/>
+        <location filename="sources/NewProfileConfiguartor.ui" line="970"/>
+        <location filename="sources/NewProfileConfiguartor.ui" line="996"/>
         <source>  0%</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
-        <location filename="sources/NewProfileConfiguartor.ui" line="364"/>
+        <location filename="sources/NewProfileConfiguartor.ui" line="557"/>
         <source>100% - 100%</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
-        <location filename="sources/NewProfileConfiguartor.ui" line="508"/>
+        <location filename="sources/NewProfileConfiguartor.ui" line="1260"/>
+        <source>Back</source>
+        <translation>Wstecz</translation>
+    </message>
+    <message>
+        <location filename="sources/NewProfileConfiguartor.ui" line="1273"/>
+        <source>Next</source>
+        <translation>Dalej</translation>
+    </message>
+    <message>
+        <location filename="sources/NewProfileConfiguartor.ui" line="1286"/>
+        <source>Page 0/0</source>
+        <translation>Strona 0/0</translation>
+    </message>
+    <message>
+        <location filename="sources/NewProfileConfiguartor.ui" line="529"/>
         <source>Enable auto healing</source>
-        <translation type="unfinished"></translation>
+        <translation>Automatyczne leczenie</translation>
     </message>
     <message>
-        <location filename="sources/NewProfileConfiguartor.ui" line="1002"/>
+        <location filename="sources/NewProfileConfiguartor.ui" line="1063"/>
         <source>Enable auto mana regen</source>
-        <translation type="unfinished"></translation>
+        <translation>Automatyczne odnawianie many</translation>
     </message>
     <message>
-        <location filename="sources/NewProfileConfiguartor.ui" line="1181"/>
+        <location filename="sources/NewProfileConfiguartor.ui" line="1131"/>
         <source>Controls</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="sources/NewProfileConfiguartor.ui" line="1188"/>
+        <location filename="sources/NewProfileConfiguartor.ui" line="1138"/>
         <source>Auto loot</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="sources/NewProfileConfiguartor.ui" line="1239"/>
+        <location filename="sources/NewProfileConfiguartor.ui" line="1189"/>
         <source>Left bars</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="sources/NewProfileConfiguartor.ui" line="1246"/>
+        <location filename="sources/NewProfileConfiguartor.ui" line="1196"/>
         <source>Right bars</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="sources/NewProfileConfiguartor.ui" line="1307"/>
-        <source>tmp</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="sources/NewProfileConfiguartor.ui" line="1320"/>
         <source>Help</source>
-        <translation type="unfinished">Pomoc</translation>
+        <translation type="vanished">Pomoc</translation>
     </message>
     <message>
-        <location filename="sources/NewProfileConfiguartor.ui" line="1333"/>
         <source>Skip other pages</source>
-        <translation type="unfinished"></translation>
+        <translation type="vanished">Pomiń kolejne strony</translation>
     </message>
     <message>
-        <location filename="sources/NewProfileConfiguartor.ui" line="1349"/>
         <source>Previous Page</source>
-        <translation type="unfinished"></translation>
+        <translation type="vanished">Wstecz</translation>
     </message>
     <message>
-        <location filename="sources/NewProfileConfiguartor.ui" line="1362"/>
+        <location filename="sources/NewProfileConfiguartor.ui" line="1302"/>
         <source>Cancel</source>
-        <translation type="unfinished">Anuluj</translation>
+        <translation>Anuluj</translation>
     </message>
     <message>
-        <location filename="sources/NewProfileConfiguartor.ui" line="1369"/>
         <source>NextPage</source>
-        <translation type="unfinished"></translation>
+        <translation type="vanished">Dalej</translation>
     </message>
     <message>
         <location filename="sources/NewProfileConfiguartor.cpp" line="22"/>
         <source>Page </source>
-        <translation type="unfinished"></translation>
+        <translation>Strona </translation>
     </message>
     <message>
-        <location filename="sources/NewProfileConfiguartor.cpp" line="31"/>
+        <location filename="sources/NewProfileConfiguartor.cpp" line="33"/>
         <source>Finish</source>
-        <translation type="unfinished"></translation>
+        <translation>Zakończ</translation>
     </message>
     <message>
-        <location filename="sources/NewProfileConfiguartor.cpp" line="31"/>
+        <location filename="sources/NewProfileConfiguartor.cpp" line="33"/>
         <source>Next page</source>
-        <translation type="unfinished"></translation>
+        <translation>Dalej</translation>
     </message>
     <message>
-        <location filename="sources/NewProfileConfiguartor.cpp" line="37"/>
+        <location filename="sources/NewProfileConfiguartor.cpp" line="39"/>
         <source>Are you sure that you want finish creating new profile?</source>
-        <translation type="unfinished"></translation>
+        <translation>Czy na pewno chcesz zakończyć tworzenie profilu?</translation>
     </message>
     <message>
-        <location filename="sources/NewProfileConfiguartor.cpp" line="221"/>
+        <location filename="sources/NewProfileConfiguartor.cpp" line="227"/>
         <source>Profile name can&apos;t be longer than 50 characters.</source>
-        <translation type="unfinished"></translation>
+        <translation>Nazwa profilu nie może być dłuższa niż 50 znaków.</translation>
     </message>
     <message>
-        <location filename="sources/NewProfileConfiguartor.cpp" line="226"/>
+        <location filename="sources/NewProfileConfiguartor.cpp" line="232"/>
         <source>Profile name can&apos;t be shorter than 3 characters.</source>
-        <translation type="unfinished"></translation>
+        <translation>Nazwa profilu nie może być krótsza niż 3 znaki</translation>
     </message>
     <message>
-        <location filename="sources/NewProfileConfiguartor.cpp" line="231"/>
+        <location filename="sources/NewProfileConfiguartor.cpp" line="237"/>
         <source>Profile name can&apos;t have any special characters, please use only letters, numbers or spaces.</source>
-        <translation type="unfinished"></translation>
+        <translation>Nazwa profilu nie może zawierać znaków specjalnych, należy użyć liter, numerów lub spacji.</translation>
     </message>
     <message>
-        <location filename="sources/NewProfileConfiguartor.cpp" line="256"/>
+        <location filename="sources/NewProfileConfiguartor.cpp" line="262"/>
         <source>You have to choose profession.</source>
-        <translation type="unfinished"></translation>
+        <translation>Muszisz wybrać profeje postaci.</translation>
     </message>
     <message>
-        <location filename="sources/NewProfileConfiguartor.cpp" line="348"/>
-        <location filename="sources/NewProfileConfiguartor.cpp" line="479"/>
+        <location filename="sources/NewProfileConfiguartor.cpp" line="350"/>
+        <location filename="sources/NewProfileConfiguartor.cpp" line="476"/>
         <source>Two sliders can&apos;t be in the same position.</source>
-        <translation type="unfinished"></translation>
+        <translation>Dwa suwaki nie mogą być w tej samej pozycji.</translation>
     </message>
     <message>
-        <location filename="sources/NewProfileConfiguartor.cpp" line="353"/>
-        <location filename="sources/NewProfileConfiguartor.cpp" line="484"/>
+        <location filename="sources/NewProfileConfiguartor.cpp" line="355"/>
+        <location filename="sources/NewProfileConfiguartor.cpp" line="481"/>
         <source>Sliders are in wrong order, please set it from biggest value to lowest.</source>
-        <translation type="unfinished"></translation>
+        <translation>Suwaki są w złej kolejności, należy je ustawić w kolejności od największej do najmniejszej wartości.</translation>
     </message>
     <message>
-        <location filename="sources/NewProfileConfiguartor.cpp" line="358"/>
-        <location filename="sources/NewProfileConfiguartor.cpp" line="489"/>
+        <location filename="sources/NewProfileConfiguartor.cpp" line="360"/>
+        <location filename="sources/NewProfileConfiguartor.cpp" line="486"/>
         <source>One of key field has more than one hotkey assigned to itself.</source>
-        <translation type="unfinished"></translation>
+        <translation>Jedno pole zawiera więcej niż jeden klawisz przypisany do danej metody.</translation>
     </message>
     <message>
-        <location filename="sources/NewProfileConfiguartor.cpp" line="363"/>
-        <location filename="sources/NewProfileConfiguartor.cpp" line="494"/>
+        <location filename="sources/NewProfileConfiguartor.cpp" line="365"/>
+        <location filename="sources/NewProfileConfiguartor.cpp" line="491"/>
         <source>Last slider has to have value above zero.</source>
-        <translation type="unfinished"></translation>
+        <translation>Ostatni suwak musi mieć wartość większą niż zero.</translation>
     </message>
     <message>
-        <location filename="sources/NewProfileConfiguartor.cpp" line="368"/>
-        <location filename="sources/NewProfileConfiguartor.cpp" line="499"/>
+        <location filename="sources/NewProfileConfiguartor.cpp" line="370"/>
+        <location filename="sources/NewProfileConfiguartor.cpp" line="496"/>
         <source>One of key field doesn&apos;t have hotkey assigned to itself.</source>
-        <translation type="unfinished"></translation>
+        <translation>Jedna z metod nie ma wybranego klawisza.</translation>
     </message>
     <message>
-        <location filename="sources/NewProfileConfiguartor.cpp" line="373"/>
-        <location filename="sources/NewProfileConfiguartor.cpp" line="504"/>
+        <location filename="sources/NewProfileConfiguartor.cpp" line="375"/>
+        <location filename="sources/NewProfileConfiguartor.cpp" line="501"/>
         <source>Key field has wrong value.</source>
-        <translation type="unfinished"></translation>
+        <translation>Przypisano zły klawisz do jednej z metod.</translation>
     </message>
     <message>
-        <location filename="sources/NewProfileConfiguartor.cpp" line="378"/>
-        <location filename="sources/NewProfileConfiguartor.cpp" line="509"/>
+        <location filename="sources/NewProfileConfiguartor.cpp" line="380"/>
+        <location filename="sources/NewProfileConfiguartor.cpp" line="506"/>
         <source>Methode field can&apos;t be empty.</source>
         <oldsource>ethode field can&apos;t be empty.</oldsource>
-        <translation type="unfinished"></translation>
+        <translation>Pole metody nie może być puste.</translation>
     </message>
     <message>
-        <location filename="sources/NewProfileConfiguartor.cpp" line="383"/>
-        <location filename="sources/NewProfileConfiguartor.cpp" line="514"/>
+        <location filename="sources/NewProfileConfiguartor.cpp" line="385"/>
+        <location filename="sources/NewProfileConfiguartor.cpp" line="511"/>
         <source>Two  fields can&apos;t share the same value.</source>
-        <translation type="unfinished"></translation>
+        <translation>Dwa klawisze nie mogą być przypisane do jednego klawisza.</translation>
     </message>
     <message>
-        <location filename="sources/NewProfileConfiguartor.cpp" line="388"/>
-        <location filename="sources/NewProfileConfiguartor.cpp" line="519"/>
+        <location filename="sources/NewProfileConfiguartor.cpp" line="390"/>
+        <location filename="sources/NewProfileConfiguartor.cpp" line="516"/>
         <source>Two key fields can&apos;t share the same key.</source>
-        <translation type="unfinished"></translation>
+        <translation>Dwie metody nie mogą współdzielić tego samego klawisza.</translation>
     </message>
     <message>
-        <location filename="sources/NewProfileConfiguartor.cpp" line="824"/>
+        <location filename="sources/NewProfileConfiguartor.cpp" line="732"/>
+        <location filename="sources/NewProfileConfiguartor.cpp" line="763"/>
+        <source>Error</source>
+        <translation>Błąd</translation>
+    </message>
+    <message>
+        <location filename="sources/NewProfileConfiguartor.cpp" line="813"/>
         <source>Are you sure that you want cancel adding new profile?</source>
-        <translation type="unfinished"></translation>
+        <translation>Czy na pewno chcesz anulować dodawanie nowego profilu?</translation>
     </message>
     <message>
-        <location filename="sources/NewProfileConfiguartor.cpp" line="835"/>
         <source>Enter profile name.</source>
-        <translation type="unfinished"></translation>
+        <translation type="vanished">Należy wprowadzić nazwę profilu, o długości 3-50 znaków.</translation>
     </message>
     <message>
-        <location filename="sources/NewProfileConfiguartor.cpp" line="838"/>
         <source>Choose your profession.</source>
-        <translation type="unfinished"></translation>
+        <translation type="vanished">Wybierz swoją profesje.</translation>
     </message>
     <message>
-        <location filename="sources/NewProfileConfiguartor.cpp" line="841"/>
         <source>Choose how many methodes of restoring health do want, up to 5 diffrent methodes. </source>
-        <translation type="unfinished"></translation>
+        <translation type="vanished">Wybierz ilość metod leczenia których chcesz używać, możliwie do 5 różnych metod.</translation>
     </message>
     <message>
-        <location filename="sources/NewProfileConfiguartor.cpp" line="842"/>
         <source>Move sliders to set value of missing health that will be used to auto heal. </source>
-        <translation type="unfinished"></translation>
+        <translation type="vanished">Ustaw suwaki aby dobrać wartości procentowe zdrowia w których będzie wykorzystywana konkretna metoda.</translation>
     </message>
     <message>
-        <location filename="sources/NewProfileConfiguartor.cpp" line="843"/>
         <source>First Slider should be used for smallest healing, last for biggest. </source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="sources/NewProfileConfiguartor.cpp" line="844"/>
-        <source>If healing would be needed, program will use appropriate healing to your remaining health. </source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="sources/NewProfileConfiguartor.cpp" line="845"/>
-        <location filename="sources/NewProfileConfiguartor.cpp" line="853"/>
-        <source>To all used sliders you have to add the same hotkey that use in game. </source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="sources/NewProfileConfiguartor.cpp" line="846"/>
-        <source>If most effective healing methode is not avaible(no enough mana, no potion), program will try to another, less efficient methode.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="sources/NewProfileConfiguartor.cpp" line="849"/>
-        <source>Choose how many methodes of restoring mana do want, up to 5 diffrent methodes. </source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="sources/NewProfileConfiguartor.cpp" line="850"/>
-        <source>Move sliders to set value of missing mana that will be used to auto mana restore. </source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="sources/NewProfileConfiguartor.cpp" line="851"/>
-        <source>First Slider should be used for smallest mana regeneration, last for biggest. </source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="sources/NewProfileConfiguartor.cpp" line="852"/>
-        <source>If mana will be low, program will use appropriate methode to regenerate it. </source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="sources/NewProfileConfiguartor.cpp" line="854"/>
-        <source>Healing potions have priority over mana potions. </source>
-        <translation type="unfinished"></translation>
+        <translation type="vanished">Suwaki powinny być ustawione od najmniej efektywnej metody leczenia do najbardziej efektywnej.</translation>
     </message>
 </context>
 <context>
@@ -983,7 +948,7 @@ p, li { white-space: pre-wrap; }
         <location filename="sources/RouteCreator.ui" line="42"/>
         <location filename="sources/RouteCreator.cpp" line="289"/>
         <source>Finish</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Zakończ</translation>
     </message>
     <message>
         <location filename="sources/RouteCreator.ui" line="49"/>

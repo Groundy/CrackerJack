@@ -24,33 +24,31 @@ MainMenu::~MainMenu(){
 }
 
 void MainMenu::onGameStateChanged(int state){	
-	QString previousText = tr("Game status: ");
-	QString toWrite;
-	QLabel* label = ui->gameActiveLabel;
+	QString toWrite = tr("Game status: ");
 	typedef activeGameThread::gameActivityStates Type;
 	switch (state)
 	{
 	case Type::ACTIVE:
-		toWrite = tr("Game active, Logged");
+		toWrite += tr("Game active, Logged");
 		break; 
 	case Type::NO_ACTIVE:
-		toWrite = tr("Game not found");
+		toWrite += tr("Game not found");
 		break;
 	case Type::NO_HANDLER:
-		toWrite = tr("Game found but no access");
+		toWrite += tr("Game found but no access");
 		break;
 	case Type::NO_LOGGED:
-		toWrite = tr("Game active but no char logged");
+		toWrite += tr("Game active but no char logged");
 		break;
 	case Type::NO_WINDOW:
-		toWrite = tr("Game is loading");
+		toWrite += tr("Game is loading");
 		break;
 	default:
-		toWrite = tr("Error");
+		toWrite += tr("Error");
 		break;
 	}
-	label->setText(previousText + toWrite);
-	label->repaint();
+	ui->gameActiveLabel->setText(toWrite);
+	ui->gameActiveLabel->repaint();
 
 	bool shouldBeActive = state == Type::ACTIVE;
 	this->screenAnalyzer->enableScreenAnalyzer = shouldBeActive;
@@ -126,12 +124,6 @@ void MainMenu::signalSlotConnector(){
 void MainMenu::autoHealAndManaRegCheckBoxChanged() {
 	bool stateOfSwitch = ui->autoManaHealChechBox->isChecked();
 	var.HealthAndManaRestorationShouldBeActive = stateOfSwitch;
-}
-
-void MainMenu::helpButtonAction(){
-	//TODO
-	//QString msg = tr("");
-	//Utilities::showMessageBox_INFO(msg);
 }
 
 void MainMenu::changeProfileButtonAction(){

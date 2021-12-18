@@ -28,7 +28,7 @@ void ScreenSaver::screenLoop(){
 			msleep(5 * timeBetweenScreens);
 			continue;
 		}
-		sendScreenRequestToGame(Key::HOME, variables);
+		sendScreenRequestToGame(Key("HOME"), variables);
 		msleep(timeBetweenScreens);
 	}
 }

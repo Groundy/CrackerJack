@@ -31,8 +31,8 @@ int main(int argc, char *argv[])
 			return 0;
 	}
 	MainMenu* mainMenu = new MainMenu(prof, NULL);
-	bool accepted2 = mainMenu->exec() == QDialog::Accepted;
-	if (!accepted2) {
+	bool accepted = mainMenu->exec() == QDialog::Accepted;
+	if (!accepted) {
 		delete mainMenu;
 		delete prof;
 		return 0;

@@ -9,25 +9,25 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>708</width>
-    <height>350</height>
+    <width>400</width>
+    <height>314</height>
    </rect>
   </property>
   <property name="sizePolicy">
-   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+   <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
     <horstretch>0</horstretch>
     <verstretch>0</verstretch>
    </sizepolicy>
   </property>
   <property name="minimumSize">
    <size>
-    <width>708</width>
-    <height>350</height>
+    <width>0</width>
+    <height>0</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
-    <width>708</width>
+    <width>400</width>
     <height>350</height>
    </size>
   </property>
@@ -83,19 +83,6 @@ p, li { white-space: pre-wrap; }
          </property>
          <property name="text">
           <string>Edit Profile</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="helpButton">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="text">
-          <string>Help</string>
          </property>
         </widget>
        </item>
@@ -328,22 +315,6 @@ p, li { white-space: pre-wrap; }
    <hints>
     <hint type="sourcelabel">
      <x>184</x>
-     <y>12</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>354</x>
-     <y>290</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>helpButton</sender>
-   <signal>clicked()</signal>
-   <receiver>MainMenu</receiver>
-   <slot>helpButtonAction()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>265</x>
      <y>12</y>
     </hint>
     <hint type="destinationlabel">

@@ -25,7 +25,6 @@ public:
 	~MainMenu();
 	activeGameThread::gameActivityStates gameActivitystate;
 public slots:
-	void helpButtonAction();
 	void changeProfileButtonAction();
 	void editProfileButtonAction();
 	void manualHuntAction();
@@ -38,18 +37,13 @@ public slots:
 	void onGameStateChanged(int state);
 	void changedValueOfCharHealthOrMana(double healthPercentage, double manaPercentage, double manaShieldPercentage0);
 private:
-	unsigned int pidOfGame;
-	QString gameWindowTitle;
 	Ui::MainMenu *ui;
 	Profile* prof;
-
-
-	ScreenSaver* screenSaverThread;
 	activeGameThread* activityThread;
+	ScreenSaver* screenSaverThread;
 	ScreenAnalyzer* screenAnalyzer;
 	ManaHealthStateAnalyzer* healthManaStateAnalyzer;
 	VariablesClass var;
-
 
 	void setProblemsWindow(QStringList problemsToShow);
 	void threadStarter();

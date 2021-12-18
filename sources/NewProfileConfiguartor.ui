@@ -50,16 +50,16 @@
       <enum>QFrame::Plain</enum>
      </property>
      <property name="currentIndex">
-      <number>1</number>
+      <number>2</number>
      </property>
      <widget class="QWidget" name="_1_namePage">
       <widget class="QWidget" name="gridLayoutWidget">
        <property name="geometry">
         <rect>
-         <x>9</x>
-         <y>9</y>
-         <width>371</width>
-         <height>249</height>
+         <x>-1</x>
+         <y>-1</y>
+         <width>391</width>
+         <height>281</height>
         </rect>
        </property>
        <layout class="QGridLayout" name="gridLayout_2">
@@ -274,13 +274,19 @@
       </layout>
      </widget>
      <widget class="QWidget" name="_3_healingPage">
+      <property name="maximumSize">
+       <size>
+        <width>389</width>
+        <height>278</height>
+       </size>
+      </property>
       <widget class="QWidget" name="gridLayoutWidget_3">
        <property name="geometry">
         <rect>
          <x>0</x>
          <y>0</y>
          <width>391</width>
-         <height>251</height>
+         <height>281</height>
         </rect>
        </property>
        <property name="sizePolicy">
@@ -296,160 +302,13 @@
         </size>
        </property>
        <layout class="QGridLayout" name="gridLayout_4">
-        <item row="3" column="2">
-         <widget class="QKeySequenceEdit" name="_3_shortKey_3">
-          <property name="enabled">
-           <bool>false</bool>
-          </property>
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="minimumSize">
-           <size>
-            <width>58</width>
-            <height>0</height>
-           </size>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>51</width>
-            <height>16777215</height>
-           </size>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="1">
-         <widget class="QLabel" name="_3_label_3">
-          <property name="enabled">
-           <bool>false</bool>
-          </property>
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Fixed" vsizetype="Minimum">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="minimumSize">
-           <size>
-            <width>65</width>
-            <height>25</height>
-           </size>
-          </property>
-          <property name="text">
-           <string>  0%</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="1">
-         <widget class="QLabel" name="_3_label_1">
-          <property name="enabled">
-           <bool>false</bool>
-          </property>
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Fixed" vsizetype="Minimum">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="minimumSize">
-           <size>
-            <width>65</width>
-            <height>25</height>
-           </size>
-          </property>
-          <property name="text">
-           <string>100% - 100%</string>
-          </property>
-         </widget>
-        </item>
-        <item row="4" column="2">
-         <widget class="QKeySequenceEdit" name="_3_shortKey_4">
-          <property name="enabled">
-           <bool>false</bool>
-          </property>
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="minimumSize">
-           <size>
-            <width>58</width>
-            <height>0</height>
-           </size>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>51</width>
-            <height>16777215</height>
-           </size>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="3">
-         <widget class="QComboBox" name="_3_comboBox_2">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="minimumSize">
-           <size>
-            <width>59</width>
-            <height>0</height>
-           </size>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>120</width>
-            <height>16777215</height>
-           </size>
-          </property>
-          <property name="maxVisibleItems">
-           <number>99</number>
-          </property>
-          <property name="sizeAdjustPolicy">
-           <enum>QComboBox::AdjustToMinimumContentsLengthWithIcon</enum>
-          </property>
-          <property name="minimumContentsLength">
-           <number>150</number>
-          </property>
-         </widget>
-        </item>
-        <item row="4" column="3">
-         <widget class="QComboBox" name="_3_comboBox_4">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="minimumSize">
-           <size>
-            <width>59</width>
-            <height>0</height>
-           </size>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>120</width>
-            <height>16777215</height>
-           </size>
-          </property>
-         </widget>
-        </item>
         <item row="3" column="0">
-         <widget class="QSlider" name="_3_horizontalSlider_3">
+         <widget class="QSlider" name="_3_horizontalSlider_2">
           <property name="enabled">
            <bool>false</bool>
           </property>
           <property name="sizePolicy">
-           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
@@ -457,7 +316,13 @@
           <property name="minimumSize">
            <size>
             <width>142</width>
-            <height>0</height>
+            <height>25</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>25</height>
            </size>
           </property>
           <property name="maximum">
@@ -468,29 +333,185 @@
           </property>
          </widget>
         </item>
-        <item row="5" column="3">
-         <widget class="QComboBox" name="_3_comboBox_5">
+        <item row="6" column="0">
+         <widget class="QSlider" name="_3_horizontalSlider_5">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
           <property name="sizePolicy">
-           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
           </property>
           <property name="minimumSize">
            <size>
-            <width>59</width>
-            <height>0</height>
+            <width>142</width>
+            <height>25</height>
            </size>
           </property>
           <property name="maximumSize">
            <size>
-            <width>120</width>
-            <height>16777215</height>
+            <width>16777215</width>
+            <height>25</height>
+           </size>
+          </property>
+          <property name="maximum">
+           <number>100</number>
+          </property>
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="1">
+         <widget class="QLabel" name="_3_label_2">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>65</width>
+            <height>25</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>25</height>
+           </size>
+          </property>
+          <property name="text">
+           <string>  0%</string>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="3">
+         <widget class="QComboBox" name="_3_comboBox_3">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>60</width>
+            <height>25</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>60</width>
+            <height>25</height>
            </size>
           </property>
          </widget>
         </item>
-        <item row="0" column="0">
+        <item row="4" column="0">
+         <widget class="QSlider" name="_3_horizontalSlider_3">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>142</width>
+            <height>25</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>25</height>
+           </size>
+          </property>
+          <property name="maximum">
+           <number>100</number>
+          </property>
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="2">
+         <widget class="QComboBox" name="_3_shortKey_2">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>60</width>
+            <height>25</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>60</width>
+            <height>25</height>
+           </size>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="2" rowspan="2">
+         <widget class="QComboBox" name="_3_shortKey_1">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>60</width>
+            <height>25</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>60</width>
+            <height>25</height>
+           </size>
+          </property>
+         </widget>
+        </item>
+        <item row="5" column="2">
+         <widget class="QComboBox" name="_3_shortKey_4">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>60</width>
+            <height>25</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>60</width>
+            <height>25</height>
+           </size>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="0" colspan="2">
          <widget class="QCheckBox" name="_3_enableAutoHealing">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
@@ -509,13 +530,13 @@
           </property>
          </widget>
         </item>
-        <item row="2" column="1">
-         <widget class="QLabel" name="_3_label_2">
+        <item row="1" column="1" rowspan="2">
+         <widget class="QLabel" name="_3_label_1">
           <property name="enabled">
            <bool>false</bool>
           </property>
           <property name="sizePolicy">
-           <sizepolicy hsizetype="Fixed" vsizetype="Minimum">
+           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
@@ -524,95 +545,26 @@
            <size>
             <width>65</width>
             <height>25</height>
-           </size>
-          </property>
-          <property name="text">
-           <string>  0%</string>
-          </property>
-         </widget>
-        </item>
-        <item row="5" column="1">
-         <widget class="QLabel" name="_3_label_5">
-          <property name="enabled">
-           <bool>false</bool>
-          </property>
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Fixed" vsizetype="Minimum">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="minimumSize">
-           <size>
-            <width>65</width>
-            <height>25</height>
-           </size>
-          </property>
-          <property name="text">
-           <string>  0%</string>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="3">
-         <widget class="QComboBox" name="_3_comboBox_3">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="minimumSize">
-           <size>
-            <width>59</width>
-            <height>0</height>
-           </size>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>120</width>
-            <height>16777215</height>
-           </size>
-          </property>
-         </widget>
-        </item>
-        <item row="4" column="0">
-         <widget class="QSlider" name="_3_horizontalSlider_4">
-          <property name="enabled">
-           <bool>false</bool>
-          </property>
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="minimumSize">
-           <size>
-            <width>142</width>
-            <height>0</height>
            </size>
           </property>
           <property name="maximumSize">
            <size>
             <width>16777215</width>
-            <height>16777215</height>
+            <height>25</height>
            </size>
           </property>
-          <property name="maximum">
-           <number>100</number>
-          </property>
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
+          <property name="text">
+           <string>100% - 100%</string>
           </property>
          </widget>
         </item>
-        <item row="1" column="0">
+        <item row="1" column="0" rowspan="2">
          <widget class="QSlider" name="_3_horizontalSlider_1">
           <property name="enabled">
            <bool>false</bool>
           </property>
           <property name="sizePolicy">
-           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
@@ -620,7 +572,13 @@
           <property name="minimumSize">
            <size>
             <width>142</width>
-            <height>0</height>
+            <height>25</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>25</height>
            </size>
           </property>
           <property name="maximum">
@@ -631,32 +589,35 @@
           </property>
          </widget>
         </item>
-        <item row="5" column="0">
-         <widget class="QSlider" name="_3_horizontalSlider_5">
+        <item row="5" column="1">
+         <widget class="QLabel" name="_3_label_4">
           <property name="enabled">
            <bool>false</bool>
           </property>
           <property name="sizePolicy">
-           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
           </property>
           <property name="minimumSize">
            <size>
-            <width>142</width>
-            <height>0</height>
+            <width>65</width>
+            <height>25</height>
            </size>
           </property>
-          <property name="maximum">
-           <number>100</number>
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>25</height>
+           </size>
           </property>
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
+          <property name="text">
+           <string>  0%</string>
           </property>
          </widget>
         </item>
-        <item row="0" column="1">
+        <item row="0" column="2">
          <widget class="QSpinBox" name="_3_spinGetNumberOfMethodes">
           <property name="enabled">
            <bool>false</bool>
@@ -681,35 +642,44 @@
           </property>
          </widget>
         </item>
-        <item row="4" column="1">
-         <widget class="QLabel" name="_3_label_4">
-          <property name="enabled">
-           <bool>false</bool>
-          </property>
+        <item row="3" column="3">
+         <widget class="QComboBox" name="_3_comboBox_2">
           <property name="sizePolicy">
-           <sizepolicy hsizetype="Fixed" vsizetype="Minimum">
+           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
           </property>
           <property name="minimumSize">
            <size>
-            <width>65</width>
+            <width>60</width>
             <height>25</height>
            </size>
           </property>
-          <property name="text">
-           <string>  0%</string>
+          <property name="maximumSize">
+           <size>
+            <width>60</width>
+            <height>25</height>
+           </size>
+          </property>
+          <property name="maxVisibleItems">
+           <number>99</number>
+          </property>
+          <property name="sizeAdjustPolicy">
+           <enum>QComboBox::AdjustToMinimumContentsLengthWithIcon</enum>
+          </property>
+          <property name="minimumContentsLength">
+           <number>150</number>
           </property>
          </widget>
         </item>
-        <item row="2" column="0">
-         <widget class="QSlider" name="_3_horizontalSlider_2">
+        <item row="5" column="0">
+         <widget class="QSlider" name="_3_horizontalSlider_4">
           <property name="enabled">
            <bool>false</bool>
           </property>
           <property name="sizePolicy">
-           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
@@ -717,7 +687,13 @@
           <property name="minimumSize">
            <size>
             <width>142</width>
-            <height>0</height>
+            <height>25</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>25</height>
            </size>
           </property>
           <property name="maximum">
@@ -728,24 +704,112 @@
           </property>
          </widget>
         </item>
-        <item row="1" column="3">
-         <widget class="QComboBox" name="_3_comboBox">
+        <item row="6" column="3">
+         <widget class="QComboBox" name="_3_comboBox_5">
           <property name="sizePolicy">
-           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
           </property>
           <property name="minimumSize">
            <size>
-            <width>59</width>
-            <height>0</height>
+            <width>60</width>
+            <height>25</height>
            </size>
           </property>
           <property name="maximumSize">
            <size>
-            <width>120</width>
-            <height>120</height>
+            <width>60</width>
+            <height>25</height>
+           </size>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="2">
+         <widget class="QComboBox" name="_3_shortKey_3">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>60</width>
+            <height>25</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>60</width>
+            <height>25</height>
+           </size>
+          </property>
+         </widget>
+        </item>
+        <item row="6" column="2">
+         <widget class="QComboBox" name="_3_shortKey_5">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>60</width>
+            <height>25</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>60</width>
+            <height>25</height>
+           </size>
+          </property>
+         </widget>
+        </item>
+        <item row="5" column="3">
+         <widget class="QComboBox" name="_3_comboBox_4">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>60</width>
+            <height>25</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>60</width>
+            <height>25</height>
+           </size>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="3" rowspan="2">
+         <widget class="QComboBox" name="_3_comboBox">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>60</width>
+            <height>25</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>60</width>
+            <height>25</height>
            </size>
           </property>
           <property name="currentIndex">
@@ -753,139 +817,61 @@
           </property>
          </widget>
         </item>
-        <item row="1" column="2">
-         <widget class="QKeySequenceEdit" name="_3_shortKey_1">
+        <item row="6" column="1">
+         <widget class="QLabel" name="_3_label_5">
           <property name="enabled">
            <bool>false</bool>
           </property>
           <property name="sizePolicy">
-           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
           </property>
           <property name="minimumSize">
            <size>
-            <width>58</width>
-            <height>0</height>
+            <width>65</width>
+            <height>25</height>
            </size>
           </property>
           <property name="maximumSize">
            <size>
-            <width>51</width>
-            <height>16777215</height>
+            <width>16777215</width>
+            <height>25</height>
            </size>
           </property>
-          <property name="locale">
-           <locale language="English" country="UnitedStates"/>
+          <property name="text">
+           <string>  0%</string>
           </property>
          </widget>
         </item>
-        <item row="2" column="2">
-         <widget class="QKeySequenceEdit" name="_3_shortKey_2">
+        <item row="4" column="1">
+         <widget class="QLabel" name="_3_label_3">
           <property name="enabled">
            <bool>false</bool>
           </property>
           <property name="sizePolicy">
-           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
           </property>
           <property name="minimumSize">
            <size>
-            <width>58</width>
-            <height>0</height>
+            <width>65</width>
+            <height>25</height>
            </size>
           </property>
           <property name="maximumSize">
            <size>
-            <width>51</width>
-            <height>16777215</height>
+            <width>16777215</width>
+            <height>25</height>
            </size>
+          </property>
+          <property name="text">
+           <string>  0%</string>
           </property>
          </widget>
-        </item>
-        <item row="5" column="2">
-         <widget class="QKeySequenceEdit" name="_3_shortKey_5">
-          <property name="enabled">
-           <bool>false</bool>
-          </property>
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="minimumSize">
-           <size>
-            <width>58</width>
-            <height>0</height>
-           </size>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>51</width>
-            <height>16777215</height>
-           </size>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="2">
-         <spacer name="horizontalSpacer_10">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="minimumSize">
-           <size>
-            <width>58</width>
-            <height>0</height>
-           </size>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>51</width>
-            <height>16777215</height>
-           </size>
-          </property>
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>40</width>
-            <height>20</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-        <item row="0" column="3">
-         <spacer name="horizontalSpacer_11">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="minimumSize">
-           <size>
-            <width>59</width>
-            <height>0</height>
-           </size>
-          </property>
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>40</width>
-            <height>20</height>
-           </size>
-          </property>
-         </spacer>
         </item>
        </layout>
       </widget>
@@ -897,12 +883,12 @@
          <x>0</x>
          <y>0</y>
          <width>391</width>
-         <height>251</height>
+         <height>281</height>
         </rect>
        </property>
        <layout class="QGridLayout" name="gridLayout_3">
-        <item row="3" column="0">
-         <widget class="QSlider" name="_4_horizontalSlider_3">
+        <item row="5" column="0">
+         <widget class="QSlider" name="_4_horizontalSlider_5">
           <property name="enabled">
            <bool>false</bool>
           </property>
@@ -914,8 +900,8 @@
           </property>
          </widget>
         </item>
-        <item row="2" column="1">
-         <widget class="QLabel" name="_4_label_2">
+        <item row="5" column="1">
+         <widget class="QLabel" name="_4_label_5">
           <property name="enabled">
            <bool>false</bool>
           </property>
@@ -924,13 +910,29 @@
           </property>
          </widget>
         </item>
-        <item row="1" column="2">
-         <widget class="QKeySequenceEdit" name="_4_shortKey_1">
+        <item row="3" column="3">
+         <widget class="QComboBox" name="_4_comboBox_3"/>
+        </item>
+        <item row="3" column="1">
+         <widget class="QLabel" name="_4_label_3">
           <property name="enabled">
            <bool>false</bool>
           </property>
-          <property name="locale">
-           <locale language="English" country="UnitedStates"/>
+          <property name="text">
+           <string>  0%</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="3">
+         <widget class="QComboBox" name="_4_comboBox_2"/>
+        </item>
+        <item row="1" column="1">
+         <widget class="QLabel" name="_4_label_1">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <property name="text">
+           <string>  0%</string>
           </property>
          </widget>
         </item>
@@ -959,8 +961,8 @@
           </property>
          </widget>
         </item>
-        <item row="3" column="1">
-         <widget class="QLabel" name="_4_label_3">
+        <item row="2" column="1">
+         <widget class="QLabel" name="_4_label_2">
           <property name="enabled">
            <bool>false</bool>
           </property>
@@ -969,19 +971,8 @@
           </property>
          </widget>
         </item>
-        <item row="5" column="2">
-         <widget class="QKeySequenceEdit" name="_4_shortKey_5">
-          <property name="enabled">
-           <bool>false</bool>
-          </property>
-         </widget>
-        </item>
-        <item row="4" column="2">
-         <widget class="QKeySequenceEdit" name="_4_shortKey_4">
-          <property name="enabled">
-           <bool>false</bool>
-          </property>
-         </widget>
+        <item row="1" column="3">
+         <widget class="QComboBox" name="_4_comboBox"/>
         </item>
         <item row="1" column="0">
          <widget class="QSlider" name="_4_horizontalSlider_1">
@@ -996,12 +987,18 @@
           </property>
          </widget>
         </item>
-        <item row="0" column="0">
-         <widget class="QCheckBox" name="_4_enableManaRestore">
+        <item row="4" column="1">
+         <widget class="QLabel" name="_4_label_4">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
           <property name="text">
-           <string>Enable auto mana regen</string>
+           <string>  0%</string>
           </property>
          </widget>
+        </item>
+        <item row="5" column="3">
+         <widget class="QComboBox" name="_4_comboBox_5"/>
         </item>
         <item row="2" column="0">
          <widget class="QSlider" name="_4_horizontalSlider_2">
@@ -1016,7 +1013,38 @@
           </property>
          </widget>
         </item>
-        <item row="0" column="1">
+        <item row="3" column="0">
+         <widget class="QSlider" name="_4_horizontalSlider_3">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <property name="maximum">
+           <number>100</number>
+          </property>
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="3">
+         <widget class="QComboBox" name="_4_comboBox_4"/>
+        </item>
+        <item row="1" column="2">
+         <widget class="QComboBox" name="_4_shortKey_1"/>
+        </item>
+        <item row="5" column="2">
+         <widget class="QComboBox" name="_4_shortKey_5"/>
+        </item>
+        <item row="4" column="2">
+         <widget class="QComboBox" name="_4_shortKey_4"/>
+        </item>
+        <item row="3" column="2">
+         <widget class="QComboBox" name="_4_shortKey_3"/>
+        </item>
+        <item row="2" column="2">
+         <widget class="QComboBox" name="_4_shortKey_2"/>
+        </item>
+        <item row="0" column="2">
          <widget class="QSpinBox" name="_4_spinGetNumberOfMethodes">
           <property name="enabled">
            <bool>false</bool>
@@ -1029,90 +1057,12 @@
           </property>
          </widget>
         </item>
-        <item row="1" column="1">
-         <widget class="QLabel" name="_4_label_1">
-          <property name="enabled">
-           <bool>false</bool>
-          </property>
+        <item row="0" column="0" colspan="2">
+         <widget class="QCheckBox" name="_4_enableManaRestore">
           <property name="text">
-           <string>  0%</string>
+           <string>Enable auto mana regen</string>
           </property>
          </widget>
-        </item>
-        <item row="3" column="2">
-         <widget class="QKeySequenceEdit" name="_4_shortKey_3">
-          <property name="enabled">
-           <bool>false</bool>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="2">
-         <widget class="QKeySequenceEdit" name="_4_shortKey_2">
-          <property name="enabled">
-           <bool>false</bool>
-          </property>
-         </widget>
-        </item>
-        <item row="5" column="0">
-         <widget class="QSlider" name="_4_horizontalSlider_5">
-          <property name="enabled">
-           <bool>false</bool>
-          </property>
-          <property name="maximum">
-           <number>100</number>
-          </property>
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-         </widget>
-        </item>
-        <item row="5" column="1">
-         <widget class="QLabel" name="_4_label_5">
-          <property name="enabled">
-           <bool>false</bool>
-          </property>
-          <property name="text">
-           <string>  0%</string>
-          </property>
-         </widget>
-        </item>
-        <item row="4" column="1">
-         <widget class="QLabel" name="_4_label_4">
-          <property name="enabled">
-           <bool>false</bool>
-          </property>
-          <property name="text">
-           <string>  0%</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="3">
-         <widget class="QComboBox" name="_4_comboBox"/>
-        </item>
-        <item row="2" column="3">
-         <widget class="QComboBox" name="_4_comboBox_2"/>
-        </item>
-        <item row="3" column="3">
-         <widget class="QComboBox" name="_4_comboBox_3"/>
-        </item>
-        <item row="4" column="3">
-         <widget class="QComboBox" name="_4_comboBox_4"/>
-        </item>
-        <item row="5" column="3">
-         <widget class="QComboBox" name="_4_comboBox_5"/>
-        </item>
-        <item row="0" column="2">
-         <spacer name="horizontalSpacer_5">
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>40</width>
-            <height>20</height>
-           </size>
-          </property>
-         </spacer>
         </item>
        </layout>
       </widget>
@@ -1295,78 +1245,61 @@
    </item>
    <item>
     <layout class="QGridLayout" name="gridLayout_7">
-     <item row="0" column="1">
-      <widget class="QLabel" name="pageLabel">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="text">
-        <string>tmp</string>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="1">
-      <widget class="QPushButton" name="helpButton">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="text">
-        <string>Help</string>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="3">
-      <widget class="QPushButton" name="pushButton">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="text">
-        <string>Skip other pages</string>
-       </property>
-      </widget>
-     </item>
      <item row="0" column="0">
       <widget class="QPushButton" name="previousButton">
        <property name="enabled">
         <bool>false</bool>
        </property>
        <property name="sizePolicy">
-        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+        <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
        </property>
        <property name="text">
-        <string>Previous Page</string>
+        <string>Back</string>
        </property>
       </widget>
      </item>
-     <item row="2" column="0">
+     <item row="0" column="3">
+      <widget class="QPushButton" name="nextButton">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="text">
+        <string>Next</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <widget class="QLabel" name="pageLabel">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="text">
+        <string>Page 0/0</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="4">
       <widget class="QPushButton" name="cancelButton">
        <property name="sizePolicy">
-        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+        <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
        </property>
        <property name="text">
         <string>Cancel</string>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="3">
-      <widget class="QPushButton" name="nextButton">
-       <property name="text">
-        <string>NextPage</string>
        </property>
       </widget>
      </item>
@@ -1406,22 +1339,6 @@
     <hint type="destinationlabel">
      <x>205</x>
      <y>149</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>helpButton</sender>
-   <signal>clicked()</signal>
-   <receiver>NewProfileConfiguartor</receiver>
-   <slot>helpButtonAction()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>197</x>
-     <y>300</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>204</x>
-     <y>160</y>
     </hint>
    </hints>
   </connection>
@@ -1570,7 +1487,7 @@
    </hints>
   </connection>
   <connection>
-   <sender>_4_horizontalSlider_5</sender>
+   <sender>_4_horizontalSlider_2</sender>
    <signal>valueChanged(int)</signal>
    <receiver>NewProfileConfiguartor</receiver>
    <slot>_4_slidersChanged()</slot>
@@ -1602,10 +1519,10 @@
    </hints>
   </connection>
   <connection>
-   <sender>_4_spinGetNumberOfMethodes</sender>
-   <signal>valueChanged(QString)</signal>
+   <sender>_4_horizontalSlider_1</sender>
+   <signal>valueChanged(int)</signal>
    <receiver>NewProfileConfiguartor</receiver>
-   <slot>_4_spinChanged()</slot>
+   <slot>_4_slidersChanged()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>108</x>
@@ -1634,39 +1551,39 @@
    </hints>
   </connection>
   <connection>
-   <sender>_4_horizontalSlider_2</sender>
-   <signal>valueChanged(int)</signal>
-   <receiver>NewProfileConfiguartor</receiver>
-   <slot>_4_slidersChanged()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>108</x>
-     <y>38</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>205</x>
-     <y>149</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>_4_horizontalSlider_1</sender>
-   <signal>valueChanged(int)</signal>
-   <receiver>NewProfileConfiguartor</receiver>
-   <slot>_4_slidersChanged()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>108</x>
-     <y>38</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>205</x>
-     <y>149</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
    <sender>_4_horizontalSlider_4</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>NewProfileConfiguartor</receiver>
+   <slot>_4_slidersChanged()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>108</x>
+     <y>38</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>205</x>
+     <y>149</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>_4_spinGetNumberOfMethodes</sender>
+   <signal>valueChanged(QString)</signal>
+   <receiver>NewProfileConfiguartor</receiver>
+   <slot>_4_spinChanged()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>108</x>
+     <y>38</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>205</x>
+     <y>149</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>_4_horizontalSlider_5</sender>
    <signal>valueChanged(int)</signal>
    <receiver>NewProfileConfiguartor</receiver>
    <slot>_4_slidersChanged()</slot>
