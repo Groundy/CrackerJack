@@ -1,4 +1,4 @@
-#pragma once
+/*#pragma once
 #include <QObject>
 #include "qnetworkinterface.h"
 #include "version.h"
@@ -18,7 +18,7 @@ public:
 private:
 
 	const uint port = 4002;
-	const QString ip = "40.85.75.230"/*"20.36.106.96";*/   /*"127.0.0.1";*/ /*"192.168.1.14"*/;
+	
 	const int timeWaitForConn = 3000;
 	const int timeWaitForDataWrite = 1000;
 	const int timeWaitForDataRead = 3000;
@@ -34,3 +34,4 @@ private:
 	void test();
 
 };
+*/

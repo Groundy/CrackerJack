@@ -1,4 +1,4 @@
-#include "Cryptography.h"
+/*#include "Cryptography.h"
 #include <QtCore/qdir.h>
 
 Cryptography::Cryptography(){
@@ -449,3 +449,4 @@ bool Cryptography::testPairOfKeys(std::string publicKey, std::string privateKey)
 	return toRet;
 }
 
+*/

@@ -1,4 +1,4 @@
-#include "ServerConnector.h"
+/*#include "ServerConnector.h"
 ServerConnector::ServerConnector(){
 	test();
 }
@@ -133,3 +133,4 @@ bool ServerConnector::conectToServer(QByteArray encryptedDataToSend, QByteArray&
 	}
 	return waited;
 }
+*/
