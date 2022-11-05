@@ -42,9 +42,6 @@
     <ClCompile Include="sources\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="sources\LoginWindow.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="sources\SelectProfileWindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -93,15 +90,6 @@
     <ClCompile Include="sources\Logger.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="sources\Cryptography.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="sources\ServerConnector.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="sources\ClientServerApi.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="sources\Market.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -134,9 +122,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <QtMoc Include="sources\LoginWindow.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
     <QtMoc Include="sources\SelectProfileWindow.h">
       <Filter>Header Files</Filter>
     </QtMoc>
@@ -150,9 +135,6 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="sources\ScreenAnalyzer.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-    <QtMoc Include="sources\ClientServerApi.h">
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="sources\Market.h">
@@ -175,9 +157,6 @@
     </QtMoc>
   </ItemGroup>
   <ItemGroup>
-    <QtUic Include="sources\LoginWindow.ui">
-      <Filter>Form Files</Filter>
-    </QtUic>
     <QtUic Include="sources\SelectProfileWindow.ui">
       <Filter>Form Files</Filter>
     </QtUic>
@@ -222,13 +201,7 @@
     <ClInclude Include="sources\Calibrator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="sources\Cryptography.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="sources\VariablesClass.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="sources\ServerConnector.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="sources\ScreenSaver.h">
