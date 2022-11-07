@@ -21,10 +21,9 @@ public:
 	VariablesClass* var;
 	unsigned int PidOfGame;
 	QString gameWindowTitle;
-	unsigned int getPIDofProcess(QString nameOfProcess, QList<QString> names, QList<unsigned int> pids);
+	unsigned int getPIDofProcess(QMap<QString, unsigned int>& processes, QString nameOfProcessToFind);
 	gameActivityStates checkState();
-	void getListOfProcess(QList<QString>& names, QList<unsigned int>& IDs);
-	unsigned int getPIDofProcess(QString nameOfProcess);
+	void getListOfProcess(QMap<QString, unsigned int>& processes);
 	QString getGameWindowTitile();
 	gameActivityStates windowIsAccessible(unsigned int PID, QString windowTitle);
 signals:

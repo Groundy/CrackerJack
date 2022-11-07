@@ -36,19 +36,6 @@ void activeGameThread::run(){
     }
 }
 
-unsigned int activeGameThread::getPIDofProcess(QString nameOfProcess) {
-    QList<QString> names;
-    QList<unsigned int> ids;
-    getListOfProcess(names, ids);
-    for (int i = 0; i < names.size(); i++) {
-        if (names[i].contains(nameOfProcess)) {
-            unsigned int toRet = ids.size() >= i ? ids[i] : 0;
-            return toRet;
-        }
-    }
-    return 0;
-}
-
 QString activeGameThread::getGameWindowTitile(){
     const QString partOfBrowserTitle = "Tibia - Free Multiplayer Online Role Playing Game";
   
@@ -72,7 +59,7 @@ QString activeGameThread::getGameWindowTitile(){
         if (title == "Program Manager")
             continue;
 
-        if(title.contains(partOfBrowserTitle))//broweser
+        if(title.contains(partOfBrowserTitle))//browser
             continue;
 
         if (title.contains("Tibia - "))
@@ -84,15 +71,12 @@ QString activeGameThread::getGameWindowTitile(){
     return QString();
 }
 
-unsigned int activeGameThread::getPIDofProcess(QString nameOfProcess, QList<QString> names, QList<unsigned int> pids){
-    for (int i = 0; i < names.size(); i++) {
-        if (names[i].contains(nameOfProcess)) {
-            bool listNotEmpty = pids.size() >= i;
-            unsigned int toRet = listNotEmpty ? pids[i] : 0;
-            return toRet;
-        }
-    }
-    return 0;
+unsigned int activeGameThread::getPIDofProcess(QMap<QString, unsigned int>& processes, QString nameOfProcessToFind){
+    auto iteratorToProcess = processes.find(nameOfProcessToFind);
+    if (iteratorToProcess == processes.end())
+        return 0;
+
+    return iteratorToProcess.value();
 }
 
 activeGameThread::gameActivityStates activeGameThread::windowIsAccessible(const unsigned int PID, QString windowTitle){
@@ -114,10 +98,9 @@ activeGameThread::gameActivityStates activeGameThread::windowIsAccessible(const 
 }
 
 activeGameThread::gameActivityStates activeGameThread::checkState(){
-    QList<QString> names;
-    QList<unsigned int> pids;
-    getListOfProcess(names, pids);
-    unsigned int PID = getPIDofProcess("client.exe", names, pids);
+    QMap<QString, unsigned int> processes;
+    getListOfProcess(processes);
+    unsigned int PID = getPIDofProcess(processes, "client.exe");
     QString windowTitle = getGameWindowTitile();
     gameActivityStates gameWinState = windowIsAccessible(PID, windowTitle);
     if (gameWinState == ACTIVE) {
@@ -132,10 +115,10 @@ activeGameThread::gameActivityStates activeGameThread::checkState(){
         if (PidOfGame != 0)
             PidOfGame = 0;
     }
-        return gameWinState;
+    return gameWinState;
 }
 
-void activeGameThread::getListOfProcess(QList<QString>& names, QList<unsigned int>& IDs) {
+void activeGameThread::getListOfProcess(QMap<QString, unsigned int>& processes) {
     HANDLE hSnapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
     if (hSnapshot) {
         PROCESSENTRY32 pe32;
@@ -146,8 +129,7 @@ void activeGameThread::getListOfProcess(QList<QString>& names, QList<unsigned in
                 WCHAR* name = pe32.szExeFile;
                 _bstr_t b(name);
                 const char* nameCC = b;
-                IDs.push_back(ID);
-                names.push_back(QString(nameCC));
+                processes.insert(QString(nameCC), ID);
             } while (Process32Next(hSnapshot, &pe32));
         }
         CloseHandle(hSnapshot);
