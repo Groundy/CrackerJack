@@ -8,12 +8,14 @@ class ScreenSaver : public QThread{
 public:
 	bool enableScreenCapture = true;
 	void run();
-	int timeBetweenScreens = 550;
-	ScreenSaver(QObject *parent, VariablesClass *varClass, std::shared_ptr<GameConnecter> gameConnector);
+
+	ScreenSaver(QObject *parent, std::shared_ptr<VariablesClass> varClass, std::shared_ptr<GameConnecter> gameConnector);
 	~ScreenSaver();
-	void sendScreenRequestToGame(Key keyCodeForScreen, VariablesClass* var);
+
 private:
+	int timeBetweenScreens = 550;
 	void screenLoop();
-	VariablesClass* variables;
-	std::shared_ptr<GameConnecter> gameConnecter;
+	std::shared_ptr<VariablesClass> var;
+	std::shared_ptr<GameConnecter> gameConnecter;	
+	void sendScreenRequestToGame(Key keyCodeForScreen);
 };

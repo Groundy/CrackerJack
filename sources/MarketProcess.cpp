@@ -1,6 +1,6 @@
 #include "MarketProcess.h"
 
-MarketProcess::MarketProcess(VariablesClass* var, QList<Offer> offersThatShouldBeSet, std::shared_ptr<GameConnecter> gameConnector, QWidget* parent = NULL) : 
+MarketProcess::MarketProcess(std::shared_ptr<VariablesClass> var, QList<Offer> offersThatShouldBeSet, std::shared_ptr<GameConnecter> gameConnector, QWidget* parent = NULL) :
 	var(var), userOfferList(offersThatShouldBeSet), gameConnector(gameConnector){
 	this->setParent(parent);
 }
@@ -170,10 +170,10 @@ bool MarketProcess::askForScreenAndReadIt(){
 	//todo poprawic bez pojawiwa sie tych procesow
 	//ScreenSaver::sendScreenRequestToGame(Key("HOME"),var);
 	Sleep(1500);
-	ScreenAnalyzer screenLoader(NULL, this->var, NULL);
-	bool ok = screenLoader.loadScreen(currentImg);
-	screenLoader.deleteScreenShotFolder();
-	return ok;
+	//ScreenAnalyzer screenLoader(NULL, var, NULL);
+	//bool ok = screenLoader.loadScreen(currentImg);
+	//screenLoader.deleteScreenShotFolder();
+	return true;
 }
 
 void MarketProcess::mainLoop() {

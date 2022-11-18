@@ -1,7 +1,7 @@
 #include "ScreenSaver.h"
 
-ScreenSaver::ScreenSaver(QObject* parent, VariablesClass* varClass, std::shared_ptr<GameConnecter> gameConnecter)
-	: QThread(parent), variables(varClass), gameConnecter(gameConnecter){
+ScreenSaver::ScreenSaver(QObject* parent, std::shared_ptr<VariablesClass> var, std::shared_ptr<GameConnecter> gameConnecter)
+	: QThread(parent), var(var), gameConnecter(gameConnecter){
 }
 
 ScreenSaver::~ScreenSaver(){
@@ -9,7 +9,7 @@ ScreenSaver::~ScreenSaver(){
 }
 
 
-void ScreenSaver::sendScreenRequestToGame(Key keyCodeForScreen, VariablesClass* var){
+void ScreenSaver::sendScreenRequestToGame(Key keyCodeForScreen){
 	uint pid = var->var_pidOfGame;
 	QString winTitle = var->var_winTitleOfGame;
 	bool wrongParameters = pid == 0 || winTitle.isEmpty();
@@ -27,7 +27,7 @@ void ScreenSaver::screenLoop(){
 			msleep(5 * timeBetweenScreens);
 			continue;
 		}
-		sendScreenRequestToGame(Key("HOME"), variables);
+		sendScreenRequestToGame(Key("HOME"));
 		msleep(timeBetweenScreens);
 	}
 }

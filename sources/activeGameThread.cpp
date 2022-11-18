@@ -1,11 +1,10 @@
 #include "activeGameThread.h"
 
-activeGameThread::activeGameThread(QObject *parent, VariablesClass* varClass)
-	: QThread(parent){
+activeGameThread::activeGameThread(QObject *parent, std::shared_ptr< VariablesClass> var)
+	: QThread(parent), var(var){
     const char* signal = SIGNAL(GameStateChanged(int));
     const char* slot = SLOT(onGameStateChanged(int));
     bool good = connect(this, signal, parent, slot);
-    var = varClass;
 }
 
 activeGameThread::~activeGameThread(){

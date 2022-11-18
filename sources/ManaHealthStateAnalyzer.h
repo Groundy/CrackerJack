@@ -10,7 +10,7 @@ class ManaHealthStateAnalyzer : public QThread
 {
 	Q_OBJECT
 public:
-	ManaHealthStateAnalyzer(QObject *parent, Profile* profile, VariablesClass* varClass);
+	ManaHealthStateAnalyzer(QObject *parent, Profile* profile, std::shared_ptr<VariablesClass> var);
 	~ManaHealthStateAnalyzer();
 	enum ERROR_CODES {
 		OK = 0,
@@ -65,5 +65,5 @@ private:
 	void sleepAppropirateTimeToNextAnalyze();
 	void getAmountsOfPotions();
 //	void readManaBreak();
-	VariablesClass* var;
+	std::shared_ptr<VariablesClass> var;
 };

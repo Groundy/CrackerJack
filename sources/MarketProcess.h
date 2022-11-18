@@ -92,7 +92,7 @@ namespace Ui { class MarketProcess; };
 class MarketProcess : public QThread {
 	Q_OBJECT
 public:
-	MarketProcess(VariablesClass* var, QList<Offer> offersThatShouldBe, std::shared_ptr<GameConnecter> gameConnector, QWidget* parent);
+	MarketProcess(std::shared_ptr<VariablesClass> var, QList<Offer> offersThatShouldBe, std::shared_ptr<GameConnecter> gameConnector, QWidget* parent);
 	~MarketProcess();
 	enum class Type { BUY, SELL };
 	enum class Actions { LOOKING_FOR_MARKET_WINDOW,SCANNING_OFFER_LIST, LOOKING_FOR_ITEM, PLACING_OFFER, CANCELING_OFFER, FINISHED, CANCELING };
@@ -115,7 +115,7 @@ signals:
 private:
 	std::shared_ptr<GameConnecter> gameConnector;
 	Pos pos;
-	VariablesClass* var;
+	std::shared_ptr<VariablesClass> var;
 	QImage currentImg;
 	HWND handlerToGame;
 	const int HEIGH_OF_OFFER_ROW = 16 ;

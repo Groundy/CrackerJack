@@ -1,7 +1,9 @@
 #include "Market.h"
 #include "ui_Market.h"
 
-Market::Market(VariablesClass* var, std::shared_ptr<GameConnecter> gameConnector) : var(var), gameConnector(gameConnector){
+Market::Market(std::shared_ptr<VariablesClass> var, std::shared_ptr<GameConnecter> gameConnector) :
+	var(var), gameConnector(gameConnector)
+{
 	ui = new Ui::Market();
 	ui->setupUi(this);
 	JsonParser::readItemJson(this->allItems);

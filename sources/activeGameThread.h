@@ -8,17 +8,18 @@
 #include "Utilities.h"
 #include "atlstr.h"
 #include "VariablesClass.h"
+#include <memory>
 class activeGameThread : public QThread
 {
 	Q_OBJECT
 
 public:
 	enum gameActivityStates {NO_ACTIVE, NO_WINDOW, NO_LOGGED, NO_HANDLER, ACTIVE };
-	activeGameThread(QObject *parent, VariablesClass* var);
+	activeGameThread(QObject *parent, std::shared_ptr<VariablesClass> var);
 	~activeGameThread();	
 	void run();
 	QList<int>* historyOfGameActivity = new QList<int>;
-	VariablesClass* var;
+	std::shared_ptr<VariablesClass> var;
 	unsigned int PidOfGame;
 	QString gameWindowTitle;
 	unsigned int getPIDofProcess(QMap<QString, unsigned int>& processes, QString nameOfProcessToFind);

@@ -33,12 +33,12 @@ public slots:
 	void startTradingProcess();
 	void editItemButtonClicked();
 public:
-	Market(VariablesClass* varToSet, std::shared_ptr<GameConnecter> gameConnector);
+	Market(std::shared_ptr<VariablesClass> var, std::shared_ptr<GameConnecter> gameConnector);
 	~Market();
 
 private:
 	Ui::Market *ui;
-	VariablesClass* var;
+	std::shared_ptr<VariablesClass> var;
 	QDir ditWithSavedItemLists;
 	QList<Item> allItems;
 	QList<Offer> offersList;

@@ -1,8 +1,7 @@
 #include "ScreenAnalyzer.h"
 
-ScreenAnalyzer::ScreenAnalyzer(QObject *parent, VariablesClass *varClass, Profile* profToSet)
-	: QThread(parent){
-	var = varClass;
+ScreenAnalyzer::ScreenAnalyzer(QObject *parent, std::shared_ptr<VariablesClass> var, Profile* profToSet)
+	: QThread(parent), var(var){
 	profile = profToSet;
 	screenShotFolder = setUpScreenFolder();
 	/*

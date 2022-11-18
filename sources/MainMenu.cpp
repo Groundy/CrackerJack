@@ -85,16 +85,16 @@ void MainMenu::setProblemsWindow(QStringList problemsToShow){
 }
 
 void MainMenu::threadStarter(){
-	activityThread = new activeGameThread(this,&var);
+	activityThread = new activeGameThread(this, var);
 	activityThread->start();
 
-	screenSaverThread = new ScreenSaver(this, &var, gameConnector);
+	screenSaverThread = new ScreenSaver(this, var, gameConnector);
 	screenSaverThread->start();
 
-	screenAnalyzer = new ScreenAnalyzer(this, &var, prof);
+	screenAnalyzer = new ScreenAnalyzer(this, var, prof);
 	screenAnalyzer->start();
 
-	healthManaStateAnalyzer = new ManaHealthStateAnalyzer(this, prof , &var);
+	healthManaStateAnalyzer = new ManaHealthStateAnalyzer(this, prof , var);
 	healthManaStateAnalyzer->start();
 }
 
@@ -125,7 +125,7 @@ void MainMenu::signalSlotConnector(){
 
 void MainMenu::autoHealAndManaRegCheckBoxChanged() {
 	bool stateOfSwitch = ui->autoManaHealChechBox->isChecked();
-	var.HealthAndManaRestorationShouldBeActive = stateOfSwitch;
+	var->HealthAndManaRestorationShouldBeActive = stateOfSwitch;
 }
 
 void MainMenu::changeProfileButtonAction(){
@@ -160,7 +160,7 @@ void MainMenu::autoHuntAction(){
 }
 
 void MainMenu::tradingAction(){
-	Market market(&var, gameConnector);
+	Market market(var, gameConnector);
 	market.exec();
 }
 

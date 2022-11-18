@@ -1,17 +1,19 @@
 #pragma once
 #include <QThread>
-#include "ScreenAnalyzer.h"
-#include "VariablesClass.h"
-#include "qdir.h"
-#include "qimage.h"
-#include "RGBstruct.h"
-#include "qdatetime.h"
-#include "qmap.h"
-#include "qdebug.h"
+#include <memory>
+#include <qdir.h>
+#include <qimage.h>
+#include <qmap.h>
+#include <qdebug.h>
+#include <qdatetime.h>
+
 #include "Calibrator.h"
 #include "Profile.h"
 #include "Utilities.h"
 #include "ProfileDataBaseManager.h"
+#include "RGBstruct.h"
+#include "ScreenAnalyzer.h"
+#include "VariablesClass.h"
 class ScreenAnalyzer : public QThread
 {
 	Q_OBJECT
@@ -24,7 +26,7 @@ public:
 		NO_ENOUGH_FRAMES_FOUND = 8
 	};
 
-	ScreenAnalyzer( QObject *parent, VariablesClass* var, Profile* prof);
+	ScreenAnalyzer( QObject *parent, std::shared_ptr<VariablesClass> var, Profile* prof);
 	~ScreenAnalyzer();
 	void run();
 	bool enableScreenAnalyzer = true;
@@ -33,7 +35,7 @@ public:
 signals:
 	void sendAllowenceToAnalyze(bool state);
 private:
-	VariablesClass* var;
+	std::shared_ptr<VariablesClass> var;
 	Profile* profile;
 	int timeBetweenNextCheckingsOfScrennShotFolder = 100;
 	bool isManaHealthClassEnabledToAnalyzeImgs = false;

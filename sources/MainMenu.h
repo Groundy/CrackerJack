@@ -43,7 +43,7 @@ private:
 	ScreenSaver* screenSaverThread;
 	ScreenAnalyzer* screenAnalyzer;
 	ManaHealthStateAnalyzer* healthManaStateAnalyzer;
-	VariablesClass var;
+	std::shared_ptr<VariablesClass> var;
 	std::shared_ptr<GameConnecter> gameConnector;
 
 	void setProblemsWindow(QStringList problemsToShow);

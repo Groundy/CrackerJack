@@ -2,7 +2,7 @@
 #include <QChar>
 #include <ImgEditor.h>
 
-ManaHealthStateAnalyzer::ManaHealthStateAnalyzer(QObject *parent, Profile* profile, VariablesClass* var)
+ManaHealthStateAnalyzer::ManaHealthStateAnalyzer(QObject *parent, Profile* profile, std::shared_ptr<VariablesClass> var)
 	: QThread(parent), var(var){
 
 	lifeThreshholds = profile->healthRestorePercentages;;
