@@ -233,9 +233,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="cpp.hint" />
-  </ItemGroup>
-  <ItemGroup>
     <Text Include="sources\ZZ___TO____DO.txt" />
   </ItemGroup>
   <ItemGroup>

@@ -292,9 +292,6 @@ xcopy /y /d ".\dependencies\64-bit\libcrypto-1_1-x64.dll" "$(OutDir)"
     <QtMoc Include="sources\SelectProfileWindow.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="cpp.hint" />
-  </ItemGroup>
-  <ItemGroup>
     <Text Include="sources\ZZ___TO____DO.txt" />
   </ItemGroup>
   <ItemGroup>
