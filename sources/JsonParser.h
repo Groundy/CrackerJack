@@ -25,4 +25,5 @@ public:
 	bool getManaRestoreMethodes(QStringList potionNameList, QList<Item>& potionToReturn);
 	bool getItemsFromCategory(QList<Item> &readItems, Item::TYPE_OF_ITEM type);
 	static bool saveJsonFile(QString pathToFolder, QString fileNameWithExtension, QJsonDocument& docToSave);
+	QMap<QString, int> readAvaibleKeys();
 };

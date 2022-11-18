@@ -307,3 +307,17 @@ bool JsonParser::saveJsonFile(QString pathToFolder, QString fileNameWithExtensio
 	return true;
 }
 
+QMap<QString, int> JsonParser::readAvaibleKeys(){
+	QJsonObject obj;
+	QString path = "C:\\Moje\\pliki\\repos\\CrackerJackClient\\ResourcesUsing\\keys.json";
+	bool openCorrectly = openJsonFile(obj, path);
+	QMap<QString, int> keys;
+	for each (auto var in obj.value("keys").toArray()){	
+		QString keyName = var.toObject().keys().first();
+		int keyVal = var.toObject().value(keyName).toInt();
+		keys.insert(keyName, keyVal);
+	}
+
+	return keys;
+}
+
