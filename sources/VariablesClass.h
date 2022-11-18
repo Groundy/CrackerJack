@@ -3,6 +3,7 @@
 #include "qmap.h"
 #include "qimage.h"
 #include <basetsd.h>
+#include <atomic>
 class VariablesClass{
 public:
 	uint var_pidOfGame;
@@ -15,7 +16,7 @@ public:
 	QImage var_manaShieldPieceImg;
 	QImage var_combinedBoxPieceImg;
 
-	float health, mana, manashield;
+	std::atomic<float> health, mana, manashield;
 	int rotationNeededForPointsAbove;
 	bool manaFound, healthFound, manaShieldFound, combinedFound;
 	bool newData;
