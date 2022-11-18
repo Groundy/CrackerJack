@@ -26,19 +26,19 @@ public slots:
 	void _3_healingEnabledChanged();
 	void _3_spinChanged();
 	void _3_slidersChanged();
-
 	void _4_ManaEnabledChanged();
 	void _4_spinChanged();
 	void _4_slidersChanged();
-	
 	void _5_listAction();
 
 private:
 	Ui::NewProfileConfiguartor *ui;
-	void refreshGUI();	
+
 	Profile* profToEdit;
 	int pageNumber = 1;
 	int MAX_PAGE;
+
+	void refreshGUI();	
 	bool finishAddingNewProfile();
 	void additionalGuiSettings();
 	bool pageIsCorrectlyFilled();

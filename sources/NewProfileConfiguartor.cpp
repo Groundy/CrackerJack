@@ -3,14 +3,13 @@
 #include <Key.h>
 
 NewProfileConfiguartor::NewProfileConfiguartor(Profile* prof, QWidget *parent)	: 
-	QDialog(parent) {
+	QDialog(parent), profToEdit(prof) {
 	ui = new Ui::NewProfileConfiguartor();
 	ui->setupUi(this); 
 	MAX_PAGE = ui->stackedWidget->count();
 	ui->stackedWidget->setCurrentIndex(0);
 	fillGuiPtrs();
 	additionalGuiSettings();
-	profToEdit = prof;
 	refreshGUI();
 }
 
@@ -90,34 +89,20 @@ void NewProfileConfiguartor::additionalGuiSettings(){
 }
 
 bool NewProfileConfiguartor::pageIsCorrectlyFilled() {
-	bool toRet;
 	switch (pageNumber) {
-	case 1: {
-		 toRet = checkCorrectnessOfPage_1();
-		 break;
-	}
-	case 2: {
-		toRet = checkCorrectnessOfPage_2();
-		break;
-	}
-	case 3: {
-		toRet = checkCorrectnessOfPage_3();
-		break;
-	}
-	case 4: {
-		toRet = checkCorrectnessOfPage_4();
-		break;
-	}
-	case 5: {
-		toRet = checkCorrectnessOfPage_5();
-		break;
-	}
-	default: {
-		toRet = true;
-		break;
-	}  
+	case 1:
+		 return checkCorrectnessOfPage_1();
+	case 2:
+		return checkCorrectnessOfPage_2();
+	case 3:
+		return checkCorrectnessOfPage_3();
+	case 4:
+		return checkCorrectnessOfPage_4();
+	case 5: 
+		return checkCorrectnessOfPage_5();
+	default:
+		return true;
 	} 
-	return toRet;
 }
 
 void NewProfileConfiguartor::saveDataToProfile(Profile* prof) {
@@ -214,7 +199,19 @@ void NewProfileConfiguartor::saveDataToProfile(Profile* prof) {
 bool NewProfileConfiguartor::checkCorrectnessOfPage_1(){
 	QString nameOfProf = ui->_1_nameEdit->text();
 	bool nameisTooLong = nameOfProf.size() > 50;
+	if (nameisTooLong) {
+		QString text = tr("Profile name can't be longer than 50 characters.");
+		Utilities::showMessageBox_INFO(text);
+		return false;
+	}
+
 	bool nameIsTooShort = nameOfProf.size() < 3;
+	if (nameIsTooShort) {
+		QString text = tr("Profile name can't be shorter than 3 characters.");
+		Utilities::showMessageBox_INFO(text);
+		return false;
+	}
+
 	bool nameConsistForbiddenChars = false;
 	if (nameOfProf.contains(QChar::LineFeed) || nameOfProf.contains(QChar::CarriageReturn))
 		nameConsistForbiddenChars = true;
@@ -222,22 +219,12 @@ bool NewProfileConfiguartor::checkCorrectnessOfPage_1(){
 		if (!character.isLetterOrNumber() && !character.isSpace())
 			nameConsistForbiddenChars = true;
 	}
-
-	if (nameisTooLong) {
-		QString text = tr("Profile name can't be longer than 50 characters.");
-		Utilities::showMessageBox_INFO(text);
-		return false;
-	}
-	if (nameIsTooShort) {
-		QString text = tr("Profile name can't be shorter than 3 characters.");
-		Utilities::showMessageBox_INFO(text);
-		return false;
-	}
 	if (nameConsistForbiddenChars) {
 		QString text = tr("Profile name can't have any special characters, please use only letters, numbers or spaces.");
 		Utilities::showMessageBox_INFO(text);
 		return false;
 	}
+
 	return true;
 }
 
