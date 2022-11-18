@@ -151,9 +151,9 @@ bool Calibrator::findPotionsOnBottomBar(QStringList namesOfPotionsToFind, QStrin
 		QString code_light = map_light[potName];
 		QString code_dark = map_dark[potName];
 		QImage imgToAdd;
-		imgToAdd = Utilities::getImageFromAdvancedCode(code_light);
+		imgToAdd = ImgEditor::getImageFromAdvancedCode(code_light);
 		potionsImg_light.push_back(imgToAdd);
-		imgToAdd = Utilities::getImageFromAdvancedCode(code_dark);
+		imgToAdd = ImgEditor::getImageFromAdvancedCode(code_dark);
 		potionsImg_dark.push_back(imgToAdd);
 	}
 
@@ -295,13 +295,13 @@ int Calibrator::calibrateManaAndHealthBar(){
 }
 
 int Calibrator::findIndexesOfRectangleThatContainsSlashes(QImage& fullScreen, QList<QRect> importantFrames, QList<int>& indexesOfFramesWithSlashesVert, QList<int>& indexesOfFramesWithSlashesHor, int& indexOfFrameCombined) {
-	QImage vertSlashes = Utilities::fromCharToImg(QChar(47));
-	QImage horSlashes = Utilities::fromCharToImg(QChar(92));
+	QImage vertSlashes = ImgEditor::fromCharToImg(QChar(47));
+	QImage horSlashes = ImgEditor::fromCharToImg(QChar(92));
 	QList<int> indexesVert, indexesHor;
 	indexOfFrameCombined = -1;
 	for (size_t i = 0; i < importantFrames.size(); i++) {
 		QImage imgTmp = fullScreen.copy(importantFrames[i]);
-		Utilities::imgToBlackAndWhiteAllColors(imgTmp, 250);
+		ImgEditor::imgToBlackAndWhiteAllColors(imgTmp, 250);
 
 		QList<QPoint> pointsVert = findStartPositionInImg(vertSlashes, imgTmp);
 		if (pointsVert.size() == 1)
@@ -728,31 +728,31 @@ int Calibrator::findWindowsOnScreen(QImage& fullScreen, QList<QRect>& importantR
 	QList<QPoint> startOfFrames;
 	for (size_t x = 0; x < WIDTH - 2; x++) {
 		for (size_t y = 0; y < HEIGHT - 2; y++) {
-			bool isPixelOfFrame = Utilities::isItPixelFromFrame(fullScreen.pixel(x, y), MIN_ACCEPTABLE_VAL, MAX_ACCEPTABLE_VAL, true);
+			bool isPixelOfFrame = ImgEditor::isItPixelFromFrame(fullScreen.pixel(x, y), MIN_ACCEPTABLE_VAL, MAX_ACCEPTABLE_VAL, true);
 			if (!isPixelOfFrame) continue;
 
-			isPixelOfFrame = Utilities::isItPixelFromFrame(fullScreen.pixel(x + 1, y + 1), MIN_ACCEPTABLE_VAL, MAX_ACCEPTABLE_VAL, false);
+			isPixelOfFrame = ImgEditor::isItPixelFromFrame(fullScreen.pixel(x + 1, y + 1), MIN_ACCEPTABLE_VAL, MAX_ACCEPTABLE_VAL, false);
 			if (isPixelOfFrame) continue;
 
-			isPixelOfFrame = Utilities::isItPixelFromFrame(fullScreen.pixel(x + 1, y + 2), MIN_ACCEPTABLE_VAL, MAX_ACCEPTABLE_VAL, false);
+			isPixelOfFrame = ImgEditor::isItPixelFromFrame(fullScreen.pixel(x + 1, y + 2), MIN_ACCEPTABLE_VAL, MAX_ACCEPTABLE_VAL, false);
 			if (isPixelOfFrame) continue;
 
-			isPixelOfFrame = Utilities::isItPixelFromFrame(fullScreen.pixel(x + 2, y + 1), MIN_ACCEPTABLE_VAL, MAX_ACCEPTABLE_VAL, false);
+			isPixelOfFrame = ImgEditor::isItPixelFromFrame(fullScreen.pixel(x + 2, y + 1), MIN_ACCEPTABLE_VAL, MAX_ACCEPTABLE_VAL, false);
 			if (isPixelOfFrame) continue;
 
-			isPixelOfFrame = Utilities::isItPixelFromFrame(fullScreen.pixel(x + 2, y + 2), MIN_ACCEPTABLE_VAL, MAX_ACCEPTABLE_VAL, false);
+			isPixelOfFrame = ImgEditor::isItPixelFromFrame(fullScreen.pixel(x + 2, y + 2), MIN_ACCEPTABLE_VAL, MAX_ACCEPTABLE_VAL, false);
 			if (isPixelOfFrame) continue;
 
-			isPixelOfFrame = Utilities::isItPixelFromFrame(fullScreen.pixel(x + 1, y), MIN_ACCEPTABLE_VAL, MAX_ACCEPTABLE_VAL, true);
+			isPixelOfFrame = ImgEditor::isItPixelFromFrame(fullScreen.pixel(x + 1, y), MIN_ACCEPTABLE_VAL, MAX_ACCEPTABLE_VAL, true);
 			if (!isPixelOfFrame) continue;
 
-			isPixelOfFrame = Utilities::isItPixelFromFrame(fullScreen.pixel(x + 2, y), MIN_ACCEPTABLE_VAL, MAX_ACCEPTABLE_VAL, true);
+			isPixelOfFrame = ImgEditor::isItPixelFromFrame(fullScreen.pixel(x + 2, y), MIN_ACCEPTABLE_VAL, MAX_ACCEPTABLE_VAL, true);
 			if (!isPixelOfFrame) continue;
 
-			isPixelOfFrame = Utilities::isItPixelFromFrame(fullScreen.pixel(x, y + 1), MIN_ACCEPTABLE_VAL, MAX_ACCEPTABLE_VAL, true);
+			isPixelOfFrame = ImgEditor::isItPixelFromFrame(fullScreen.pixel(x, y + 1), MIN_ACCEPTABLE_VAL, MAX_ACCEPTABLE_VAL, true);
 			if (!isPixelOfFrame) continue;
 
-			isPixelOfFrame = Utilities::isItPixelFromFrame(fullScreen.pixel(x, y + 2), MIN_ACCEPTABLE_VAL, MAX_ACCEPTABLE_VAL, true);
+			isPixelOfFrame = ImgEditor::isItPixelFromFrame(fullScreen.pixel(x, y + 2), MIN_ACCEPTABLE_VAL, MAX_ACCEPTABLE_VAL, true);
 			if (!isPixelOfFrame) continue;
 
 			startOfFrames.push_back(QPoint(x, y));
@@ -765,7 +765,7 @@ int Calibrator::findWindowsOnScreen(QImage& fullScreen, QList<QRect>& importantR
 		int currentWidth = 0;
 		for (size_t x = startPoint.x(); x < WIDTH; x++) {
 			uint color = fullScreen.pixel(x, startPoint.y());
-			bool isPixOfFrame = Utilities::isItPixelFromFrame(color, MIN_ACCEPTABLE_VAL, MAX_ACCEPTABLE_VAL, true);
+			bool isPixOfFrame = ImgEditor::isItPixelFromFrame(color, MIN_ACCEPTABLE_VAL, MAX_ACCEPTABLE_VAL, true);
 			if (isPixOfFrame)
 				currentWidth++;
 			else
@@ -774,7 +774,7 @@ int Calibrator::findWindowsOnScreen(QImage& fullScreen, QList<QRect>& importantR
 		int currentHeight = 0;
 		for (size_t y = startPoint.y(); y < HEIGHT; y++) {
 			uint color = fullScreen.pixel(startPoint.x(), y);
-			bool isPixOfFrame = Utilities::isItPixelFromFrame(color, MIN_ACCEPTABLE_VAL, MAX_ACCEPTABLE_VAL, true);
+			bool isPixOfFrame = ImgEditor::isItPixelFromFrame(color, MIN_ACCEPTABLE_VAL, MAX_ACCEPTABLE_VAL, true);
 			if (isPixOfFrame)
 				currentHeight++;
 			else
@@ -819,9 +819,9 @@ void Calibrator::TEST_setPositionHealthImhs(QString pathToFolderWithDiffrentPosi
 		health = img.copy(importantRects[indHealth]);
 		QString healthStr, manaStr, ManaShieldStr, combinedStr;
 
-		Utilities::rotateImgToRight(health, howTheyShouldBeRotated);
-		Utilities::imgToBlackAndWhiteAllColors(health, 240);
-		healthStr = Utilities::imgWithStrToStr(health);
+		ImgEditor::rotateImgToRight(health, howTheyShouldBeRotated);
+		ImgEditor::imgToBlackAndWhiteAllColors(health, 240);
+		healthStr = ImgEditor::imgWithStrToStr(health);
 		qDebug() << "Health: " + healthStr;
 
 		bool thereIsCombinedBox = indCombined != -1;
@@ -831,9 +831,9 @@ void Calibrator::TEST_setPositionHealthImhs(QString pathToFolderWithDiffrentPosi
 			QRect rect = importantRects.at(indCombined);
 			combined = img.copy(rect);
 
-			Utilities::rotateImgToRight(combined, howTheyShouldBeRotated);
-			Utilities::imgToBlackAndWhiteAllColors(combined, 240);
-			QString combinedStr = Utilities::imgWithStrToStr(combined);
+			ImgEditor::rotateImgToRight(combined, howTheyShouldBeRotated);
+			ImgEditor::imgToBlackAndWhiteAllColors(combined, 240);
+			QString combinedStr = ImgEditor::imgWithStrToStr(combined);
 			qDebug() << "combinedStr: " + combinedStr;
 		}
 		else if (!thereIsCombinedBox && manaShieldFound && manaFound) {
@@ -842,23 +842,23 @@ void Calibrator::TEST_setPositionHealthImhs(QString pathToFolderWithDiffrentPosi
 			rect = importantRects.at(indManaShield);
 			manaShield = img.copy(rect);
 
-			Utilities::rotateImgToRight(mana, howTheyShouldBeRotated);
-			Utilities::imgToBlackAndWhiteAllColors(mana, 240);
-			QString manaStr = Utilities::imgWithStrToStr(mana);
+			ImgEditor::rotateImgToRight(mana, howTheyShouldBeRotated);
+			ImgEditor::imgToBlackAndWhiteAllColors(mana, 240);
+			QString manaStr = ImgEditor::imgWithStrToStr(mana);
 			qDebug() << "manaStr: " + manaStr;
 
-			Utilities::rotateImgToRight(manaShield, howTheyShouldBeRotated);
-			Utilities::imgToBlackAndWhiteAllColors(manaShield, 240);
-			QString ManaShieldStr = Utilities::imgWithStrToStr(manaShield);
+			ImgEditor::rotateImgToRight(manaShield, howTheyShouldBeRotated);
+			ImgEditor::imgToBlackAndWhiteAllColors(manaShield, 240);
+			QString ManaShieldStr = ImgEditor::imgWithStrToStr(manaShield);
 			qDebug() << "ManaShieldStr: " + ManaShieldStr;
 		}
 		else if (!thereIsCombinedBox && !manaShieldFound && manaFound) {
 			QRect rect = importantRects.at(indMana);
 			mana = img.copy(rect);
 
-			Utilities::rotateImgToRight(mana, howTheyShouldBeRotated);
-			Utilities::imgToBlackAndWhiteAllColors(mana, 240);
-			QString manaStr = Utilities::imgWithStrToStr(mana);
+			ImgEditor::rotateImgToRight(mana, howTheyShouldBeRotated);
+			ImgEditor::imgToBlackAndWhiteAllColors(mana, 240);
+			QString manaStr = ImgEditor::imgWithStrToStr(mana);
 			qDebug() << "manaStr: " + manaStr;
 		}
 		else

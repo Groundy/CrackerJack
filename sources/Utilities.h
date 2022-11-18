@@ -24,24 +24,6 @@ public:
 		LAST_USED_LOGIN,
 		LAST_USED_PROFILE_NAME,
 	};
-
-	static int showMessageBox(QString title, QString text, QFlags<QMessageBox::StandardButton> buttons);
-	static void showMessageBox_INFO(QString text);
-	static bool showMessageBox_NO_YES(QString text);
-	static void imgToBlackAndWhiteAllColors(QImage& img, int threshold);
-	static QString imgWithStrToStr(QImage& img);
-	static QImage fromCharToImg(QChar CharToImg);
-	static void rotateImgToRight(QImage& imgToRotate, int timesToRotateRight);
-	static bool isItPixelFromFrame(uint color, int minValueAcceptable, int maxValueAcceptable, bool requireSameValuesOfRGB);
-	static LONG64 getCurrentTimeInMiliSeconds();
-	static QImage getImageFromAdvancedCode(QString codeOfImg);
-	static int getNumberFromBottomBar(QImage& bottomBar);
-	static QDir getDirWithCrackerJackTmpFolder(FOLDERS_OF_TMP_FOLDER folderType);
-	static void sendStringToGame(QString str, HWND handler);
-	static QMap<FieldsOfIniFile, QString> get_Field_NamesFromIni_map();
-	static QString readFromIniFile(FieldsOfIniFile nameOfField);
-	static void writeIniFile(FieldsOfIniFile nameOfField, QString value);
-
 	class RestoreMethode {
 	public:
 		enum class TypeOfMethode{ POTION, SPELL };
@@ -67,17 +49,25 @@ public:
 		}
 	};	
 
+	static int showMessageBox(QString title, QString text, QFlags<QMessageBox::StandardButton> buttons);
+	static void showMessageBox_INFO(QString text);
+	static bool showMessageBox_NO_YES(QString text);
+
+	static LONG64 getCurrentTimeInMiliSeconds();
+	static QDir getDirWithCrackerJackTmpFolder(FOLDERS_OF_TMP_FOLDER folderType);
+	static void sendStringToGame(QString str, HWND handler);
+	static QMap<FieldsOfIniFile, QString> get_Field_NamesFromIni_map();
+	static QString readFromIniFile(FieldsOfIniFile nameOfField);
+	static void writeIniFile(FieldsOfIniFile nameOfField, QString value);
+
+
 	static QStringList TOOL_getCodesOfAllInFolder_regular(QString pathToInputFolder, QString pathToOutputFolder);
 	static QStringList TOOL_getCodesOfAllInFolder_bottom(QString pathToInputFolder);
 	static void TOOL_saveImgToOutPutFolder(QImage& img, QString extraName);
-	static void cutImgWithLettersToSingleLettersImgList(QImage& img, QList<QImage>& list);
 	static QMap<QString, QString> getQmapWithCodes();
 	static QString getPathToSettingsFile();
 	static void getMapWithNumbersFromBottomBar(QMap<QString, int>& lightToRet, QMap<QString, int>& darkToRet);
-	static void imgToBlackAndWhiteOneColor(QImage& img, int threshold);
 	static QString StrCodeToLetter(QString code);
-	static void cutBlackBordersOfImg(QImage& img);
-	static QString letterImgToLetterCodeStr(QImage* SingleLetterImg);
 
 	static void TOOL_manaSit(int pid, QString winTitle, std::shared_ptr<GameConnecter> gameConnecter){
 		int i = 0;

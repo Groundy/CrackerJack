@@ -87,10 +87,13 @@ void MainMenu::setProblemsWindow(QStringList problemsToShow){
 void MainMenu::threadStarter(){
 	activityThread = new activeGameThread(this,&var);
 	activityThread->start();
+
 	screenSaverThread = new ScreenSaver(this, &var, gameConnector);
 	screenSaverThread->start();
+
 	screenAnalyzer = new ScreenAnalyzer(this, &var, prof);
 	screenAnalyzer->start();
+
 	healthManaStateAnalyzer = new ManaHealthStateAnalyzer(this, prof , &var);
 	healthManaStateAnalyzer->start();
 }

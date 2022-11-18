@@ -148,7 +148,7 @@ void MarketProcess::initPos(){
 QPoint MarketProcess::findTopLeftCornerOfMarketWin(){
 	sendTextToDisplay(Actions::LOOKING_FOR_MARKET_WINDOW, NULL);
 	QString code = "44_9_#58#59#59_#144#144#144_#144#144#144_#144#144#144_#144#144#144_#144#144#144_#144#144#144_#144#144#144_#144#144#144_#51#51#51_#144#144#144_#144#144#144_#144#144#144_#64#64#64_#56#56#56_#53#53#53_#71#71#71_#61#61#61_#60#60#61_#53#53#53_#144#144#144_#144#144#144_#144#144#144_#59#59#59_#57#57#57_#49#49#49_#78#79#79_#55#55#55_#58#58#58_#52#52#52_#144#144#144_#144#144#144_#144#144#144_#61#61#61_#54#54#54_#58#58#58_#52#52#52_#50#51#51_#54#54#54_#58#58#58_#144#144#144_#52#52#52_#56#56#56_#59#59#59_#57#57#57_#57#58#58_#56#56#56_#55#55#55_#144#144#144_#58#58#58_#64#64#64_#53#53#53_#56#56#56_#62#62#63_#51#51#51_#55#55#55_#144#144#144_#144#144#144_#144#144#144_#144#144#144_#144#144#144_#144#144#144_#144#144#144_#52#52#52_#144#144#144_#144#144#144_#144#144#144_#144#144#144_#144#144#144_#144#144#144_#144#144#144_#144#144#144_#55#55#56_#61#61#61_#51#51#51_#54#55#55_#57#57#57_#52#52#52_#49#50#50_#47#48#48_#55#56#56_#61#61#61_#56#56#56_#56#57#56_#53#53#53_#60#60#59_#67#67#67_#53#54#53_#49#49#49_#66#67#66_#62#62#62_#55#55#55_#56#56#56_#58#58#58_#49#49#49_#52#52#52_#144#144#144_#144#144#144_#49#49#49_#53#53#53_#62#62#62_#55#55#55_#144#144#144_#56#56#56_#144#144#144_#144#144#144_#144#144#144_#144#144#144_#52#53#53_#56#56#56_#59#60#59_#144#144#144_#56#56#56_#144#144#144_#51#51#51_#58#58#59_#144#144#144_#62#62#62_#54#55#55_#61#61#61_#144#144#144_#53#53#53_#144#144#144_#58#59#59_#55#55#55_#144#144#144_#53#53#53_#59#60#59_#58#58#58_#144#144#144_#144#144#144_#144#144#144_#144#144#144_#144#144#144_#144#144#144_#55#55#55_#56#56#56_#57#57#57_#58#58#58_#144#144#144_#144#144#144_#144#144#144_#144#144#144_#144#144#144_#61#61#61_#51#52#51_#58#58#58_#55#56#56_#71#71#71_#56#56#56_#68#68#68_#61#61#61_#67#67#67_#55#55#55_#61#61#61_#58#58#58_#55#55#54_#55#55#54_#58#59#58_#66#66#66_#59#59#59_#56#56#56_#55#55#55_#57#57#56_#57#58#56_#144#144#144_#144#144#144_#144#144#144_#144#144#144_#144#144#144_#144#144#144_#55#55#55_#57#58#57_#58#58#57_#144#144#144_#144#144#144_#144#144#144_#144#144#144_#144#144#144_#144#144#144_#66#66#66_#58#58#58_#61#61#61_#54#55#54_#144#144#144_#51#51#51_#58#58#58_#58#58#58_#56#55#55_#55#55#55_#61#61#61_#59#59#59_#144#144#144_#144#144#144_#56#57#56_#59#59#59_#59#59#59_#52#53#53_#49#49#49_#58#58#58_#61#61#61_#144#144#144_#144#144#144_#55#55#54_#58#58#58_#57#57#56_#56#56#56_#54#54#55_#44#44#44_#49#49#49_#53#53#53_#67#68#67_#67#67#67_#60#61#60_#60#60#60_#55#55#55_#144#144#144_#144#144#144_#144#144#144_#144#144#144_#144#144#144_#144#144#144_#144#144#144_#144#144#144_#144#144#144_#144#144#144_#144#144#144_#144#144#144_#144#144#144_#144#144#144_#144#144#144_#144#144#144_#144#144#144_#144#144#144_#57#58#58_#55#55#55_#53#54#53_#49#49#49_#54#54#54_#144#144#144_#144#144#144_#58#58#57_#60#61#60_#55#55#55_#61#61#61_#58#58#58_#53#53#53_#144#144#144_#144#144#144_#144#144#144_#144#144#144_#57#57#57_#56#56#56_#57#58#57_#60#60#60_#144#144#144_#144#144#144_#62#62#62_#64#65#64_#144#144#144_#144#144#144_#55#55#55_#51#51#51_#49#49#49_#144#144#144_#56#57#56_#54#54#54_#48#48#48_#66#67#66_#144#144#144_#59#59#59_#56#56#56_#53#53#53_#49#49#48_#61#61#61_#50#50#49_#54#55#53_#49#49#49_#64#64#64_#59#60#60_#53#53#53_#56#57#56_#61#61#61_#55#55#55_#66#66#65_#59#59#59_#44#44#44_#61#61#61_#55#55#55_#61#61#61_#55#55#55_#58#58#58_#144#144#144_#144#144#144_#144#144#144_#144#144#144_#61#61#61_#54#54#54_#65#65#64_#61#61#61_#144#144#144_#144#144#144_#144#144#144_#144#144#144_#144#144#144_#144#144#144_#57#57#57_#53#53#53_#56#56#55_#144#144#144_#56#56#55_#144#144#144_#52#52#51_#58#58#58_#144#144#144_#61#61#61_#52#52#52_#55#55#55_#144#144#144_#64#64#64_#144#144#144_#47#47#46_#54#54#53_#144#144#144_#62#62#62_#55#55#55_#53#53#53_#144#144#144_#144#144#144_#144#144#144_#56#56#55_#45#45#44_#144#144#144_#62#62#62_#66#67#66_#63#64#63_#52#53#52_#144#144#144_#144#144#144_#65#65#65_#144#144#144_#55#55#54_#59#60#59_#49#49#49_#55#55#55_#61#61#61_#53#53#53_#49#49#49_#58#58#58_#64#64#65_#54#55#55_#55#56#55_#66#67#67_#53#53#53_#144#144#144_#49#49#49_#53#53#53_#55#55#54_#52#52#52_#68#68#68_#56#56#56_#144#144#144_#144#144#144_#144#144#144_#144#144#144_#144#144#144_#144#144#144_#144#144#144_#49#49#49_#58#59#58_#144#144#144_#144#144#144_#144#144#144_#144#144#144_#144#144#144_#144#144#144_#144#144#144_#144#144#144_#56#56#56_#58#58#58_#55#55#55_#144#144#144_#51#51#51_#59#59#59_#55#55#55_#56#56#56_#144#144#144_#62#62#62_#60#60#60_#57#58#58_#144#144#144_#56#56#56_#49#49#49_#57#57#56_#57#57#57_#144#144#144";
-	QImage marketTitleImg = Utilities::getImageFromAdvancedCode(code);
+	QImage marketTitleImg = ImgEditor::getImageFromAdvancedCode(code);
 	bool ok = askForScreenAndReadIt();
 	QList<QPoint> marketWindowTitlePosList = Calibrator::findStartPositionInImg(marketTitleImg, currentImg);
 	if (marketWindowTitlePosList.size() == 1) {
@@ -278,10 +278,10 @@ bool MarketProcess::readFirstOffertsOfCurrentItem(int& price, int& amount, Type 
 	QRect amountRect = sellType ? pos.firstOffer_Amount_Sell : pos.firstOffer_Amount_Buy;
 	QImage priceImg = currentImg.copy(priceRect);
 	QImage amountImg = currentImg.copy(amountRect);
-	Utilities::imgToBlackAndWhiteOneColor(priceImg, 170);
-	Utilities::imgToBlackAndWhiteOneColor(amountImg, 170);
-	QString priceStr = Utilities::imgWithStrToStr(priceImg);
-	QString amountStr = Utilities::imgWithStrToStr(amountImg);
+	ImgEditor::imgToBlackAndWhiteOneColor(priceImg, 170);
+	ImgEditor::imgToBlackAndWhiteOneColor(amountImg, 170);
+	QString priceStr = ImgEditor::imgWithStrToStr(priceImg);
+	QString amountStr = ImgEditor::imgWithStrToStr(amountImg);
 	amount = amountStr.toInt();
 	price = priceStr.toInt();
 	bool ok = amount > 0 && price > 0;
@@ -321,9 +321,9 @@ int MarketProcess::appendDisplayedOfferts(QList<AlreadyPostedOffer>& set, Type t
 		if (atLeatOneImgIsEmpty)
 			continue;
 
-		QString name = Utilities::imgWithStrToStr(nameImg);
-		int amount = Utilities::imgWithStrToStr(amountImg).toInt();
-		int price = Utilities::imgWithStrToStr(priceImg).toInt();
+		QString name = ImgEditor::imgWithStrToStr(nameImg);
+		int amount = ImgEditor::imgWithStrToStr(amountImg).toInt();
+		int price = ImgEditor::imgWithStrToStr(priceImg).toInt();
 
 		bool readCorrectly = name.size() > 0 && amount > 0 && price > 0;
 		if (!readCorrectly)
@@ -352,8 +352,8 @@ int MarketProcess::appendDisplayedOfferts(QList<AlreadyPostedOffer>& set, Type t
 }
 
 void MarketProcess::splitPicToBlackWhiteRows(QImage& imgToSplit, QList<QImage>& rows){
-	Utilities::imgToBlackAndWhiteAllColors(imgToSplit, 130);
-	Utilities::cutBlackBordersOfImg(imgToSplit);
+	ImgEditor::imgToBlackAndWhiteAllColors(imgToSplit, 130);
+	ImgEditor::cutBlackBordersOfImg(imgToSplit);
 	const uint BLACK = qRgb(0, 0, 0);
 	QList<int> fullBlackRows;
 	for (size_t y = 0; y < imgToSplit.height(); y++){
@@ -471,8 +471,8 @@ void MarketProcess::cancelOffer(QString itemName, Type type){
 
 int MarketProcess::howMuchMoneyDoIHave(){
 	QImage cashImg = currentImg.copy(pos.goldPossessionBar);
-	Utilities::imgToBlackAndWhiteAllColors(cashImg, 150);
-	QString cashAsStr = Utilities::imgWithStrToStr(cashImg);
+	ImgEditor::imgToBlackAndWhiteAllColors(cashImg, 150);
+	QString cashAsStr = ImgEditor::imgWithStrToStr(cashImg);
 	return cashAsStr.toInt();
 }
 

@@ -225,6 +225,7 @@ xcopy /y /d ".\dependencies\64-bit\libcrypto-1_1-x64.dll" "$(OutDir)"
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameConnecter.cpp" />
+    <ClCompile Include="sources\ImgEditor.cpp" />
     <ClCompile Include="sources\Item.cpp" />
     <ClCompile Include="sources\Logger.cpp" />
     <ClCompile Include="sources\activeGameThread.cpp" />
@@ -264,6 +265,7 @@ xcopy /y /d ".\dependencies\64-bit\libcrypto-1_1-x64.dll" "$(OutDir)"
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="GameConnecter.h" />
+    <QtMoc Include="sources\ImgEditor.h" />
     <ClInclude Include="sources\Item.h" />
     <QtMoc Include="sources\MarketProcess.h" />
     <QtMoc Include="sources\MarketProcessGui.h" />

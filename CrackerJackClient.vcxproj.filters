@@ -123,6 +123,9 @@
     <ClCompile Include="GameConnecter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="sources\ImgEditor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="sources\SelectProfileWindow.h">
@@ -159,6 +162,9 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="GameConnecter.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="sources\ImgEditor.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>

@@ -1,5 +1,6 @@
 #include "ManaHealthStateAnalyzer.h"
 #include <QChar>
+#include <ImgEditor.h>
 
 ManaHealthStateAnalyzer::ManaHealthStateAnalyzer(QObject *parent, Profile* profile, VariablesClass* var)
 	: QThread(parent), var(var){
@@ -68,22 +69,22 @@ void ManaHealthStateAnalyzer::mainLoop(){
 int ManaHealthStateAnalyzer::changeImgsToStrings(){
 	QString healthStr, manaStr, manaShieldStr, combinedStr, tmp;
 	if (healthFound) {
-		healthStr = Utilities::imgWithStrToStr(healthImg);
+		healthStr = ImgEditor::imgWithStrToStr(healthImg);
 		tmp = healthStr.remove("\0");
 		healthStr = tmp;
 	}
 	if (manaFound) {
-		manaStr = Utilities::imgWithStrToStr(manaImg);
+		manaStr = ImgEditor::imgWithStrToStr(manaImg);
 		tmp = manaStr.remove("\0");
 		manaStr = tmp;
 	}
 	if (manaShieldFound) {
-		manaShieldStr = Utilities::imgWithStrToStr(manaShieldImg);
+		manaShieldStr = ImgEditor::imgWithStrToStr(manaShieldImg);
 		tmp = manaShieldStr.remove("\0");
 		manaShieldStr = tmp;
 	}
 	if (combinedFound) {
-		combinedStr = Utilities::imgWithStrToStr(combinedImg);
+		combinedStr = ImgEditor::imgWithStrToStr(combinedImg);
 		tmp = combinedStr.remove("\0");
 		combinedStr = tmp;
 	}
@@ -331,7 +332,7 @@ void ManaHealthStateAnalyzer::getAmountsOfPotions() {
 		if (rect.isEmpty())
 			continue;
 		QImage img = wholeImg.copy(rect);
-		int amount = Utilities::getNumberFromBottomBar(img);
+		int amount = ImgEditor::getNumberFromBottomBar(img);
 		amountOfPots.push_back(amount);
 		namesOfPots.push_back(nameOfPot);
 	}
