@@ -289,7 +289,6 @@ xcopy /y /d ".\dependencies\64-bit\libcrypto-1_1-x64.dll" "$(OutDir)"
     <ClInclude Include="sources\Logger.h" />
     <QtMoc Include="sources\NewProfileConfiguartor.h" />
     <ClInclude Include="sources\Key.h" />
-    <ClInclude Include="resource.h" />
     <ClInclude Include="sources\Utilities.h" />
     <ClInclude Include="sources\ProfileDataBaseManager.h" />
     <ClInclude Include="sources\Profile.h" />

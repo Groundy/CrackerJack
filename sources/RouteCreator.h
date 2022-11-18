@@ -53,11 +53,11 @@ private:
 	Ui::RouteCreator *ui;
 	QImage currentMap;
 	QImage currentMapOfWalkability;
-	Route route ;
+	Route route;
 	QDir dirWithRoutes;
 	QDir dirWithMaps = QDir("C:\\Users\\ADMIN\\Desktop\\maps");//todo zmienic
 	int zoom = 1;
-	Point3D currentChoosenPoint = { 625,1265,0 };
+	Point3D currentChoosenPoint = { 625,1265,0};
 	const QSize sizeToDisplay = { 108,108 };
 	const uint CHOOSEN_POINT_COLOR = qRgb(60,60,60);
 

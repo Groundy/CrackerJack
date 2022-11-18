@@ -170,16 +170,17 @@ bool Route::checkRouteCorectness(QString& errorTextToDisplay){
 		FIELDS_TYPE currentType = route[i].second;
 
 		bool canGoToNextPoint;
-
-		if (current.floor < next.floor) {
+		const int currentF = current.getFloor();
+		const int nextF = next.getFloor();
+		if (currentF < nextF) {
 			canGoToNextPoint = typesGoingUp.contains(currentType);
 			flChange = FLOOR_CHANGE::UP;
 		}
-		else if (current.floor == next.floor) {
+		else if (currentF == nextF) {
 			canGoToNextPoint = typesGoingSame.contains(currentType);
 			flChange = FLOOR_CHANGE::SAME;
 		}
-		else if (current.floor > next.floor) {
+		else if (currentF > nextF) {
 			canGoToNextPoint = typesGoingDown.contains(currentType);
 			flChange = FLOOR_CHANGE::DOWN;
 		}

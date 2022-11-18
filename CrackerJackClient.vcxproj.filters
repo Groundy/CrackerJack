@@ -120,10 +120,10 @@
     <ClCompile Include="sources\MarketProcessGui.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="GameConnecter.cpp">
+    <ClCompile Include="sources\ImgEditor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="sources\ImgEditor.cpp">
+    <ClCompile Include="sources\GameConnecter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -161,10 +161,10 @@
     <QtMoc Include="sources\MarketProcessGui.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="GameConnecter.h">
+    <QtMoc Include="sources\ImgEditor.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="sources\ImgEditor.h">
+    <QtMoc Include="sources\GameConnecter.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>
@@ -192,9 +192,6 @@
     </QtUic>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="resource.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="sources\Utilities.h">
       <Filter>Header Files</Filter>
     </ClInclude>

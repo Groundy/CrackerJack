@@ -14,6 +14,15 @@ public:
 	enum PROFESSION { RP, EK, ED, MS};
 	enum AUTO_LOOT_KEY { RIGHT_MOUSE_BUTTON, SHIFT_RIGHT, LEFT_MOUSE_BUTTON };//enable only if controls
 	enum CONTROLS { CLSSIC_CONTROLS, REGULARCONTROLS, LEFT_SMART_CLICK };
+	struct Frames {
+		QRect gameFrame;
+		QRect miniMapFrame;
+		QRect healthFrame;
+		QRect manaFrame;
+		QRect manaShieldFrame;
+		QRect combinedFrame;
+		int howTheyShouldBeRotated;
+	};
 	//enum STATES {HASTE, BATTLE, PROTECTOR_ZONE, POISONED, PARALYZED, UPGRADED}
 	Profile();
 	~Profile();
@@ -25,15 +34,7 @@ public:
 	QList<QString> healthRestoreMethodeNames;
 	QList<QString> manaRestoreMethodeNames;
 
-	struct Frames {
-		QRect gameFrame;
-		QRect miniMapFrame;
-		QRect healthFrame;
-		QRect manaFrame;
-		QRect manaShieldFrame;
-		QRect combinedFrame;
-		int howTheyShouldBeRotated;
-	};
+
 	Frames frames;
 
 	PROFESSION profession;//re

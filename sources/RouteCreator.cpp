@@ -5,7 +5,7 @@ RouteCreator::RouteCreator(QDialog* parent)
 	: QDialog(parent){
 	ui = new Ui::RouteCreator();
 	ui->setupUi(this);
-	loadMap(currentChoosenPoint.floor);
+	loadMap(currentChoosenPoint.getFloor());
 	repaintMap();
 	refreshPositionLabel();
 	ui->movePointUpButton->setEnabled(false);
@@ -60,19 +60,21 @@ void RouteCreator::imgMoved_down_very_fast() {
 
 
 void RouteCreator::floorDown(){
-	if (currentChoosenPoint.floor == -8)
+	int currentF = currentChoosenPoint.getFloor();
+	if (currentF == -8)
 		return;
-	currentChoosenPoint.floor--;
-	loadMap(currentChoosenPoint.floor);
+	currentChoosenPoint.setFloor(currentF - 1);
+	loadMap(currentChoosenPoint.getFloor());
 	refreshPositionLabel();
 	repaintMap();
 }
 
 void RouteCreator::floorUp(){
-	if (currentChoosenPoint.floor == 7)
+	int currentF = currentChoosenPoint.getFloor();
+	if (currentF == 7)
 		return;
-	currentChoosenPoint.floor++;
-	loadMap(currentChoosenPoint.floor);
+	currentChoosenPoint.setFloor(currentF + 1);
+	loadMap(currentChoosenPoint.getFloor());
 	refreshPositionLabel();
 	repaintMap();
 }
@@ -309,9 +311,9 @@ bool RouteCreator::repaintMap(){
 	const int WIDTH = currentMap.width();
 	const int HEIGHT = currentMap.height();
 
-	int startX = currentChoosenPoint.x - sizeToDisplay.width() / 2;
+	int startX = currentChoosenPoint.getX() - sizeToDisplay.width() / 2;
 	int width =  sizeToDisplay.width();
-	int startY = currentChoosenPoint.y - sizeToDisplay.height() / 2;
+	int startY = currentChoosenPoint.getY() - sizeToDisplay.height() / 2;
 	int height =  sizeToDisplay.height();
 
 
@@ -415,12 +417,11 @@ bool RouteCreator::checkRouteButtonPressed(){
 }
 
 bool RouteCreator::currentPixIsWalkable(){
-	QPoint pt(currentChoosenPoint.x, currentChoosenPoint.y);
-	uint pixCol = currentMapOfWalkability.pixel(pt);
+	uint pixCol = currentMapOfWalkability.pixel(currentChoosenPoint.getXY());
 	RGBstruct rgb(pixCol);
 	bool isWalkable = rgb.isGrey();
 	if (!isWalkable) {
-		uint pixColFromNormalMap = currentMap.pixel(pt);
+		uint pixColFromNormalMap = currentMap.pixel(currentChoosenPoint.getXY());
 		RGBstruct rgbFromNormalMap = RGBstruct(pixColFromNormalMap);
 		isWalkable = rgbFromNormalMap.isYellow();
 	}
@@ -433,27 +434,31 @@ void RouteCreator::moveMap(DIRECTIONS direction, int step){
 
 	switch (direction)	{
 	case DIRECTIONS::UP: {
-		int tmpCordinateY = currentChoosenPoint.y - step;
+		int tmpCordinateY = currentChoosenPoint.getY() - step;
 		bool ptOutOfRange = tmpCordinateY  < 0;
-		currentChoosenPoint.y = ptOutOfRange ? 0 : tmpCordinateY;
+		int toSet = ptOutOfRange ? 0 : tmpCordinateY;
+		currentChoosenPoint.setY(toSet);
 		break;
 	}
 	case DIRECTIONS::DOWN: {
-		int tmpCordinateY = currentChoosenPoint.y + step;
+		int tmpCordinateY = currentChoosenPoint.getY() + step;
 		bool ptOutOfRange = tmpCordinateY  > maxY;
-		currentChoosenPoint.y = ptOutOfRange ? maxY : tmpCordinateY;
+		int toSet = ptOutOfRange ? maxY : tmpCordinateY;
+		currentChoosenPoint.setY(toSet);
 		break;
 	}
 	case DIRECTIONS::RIGHT: {
-		int tmpCordinateX = currentChoosenPoint.x + step;
+		int tmpCordinateX = currentChoosenPoint.getX() + step;
 		bool ptOutOfRange = tmpCordinateX  > maxX;
-		currentChoosenPoint.x = ptOutOfRange ? maxX : tmpCordinateX;
+		int toSet = ptOutOfRange ? maxX : tmpCordinateX;
+		currentChoosenPoint.setX(toSet);
 		break;
 	}
 	case DIRECTIONS::LEFT: {
-		int tmpCordinateX = currentChoosenPoint.x - step;
+		int tmpCordinateX = currentChoosenPoint.getX() - step;
 		bool ptOutOfRange = tmpCordinateX < 0;
-		currentChoosenPoint.x = ptOutOfRange ? 0 : tmpCordinateX;
+		int toSet = ptOutOfRange ? 0 : tmpCordinateX;
+		currentChoosenPoint.setX(toSet);
 		break;
 	}
 	default:

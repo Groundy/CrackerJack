@@ -1,19 +1,9 @@
 #include "Point3D.h"
 
-Point3D::Point3D(){
-	//Thais temple
-	x = 625;
-	y = 1265;
-	floor = 0;
-}
-Point3D::~Point3D()
-{
-}
-Point3D::Point3D(int X, int Y, int F) {
-	x = X;
-	y = Y;
-	floor = F;
-};
+Point3D::Point3D() : x(625), y(1265), floor(0)/*thias temple*/{}
+Point3D::~Point3D(){}
+Point3D::Point3D(int x, int y, int floor) : x(x), y(y), floor(floor) {};
+
 Point3D::Point3D(QString str) {
 	QStringList parts = str.split(",", Qt::SplitBehaviorFlags::SkipEmptyParts);
 	if (parts.size() != 3) {
@@ -49,8 +39,5 @@ QString Point3D::toString() {
 	return text;
 }
 bool Point3D::operator==(Point3D pt){
-	bool x_OK = x == pt.x;
-	bool y_OK = y == pt.y;
-	bool f_OK = floor == pt.floor;
-	return x_OK && y_OK && f_OK;
+	return (x == pt.x) && (y == pt.y) && (floor == pt.floor);
 }
