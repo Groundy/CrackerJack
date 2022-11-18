@@ -5,6 +5,7 @@ MainMenu::MainMenu(Profile* selectedProf, QWidget* parent)
 	: QDialog(parent), prof(selectedProf){
 	ui = new Ui::MainMenu();
 	ui->setupUi(this);
+	var = std::shared_ptr<VariablesClass>(new VariablesClass());
 	gameConnector = std::shared_ptr<GameConnecter>(new GameConnecter(this));
 	ui->profileNameLabel->setText(prof->profileName);
 	threadStarter();
@@ -24,7 +25,7 @@ MainMenu::~MainMenu(){
 
 void MainMenu::onGameStateChanged(int state){	
 	QString toWrite = tr("Game status: ");
-	typedef activeGameThread::gameActivityStates Type;
+	typedef ActiveGameThread::GameActivityStates Type;
 	switch (state)
 	{
 	case Type::ACTIVE:
@@ -85,7 +86,7 @@ void MainMenu::setProblemsWindow(QStringList problemsToShow){
 }
 
 void MainMenu::threadStarter(){
-	activityThread = new activeGameThread(this, var);
+	activityThread = new ActiveGameThread(this, var);
 	activityThread->start();
 
 	screenSaverThread = new ScreenSaver(this, var, gameConnector);

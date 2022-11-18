@@ -1,18 +1,18 @@
-#include "activeGameThread.h"
+#include "ActiveGameThread.h"
 
-activeGameThread::activeGameThread(QObject *parent, std::shared_ptr< VariablesClass> var)
+ActiveGameThread::ActiveGameThread(QObject *parent, std::shared_ptr< VariablesClass> var)
 	: QThread(parent), var(var){
     const char* signal = SIGNAL(GameStateChanged(int));
     const char* slot = SLOT(onGameStateChanged(int));
     bool good = connect(this, signal, parent, slot);
 }
 
-activeGameThread::~activeGameThread(){
+ActiveGameThread::~ActiveGameThread(){
     this->terminate();
     delete historyOfGameActivity;
 }
 
-void activeGameThread::run(){
+void ActiveGameThread::run(){
     while (true) {
         int stateCode = (int)checkState();
         //That loops stores history of gamestates, signal is emited only if gameStateWasChanged
@@ -35,7 +35,7 @@ void activeGameThread::run(){
     }
 }
 
-QString activeGameThread::getGameWindowTitile(){
+QString ActiveGameThread::getGameWindowTitile(){
     const QString partOfBrowserTitle = "Tibia - Free Multiplayer Online Role Playing Game";
   
     for (HWND hwnd = GetTopWindow(NULL); hwnd != NULL; hwnd = GetNextWindow(hwnd, GW_HWNDNEXT))
@@ -70,7 +70,7 @@ QString activeGameThread::getGameWindowTitile(){
     return QString();
 }
 
-unsigned int activeGameThread::getPIDofProcess(QMap<QString, unsigned int>& processes, QString nameOfProcessToFind){
+unsigned int ActiveGameThread::getPIDofProcess(QMap<QString, unsigned int>& processes, QString nameOfProcessToFind){
     auto iteratorToProcess = processes.find(nameOfProcessToFind);
     if (iteratorToProcess == processes.end())
         return 0;
@@ -78,13 +78,14 @@ unsigned int activeGameThread::getPIDofProcess(QMap<QString, unsigned int>& proc
     return iteratorToProcess.value();
 }
 
-activeGameThread::gameActivityStates activeGameThread::windowIsAccessible(const unsigned int PID, QString windowTitle){
+ActiveGameThread::GameActivityStates ActiveGameThread::windowIsAccessible(const unsigned int PID, QString windowTitle){
     if (PID == 0)
         return NO_ACTIVE;
     if (windowTitle.isEmpty())
         return NO_WINDOW;
     else if (windowTitle == "Tibia")
         return NO_LOGGED;
+
     LPCWSTR nameOfWindowLPCWSTR = (const wchar_t*)windowTitle.utf16();
     HWND handler = FindWindow(NULL, nameOfWindowLPCWSTR);
     if (handler == NULL)
@@ -96,12 +97,12 @@ activeGameThread::gameActivityStates activeGameThread::windowIsAccessible(const 
     return ACTIVE;
 }
 
-activeGameThread::gameActivityStates activeGameThread::checkState(){
+ActiveGameThread::GameActivityStates ActiveGameThread::checkState(){
     QMap<QString, unsigned int> processes;
     getListOfProcess(processes);
     unsigned int PID = getPIDofProcess(processes, "client.exe");
     QString windowTitle = getGameWindowTitile();
-    gameActivityStates gameWinState = windowIsAccessible(PID, windowTitle);
+    GameActivityStates gameWinState = windowIsAccessible(PID, windowTitle);
     if (gameWinState == ACTIVE) {
         if (var->var_winTitleOfGame != windowTitle)
             var->var_winTitleOfGame = windowTitle;
@@ -117,7 +118,7 @@ activeGameThread::gameActivityStates activeGameThread::checkState(){
     return gameWinState;
 }
 
-void activeGameThread::getListOfProcess(QMap<QString, unsigned int>& processes) {
+void ActiveGameThread::getListOfProcess(QMap<QString, unsigned int>& processes) {
     HANDLE hSnapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
     if (hSnapshot) {
         PROCESSENTRY32 pe32;

@@ -224,11 +224,11 @@ xcopy /y /d ".\dependencies\64-bit\libcrypto-1_1-x64.dll" "$(OutDir)"
     <ResourceCompile Include="CrackerJackClient.rc" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="GameConnecter.cpp" />
+    <ClCompile Include="sources\GameConnecter.cpp" />
     <ClCompile Include="sources\ImgEditor.cpp" />
     <ClCompile Include="sources\Item.cpp" />
     <ClCompile Include="sources\Logger.cpp" />
-    <ClCompile Include="sources\activeGameThread.cpp" />
+    <ClCompile Include="sources\ActiveGameThread.cpp" />
     <ClCompile Include="sources\Calibrator.cpp" />
     <ClCompile Include="sources\JsonParser.cpp" />
     <ClCompile Include="sources\MainMenu.cpp" />
@@ -264,7 +264,7 @@ xcopy /y /d ".\dependencies\64-bit\libcrypto-1_1-x64.dll" "$(OutDir)"
     <QtUic Include="sources\SetNameWidnow.ui" />
   </ItemGroup>
   <ItemGroup>
-    <QtMoc Include="GameConnecter.h" />
+    <QtMoc Include="sources\GameConnecter.h" />
     <QtMoc Include="sources\ImgEditor.h" />
     <ClInclude Include="sources\Item.h" />
     <QtMoc Include="sources\MarketProcess.h" />
@@ -280,7 +280,7 @@ xcopy /y /d ".\dependencies\64-bit\libcrypto-1_1-x64.dll" "$(OutDir)"
     <ClInclude Include="sources\VariablesClass.h" />
     <ClInclude Include="sources\ScreenSaver.h" />
     <QtMoc Include="sources\MainMenu.h" />
-    <QtMoc Include="sources\activeGameThread.h" />
+    <QtMoc Include="sources\ActiveGameThread.h" />
     <QtMoc Include="sources\ManaHealthStateAnalyzer.h" />
     <QtMoc Include="sources\ScreenAnalyzer.h" />
     <ClInclude Include="sources\RGBstruct.h" />

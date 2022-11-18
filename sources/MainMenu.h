@@ -23,7 +23,6 @@ class MainMenu : public QDialog
 public:
 	MainMenu(Profile* prof, QWidget *parent = Q_NULLPTR);
 	~MainMenu();
-	activeGameThread::gameActivityStates gameActivitystate;
 public slots:
 	void changeProfileButtonAction();
 	void editProfileButtonAction();
@@ -39,12 +38,13 @@ public slots:
 private:
 	Ui::MainMenu *ui;
 	Profile* prof;
-	activeGameThread* activityThread;
+	ActiveGameThread* activityThread;
 	ScreenSaver* screenSaverThread;
 	ScreenAnalyzer* screenAnalyzer;
 	ManaHealthStateAnalyzer* healthManaStateAnalyzer;
 	std::shared_ptr<VariablesClass> var;
 	std::shared_ptr<GameConnecter> gameConnector;
+	ActiveGameThread::GameActivityStates gameActivitystate;
 
 	void setProblemsWindow(QStringList problemsToShow);
 	void threadStarter();
