@@ -44,6 +44,7 @@ private:
 	ScreenAnalyzer* screenAnalyzer;
 	ManaHealthStateAnalyzer* healthManaStateAnalyzer;
 	VariablesClass var;
+	std::shared_ptr<GameConnecter> gameConnector;
 
 	void setProblemsWindow(QStringList problemsToShow);
 	void threadStarter();

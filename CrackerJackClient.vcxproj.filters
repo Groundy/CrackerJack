@@ -120,6 +120,9 @@
     <ClCompile Include="sources\MarketProcessGui.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="GameConnecter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="sources\SelectProfileWindow.h">
@@ -153,6 +156,9 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="sources\MarketProcessGui.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="GameConnecter.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>

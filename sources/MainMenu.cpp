@@ -2,11 +2,10 @@
 #include "ui_MainMenu.h"
 #include "MinimapAnalyzer.h"
 MainMenu::MainMenu(Profile* selectedProf, QWidget* parent)
-	: QDialog(parent)
-{
+	: QDialog(parent), prof(selectedProf){
 	ui = new Ui::MainMenu();
 	ui->setupUi(this);
-	prof = selectedProf;
+	gameConnector = std::shared_ptr<GameConnecter>(new GameConnecter(this));
 	ui->profileNameLabel->setText(prof->profileName);
 	threadStarter();
 	signalSlotConnector();
@@ -88,7 +87,7 @@ void MainMenu::setProblemsWindow(QStringList problemsToShow){
 void MainMenu::threadStarter(){
 	activityThread = new activeGameThread(this,&var);
 	activityThread->start();
-	screenSaverThread = new ScreenSaver(this, &var);
+	screenSaverThread = new ScreenSaver(this, &var, gameConnector);
 	screenSaverThread->start();
 	screenAnalyzer = new ScreenAnalyzer(this, &var, prof);
 	screenAnalyzer->start();
@@ -158,7 +157,7 @@ void MainMenu::autoHuntAction(){
 }
 
 void MainMenu::tradingAction(){
-	Market market(&var);
+	Market market(&var, gameConnector);
 	market.exec();
 }
 

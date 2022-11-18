@@ -7,7 +7,6 @@
 #include <psapi.h>
 #include "qlist.h"
 #include "tlhelp32.h"
-#include <comdef.h> 
 #include <iostream>
 #include "RGBstruct.h"
 #include "qdir.h"
@@ -16,6 +15,7 @@
 #include "qdatetime.h"
 #include "qrgb.h"
 #include "Logger.h"
+#include "GameConnecter.h"
 class Utilities {
 public:
 	enum class FOLDERS_OF_TMP_FOLDER {Logs, Profiles, TradeReports, Main, Routes, MarketLists};
@@ -28,7 +28,6 @@ public:
 	static int showMessageBox(QString title, QString text, QFlags<QMessageBox::StandardButton> buttons);
 	static void showMessageBox_INFO(QString text);
 	static bool showMessageBox_NO_YES(QString text);
-	static bool sendKeyStrokeToProcess(Key key, unsigned int PID, QString WindowName);
 	static void imgToBlackAndWhiteAllColors(QImage& img, int threshold);
 	static QString imgWithStrToStr(QImage& img);
 	static QImage fromCharToImg(QChar CharToImg);
@@ -38,10 +37,7 @@ public:
 	static QImage getImageFromAdvancedCode(QString codeOfImg);
 	static int getNumberFromBottomBar(QImage& bottomBar);
 	static QDir getDirWithCrackerJackTmpFolder(FOLDERS_OF_TMP_FOLDER folderType);
-	static void clickLeft(QPoint pt, HWND handler);
-	static void clickRight(QPoint pt, HWND handler);
 	static void sendStringToGame(QString str, HWND handler);
-	static HWND getHandlerToGameWindow(unsigned int PID, QString WindowName);
 	static QMap<FieldsOfIniFile, QString> get_Field_NamesFromIni_map();
 	static QString readFromIniFile(FieldsOfIniFile nameOfField);
 	static void writeIniFile(FieldsOfIniFile nameOfField, QString value);
@@ -83,7 +79,7 @@ public:
 	static void cutBlackBordersOfImg(QImage& img);
 	static QString letterImgToLetterCodeStr(QImage* SingleLetterImg);
 
-	static void TOOL_manaSit(int pid,QString winTitle){
+	static void TOOL_manaSit(int pid, QString winTitle, std::shared_ptr<GameConnecter> gameConnecter){
 		int i = 0;
 		while (true) {
 			Key key;
@@ -93,7 +89,7 @@ public:
 				key = Key("END");
 			else
 				key = Key("F11");
-			Utilities::sendKeyStrokeToProcess(key, pid, winTitle);
+			gameConnecter->sendKeyStrokeToProcess(key, pid, winTitle);
 			Sleep(125 * 100);
 			i++;
 			i = i % 3;

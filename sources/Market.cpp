@@ -1,10 +1,9 @@
 #include "Market.h"
 #include "ui_Market.h"
 
-Market::Market(VariablesClass* varToSet){
+Market::Market(VariablesClass* var, std::shared_ptr<GameConnecter> gameConnector) : var(var), gameConnector(gameConnector){
 	ui = new Ui::Market();
 	ui->setupUi(this);
-	var = varToSet;
 	JsonParser::readItemJson(this->allItems);
 	ui->buyTypeRadioButton->setChecked(true);
 	filtr_seller = Seller::ANY;
@@ -314,7 +313,7 @@ void Market::removeItem(){
 }
 
 void Market::test() {
-	MarketProcess marketProcess(var,offersList,NULL);
+	MarketProcess marketProcess(var, offersList, this->gameConnector, NULL);
 	MarketProcessGui marketProcessGui;
 	
 

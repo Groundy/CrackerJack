@@ -1,8 +1,7 @@
 #include "ScreenSaver.h"
 
-ScreenSaver::ScreenSaver(QObject* parent, VariablesClass* varClass)
-	: QThread(parent){
-	variables = varClass;
+ScreenSaver::ScreenSaver(QObject* parent, VariablesClass* varClass, std::shared_ptr<GameConnecter> gameConnecter)
+	: QThread(parent), variables(varClass), gameConnecter(gameConnecter){
 }
 
 ScreenSaver::~ScreenSaver(){
@@ -19,7 +18,7 @@ void ScreenSaver::sendScreenRequestToGame(Key keyCodeForScreen, VariablesClass* 
 		return;
 	}
 	Key key(keyCodeForScreen);
-	Utilities::sendKeyStrokeToProcess(key, pid, winTitle);
+	gameConnecter->sendKeyStrokeToProcess(key, pid, winTitle);
 }
 
 void ScreenSaver::screenLoop(){

@@ -1,9 +1,8 @@
 #include "ManaHealthStateAnalyzer.h"
 #include <QChar>
 
-ManaHealthStateAnalyzer::ManaHealthStateAnalyzer(QObject *parent, Profile* profile, VariablesClass* varClass)
-	: QThread(parent){
-	var = varClass;
+ManaHealthStateAnalyzer::ManaHealthStateAnalyzer(QObject *parent, Profile* profile, VariablesClass* var)
+	: QThread(parent), var(var){
 
 	lifeThreshholds = profile->healthRestorePercentages;;
 	manaThreshholds= profile->ManaRestoreMethodesPercentage;

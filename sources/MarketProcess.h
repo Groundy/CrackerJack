@@ -6,6 +6,8 @@
 #include "ScreenAnalyzer.h"
 #include "Offer.h"
 #include "MarketProcessGui.h"
+#include "GameConnecter.h"
+#include <memory>
 struct AlreadyPostedOffer {
 	AlreadyPostedOffer() {};
 	AlreadyPostedOffer(QString nameToSet, int priceToSet, int amountToSet) {
@@ -90,7 +92,7 @@ namespace Ui { class MarketProcess; };
 class MarketProcess : public QThread {
 	Q_OBJECT
 public:
-	MarketProcess(VariablesClass* var, QList<Offer> offersThatShouldBe, QWidget* parent);
+	MarketProcess(VariablesClass* var, QList<Offer> offersThatShouldBe, std::shared_ptr<GameConnecter> gameConnector, QWidget* parent);
 	~MarketProcess();
 	enum class Type { BUY, SELL };
 	enum class Actions { LOOKING_FOR_MARKET_WINDOW,SCANNING_OFFER_LIST, LOOKING_FOR_ITEM, PLACING_OFFER, CANCELING_OFFER, FINISHED, CANCELING };
@@ -111,6 +113,7 @@ signals:
 	void addTextToDisplayOnList(QString str);
 	void noMarketSignFound(QString str);
 private:
+	std::shared_ptr<GameConnecter> gameConnector;
 	Pos pos;
 	VariablesClass* var;
 	QImage currentImg;

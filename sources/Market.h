@@ -11,6 +11,8 @@
 #include <QTranslator>
 ///test
 #include "activeGameThread.h"
+#include "GameConnecter.h"
+#include <memory>
 namespace Ui { class Market; };
 typedef Item::SELLER Seller;
 typedef Item::TYPE_OF_ITEM ItemType;
@@ -31,7 +33,7 @@ public slots:
 	void startTradingProcess();
 	void editItemButtonClicked();
 public:
-	Market(VariablesClass* varToSet);
+	Market(VariablesClass* varToSet, std::shared_ptr<GameConnecter> gameConnector);
 	~Market();
 
 private:
@@ -43,6 +45,7 @@ private:
 	Item currentlyDisplayedItem;
 	QString listFileName;
 	Seller filtr_seller;
+	std::shared_ptr<GameConnecter> gameConnector;
 
 	void fillCategoryLists();
 	void fillLabels(Item* item);
