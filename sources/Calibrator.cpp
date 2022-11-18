@@ -1,5 +1,4 @@
 #include "Calibrator.h"
-
 Calibrator::Calibrator(QImage& fullScreenImg, VariablesClass& varClass, Profile* profileToPass){
 	var = &varClass;
 	fullScreen = &fullScreenImg;

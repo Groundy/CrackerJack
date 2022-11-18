@@ -2,17 +2,28 @@
 #include "MainMenu.h"
 #include <qtranslator.h>
 #include "Market.h"
-void test();
-QIcon getIcon();
-void initSettings(QApplication& a);
+void test(){
+}
+QIcon getIcon(){
+	QDir dir = QDir::current();
+	dir.cd("Resources");
+	QString iconPath = dir.absoluteFilePath("logo.png");
+	return QIcon(iconPath);
+}
+void initSettings(QApplication& a){
+	a.setQuitOnLastWindowClosed(true);
+	a.setStyle("fusion");
+	a.setWindowIcon(getIcon());
+	QApplication::setAttribute(Qt::AA_DisableWindowContextHelpButton);
+}
 
 int main(int argc, char *argv[])
 {
-	QApplication a(argc, argv);
+	QApplication app(argc, argv);
 	QTranslator translator;
 	bool ok1 = translator.load("Debug\\crackerjackclient_pl");
-	bool ok2 = a.installTranslator(&translator);
-	initSettings(a);
+	bool ok2 = app.installTranslator(&translator);
+	initSettings(app);
 	test();
 
 	Profile* prof = new Profile();
@@ -29,23 +40,5 @@ int main(int argc, char *argv[])
 		delete prof;
 		return 0;
 	}
-	return a.exec();
-}
-
-void test(){
-};
-
-
-QIcon getIcon() {
-	QDir dir = QDir::current();
-	dir.cd("Resources");
-	QString iconPath = dir.absoluteFilePath("logo.png");
-	return QIcon(iconPath);
-};
-
-void initSettings(QApplication &a) {
-	a.setQuitOnLastWindowClosed(true);
-	a.setStyle("fusion");
-	a.setWindowIcon(getIcon());
-	QApplication::setAttribute(Qt::AA_DisableWindowContextHelpButton);
+	return app.exec();
 }

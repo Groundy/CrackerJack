@@ -2,7 +2,6 @@
 #include "Utilities.h"
 #include <QObject>
 #include "qjsonvalue.h"
-
 class Item{
 public:
 	enum TYPE_OF_ITEM { ARMOR, AMULETS, BOOTS, CREATURE, HELMETS, LEGS, POTIONS, RINGS, RUNES, SHIELDS, VALUABLES, AMMO, AXES, SWORDS, CLUBS, DISTANCES, ROD, WANDS, OTHER, ANY};

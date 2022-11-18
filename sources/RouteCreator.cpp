@@ -418,13 +418,11 @@ bool RouteCreator::currentPixIsWalkable(){
 	QPoint pt(currentChoosenPoint.x, currentChoosenPoint.y);
 	uint pixCol = currentMapOfWalkability.pixel(pt);
 	RGBstruct rgb(pixCol);
-	bool isWalkable = (rgb.r == rgb.g) && (rgb.r == rgb.b);
+	bool isWalkable = rgb.isGrey();
 	if (!isWalkable) {
-		pixCol = currentMap.pixel(pt);
-		rgb = RGBstruct(pixCol);
-		bool isYellowOnNormalMap = rgb.r == 255 && rgb.g == 255 && rgb.b == 0;
-		if (isYellowOnNormalMap)
-			isWalkable = true;
+		uint pixColFromNormalMap = currentMap.pixel(pt);
+		RGBstruct rgbFromNormalMap = RGBstruct(pixColFromNormalMap);
+		isWalkable = rgbFromNormalMap.isYellow();
 	}
 	return isWalkable;
 }

@@ -58,11 +58,7 @@ void Utilities::imgToBlackAndWhiteOneColor(QImage& img, int threshold) {
 	for (size_t x = 0; x < WIDTH; x++) {
 		for (size_t y = 0; y < HEIGHT; y++) {
 			uint pixelColor = img.pixel(x, y);
-			RGBstruct rgb(pixelColor);
-			bool redIsEnough = rgb.r >= threshold;
-			bool greenIsEnough = rgb.g >= threshold;
-			bool blueIsEnough = rgb.b >= threshold;
-			bool setWhite = redIsEnough || greenIsEnough || blueIsEnough;
+			bool setWhite = RGBstruct(pixelColor).oneColEqualOrAboveThreshold(threshold);
 			uint toSet = setWhite ? WHITE : BLACK;
 			img.setPixel(x, y, toSet);
 		}
@@ -78,10 +74,7 @@ void Utilities::imgToBlackAndWhiteAllColors(QImage& img, int threshold) {
 		for (size_t y = 0; y < HEIGHT; y++) {
 			uint pixelColor = img.pixel(x, y);
 			RGBstruct rgb(pixelColor);
-			bool redIsEnough = rgb.r >= threshold;
-			bool greenIsEnough = rgb.g >= threshold;
-			bool blueIsEnough = rgb.b >= threshold;
-			bool setWhite = redIsEnough && greenIsEnough && blueIsEnough;
+			bool setWhite = rgb.allColsEqualOrAboveThreshold(threshold);
 			uint pixToSet = setWhite ? WHITE : BLACK;
 			img.setPixel(x, y, pixToSet);
 		}
@@ -261,9 +254,8 @@ QString Utilities::letterImgToLetterCodeStr(QImage* SingleLetterImg) {
     for (size_t x = 0; x < WIDTH; x++) {
 	    for (size_t y = 0; y < HEIGHT; y++) {
 		    uint pixelColor = SingleLetterImg->pixel(x, y);
-		    RGBstruct rgb(pixelColor);
-		    int sum = rgb.b + rgb.r + rgb.g;
-		    QString toAppend = sum == 0 ? ZERO : ONE;
+			bool isBlack = RGBstruct(pixelColor).isBlack();
+		    QString toAppend = isBlack ? ZERO : ONE;
 		    toRet.append(toAppend);
 	    }
     }
@@ -399,8 +391,8 @@ void Utilities::rotateImgToRight(QImage& imgToRotate, int timesToRotateRight){
 
 bool Utilities::isItPixelFromFrame(uint color, int minValueAcceptable, int maxValueAcceptable, bool requireSameValuesOfRGB){
 	RGBstruct rgb(color);
-	int minValueFound = min(min(rgb.r, rgb.g), rgb.b);
-	int maxValueFound = max(max(rgb.r, rgb.g), rgb.b);
+	int minValueFound = rgb.getMinColVal();
+	int maxValueFound = rgb.getMaxColVal();
 	if (requireSameValuesOfRGB) {
 		if (maxValueFound - minValueFound > 1)
 			return false;
@@ -644,18 +636,14 @@ QStringList Utilities::TOOL_getCodesOfAllInFolder_bottom(QString pathToInputFold
 		int height = img->height();
 		// patern width_height_digits
 		// digits = #r#g#b_#r#g#b_#r#g#b_#r#g#b_#r#g#b_#r#g#b 
-		QString hash = QString("#");
-		QString floor = QString("_");
-		QString strWithCode = QString::number(width) + floor + QString::number(height) + floor;
+		const QString HASH = QString("#");
+		const QString FLOOR = QString("_");
+		QString strWithCode = QString::number(width) + HASH + QString::number(height) + HASH;
 		
 		for (size_t x = 0; x < width; x++){
 			for (size_t y = 0; y < height; y++){
 				uint pixVal = (uint)img->pixel(x, y);
-				RGBstruct rgb(pixVal);
-				QString r = QString::number(rgb.r);
-				QString g = QString::number(rgb.g);
-				QString b = QString::number(rgb.b);
-				QString strToAppend = hash + r + hash + g + hash + b + floor;
+				QString strToAppend = RGBstruct(pixVal).toString();
 				strWithCode.append(strToAppend);
 			}
 		}
@@ -663,8 +651,6 @@ QStringList Utilities::TOOL_getCodesOfAllInFolder_bottom(QString pathToInputFold
 		QString toDisplay = litOfFIles[i] + "______" + strWithCode;
 		qDebug() << toDisplay;
 	}
-
-	
 	return list;
 }
 
