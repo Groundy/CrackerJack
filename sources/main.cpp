@@ -10,20 +10,23 @@ QIcon getIcon(){
 	QString iconPath = dir.absoluteFilePath("logo.png");
 	return QIcon(iconPath);
 }
-void initSettings(QApplication& a){
+void setStyle(QApplication& a){
 	a.setQuitOnLastWindowClosed(true);
 	a.setStyle("fusion");
 	a.setWindowIcon(getIcon());
 	QApplication::setAttribute(Qt::AA_DisableWindowContextHelpButton);
 }
+void setTranslation(QApplication& app) {
+	QTranslator translator;
+	bool ok1 = translator.load("Debug\\crackerjackclient_pl");
+	bool ok2 = app.installTranslator(&translator);
+}
 
 int main(int argc, char *argv[])
 {
 	QApplication app(argc, argv);
-	QTranslator translator;
-	bool ok1 = translator.load("Debug\\crackerjackclient_pl");
-	bool ok2 = app.installTranslator(&translator);
-	initSettings(app);
+	setTranslation(app);
+	setStyle(app);
 	test();
 
 	Profile* prof = new Profile();
@@ -33,7 +36,7 @@ int main(int argc, char *argv[])
 		if (!accepted)
 			return 0;
 	}
-	MainMenu* mainMenu = new MainMenu(prof, NULL);
+	MainMenu* mainMenu = new MainMenu(prof);
 	bool accepted = mainMenu->exec() == QDialog::Accepted;
 	if (!accepted) {
 		delete mainMenu;

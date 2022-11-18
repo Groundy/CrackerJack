@@ -151,11 +151,10 @@ void ScreenAnalyzer::mainLoop(){
 }
 
 int ScreenAnalyzer::cutImportantImgsFromWholeScreenAndSendThemToVarClass(QImage& fullscreen){
-	QRect emptyRect;
-	bool healthFrameFound = profile->frames.healthFrame != emptyRect;
-	bool manaFrameFound = profile->frames.manaFrame != emptyRect;
-	bool manaShieldFound = profile->frames.manaShieldFrame != emptyRect;
-	bool combinedBoxFound = profile->frames.combinedFrame != emptyRect;
+	bool healthFrameFound = !profile->frames.healthFrame.isEmpty();
+	bool manaFrameFound = !profile->frames.manaFrame.isEmpty();
+	bool manaShieldFound = !profile->frames.manaShieldFrame.isEmpty();
+	bool combinedBoxFound = !profile->frames.combinedFrame.isEmpty();
 
 	bool notEnoughFramesFound = !((manaFrameFound || combinedBoxFound) && healthFrameFound);
 	if(notEnoughFramesFound)

@@ -6,7 +6,7 @@ Market::Market(std::shared_ptr<VariablesClass> var, std::shared_ptr<GameConnecte
 {
 	ui = new Ui::Market();
 	ui->setupUi(this);
-	JsonParser::readItemJson(this->allItems);
+	JsonParser().readItemJson(this->allItems);
 	ui->buyTypeRadioButton->setChecked(true);
 	filtr_seller = Seller::ANY;
 	fillCategoryLists();
@@ -18,20 +18,7 @@ Market::~Market(){
 }
 
 void Market::sellerFiltrChange() {
-	int indexOfMerchantFiltr = ui->merchantFiltr->currentIndex();
-	if (indexOfMerchantFiltr == 0)
-		filtr_seller = Seller::ANY;
-	else if (indexOfMerchantFiltr == 1)	
-		filtr_seller = Seller::GREEN_DJIN;
-	else if (indexOfMerchantFiltr == 2)
-		filtr_seller = Seller::BLUE_DJIN;
-	else if (indexOfMerchantFiltr == 3)
-		filtr_seller = Seller::ORAMOND;
-	else if (indexOfMerchantFiltr == 4)
-		filtr_seller = Seller::RASHID;
-	else if (indexOfMerchantFiltr == 5)
-		filtr_seller = Seller::ZAO;
-
+	filtr_seller = Seller(ui->merchantFiltr->currentIndex());
 	fillCategoryLists();
 }
 
@@ -284,7 +271,7 @@ void Market::readListFromJsonFile(){
 	listFileName = QFileInfo(pathToFile).fileName();
 
 	QJsonObject obj;	
-	JsonParser::openJsonFile(obj, pathToFile);
+	JsonParser().openJsonFile(obj, pathToFile);
 	QJsonArray arr = obj["offers"].toArray();
 	if (arr.count() == 0) {
 		QString text = tr("File is uncorrect or empty.");

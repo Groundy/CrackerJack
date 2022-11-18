@@ -29,9 +29,8 @@ bool JsonParser::openJsonFile(QJsonObject& jsonDoc, QString pathToFile){
 
 bool JsonParser::readSpellsJson(QList<Spell>& spells){
 	QJsonObject obj;
-	static const QString spellFilePath = "C:\\Users\\ADMIN\\source\\repos\\CrackerJackClient\\Resources\\spells.json";//todo
 
-	bool res = openJsonFile(obj, spellFilePath);
+	bool res = openJsonFile(obj, spellsPath);
 	if (!res) {
 		Logger::logPotenialBug("Problem with Json reading", "JsonParser", "readSpellsJson");
 		return false;
@@ -114,8 +113,7 @@ bool JsonParser::filtrSpells(QList<Spell>& spells, Profile::PROFESSION* prof, Sp
 
 bool JsonParser::getPotionsForProf(QList<Potion>& potions, Profile::PROFESSION* prof, TypeOfPotion type){
 	QJsonObject obj;
-	const QString itemsFilePath = "C:\\Users\\ADMIN\\source\\repos\\CrackerJackClient\\Resources\\items.json";//todo
-	bool res = openJsonFile(obj, itemsFilePath);
+	bool res = openJsonFile(obj, itemPath);
 	if (!res) {
 		Logger::logPotenialBug("Problem with Json reading", "JsonParser", "getPotionsForProf");
 		return false;
@@ -176,8 +174,7 @@ bool JsonParser::getPotionsForProf(QList<Potion>& potions, Profile::PROFESSION* 
 bool JsonParser::readItemJson(QList<Item>& items){
 	items.clear();
 	QJsonObject obj;
-	const QString itemsFilePath = "C:\\Users\\ADMIN\\source\\repos\\CrackerJackClient\\Resources\\items.json";//todo
-	bool res = openJsonFile(obj, itemsFilePath);
+	bool res = openJsonFile(obj, itemPath);
 	if (!res) {
 		Logger::logPotenialBug("Problem with Json reading", "JsonParser", "readSpellsJson");
 		return false;
@@ -309,8 +306,7 @@ bool JsonParser::saveJsonFile(QString pathToFolder, QString fileNameWithExtensio
 
 QMap<QString, int> JsonParser::readAvaibleKeys(){
 	QJsonObject obj;
-	QString path = "C:\\Moje\\pliki\\repos\\CrackerJackClient\\ResourcesUsing\\keys.json";
-	bool openCorrectly = openJsonFile(obj, path);
+	bool openCorrectly = openJsonFile(obj, keyPath);
 	QMap<QString, int> keys;
 	for each (auto var in obj.value("keys").toArray()){	
 		QString keyName = var.toObject().keys().first();

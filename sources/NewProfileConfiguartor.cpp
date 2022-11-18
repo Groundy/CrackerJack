@@ -227,7 +227,6 @@ bool NewProfileConfiguartor::checkCorrectnessOfPage_1(){
 
 	return true;
 }
-
 bool NewProfileConfiguartor::checkCorrectnessOfPage_2(){
 	bool oneOfButtonsIsChecked = false;
 	QList<QRadioButton*> buttons;
@@ -252,9 +251,7 @@ bool NewProfileConfiguartor::checkCorrectnessOfPage_2(){
 	}
 
 }
-
 bool NewProfileConfiguartor::checkCorrectnessOfPage_3(){	
-
 	bool slidersAreInCorrectOrder = true;
 	bool everySliderHasDiffrentValue = true;
 	{
@@ -506,7 +503,6 @@ bool NewProfileConfiguartor::checkCorrectnessOfPage_4(){
 	}
 	return true;
 }
-
 bool NewProfileConfiguartor::checkCorrectnessOfPage_5(){
 	//change //TODO
 	int indexOfAutoBox = ui->_5_AutoLootBox->currentIndex();

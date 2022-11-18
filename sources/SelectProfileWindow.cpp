@@ -1,7 +1,9 @@
 #include "SelectProfileWindow.h"
 #include "ui_SelectProfileWindow.h"
 
-SelectProfileWindow::SelectProfileWindow(QWidget *parent, Profile* prof) : QDialog(parent){
+SelectProfileWindow::SelectProfileWindow(QWidget *parent, Profile* prof) : 
+	QDialog(parent), profToSelect(prof)
+{
 	ui = new Ui::SelectProfileWindow();
 	ui->setupUi(this);
 	setFixedSize(this->size());
@@ -9,7 +11,6 @@ SelectProfileWindow::SelectProfileWindow(QWidget *parent, Profile* prof) : QDial
 	prepareProfiles();
 	ui->listOfProfs->setItemSelected(NULL, true);
 	selectListAction();
-	profToSelect = prof;
 	readAndSetLastUsedProFromINI();
 }
 

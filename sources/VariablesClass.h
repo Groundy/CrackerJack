@@ -18,7 +18,7 @@ public:
 
 	std::atomic<float> health, mana, manashield;
 	int rotationNeededForPointsAbove;
-	bool manaFound, healthFound, manaShieldFound, combinedFound;
+	std::atomic<bool> manaFound, healthFound, manaShieldFound, combinedFound;
 	bool newData;
 	
 	//
