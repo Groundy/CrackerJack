@@ -136,7 +136,7 @@ void MainMenu::changeProfileButtonAction(){
 	SelectProfileWindow selectProfWin(this, &profTmp);
 	int res = selectProfWin.exec();
 	if (res == QDialog::Accepted) {
-		this->prof->getDataFromOtherProf(profTmp);
+		this->prof->copyFrom(profTmp);
 		this->ui->profileNameLabel->setText(this->prof->profileName);
 		this->ui->profileNameLabel->repaint();
 	}
@@ -148,7 +148,7 @@ void MainMenu::editProfileButtonAction(){
 	profConfig.fillWidgetsWithDataFromProf(this->prof);
 	int res = profConfig.exec();
 	if (res == QDialog::Accepted) {
-		this->prof->getDataFromOtherProf(profTmp);
+		this->prof->copyFrom(profTmp);
 		this->ui->profileNameLabel->setText(this->prof->profileName);
 		this->ui->profileNameLabel->repaint();
 	}

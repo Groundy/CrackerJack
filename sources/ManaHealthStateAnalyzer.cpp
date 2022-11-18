@@ -3,15 +3,9 @@
 #include <ImgEditor.h>
 
 ManaHealthStateAnalyzer::ManaHealthStateAnalyzer(QObject *parent, Profile* profile, std::shared_ptr<VariablesClass> var)
-	: QThread(parent), var(var){
+	: QThread(parent), var(var), prof(prof){
 
-	lifeThreshholds = profile->healthRestorePercentages;;
-	manaThreshholds= profile->ManaRestoreMethodesPercentage;
-	healthKeys = profile->healthKeys;
-	manaKeys = profile->ManaKeys;
-	QStringList restorationMethodeList_Health = profile->healthRestoreMethodeNames;
-	QStringList restorationMethodeList_Mana = profile->manaRestoreMethodeNames;
-	setupRestorationMethodes(restorationMethodeList_Health, restorationMethodeList_Mana);
+	//setupRestorationMethodes(restorationMethodeList_Health, restorationMethodeList_Mana);
 	/*
 	for each (auto var in restorationMethodeList_Health)
 		lastTimeUsedHealthMethode.push_back(0);
@@ -244,15 +238,15 @@ void ManaHealthStateAnalyzer::setupRestorationMethodes(QStringList listOfRestora
 }
 
 int ManaHealthStateAnalyzer::getKeyThatShouldBeSendToKeySenderClass(Key& healthKey, Key& manaKey){
-	int indexOfHealth;
-	auto res1 = findNearestThresholdIndex(healthPercentage, lifeThreshholds, indexOfHealth);
-	if (res1!= OK)
-		return res1;
+	int indexOfHealth;//todo
+	//auto res1 = findNearestThresholdIndex(healthPercentage, lifeThreshholds, indexOfHealth);
+	//if (res1!= OK)
+	//	return res1;
 
-	int indexOfMana;
-	auto res2 = findNearestThresholdIndex(manaPercentage, manaThreshholds, indexOfMana);
-	if (res2 != OK)
-		return res2;
+	int indexOfMana;//todo
+	//auto res2 = findNearestThresholdIndex(manaPercentage, manaThreshholds, indexOfMana);
+	//if (res2 != OK)
+	//	return res2;
 
 
 	bool potionSlotIsUsed = false;
@@ -269,7 +263,7 @@ int ManaHealthStateAnalyzer::getKeyThatShouldBeSendToKeySenderClass(Key& healthK
 			LONG64 nextTimeAnyItemWillBeAvaible = var->lastTimeUsed_item + 1000;
 			bool useThis = max(nextTimeThisItemWillBeAvaible, nextTimeAnyItemWillBeAvaible) <= currentTime;
 			if (useThis){
-				potionKey = healthKeys[i];
+				//potionKey = healthKeys[i];//todo
 				potionSlotIsUsed = true;
 				var->lastTimeUsed_item = currentTime;
 				var->lastTimeMethodeUsed_Healing[i] = currentTime;
@@ -284,7 +278,7 @@ int ManaHealthStateAnalyzer::getKeyThatShouldBeSendToKeySenderClass(Key& healthK
 			bool canUseNow =  nextTimeThisSpellWillBeAvaible <= currentTime;
 			bool haveManaForIt = mana >= healthMethodes[i].mana;
 			if (canUseNow && haveManaForIt) {
-				spellKey = healthKeys[i];
+				//spellKey = healthKeys[i];//todo
 				spellSlotIsUsed = true;
 				var->lastTimeUsed_spell_healing = currentTime;
 				var->lastTimeMethodeUsed_Healing[i] = currentTime;
@@ -298,7 +292,7 @@ int ManaHealthStateAnalyzer::getKeyThatShouldBeSendToKeySenderClass(Key& healthK
 		LONG64 nextTimeThisItemWillBeAvaible = var->lastTimeUsed_item + 1000;
 		bool isReady = nextTimeThisItemWillBeAvaible <= currentTime;
 		if (isReady) {
-			potionKey = manaKeys[i];
+			//potionKey = manaKeys[i];//todo
 			potionSlotIsUsed = true;
 			var->lastTimeUsed_item = currentTime;
 		}

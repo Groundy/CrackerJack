@@ -1,6 +1,5 @@
 #pragma once
 #include <QDialog>
-#include "ProfileDataBaseManager.h"
 namespace Ui { class SelectProfileWindow; };
 
 class SelectProfileWindow : public QDialog

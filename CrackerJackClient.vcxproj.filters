@@ -57,9 +57,6 @@
     <ClCompile Include="sources\NewProfileConfiguartor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="sources\ProfileDataBaseManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="sources\ScreenSaver.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -217,9 +214,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="sources\RGBstruct.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="sources\ProfileDataBaseManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="sources\Profile.h">

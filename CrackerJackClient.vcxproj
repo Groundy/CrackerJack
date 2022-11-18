@@ -241,7 +241,6 @@ xcopy /y /d ".\dependencies\64-bit\libcrypto-1_1-x64.dll" "$(OutDir)"
     <ClCompile Include="sources\Key.cpp" />
     <ClCompile Include="sources\Offer.cpp" />
     <ClCompile Include="sources\Point3D.cpp" />
-    <ClCompile Include="sources\ProfileDataBaseManager.cpp" />
     <ClCompile Include="sources\main.cpp" />
     <ClCompile Include="sources\Profile.cpp" />
     <ClCompile Include="sources\RGBstruct.cpp" />
@@ -290,7 +289,6 @@ xcopy /y /d ".\dependencies\64-bit\libcrypto-1_1-x64.dll" "$(OutDir)"
     <QtMoc Include="sources\NewProfileConfiguartor.h" />
     <ClInclude Include="sources\Key.h" />
     <ClInclude Include="sources\Utilities.h" />
-    <ClInclude Include="sources\ProfileDataBaseManager.h" />
     <ClInclude Include="sources\Profile.h" />
     <QtMoc Include="sources\SelectProfileWindow.h" />
   </ItemGroup>

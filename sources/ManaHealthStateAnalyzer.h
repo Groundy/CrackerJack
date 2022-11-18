@@ -40,11 +40,7 @@ private:
 	int health, maxHealth;
 	float healthPercentage, manaPercentage, manaShieldPercentage;
 
-	//info from prof
-	QList<int> lifeThreshholds;
-	QList<int> manaThreshholds;
-	QList<Key> healthKeys;
-	QList<Key> manaKeys;
+	Profile* prof;
 
 	QList<Utilities::RestoreMethode> healthMethodes;
 	QList<Item> manaMethodes;

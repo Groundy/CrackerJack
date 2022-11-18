@@ -118,70 +118,49 @@ void NewProfileConfiguartor::saveDataToProfile(Profile* prof) {
 		prof->profession = Profile::PROFESSION::RP;
 	//3
 	if (ui->_3_enableAutoHealing->isChecked()) {
-		int size = ui->_3_spinGetNumberOfMethodes->value();
 		QList<QAbstractSlider*> sliders;
 		sliders.push_back(ui->_3_horizontalSlider_1);
 		sliders.push_back(ui->_3_horizontalSlider_2);
 		sliders.push_back(ui->_3_horizontalSlider_3);
 		sliders.push_back(ui->_3_horizontalSlider_4);
 		sliders.push_back(ui->_3_horizontalSlider_5);
-
-		prof->healthRestorePercentages.clear();
-		for (size_t i = 0; i < size; i++){
-			int thresholdOfSlider = sliders[i]->value();
-			prof->healthRestorePercentages.push_back(thresholdOfSlider);
-		}
-
 		QList<QComboBox*> keysPtrs;
 		keysPtrs.push_back(ui->_3_shortKey_1);
 		keysPtrs.push_back(ui->_3_shortKey_2);
 		keysPtrs.push_back(ui->_3_shortKey_3);
 		keysPtrs.push_back(ui->_3_shortKey_4);
 		keysPtrs.push_back(ui->_3_shortKey_5);
-
-		prof->healthKeys.clear();
-		for (size_t i = 0; i < size; i++)
-			prof->healthKeys.push_back(keysPtrs[i]->currentText());
-
-		QList<QString> helathRestorationNames;
+		QStringList helathRestorationNames;
 		helathRestorationNames.push_back(ui->_3_comboBox->currentText());
 		helathRestorationNames.push_back(ui->_3_comboBox_2->currentText());
 		helathRestorationNames.push_back(ui->_3_comboBox_3->currentText());
 		helathRestorationNames.push_back(ui->_3_comboBox_4->currentText());
 		helathRestorationNames.push_back(ui->_3_comboBox_5->currentText());
 
-		prof->healthRestoreMethodeNames.clear();
-		for (size_t i = 0; i < size; i++)
-			prof->healthRestoreMethodeNames.push_back(helathRestorationNames[i]);
+		prof->healthRestorations.clear();
+		int size = ui->_3_spinGetNumberOfMethodes->value();
+		for (size_t i = 0; i < size; i++) {
+			int thresholdOfSlider = sliders[i]->value();
+			Key key = Key(keysPtrs[i]->currentText());
+			QString restorationName = helathRestorationNames[i];
+			RestorationStruct restorationMethode(thresholdOfSlider, key, restorationName);
+			prof->healthRestorations.push_back(restorationMethode);
+		}
 	}
 	//4
 	if (ui->_4_enableManaRestore->isChecked()) {
-		int size = ui->_4_spinGetNumberOfMethodes->value();
 		QList<QAbstractSlider*> sliders;
 		sliders.push_back(ui->_4_horizontalSlider_1);
 		sliders.push_back(ui->_4_horizontalSlider_2);
 		sliders.push_back(ui->_4_horizontalSlider_3);
 		sliders.push_back(ui->_4_horizontalSlider_4);
 		sliders.push_back(ui->_4_horizontalSlider_5);
-
-		prof->ManaRestoreMethodesPercentage.clear();
-		for (size_t i = 0; i < size; i++) {
-			int thresholdOfSlider = sliders[i]->value();
-			prof->ManaRestoreMethodesPercentage.push_back(thresholdOfSlider);
-		}
-
-
 		QList<QComboBox*> keysPtrs;
 		keysPtrs.push_back(ui->_4_shortKey_1);
 		keysPtrs.push_back(ui->_4_shortKey_2);
 		keysPtrs.push_back(ui->_4_shortKey_3);
 		keysPtrs.push_back(ui->_4_shortKey_4);
 		keysPtrs.push_back(ui->_4_shortKey_5);
-
-		prof->ManaKeys.clear();
-		for (size_t i = 0; i < size; i++)
-			prof->ManaKeys.push_back(keysPtrs[i]->currentText());
-
 		QList<QString> manaRestoreNames;
 		manaRestoreNames.push_back(ui->_4_comboBox->currentText());
 		manaRestoreNames.push_back(ui->_4_comboBox_2->currentText());
@@ -189,9 +168,14 @@ void NewProfileConfiguartor::saveDataToProfile(Profile* prof) {
 		manaRestoreNames.push_back(ui->_4_comboBox_4->currentText());
 		manaRestoreNames.push_back(ui->_4_comboBox_5->currentText());
 
-		prof->manaRestoreMethodeNames.clear();
-		for (size_t i = 0; i < size; i++)
-			prof->manaRestoreMethodeNames.push_back(manaRestoreNames[i]);
+		int size = ui->_4_spinGetNumberOfMethodes->value();
+		for (size_t i = 0; i < size; i++) {
+			int thresholdOfSlider = sliders[i]->value();
+			Key key = Key(keysPtrs[i]->currentText());
+			QString restorationName = manaRestoreNames[i];
+			RestorationStruct restorationMethode(thresholdOfSlider, key, restorationName);
+			prof->manaRestorations.push_back(restorationMethode);
+		}
 	}
 	//5
 }
@@ -283,7 +267,7 @@ bool NewProfileConfiguartor::checkCorrectnessOfPage_3(){
 	{
 		for (size_t i = 0; i < guiPtrs.activeElementsOnPage_3; i++){
 			QString keyText = guiPtrs.keyShortCutsOnPage_3[i]->currentText();
-			int number = Key(keyText).number;
+			int number = Key(keyText).getKeyVal();
 			bool error = number == -1;
 			if (error)
 				oneOfKeyFieldsHasNoValue = true;
@@ -308,7 +292,7 @@ bool NewProfileConfiguartor::checkCorrectnessOfPage_3(){
 		const int MAX_INDEX = guiPtrs.activeElementsOnPage_3;
 		for (size_t i = 0; i < MAX_INDEX; i++) {
 			QString keySrt = guiPtrs.keyShortCutsOnPage_3[i]->currentText();
-			int valueOfKey = Key(keySrt).number;
+			int valueOfKey = Key(keySrt).getKeyVal();
 			setToPreventDuplicates.insert(valueOfKey);
 		}
 
@@ -377,7 +361,6 @@ bool NewProfileConfiguartor::checkCorrectnessOfPage_3(){
 	}
 	return true;
 }
-
 bool NewProfileConfiguartor::checkCorrectnessOfPage_4(){
 	bool slidersAreInCorrectOrder = true;
 	bool everySliderHasDiffrentValue = true;
@@ -410,7 +393,7 @@ bool NewProfileConfiguartor::checkCorrectnessOfPage_4(){
 	{
 		for (size_t i = 0; i < guiPtrs.activeElementsOnPage_4; i++) {
 			QString keyText = guiPtrs.keyShortCutsOnPage_3[i]->currentText();
-			int number = Key(keyText).number;
+			int number = Key(keyText).getKeyVal();
 			bool error = number == -1;
 			if (error)
 				oneOfKeyFieldsHasNoValue = true;
@@ -435,7 +418,7 @@ bool NewProfileConfiguartor::checkCorrectnessOfPage_4(){
 		int MAX_INDEX = guiPtrs.activeElementsOnPage_4;
 		for (size_t i = 0; i < MAX_INDEX; i++) {
 			QString keyStr = guiPtrs.keyShortCutsOnPage_4[i]->currentText();
-			int valueOfKey = Key(keyStr).number;
+			int valueOfKey = Key(keyStr).getKeyVal();
 			setToPreventDuplicates.insert(valueOfKey);
 		}
 		bool allWidgetsAreDiffrent = setToPreventDuplicates.size() == MAX_INDEX;
@@ -448,7 +431,7 @@ bool NewProfileConfiguartor::checkCorrectnessOfPage_4(){
 	if(guiPtrs.activeElementsOnPage_4 > 0){
 		QSet<int> setToPreventDuplicates;
 		for (size_t i = 0; i < guiPtrs.activeElementsOnPage_4; i++) {
-			QString codeStr = Key(guiPtrs.keyShortCutsOnPage_4[i]->currentText()).number;
+			QString codeStr = Key(guiPtrs.keyShortCutsOnPage_4[i]->currentText()).getKeyVal();
 			int code = Key::KeysAndCodesMap.value(codeStr, -1);
 			setToPreventDuplicates.insert(code);
 		}
@@ -546,7 +529,7 @@ QStringList NewProfileConfiguartor::getNamesOfManaRestoringMethodes(Profile::PRO
 }
 
 void NewProfileConfiguartor::fillGuiElementsWithNamesRestoreMethodes_Health(Profile::PROFESSION profession){
-	QStringList listOfMethodesNamesFromProf = profToEdit->healthRestoreMethodeNames;
+	QStringList listOfMethodesNamesFromProf = profToEdit->getHealthRestorationNames();
 	QStringList namesOfAllPosibleMethodes = getNamesOfHealthRestoringMethodes(profession);
 	QStringList incantationsThatShouldBeDeleted{"utura", "utura gran", "exura sio \"name\"",
 	"exana pox", "utura mas sio", "exana flam", "exana kor", "exana vis", "exura gran sio \"name\"",
@@ -571,7 +554,10 @@ void NewProfileConfiguartor::fillGuiElementsWithNamesRestoreMethodes_Health(Prof
 }
 
 void NewProfileConfiguartor::fillGuiElementsWithNamesRestoreMethodes_Mana(Profile::PROFESSION prof){
-	QStringList listOfMethodesNamesFromProf = profToEdit->manaRestoreMethodeNames;
+	QStringList listOfMethodesNamesFromProf = {};
+	//for (auto var : profToEdit->manaRestorations)
+	//	listOfMethodesNamesFromProf.push_back(var.name);
+
 	QStringList namesOfAllPosibleMethodes = getNamesOfManaRestoringMethodes(prof);
 	namesOfAllPosibleMethodes.sort();
 
@@ -687,7 +673,7 @@ void NewProfileConfiguartor::fillWidgetsWithDataFromProf(Profile* profToEdit) {
 	}
 	//3
 	{
-		int methodesUsedByProfile = profToEdit->healthRestorePercentages.size();
+		int methodesUsedByProfile = profToEdit->healthRestorations.size();
 		if (methodesUsedByProfile >= 1) {
 			ui->_3_enableAutoHealing->setEnabled(true);
 			ui->_3_enableAutoHealing->setChecked(true);
@@ -708,19 +694,20 @@ void NewProfileConfiguartor::fillWidgetsWithDataFromProf(Profile* profToEdit) {
 				guiPtrs.labelsOnPage_3[i] ->setVisible(shouldBeVisible);
 				guiPtrs.keyShortCutsOnPage_3[i]->setVisible(shouldBeVisible);
 				guiPtrs.boxesOnPage_3[i]->setVisible(shouldBeVisible);
-				guiPtrs.sliderOnPage_3[i]->setValue(profToEdit->healthRestorePercentages[i]);
-				int indexToSet = profToEdit->healthRestoreMethodeNames.indexOf(profToEdit->healthRestoreMethodeNames[i]);
-				guiPtrs.boxesOnPage_3[i]->setCurrentIndex(indexToSet);
-				int codeOfKey = profToEdit->healthKeys[i].number;
-				QString textOfKey = Key::KeysAndCodesMap.key(codeOfKey, tr("Error"));
-				guiPtrs.keyShortCutsOnPage_3[i]->setCurrentText(textOfKey);
+
+				//guiPtrs.sliderOnPage_3[i]->setValue(profToEdit->healthRestorations[i].threshold);
+				//int indexToSet = profToEdit->healthRestoreMethodeNames.indexOf(profToEdit->healthRestoreMethodeNames[i]);
+				//guiPtrs.boxesOnPage_3[i]->setCurrentIndex(indexToSet);
+				//int codeOfKey = profToEdit->healthRestorations[i].key.number;
+				//QString textOfKey = Key::KeysAndCodesMap.key(codeOfKey, tr("Error"));
+				//guiPtrs.keyShortCutsOnPage_3[i]->setCurrentText(textOfKey);
 			}
 		}
 		_3_slidersChanged();//setting proper text on labels;
 	}
 	//4
 	{
-		int methodesUsedByProfile = profToEdit->manaRestoreMethodeNames.size();
+		int methodesUsedByProfile = profToEdit->manaRestorations.size();
 		if (methodesUsedByProfile >= 1) {
 			ui->_4_enableManaRestore->setEnabled(true);
 			ui->_4_enableManaRestore->setChecked(true);
@@ -739,13 +726,13 @@ void NewProfileConfiguartor::fillWidgetsWithDataFromProf(Profile* profToEdit) {
 				guiPtrs.labelsOnPage_4[i]->setVisible(shouldBeVisible);
 				guiPtrs.keyShortCutsOnPage_4[i]->setVisible(shouldBeVisible);
 				guiPtrs.boxesOnPage_4[i]->setVisible(shouldBeVisible);
-				guiPtrs.sliderOnPage_4[i]->setValue(profToEdit->healthRestorePercentages[i]);
-				int indexToSet = profToEdit->healthRestoreMethodeNames.indexOf(profToEdit->healthRestoreMethodeNames[i]);
-				guiPtrs.boxesOnPage_4[i]->setCurrentIndex(indexToSet);
-				int keyCode = profToEdit->healthKeys[i].number;
-				QString textToFind = Key::KeysAndCodesMap.key(keyCode, tr("Error"));
-				int index = guiPtrs.keyShortCutsOnPage_4[i]->findText(textToFind, Qt::MatchExactly);
-				guiPtrs.keyShortCutsOnPage_4[i]->setCurrentIndex(index);
+				//guiPtrs.sliderOnPage_4[i]->setValue(profToEdit->healthRestorations[i].threshold);
+				//int indexToSet = profToEdit->healthRestoreMethodeNames.indexOf(profToEdit->healthRestoreMethodeNames[i]);
+				//guiPtrs.boxesOnPage_4[i]->setCurrentIndex(indexToSet);
+				//int keyCode = profToEdit->healthRestorations[i].key.number;
+				//QString textToFind = Key::KeysAndCodesMap.key(keyCode, tr("Error"));
+				//int index = guiPtrs.keyShortCutsOnPage_4[i]->findText(textToFind, Qt::MatchExactly);
+				//guiPtrs.keyShortCutsOnPage_4[i]->setCurrentIndex(index);
 			}
 		}
 		_4_slidersChanged();//set proper text on labels;

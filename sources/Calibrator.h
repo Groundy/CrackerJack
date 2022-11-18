@@ -4,7 +4,6 @@
 #include <qimage.h>
 #include <qmap.h>
 #include "Utilities.h"
-#include "ProfileDataBaseManager.h"
 #include "ImgEditor.h"
 class Calibrator{
 public:
