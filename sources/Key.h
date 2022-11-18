@@ -4,14 +4,20 @@
 #include "qsplitter.h"
 #include "qmap.h"
 #include "Logger.h"
+#include <qjsonobject.h>
 class Key {
 public:
-	static QMap<QString, int> KeysAndCodesMap;
-	static QStringList getListOfAllPossibleKeys();
-	int number;
-
 	Key();
 	Key(int codeOfKey);
 	Key(QString keyCodeAsStr);
+	Key(QJsonObject obj);
+
+	int getKeyVal() { return keyVal; };
+	static QMap<QString, int> KeysAndCodesMap;
+	static QStringList getListOfAllPossibleKeys();
+	QJsonObject toJson();
+private:
+	int keyVal;
+	QString keyName;
 };
 

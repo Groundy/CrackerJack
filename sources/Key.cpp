@@ -4,17 +4,39 @@ QStringList Key::getListOfAllPossibleKeys(){
 	return KeysAndCodesMap.keys();
 }
 
+QJsonObject Key::toJson() {
+	QJsonObject json;
+	json.insert("keyVal", keyVal);
+	json.insert("keyName", keyName);
+	return json;
+}
+
 Key::Key(int codeOfKey){
 	bool thereIsSuchCode = KeysAndCodesMap.values().contains(codeOfKey);
-	this->number = thereIsSuchCode ? codeOfKey : -1;
+	this->keyVal = thereIsSuchCode ? codeOfKey : -1;
 }
 
 Key::Key(QString keyCodeAsStr){
-	this->number = KeysAndCodesMap.value(keyCodeAsStr, -1);
+	this->keyVal = KeysAndCodesMap.value(keyCodeAsStr, -1);
+}
+
+Key::Key(QJsonObject obj){
+	if (!obj.contains("keyVal"))
+		throw std::exception("no keyVal field in key object in json file");
+	if(!obj.value("keyVal").isDouble())
+		throw std::exception("invalid keyVal field in key object in json file");
+
+	if (!obj.contains("keyName"))
+		throw std::exception("no keyName field in key object in json file");
+	if (!obj.value("keyName").isString())
+		throw std::exception("invalid keyName field in key object in json file");
+
+	keyVal = obj.value("keyVal").toInt();
+	keyName = obj.value("keyName").toString();
 }
 
 Key::Key(){
-	this->number = -1;
+	this->keyVal = -1;
 }
 
 QMap<QString, int> Key::KeysAndCodesMap = {

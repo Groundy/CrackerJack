@@ -48,8 +48,8 @@ bool GameConnecter::sendKeyStrokeToProcess(Key key, unsigned int PID, QString na
 	DWORD hThread = GetWindowThreadProcessId(handler, &tmp);
 	if (hThread != NULL) {
 		int g = 0x1470001;
-		PostMessage(handler, WM_KEYDOWN, key.number, g);
-		PostMessage(handler, WM_KEYUP, key.number, g);
+		PostMessage(handler, WM_KEYDOWN, key.getKeyVal(), g);
+		PostMessage(handler, WM_KEYUP, key.getKeyVal(), g);
 		return true;
 	}
 	else {

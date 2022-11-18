@@ -55,8 +55,8 @@ void ManaHealthStateAnalyzer::mainLoop(){
 		getAmountsOfPotions();
 		Key healthKey, manaKey;
 		bool sucess = getKeyThatShouldBeSendToKeySenderClass(healthKey, manaKey) == OK;
-		bool thereIsHealthKey = (healthKey.number != -1) && sucess;
-		bool thereIsManaKey = (manaKey.number != -1) && sucess;
+		bool thereIsHealthKey = (healthKey.getKeyVal() != -1) && sucess;
+		bool thereIsManaKey = (manaKey.getKeyVal() != -1) && sucess;
 		if (thereIsHealthKey)
 			//Utilities::sendKeyStrokeToProcess(healthKey, var->var_pidOfGame, var->var_winTitleOfGame);
 		if (thereIsManaKey) {
