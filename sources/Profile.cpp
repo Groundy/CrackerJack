@@ -10,7 +10,7 @@ Profile::Profile(QJsonObject obj) {
 
 		if (!obj.contains("profession"))
 			throw std::exception("No profileName field in profil json file!");
-		this->profession = PROFESSION(obj.value("profession").toInt());
+		this->profession = Profession(obj.value("profession").toString());
 
 		if (!obj.contains("healthRestorations"))
 			throw std::exception("No healthRestorations field in profil json file!");
@@ -41,45 +41,26 @@ Profile::Profile(QJsonObject obj) {
 	}
 }
 
-void Profile::toJson(){
 	QJsonObject mainObj;
-	QString professionName;
-	switch (profession) {
-	case Profile::RP:
-		professionName = "RP";
-		break;
-	case Profile::EK:
-		professionName = "EK";
-		break;
-	case Profile::ED:
-		professionName = "ED";
-		break;
-	case Profile::MS:
-		professionName = "MS";
-		break;
-	default:
-		professionName = "RP";
-		break;
-	};
-
-	QJsonArray healthArray, manaArray;
+		QJsonArray healthArray, manaArray;
 	for each (auto var in healthRestorations)
 		healthArray.push_back(var.toJsonObj());
 	for each (auto var in manaRestorations)
 		manaArray.push_back(var.toJsonObj());
 	
 	mainObj.insert("profileName", profileName);
-	mainObj.insert("profession", professionName);
+	mainObj.insert("profession", profession.getTypeName());
 	mainObj.insert("healthRestorations", healthArray);
 	mainObj.insert("manaRestorations", healthArray);
 	mainObj.insert("lootKey", lootKey);
 	mainObj.insert("controls", controls);
+	return mainObj;
 }
 
 void Profile::clearProfile(){
 	healthRestorations.clear();
 	manaRestorations.clear();
-	profession = PROFESSION(0);//done
+	profession = Profession();
 	profileName.clear();
 }
 

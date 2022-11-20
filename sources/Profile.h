@@ -8,6 +8,7 @@
 #include "Key.h"
 #include "Windows.h"
 #include <qexception.h>
+#include "Profession.h"
 struct Frames {
 	QRect gameFrame;
 	QRect miniMapFrame;
@@ -74,13 +75,12 @@ public:
 	QStringList getHealthRestorationNames();
 	QStringList getManaRestorationNames();
 public:
-	enum PROFESSION { RP, EK, ED, MS};
 	enum AUTO_LOOT_KEY { RIGHT_MOUSE_BUTTON, SHIFT_RIGHT, LEFT_MOUSE_BUTTON };//enable only if controls
 	enum CONTROLS { CLSSIC_CONTROLS, REGULARCONTROLS, LEFT_SMART_CLICK };
 	enum STATES { HASTE, BATTLE, PROTECTOR_ZONE, POISONED, PARALYZED, UPGRADED };
 
 	QString profileName;
-	PROFESSION profession;
+	Profession profession;
 	QList<RestorationStruct> manaRestorations;
 	QList<RestorationStruct> healthRestorations;
 	AUTO_LOOT_KEY lootKey;

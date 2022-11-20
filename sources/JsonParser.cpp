@@ -75,26 +75,27 @@ bool JsonParser::readSpellsJson(QList<Spell>& spells){
 	return true;
 }
 
-bool JsonParser::filtrSpells(QList<Spell>& spells, Profile::PROFESSION* prof, Spell::TYPE_OF_SPELL* type){
-	if (prof == NULL && type == NULL)
+bool JsonParser::filtrSpells(QList<Spell>& spells, Profession* profession, Spell::TYPE_OF_SPELL* type){
+	if (profession == NULL && type == NULL)
 		return false;
 	typedef Utilities::Spell Spell;
 
-	bool filtrByProf = prof != NULL;
+	bool filtrByProf = profession != NULL;
 	bool filtrByType = type != NULL;
 	QList<Spell> spellsCopy = spells;      
 	QList<Spell> spelsToRet;
 	for each (Spell var in spellsCopy) {
-
 		if (filtrByProf) {
+			/*
 			bool isProperProf = false;
-			if (*prof == Profile::ED)
+			auto professionType = profession->getType();
+			if (professionType == Profession::ED)
 				isProperProf = var.ED;
-			else if (*prof == Profile::EK)
+			else if (professionType == Profession::EK)
 				isProperProf = var.EK;
-			else if (*prof == Profile::MS)
+			else if (professionType == Profession::MS)
 				isProperProf = var.MS;
-			else if (*prof == Profile::RP)
+			else if (professionType == Profession::RP)
 				isProperProf = var.RP;
 
 			if (!isProperProf)
@@ -111,7 +112,7 @@ bool JsonParser::filtrSpells(QList<Spell>& spells, Profile::PROFESSION* prof, Sp
 	return true;
 }
 
-bool JsonParser::getPotionsForProf(QList<Potion>& potions, Profile::PROFESSION* prof, TypeOfPotion type){
+bool JsonParser::getPotionsForProf(QList<Potion>& potions, Profession* prof, TypeOfPotion type){
 	QJsonObject obj;
 	bool res = openJsonFile(obj, itemPath);
 	if (!res) {
@@ -144,21 +145,14 @@ bool JsonParser::getPotionsForProf(QList<Potion>& potions, Profile::PROFESSION* 
 		if (skipCauseHealthCondition || skipCauseManaCondition)
 			continue;
 
-		bool isMage, isRP, isEK;
-		if (prof != NULL) {
-			isMage = *prof == Profile::PROFESSION::ED || *prof == Profile::PROFESSION::MS;
-			isRP = *prof == Profile::PROFESSION::RP;
-			isEK = *prof == Profile::PROFESSION::EK;
-		}
-
 		bool skipCauseProfCon = true;
 		if (prof == NULL)
 			skipCauseProfCon = false;
-		else if(potionToAdd.forMage && isMage)
+		else if(potionToAdd.forMage && prof->isMage())
 			skipCauseProfCon = false;
-		else if(potionToAdd.forEk && isEK)
+		else if(potionToAdd.forEk && prof->isEK())
 			skipCauseProfCon = false;
-		else if(potionToAdd.forRp && isRP)
+		else if(potionToAdd.forRp && prof->isRP())
 			skipCauseProfCon = false;
 
 
