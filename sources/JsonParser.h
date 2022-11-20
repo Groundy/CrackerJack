@@ -26,8 +26,13 @@ public:
 	bool getItemsFromCategory(QList<Item> &readItems, Item::TYPE_OF_ITEM type);
 	static bool saveJsonFile(QString pathToFolder, QString fileNameWithExtension, QJsonDocument& docToSave);
 	QMap<QString, int> readAvaibleKeys();
+
+	void saveProfiles(Profile* prof);
+	Profile loadProfiles(QString profileName);
+	void deleteProfileFile(QString profileName) {};
 private:
 	QString spellsPath = "C:\\Moje\\pliki\\repos\\CrackerJackClient\\ResourcesUsing\\spells.json";//todo
 	QString itemPath = "C:\\Users\\ADMIN\\source\\repos\\CrackerJackClient\\Resources\\items.json"; //todo
 	QString keyPath = "C:\\Moje\\pliki\\repos\\CrackerJackClient\\ResourcesUsing\\keys.json";//todo
+	QString pathToProfileFolder = "C:\\Moje\\pliki\\repos\\CrackerJackClient\\Profiles\\";
 };

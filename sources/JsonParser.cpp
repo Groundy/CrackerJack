@@ -317,3 +317,16 @@ QMap<QString, int> JsonParser::readAvaibleKeys(){
 	return keys;
 }
 
+void JsonParser::saveProfiles(Profile* prof){
+	const QString fileName = prof->profileName + ".json";
+	QJsonDocument docToSave(prof->toJson());
+	saveJsonFile(pathToProfileFolder, fileName, docToSave);
+}
+
+Profile JsonParser::loadProfiles(QString profileName){
+	const QString filePath = pathToProfileFolder + "\\" + profileName + ".json";
+	QJsonObject profJsonObj;
+	openJsonFile(profJsonObj, filePath);
+	return Profile(profJsonObj);
+}
+
