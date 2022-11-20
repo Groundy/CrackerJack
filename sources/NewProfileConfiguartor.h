@@ -1,9 +1,11 @@
 #pragma once
 #include <qdialog.h>
-#include "qlistwidget.h"
+#include <qlistwidget.h>
+#include <qstring.h>
+#include <iostream>
+
 #include "ui_NewProfileConfiguartor.h"
 #include "Utilities.h"
-#include "qstring.h"
 #include "Profile.h"
 #include "JsonParser.h"
 #include "Key.h"
@@ -71,4 +73,5 @@ private:
 	};
 	guiPointers guiPtrs;
 	const int MAX_NUMBER_OF_ACTIVE_WIDGETS = 5;
+
 };

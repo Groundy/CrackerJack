@@ -235,256 +235,100 @@ bool NewProfileConfiguartor::checkCorrectnessOfPage_2(){
 	}
 
 }
-bool NewProfileConfiguartor::checkCorrectnessOfPage_3(){	
-	bool slidersAreInCorrectOrder = true;
-	bool everySliderHasDiffrentValue = true;
-	{
-		int biggestValue = 101;
-		for (size_t i = 0; i < guiPtrs.activeElementsOnPage_3; i++){
-			QAbstractSlider* slider = guiPtrs.sliderOnPage_3[i];
-			if (slider->value() < biggestValue)
-				biggestValue = slider->value();
-			else if (slider->value() == biggestValue)
-				everySliderHasDiffrentValue = false;
-			else
-				slidersAreInCorrectOrder = false;
-		}
-	}
+bool NewProfileConfiguartor::checkCorrectnessOfPage_3() {
+	try {
+		int size = ui->_3_spinGetNumberOfMethodes->value();
+		if (size == 0)
+			return true;
 
-	bool lastSliderIsZero = false;
-	{
-		int activeElements = guiPtrs.activeElementsOnPage_3;
-		if (activeElements > 0) {
-			int lastSliderIndex = activeElements - 1;
-			int valOfLastSlider = guiPtrs.sliderOnPage_3[lastSliderIndex]->value();
-			lastSliderIsZero = valOfLastSlider <= 0;
-		}
-	}
-
-	bool oneOfKeyFieldsHasManyValues = false;
-	bool oneOfKeyFieldsHasNoValue = false;
-	bool oneOfKeyFieldsHasForbiddenChars = false;
-	{
-		for (size_t i = 0; i < guiPtrs.activeElementsOnPage_3; i++){
-			QString keyText = guiPtrs.keyShortCutsOnPage_3[i]->currentText();
-			int number = Key(keyText).getKeyVal();
-			bool error = number == -1;
-			if (error)
-				oneOfKeyFieldsHasNoValue = true;
-		}
-	}
-
-	bool comboBoxHasNotChoosenValue = false;
-	{
-		for (size_t i = 0; i < guiPtrs.activeElementsOnPage_3; i++){
-			QComboBox* comboBox = guiPtrs.boxesOnPage_3[i];
-			int maxIndex = comboBox->count();
-			int currentIndex = comboBox->currentIndex();
-			bool indexIsInProperRange = currentIndex >= 0 && currentIndex < maxIndex;
-			if (!indexIsInProperRange)
-				comboBoxHasNotChoosenValue = true;
-		}
-	}
-
-	bool theSameValueIsAssignedToMoreThanOneBox = false;
-	if (guiPtrs.activeElementsOnPage_3 > 0) {
-		QSet<int> setToPreventDuplicates;
-		const int MAX_INDEX = guiPtrs.activeElementsOnPage_3;
-		for (size_t i = 0; i < MAX_INDEX; i++) {
-			QString keySrt = guiPtrs.keyShortCutsOnPage_3[i]->currentText();
-			int valueOfKey = Key(keySrt).getKeyVal();
-			setToPreventDuplicates.insert(valueOfKey);
+		QVector<int> slidersValue;
+		QStringList keyNames, methodeNames;
+		for (size_t i = 0; i < size; i++) {
+			slidersValue.push_back(guiPtrs.sliderOnPage_3[i]->value());
+			keyNames.push_back(guiPtrs.keyShortCutsOnPage_3[i]->currentText());
+			methodeNames.push_back(guiPtrs.boxesOnPage_3[i]->currentText());
 		}
 
-		bool allWidgetsAreDiffrent = setToPreventDuplicates.size() == MAX_INDEX;
-		bool AtLeastOneIsActive = MAX_INDEX > 0;
-		if(AtLeastOneIsActive)
-			theSameValueIsAssignedToMoreThanOneBox = !allWidgetsAreDiffrent;
-	}
-
-	bool theSameKeyIsAssignedToMoreThanOneKeyShortCut = false;
-	if(guiPtrs.activeElementsOnPage_3 > 0){
-		QSet<int> setToPreventDuplicates;
-		for (size_t i = 0; i < guiPtrs.activeElementsOnPage_3; i++){
-			QString codeStr = guiPtrs.keyShortCutsOnPage_3[i]->currentText();
-			int code = Key::KeysAndCodesMap.value(codeStr, -1);
-			setToPreventDuplicates.insert(code);
+		if (size > 1) {
+			for (int i = 1; i < size; i++){
+				if (slidersValue[i - 1] < slidersValue[i])
+					throw(tr("Sliders are in wrong order, please set it from biggest value to lowest."));
+				if (slidersValue[i - 1] == slidersValue[i]) 
+					throw(tr("Two sliders can't be in the same position."));
+			}
 		}
-		bool allKeysAreDiffrent = setToPreventDuplicates.size() == guiPtrs.activeElementsOnPage_3;
-		theSameKeyIsAssignedToMoreThanOneKeyShortCut = !allKeysAreDiffrent;
-	}
 
-	if (!everySliderHasDiffrentValue) {
-		QString text = tr("Two sliders can't be in the same position.");
-		Utilities::showMessageBox_INFO(text);
+		if (slidersValue.last() == 0)
+			throw(tr("Last slider has to have value above zero."));
+
+		for (size_t i = 0; i < size; i++){
+			if(keyNames[i].isEmpty())
+				throw(tr("One of key field doesn't have hotkey assigned to itself."));
+			if(methodeNames[i].isEmpty())
+				throw (tr("Methode field can't be empty."));
+		}
+
+		if(keyNames.removeDuplicates() > 0)
+			throw (tr("Two key fields can't share the same key."));
+
+		if(methodeNames.removeDuplicates() > 0)
+			throw (tr("Two  fields can't share the same value."));
+
+		return true;
+	}
+	catch (const std::exception& e) {
+		std::cout << e.what() << std::endl;	
+		Utilities::showMessageBox_INFO(e.what());
 		return false;
 	}
-	if (!slidersAreInCorrectOrder) {
-		QString text = tr("Sliders are in wrong order, please set it from biggest value to lowest.");
-		Utilities::showMessageBox_INFO(text);
-		return false;
-	}
-	if (oneOfKeyFieldsHasManyValues) {
-		QString text = tr("One of key field has more than one hotkey assigned to itself.");
-		Utilities::showMessageBox_INFO(text);
-		return false;
-	}
-	if (lastSliderIsZero) {
-		QString text = tr("Last slider has to have value above zero.");
-		Utilities::showMessageBox_INFO(text);
-		return false;
-	}
-	if (oneOfKeyFieldsHasNoValue) {
-		QString text = tr("One of key field doesn't have hotkey assigned to itself.");
-		Utilities::showMessageBox_INFO(text);
-		return false;
-	}
-	if (oneOfKeyFieldsHasForbiddenChars) {
-		QString text = tr("Key field has wrong value.");
-		Utilities::showMessageBox_INFO(text);
-		return false;
-	}
-	if (comboBoxHasNotChoosenValue) {
-		QString text = tr("Methode field can't be empty.");
-		Utilities::showMessageBox_INFO(text);
-		return false;
-	}
-	if (theSameValueIsAssignedToMoreThanOneBox) {
-		QString text = tr("Two  fields can't share the same value.");
-		Utilities::showMessageBox_INFO(text);
-		return false;
-	}
-	if (theSameKeyIsAssignedToMoreThanOneKeyShortCut) {
-		QString text = tr("Two key fields can't share the same key.");
-		Utilities::showMessageBox_INFO(text);
-		return false;
-	}
-	return true;
 }
+
 bool NewProfileConfiguartor::checkCorrectnessOfPage_4(){
-	bool slidersAreInCorrectOrder = true;
-	bool everySliderHasDiffrentValue = true;
-	{
-		int biggestValue = 101;
-		for (size_t i = 0; i < guiPtrs.activeElementsOnPage_4; i++) {
-			QAbstractSlider* slider = guiPtrs.sliderOnPage_4[i];
-			if (slider->value() < biggestValue)
-				biggestValue = slider->value();
-			else if (slider->value() == biggestValue)
-				everySliderHasDiffrentValue = false;
-			else
-				slidersAreInCorrectOrder = false;
-		}
-	}
+	try {
+		int size = ui->_4_spinGetNumberOfMethodes->value();
+		if (size == 0)
+			return true;
 
-	bool lastSliderIsZero = false;
-	{
-		int activeElements = guiPtrs.activeElementsOnPage_4;
-		if (activeElements > 0) {
-			int lastSliderIndex = activeElements - 1;
-			int valOfLastSlider = guiPtrs.sliderOnPage_4[lastSliderIndex]->value();
-			lastSliderIsZero = valOfLastSlider <= 0;
+		QVector<int> slidersValue;
+		QStringList keyNames, methodeNames;
+		for (size_t i = 0; i < size; i++) {
+			slidersValue.push_back(guiPtrs.sliderOnPage_4[i]->value());
+			keyNames.push_back(guiPtrs.keyShortCutsOnPage_4[i]->currentText());
+			methodeNames.push_back(guiPtrs.boxesOnPage_4[i]->currentText());
 		}
-	}
 
-	bool oneOfKeyFieldsHasManyValues = false;
-	bool oneOfKeyFieldsHasNoValue = false;
-	bool oneOfKeyFieldsHasForbiddenChars = false;
-	{
-		for (size_t i = 0; i < guiPtrs.activeElementsOnPage_4; i++) {
-			QString keyText = guiPtrs.keyShortCutsOnPage_3[i]->currentText();
-			int number = Key(keyText).getKeyVal();
-			bool error = number == -1;
-			if (error)
-				oneOfKeyFieldsHasNoValue = true;
+		if (size > 1) {
+			for (int i = 1; i < size; i++) {
+				if (slidersValue[i - 1] < slidersValue[i])
+					throw(tr("Sliders are in wrong order, please set it from biggest value to lowest."));
+				if (slidersValue[i - 1] == slidersValue[i])
+					throw(tr("Two sliders can't be in the same position."));
+			}
 		}
-	}
 
-	bool comboBoxHasNotChoosenValue = false;
-	{
-		for (size_t i = 0; i < guiPtrs.activeElementsOnPage_4; i++) {
-			QComboBox* comboBox = guiPtrs.boxesOnPage_4[i];
-			int maxIndex = comboBox->count();
-			int currentIndex = comboBox->currentIndex();
-			bool indexIsInProperRange = currentIndex >= 0 && currentIndex < maxIndex;
-			if (!indexIsInProperRange)
-				comboBoxHasNotChoosenValue = true;
+		if (slidersValue.last() == 0)
+			throw(tr("Last slider has to have value above zero."));
+
+		for (size_t i = 0; i < size; i++) {
+			if (keyNames[i].isEmpty())
+				throw(tr("One of key field doesn't have hotkey assigned to itself."));
+			if (methodeNames[i].isEmpty())
+				throw (tr("Methode field can't be empty."));
 		}
-	}
 
-	bool theSameValueIsAssignedToMoreThanOneBox = false;
-	if (guiPtrs.activeElementsOnPage_4 > 0) {
-		QSet<int> setToPreventDuplicates;
-		int MAX_INDEX = guiPtrs.activeElementsOnPage_4;
-		for (size_t i = 0; i < MAX_INDEX; i++) {
-			QString keyStr = guiPtrs.keyShortCutsOnPage_4[i]->currentText();
-			int valueOfKey = Key(keyStr).getKeyVal();
-			setToPreventDuplicates.insert(valueOfKey);
-		}
-		bool allWidgetsAreDiffrent = setToPreventDuplicates.size() == MAX_INDEX;
-		bool AtLeastOneIsActive = MAX_INDEX > 0;
-		if (AtLeastOneIsActive)
-			theSameValueIsAssignedToMoreThanOneBox = !allWidgetsAreDiffrent;
-	}
+		if (keyNames.removeDuplicates() > 0)
+			throw (tr("Two key fields can't share the same key."));
 
-	bool theSameKeyIsAssignedToMoreThanOneKeyShortCut = false;
-	if(guiPtrs.activeElementsOnPage_4 > 0){
-		QSet<int> setToPreventDuplicates;
-		for (size_t i = 0; i < guiPtrs.activeElementsOnPage_4; i++) {
-			QString codeStr = Key(guiPtrs.keyShortCutsOnPage_4[i]->currentText()).getKeyVal();
-			int code = Key::KeysAndCodesMap.value(codeStr, -1);
-			setToPreventDuplicates.insert(code);
-		}
-		bool allKeysAreDiffrent = setToPreventDuplicates.size() == guiPtrs.activeElementsOnPage_4;
-		theSameKeyIsAssignedToMoreThanOneKeyShortCut = !allKeysAreDiffrent;
-	}
+		if (methodeNames.removeDuplicates() > 0)
+			throw (tr("Two  fields can't share the same value."));
 
-	if (!everySliderHasDiffrentValue) {
-		QString text = tr("Two sliders can't be in the same position.");
-		Utilities::showMessageBox_INFO(text);
+		return true;
+	}
+	catch (const std::exception& e) {
+		std::cout << e.what() << std::endl;
+		Utilities::showMessageBox_INFO(e.what());
 		return false;
 	}
-	if (!slidersAreInCorrectOrder) {
-		QString text = tr("Sliders are in wrong order, please set it from biggest value to lowest.");
-		Utilities::showMessageBox_INFO(text);
-		return false;
-	}
-	if (oneOfKeyFieldsHasManyValues) {
-		QString text = tr("One of key field has more than one hotkey assigned to itself.");
-		Utilities::showMessageBox_INFO(text);
-		return false;
-	}
-	if (lastSliderIsZero) {
-		QString text = tr("Last slider has to have value above zero.");
-		Utilities::showMessageBox_INFO(text);
-		return false;
-	}
-	if (oneOfKeyFieldsHasNoValue) {
-		QString text = tr("One of key field doesn't have hotkey assigned to itself.");
-		Utilities::showMessageBox_INFO(text);
-		return false;
-	}
-	if (oneOfKeyFieldsHasForbiddenChars) {
-		QString text = tr("Key field has wrong value.");
-		Utilities::showMessageBox_INFO(text);
-		return false;
-	}
-	if (comboBoxHasNotChoosenValue) {
-		QString text = tr("Methode field can't be empty.");
-		Utilities::showMessageBox_INFO(text);
-		return false;
-	}
-	if (theSameValueIsAssignedToMoreThanOneBox) {
-		QString text = tr("Two  fields can't share the same value.");
-		Utilities::showMessageBox_INFO(text);
-		return false;
-	}
-	if (theSameKeyIsAssignedToMoreThanOneKeyShortCut) {
-		QString text = tr("Two key fields can't share the same key.");
-		Utilities::showMessageBox_INFO(text);
-		return false;
-	}
-	return true;
 }
 bool NewProfileConfiguartor::checkCorrectnessOfPage_5(){
 	//change //TODO
