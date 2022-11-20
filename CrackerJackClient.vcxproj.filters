@@ -234,6 +234,9 @@
     <ClInclude Include="sources\Offer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Profession.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="sources\ZZ___TO____DO.txt" />
