@@ -47,14 +47,14 @@ bool NewProfileConfiguartor::checkControlsGroup() {
 			indexOfControlBox > ui->_5_ControlBox->count() - 1 ||
 			indexOfControlBox < 0;
 		if (controlsWrong)
-			throw("Something is wrong with selected controls");
+			throw std::exception("Something is wrong with selected controls");
 
 		int indexOfAutoLootlBox = ui->_5_AutoLootBox->currentIndex();
 		bool autoLootWrongs = indexOfControlBox < 0 ||
 			indexOfAutoLootlBox > ui->_5_AutoLootBox->count() - 1 ||
 			indexOfAutoLootlBox < 0;
 		if (autoLootWrongs)
-			throw("Something is wrong with selected auto loot key");
+			throw std::exception("Something is wrong with selected auto loot key");
 
 		return true;
 	}
@@ -83,25 +83,25 @@ bool NewProfileConfiguartor::checkSlidersGroup(GuiPointers guiPtrs){
 				if (slidersValue[i - 1] < slidersValue[i])
 					throw std::exception("Sliders are in wrong order, please set it from biggest value to lowest.");
 				if (slidersValue[i - 1] == slidersValue[i])
-					throw(tr("Two sliders can't be in the same position."));
+					throw std::exception("Two sliders can't be in the same position.");
 			}
 		}
 
 		if (slidersValue.last() == 0)
-			throw(tr("Last slider has to have value above zero."));
+			throw std::exception("Last slider has to have value above zero.");
 
 		for (size_t i = 0; i < activeElements; i++) {
 			if (keyNames[i].isEmpty())
-				throw(tr("One of key field doesn't have hotkey assigned to itself."));
+				throw std::exception("One of key field doesn't have hotkey assigned to itself.");
 			if (methodeNames[i].isEmpty())
-				throw (tr("Methode field can't be empty."));
+				throw std::exception("Methode field can't be empty.");
 		}
 
 		if (keyNames.removeDuplicates() > 0)
-			throw (tr("Two key fields can't share the same key."));
+			throw std::exception("Two key fields can't share the same key.");
 
 		if (methodeNames.removeDuplicates() > 0)
-			throw (tr("Two  fields can't share the same value."));
+			throw std::exception("Two  fields can't share the same value.");
 
 		return true;
 	}
