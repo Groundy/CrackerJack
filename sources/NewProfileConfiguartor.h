@@ -39,6 +39,13 @@ private:
 	Profile* profToEdit;
 	int pageNumber = 1;
 	int MAX_PAGE;
+	struct GuiPointers {
+		QVector<QAbstractSlider*> sliders;
+		QVector<QLabel*> percentageLabels;
+		QVector<QComboBox*> methodeNames;
+		QVector<QComboBox*> keyShortCuts;
+		int activeElements;
+	};
 
 	void refreshGUI();	
 	bool finishAddingNewProfile();
@@ -47,7 +54,8 @@ private:
 	void saveDataToProfile(Profile* prof);
 
 	bool checkCorrectnessOfPage_1();
-	bool checkCorrectnessOfPage_2();
+	bool checkCorrectnessOfPage_2();	
+	bool checkCorrectnesOnSliderPages(GuiPointers guiPtrs);
 	bool checkCorrectnessOfPage_3();
 	bool checkCorrectnessOfPage_4();
 	bool checkCorrectnessOfPage_5();
@@ -58,20 +66,7 @@ private:
 	Profile::PROFESSION getProfessionFromRadioButtonOnPage2();
 	void fillGuiPtrs();
 
-	struct guiPointers {
-		QList<QAbstractSlider*> sliderOnPage_3;
-		QList<QLabel*> labelsOnPage_3;
-		QList<QComboBox*> boxesOnPage_3;
-		QList<QComboBox*> keyShortCutsOnPage_3;
-		int activeElementsOnPage_3;
-
-		QList<QAbstractSlider*> sliderOnPage_4;
-		QList<QLabel*> labelsOnPage_4;
-		QList<QComboBox*> boxesOnPage_4;
-		QList<QComboBox*> keyShortCutsOnPage_4;
-		int activeElementsOnPage_4;
-	};
-	guiPointers guiPtrs;
+	GuiPointers guiPtrsOnPage3, guiPtrsOnPage4;
 	const int MAX_NUMBER_OF_ACTIVE_WIDGETS = 5;
 
 };
