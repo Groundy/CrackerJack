@@ -148,14 +148,21 @@ void NewProfileConfiguartor::cancelButtonAction() {
 	if(accepted)
 		this->reject();
 }
-void NewProfileConfiguartor::healingOrManaGroupCounterChanged() {
-	fillRestoriationMethodesForProfession(getSelectedProf());
+void NewProfileConfiguartor::healingGroupCounterChanged() {
+	counterChanged(healthPtrs);
+	fillRestoriationMethodes(getSelectedProf(), healthPtrs);
+	refreshSlidersLabels(healthPtrs);
+}
+void NewProfileConfiguartor::manaGroupCounterChanged(){
+	counterChanged(manaPtrs);
+	fillRestoriationMethodes(getSelectedProf(), manaPtrs);
+	refreshSlidersLabels(healthPtrs);
 }
 void NewProfileConfiguartor::healingSlidersChanged(){
-	refreshSliders(healthPtrs);
+	refreshSlidersLabels(healthPtrs);
 }
 void NewProfileConfiguartor::manaSlidersChanged(){
-	refreshSliders(manaPtrs);
+	refreshSlidersLabels(manaPtrs);
 }
 void NewProfileConfiguartor::controlsOrAutoLootListAction(){
 	if (ui->_5_ControlBox->currentIndex() == Profile::CONTROLS::CLSSIC_CONTROLS) {
@@ -168,13 +175,22 @@ void NewProfileConfiguartor::controlsOrAutoLootListAction(){
 	}
 	ui->_5_AutoLootBox->repaint();
 }
+void NewProfileConfiguartor::professionChanged(){
+	Profession profession = getSelectedProf();
+	fillRestoriationMethodes(profession, manaPtrs);
+	fillRestoriationMethodes(profession, healthPtrs);
+	for (size_t i = 0; i < MAX_NUMBER_OF_ACTIVE_WIDGETS; i++){
+		healthPtrs.methodeNames[i]->setCurrentIndex(-1);
+		manaPtrs.methodeNames[i]->setCurrentIndex(-1);
+	}
+}
 
 //funcs
 Profession NewProfileConfiguartor::getSelectedProf(){
 	QString profName = ui->professionCombBox->currentText();
 	return Profession(profName);
 }
-void NewProfileConfiguartor::refreshSliders(GuiPointers guiPointers){
+void NewProfileConfiguartor::refreshSlidersLabels(GuiPointers guiPointers){
 	int activeElements = guiPointers.activeElementsCounter->value();
 	if (activeElements == 0){
 		for (size_t i = 0; i < MAX_NUMBER_OF_ACTIVE_WIDGETS; i++)
@@ -185,7 +201,7 @@ void NewProfileConfiguartor::refreshSliders(GuiPointers guiPointers){
 	QStringList textToSetOnSliders;
 	for (int i = 0; i < MAX_NUMBER_OF_ACTIVE_WIDGETS; i++) {
 		bool shouldBeEnabled = i < activeElements;
-		if (shouldBeEnabled) {
+		if (!shouldBeEnabled) {
 			textToSetOnSliders.push_back(QString());
 			continue;
 		}
@@ -219,45 +235,55 @@ void NewProfileConfiguartor::fillSlidersGroup(GuiPointers guiPointers, QList<Res
 		guiPointers.sliders[i]->setValue(current->getThreshold());
 	}
 }
-void NewProfileConfiguartor::fillRestoriationMethodesForProfession(Profession profession){
-	QStringList healthMethodes = JsonParser().getNamesOfHealingPotsAndSpellsForProf(profession);
-	int healthSlotsToFill = healthPtrs.activeElementsCounter->value();
-	for (size_t i = 0; i < MAX_NUMBER_OF_ACTIVE_WIDGETS; i++){
-		QComboBox* box = healthPtrs.methodeNames[i];
-		box->clear();
-		bool healthSlotShouldBeActive = i < healthSlotsToFill;
-		box->setEnabled(healthSlotShouldBeActive);
-		if (healthSlotShouldBeActive) {
-			box->insertItems(0, healthMethodes);
-			box->setCurrentIndex(0);
+void NewProfileConfiguartor::fillRestoriationMethodes(Profession profession, GuiPointers& guiPointers){
+	QStringList allPossibleKeys = Key::getListOfAllPossibleKeys();
+	if (&guiPointers == &healthPtrs) {
+		QStringList healthMethodes = JsonParser().getNamesOfHealingPotsAndSpellsForProf(profession);
+		int healthSlotsToFill = healthPtrs.activeElementsCounter->value();
+		for (size_t i = 0; i < MAX_NUMBER_OF_ACTIVE_WIDGETS; i++){
+			QComboBox* methodeBox = healthPtrs.methodeNames[i];
+			QComboBox* keyBox = healthPtrs.keyShortCuts[i];
+			methodeBox->clear();
+			keyBox->clear();
+			bool enable = i < healthSlotsToFill;
+			if (enable) {
+				methodeBox->insertItems(0, healthMethodes);
+				methodeBox->setCurrentIndex(-1);
+				keyBox->insertItems(0, allPossibleKeys);
+				keyBox->setCurrentIndex(-1);
+			}
 		}
 	}
-
-	QStringList manaMethodes = JsonParser().getNamesOManaPotsForProf(profession);
-	int manaSlotsToFill = manaPtrs.activeElementsCounter->value();
-	for (size_t i = 0; i < MAX_NUMBER_OF_ACTIVE_WIDGETS; i++) {
-		QComboBox* box = manaPtrs.methodeNames[i];
-		box->clear();
-		bool healthSlotShouldBeActive = i < manaSlotsToFill;
-		box->setEnabled(healthSlotShouldBeActive);
-		if (healthSlotShouldBeActive) {
-			box->insertItems(0, healthMethodes);
-			box->setCurrentIndex(0);
+	else if (&guiPointers == &manaPtrs) {
+		QStringList manaMethodes = JsonParser().getNamesOManaPotsForProf(profession);
+		int manaSlotsToFill = manaPtrs.activeElementsCounter->value();
+		for (size_t i = 0; i < MAX_NUMBER_OF_ACTIVE_WIDGETS; i++) {
+			QComboBox* methodeBox = manaPtrs.methodeNames[i];
+			QComboBox* keyBox = manaPtrs.keyShortCuts[i];
+			methodeBox->clear();
+			keyBox->clear();
+			bool manaSlotShouldBeActive = i < manaSlotsToFill;
+			if (manaSlotShouldBeActive) {
+				methodeBox->insertItems(0, manaMethodes);
+				methodeBox->setCurrentIndex(0);
+				keyBox->insertItems(0, allPossibleKeys);
+				keyBox->setCurrentIndex(0);
+			}
 		}
 	}
 }
 void NewProfileConfiguartor::fillGuiPtrs() {
-	healthPtrs.sliders.push_back(ui->_3_horizontalSlider_1);
-	healthPtrs.sliders.push_back(ui->_3_horizontalSlider_2);
-	healthPtrs.sliders.push_back(ui->_3_horizontalSlider_3);
-	healthPtrs.sliders.push_back(ui->_3_horizontalSlider_4);
-	healthPtrs.sliders.push_back(ui->_3_horizontalSlider_5);
+	healthPtrs.sliders.push_back(ui->healthSlider_1);
+	healthPtrs.sliders.push_back(ui->healthSlider_2);
+	healthPtrs.sliders.push_back(ui->healthSlider_3);
+	healthPtrs.sliders.push_back(ui->healthSlider_4);
+	healthPtrs.sliders.push_back(ui->healthSlider_5);
 
-	manaPtrs.sliders.push_back(ui->_4_horizontalSlider_1);
-	manaPtrs.sliders.push_back(ui->_4_horizontalSlider_2);
-	manaPtrs.sliders.push_back(ui->_4_horizontalSlider_3);
-	manaPtrs.sliders.push_back(ui->_4_horizontalSlider_4);
-	manaPtrs.sliders.push_back(ui->_4_horizontalSlider_5);
+	manaPtrs.sliders.push_back(ui->manaSlider_1);
+	manaPtrs.sliders.push_back(ui->manaSlider_2);
+	manaPtrs.sliders.push_back(ui->manaSlider_3);
+	manaPtrs.sliders.push_back(ui->manaSlider_4);
+	manaPtrs.sliders.push_back(ui->manaSlider_5);
 
 	healthPtrs.percentageLabels.push_back(ui->_3_label_1);
 	healthPtrs.percentageLabels.push_back(ui->_3_label_2);
@@ -296,8 +322,23 @@ void NewProfileConfiguartor::fillGuiPtrs() {
 	manaPtrs.keyShortCuts.push_back(ui->_4_shortKey_4);
 	manaPtrs.keyShortCuts.push_back(ui->_4_shortKey_5);
 
-	healthPtrs.activeElementsCounter = ui->_3_spinGetNumberOfMethodes;
-	manaPtrs.activeElementsCounter = ui->_4_spinGetNumberOfMethodes;
+	healthPtrs.activeElementsCounter = ui->amountHealthRegMethodes;
+	manaPtrs.activeElementsCounter = ui->amountManaRegMethodes;
+}
+void NewProfileConfiguartor::counterChanged(GuiPointers guiPointers){
+	for (size_t i = 0; i < MAX_NUMBER_OF_ACTIVE_WIDGETS; i++){
+		bool enable = i < guiPointers.activeElementsCounter->value();
+		guiPointers.keyShortCuts[i]->setEnabled(enable);
+		guiPointers.methodeNames[i]->setEnabled(enable);
+		guiPointers.sliders[i]->setEnabled(enable);
+		guiPointers.percentageLabels[i]->setEnabled(enable);
+		if (!enable) {
+			//guiPointers.keyShortCuts[i]->setEnabled(enable);
+			//guiPointers.methodeNames[i]->s(enable);
+			guiPointers.sliders[i]->setValue(0);
+			guiPointers.percentageLabels[i]->setText(QString());
+		}
+	}
 }
 void NewProfileConfiguartor::fillFormsFromDataFromProf(const Profile& profToEdit){
 	ui->_1_nameEdit->setText(profToEdit.profileName); 
@@ -324,72 +365,3 @@ void NewProfileConfiguartor::saveDataToProfile(){
 	profToEdit->manaRestorations = getRestorationMethodesFromGUI(manaPtrs);
 	//todo fill controls loot
 }
-
-
-
-/*
-void NewProfileConfiguartor::saveDataToProfile(Profile* prof) {
-	//3
-	if (ui->_3_enableAutoHealing->isChecked()) {
-		QList<QAbstractSlider*> sliders;
-		sliders.push_back(ui->_3_horizontalSlider_1);
-		sliders.push_back(ui->_3_horizontalSlider_2);
-		sliders.push_back(ui->_3_horizontalSlider_3);
-		sliders.push_back(ui->_3_horizontalSlider_4);
-		sliders.push_back(ui->_3_horizontalSlider_5);
-		QList<QComboBox*> keysPtrs;
-		keysPtrs.push_back(ui->_3_shortKey_1);
-		keysPtrs.push_back(ui->_3_shortKey_2);
-		keysPtrs.push_back(ui->_3_shortKey_3);
-		keysPtrs.push_back(ui->_3_shortKey_4);
-		keysPtrs.push_back(ui->_3_shortKey_5);
-		QStringList helathRestorationNames;
-		helathRestorationNames.push_back(ui->_3_comboBox->currentText());
-		helathRestorationNames.push_back(ui->_3_comboBox_2->currentText());
-		helathRestorationNames.push_back(ui->_3_comboBox_3->currentText());
-		helathRestorationNames.push_back(ui->_3_comboBox_4->currentText());
-		helathRestorationNames.push_back(ui->_3_comboBox_5->currentText());
-
-		prof->healthRestorations.clear();
-		int size = ui->_3_spinGetNumberOfMethodes->value();
-		for (size_t i = 0; i < size; i++) {
-			int thresholdOfSlider = sliders[i]->value();
-			Key key = Key(keysPtrs[i]->currentText());
-			QString restorationName = helathRestorationNames[i];
-			RestorationStruct restorationMethode(thresholdOfSlider, key, restorationName);
-			prof->healthRestorations.push_back(restorationMethode);
-		}
-	}
-	//4
-	if (ui->_4_enableManaRestore->isChecked()) {
-		QList<QAbstractSlider*> sliders;
-		sliders.push_back(ui->_4_horizontalSlider_1);
-		sliders.push_back(ui->_4_horizontalSlider_2);
-		sliders.push_back(ui->_4_horizontalSlider_3);
-		sliders.push_back(ui->_4_horizontalSlider_4);
-		sliders.push_back(ui->_4_horizontalSlider_5);
-		QList<QComboBox*> keysPtrs;
-		keysPtrs.push_back(ui->_4_shortKey_1);
-		keysPtrs.push_back(ui->_4_shortKey_2);
-		keysPtrs.push_back(ui->_4_shortKey_3);
-		keysPtrs.push_back(ui->_4_shortKey_4);
-		keysPtrs.push_back(ui->_4_shortKey_5);
-		QList<QString> manaRestoreNames;
-		manaRestoreNames.push_back(ui->_4_comboBox->currentText());
-		manaRestoreNames.push_back(ui->_4_comboBox_2->currentText());
-		manaRestoreNames.push_back(ui->_4_comboBox_3->currentText());
-		manaRestoreNames.push_back(ui->_4_comboBox_4->currentText());
-		manaRestoreNames.push_back(ui->_4_comboBox_5->currentText());
-
-		int size = ui->_4_spinGetNumberOfMethodes->value();
-		for (size_t i = 0; i < size; i++) {
-			int thresholdOfSlider = sliders[i]->value();
-			Key key = Key(keysPtrs[i]->currentText());
-			QString restorationName = manaRestoreNames[i];
-			RestorationStruct restorationMethode(thresholdOfSlider, key, restorationName);
-			prof->manaRestorations.push_back(restorationMethode);
-		}
-	}
-	//5
-}
-*/

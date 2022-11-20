@@ -24,10 +24,12 @@ public:
 public slots:
 	void cancelButtonAction();
 	void finishButtonAction();
-	void healingOrManaGroupCounterChanged();
+	void healingGroupCounterChanged();
+	void manaGroupCounterChanged();
 	void healingSlidersChanged();
 	void manaSlidersChanged();
 	void controlsOrAutoLootListAction();
+	void professionChanged();
 
 private:
 	struct GuiPointers {
@@ -54,9 +56,10 @@ private:
 
 	//funcs
 	void saveDataToProfile();
-	void refreshSliders(GuiPointers guiPointers);
+	void refreshSlidersLabels(GuiPointers guiPointers);
 	void fillSlidersGroup(GuiPointers guiPointers, QList<RestorationStruct> stucts);
-	void fillRestoriationMethodesForProfession(Profession prof);
+	void fillRestoriationMethodes(Profession prof, GuiPointers& guiPointers);
+	void counterChanged(GuiPointers guiPointers);
 	void fillFormsFromDataFromProf(const Profile& profToEdit);
 	QList<RestorationStruct> getRestorationMethodesFromGUI(GuiPointers guiPotiners);
 	Profession getSelectedProf();
