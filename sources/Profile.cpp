@@ -41,6 +41,7 @@ Profile::Profile(QJsonObject obj) {
 	}
 }
 
+QJsonObject Profile::toJson(){
 	QJsonObject mainObj;
 		QJsonArray healthArray, manaArray;
 	for each (auto var in healthRestorations)

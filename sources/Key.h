@@ -13,6 +13,7 @@ public:
 	Key(QJsonObject obj);
 
 	int getKeyVal() { return keyVal; };
+	QString getKeyName(){ return keyName; };
 	static QMap<QString, int> KeysAndCodesMap;
 	static QStringList getListOfAllPossibleKeys();
 	QJsonObject toJson();

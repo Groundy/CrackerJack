@@ -3,8 +3,11 @@
 #include <qrect.h>
 #include <qimage.h>
 #include <qmap.h>
+
 #include "Utilities.h"
 #include "ImgEditor.h"
+#include "Profile.h"
+
 class Calibrator{
 public:
 	Calibrator(QImage& fullScreenImg, VariablesClass& varClass, Profile* profileToSet);

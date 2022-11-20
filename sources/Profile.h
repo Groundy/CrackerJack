@@ -8,6 +8,7 @@
 #include "Key.h"
 #include "Windows.h"
 #include <qexception.h>
+#include <qjsonarray.h>
 #include "Profession.h"
 struct Frames {
 	QRect gameFrame;
@@ -59,6 +60,12 @@ public:
 	QString getName() {
 		return name;
 	};
+	int getThreshold() {
+		return threshold;
+	};
+	QString getKeyName() {
+		return key.getKeyName();
+	}
 private:
 	int threshold;
 	Key key;
@@ -69,7 +76,7 @@ class Profile{
 public:
 	Profile();
 	Profile(QJsonObject obj);
-	void toJson();
+	QJsonObject toJson();
 	Frames frames;
 	void copyFrom(Profile& profToCopyFrom);
 	QStringList getHealthRestorationNames();

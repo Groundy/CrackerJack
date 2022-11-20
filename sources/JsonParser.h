@@ -5,9 +5,10 @@
 #include "qjsonvalue.h"
 #include "qjsonarray.h"
 #include "qfile.h"
+#include "qfileinfo.h"
+
 #include "Utilities.h"
 #include "Profile.h"
-#include "qfileinfo.h"
 #include "Item.h"
 #include "Profession.h"
 class JsonParser{

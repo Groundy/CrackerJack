@@ -14,6 +14,7 @@ MainMenu::MainMenu(Profile* selectedProf, QWidget* parent)
 }
 
 MainMenu::~MainMenu(){
+	/*
 	delete activityThread;
 	delete screenSaverThread;
 	delete screenAnalyzer;
@@ -21,6 +22,7 @@ MainMenu::~MainMenu(){
 	delete ui;
 	ProfileDataBaseManager db;
 	db.saveProfileToDataBase(*this->prof);
+	*/
 }
 
 void MainMenu::onGameStateChanged(int state){	
@@ -130,6 +132,7 @@ void MainMenu::autoHealAndManaRegCheckBoxChanged() {
 }
 
 void MainMenu::changeProfileButtonAction(){
+	/*
 	ProfileDataBaseManager db;
 	db.saveProfileToDataBase(*this->prof);
 	Profile profTmp;
@@ -140,9 +143,11 @@ void MainMenu::changeProfileButtonAction(){
 		this->ui->profileNameLabel->setText(this->prof->profileName);
 		this->ui->profileNameLabel->repaint();
 	}
+	*/
 }
 
 void MainMenu::editProfileButtonAction(){
+	/*
 	Profile profTmp;
 	NewProfileConfiguartor profConfig(&profTmp,this);
 	profConfig.fillWidgetsWithDataFromProf(this->prof);
@@ -152,6 +157,7 @@ void MainMenu::editProfileButtonAction(){
 		this->ui->profileNameLabel->setText(this->prof->profileName);
 		this->ui->profileNameLabel->repaint();
 	}
+	*/
 }
 
 void MainMenu::manualHuntAction(){

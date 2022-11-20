@@ -2,6 +2,7 @@
 #include "MainMenu.h"
 #include <qtranslator.h>
 #include "Market.h"
+#include <qicon.h>
 void test(){
 }
 QIcon getIcon(){

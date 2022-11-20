@@ -9,6 +9,7 @@
 #include "Profile.h"
 #include "JsonParser.h"
 #include "Key.h"
+#include "Profession.h"
 
 namespace Ui { class NewProfileConfiguartor; };
 
@@ -19,54 +20,45 @@ class NewProfileConfiguartor : public QDialog
 public:
 	NewProfileConfiguartor(Profile* prof, QWidget *parent = Q_NULLPTR);
 	~NewProfileConfiguartor();
-	void fillWidgetsWithDataFromProf(Profile* profile);
+
 public slots:
 	void cancelButtonAction();
-	void nextPageButtonAction();
-	void previousPageButtonAction();
-
-	void _3_healingEnabledChanged();
-	void _3_spinChanged();
-	void _3_slidersChanged();
-	void _4_ManaEnabledChanged();
-	void _4_spinChanged();
-	void _4_slidersChanged();
-	void _5_listAction();
+	void finishButtonAction();
+	void healingOrManaGroupCounterChanged();
+	void healingSlidersChanged();
+	void manaSlidersChanged();
+	void controlsOrAutoLootListAction();
 
 private:
-	Ui::NewProfileConfiguartor *ui;
-
-	Profile* profToEdit;
-	int pageNumber = 1;
-	int MAX_PAGE;
 	struct GuiPointers {
 		QVector<QAbstractSlider*> sliders;
 		QVector<QLabel*> percentageLabels;
 		QVector<QComboBox*> methodeNames;
 		QVector<QComboBox*> keyShortCuts;
-		int activeElements;
+		QSpinBox* activeElementsCounter;
 	};
 
-	void refreshGUI();	
-	bool finishAddingNewProfile();
-	void additionalGuiSettings();
-	bool pageIsCorrectlyFilled();
-	void saveDataToProfile(Profile* prof);
-
-	bool checkCorrectnessOfPage_1();
-	bool checkCorrectnessOfPage_2();	
-	bool checkCorrectnesOnSliderPages(GuiPointers guiPtrs);
-	bool checkCorrectnessOfPage_3();
-	bool checkCorrectnessOfPage_4();
-	bool checkCorrectnessOfPage_5();
-	QStringList getNamesOfHealthRestoringMethodes(Profile::PROFESSION prof);
-	QStringList getNamesOfManaRestoringMethodes(Profile::PROFESSION prof);
-	void fillGuiElementsWithNamesRestoreMethodes_Health(Profile::PROFESSION prof);
-	void fillGuiElementsWithNamesRestoreMethodes_Mana(Profile::PROFESSION prof);
-	Profile::PROFESSION getProfessionFromRadioButtonOnPage2();
-	void fillGuiPtrs();
-
-	GuiPointers guiPtrsOnPage3, guiPtrsOnPage4;
+	GuiPointers healthPtrs, manaPtrs;
 	const int MAX_NUMBER_OF_ACTIVE_WIDGETS = 5;
+	Ui::NewProfileConfiguartor *ui;
+	Profile* profToEdit;
 
+	//correctnessCheck
+	bool checkNameGroup();	
+	bool checkSlidersGroup(GuiPointers guiPtrs);
+	bool checkHealthGroup();
+	bool checkManaGroup();
+	bool checkControlsGroup();
+	bool checkAllForms();
+
+
+	//funcs
+	void saveDataToProfile();
+	void refreshSliders(GuiPointers guiPointers);
+	void fillSlidersGroup(GuiPointers guiPointers, QList<RestorationStruct> stucts);
+	void fillRestoriationMethodesForProfession(Profession prof);
+	void fillFormsFromDataFromProf(const Profile& profToEdit);
+	QList<RestorationStruct> getRestorationMethodesFromGUI(GuiPointers guiPotiners);
+	Profession getSelectedProf();
+	void fillGuiPtrs();
 };

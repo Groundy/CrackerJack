@@ -1,5 +1,7 @@
 #pragma once
 #include <QDialog>
+#include "memory"
+
 #include "Profile.h"
 #include "ScreenSaver.h"
 #include "activeGameThread.h"
@@ -9,7 +11,6 @@
 #include "Key.h"
 #include "ManaHealthStateAnalyzer.h"
 #include "ScreenAnalyzer.h"
-#include "memory"
 #include "Calibrator.h"
 #include "SelectProfileWindow.h"
 #include "RouteCreator.h"

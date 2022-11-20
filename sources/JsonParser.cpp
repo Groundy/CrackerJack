@@ -100,6 +100,8 @@ bool JsonParser::filtrSpells(QList<Spell>& spells, Profession* profession, Spell
 
 			if (!isProperProf)
 				continue;
+				*/
+			//todo
 		}
 		if (filtrByType) {
 			bool isProperType = var.typeOfSpell == *type;

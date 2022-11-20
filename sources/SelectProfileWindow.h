@@ -1,5 +1,8 @@
 #pragma once
 #include <QDialog>
+#include <memory>
+
+#include "Profile.h"
 namespace Ui { class SelectProfileWindow; };
 
 class SelectProfileWindow : public QDialog
@@ -9,7 +12,6 @@ class SelectProfileWindow : public QDialog
 public:
 	SelectProfileWindow(QWidget *parent = Q_NULLPTR, Profile* selectedProf = NULL);
 	~SelectProfileWindow();
-	ProfileDataBaseManager dbManager;
 public slots:
 	void addNewProfileButtonAction();
 	void editProfileButtonAction();
@@ -18,8 +20,9 @@ public slots:
 	void profSelected();
 private:
 	Ui::SelectProfileWindow *ui;
-	void prepareProfiles();
+	void refreshProfilesOnList();
 	void setUpGui();
 	Profile* profToSelect;
 	void readAndSetLastUsedProFromINI();
+	QString getSelectedProfName();
 };
