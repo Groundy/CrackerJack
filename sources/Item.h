@@ -76,8 +76,14 @@ public:
 	bool isType(const TypeOfPotion& type) const {
 		if (type == TypeOfPotion::HEALTH)
 			return healthReg > 0;
-		if (type == TypeOfPotion::MANA)
+		else if (type == TypeOfPotion::MANA)
 			return manaReg > 0; 
+		else {
+			QString msg = "Error Potion::isType";
+			qDebug() << msg;
+			Utilities::showMessageBox_INFO(msg);
+			return false;
+		}
 	}
 	bool isHealing() const { return healthReg > 0; }
 	bool isMana() const { return manaReg > 0; }
