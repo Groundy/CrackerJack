@@ -182,7 +182,7 @@ void NewProfileConfiguartor::healingGroupCounterChanged() {
 void NewProfileConfiguartor::manaGroupCounterChanged(){
 	counterChanged(manaPtrs);
 	fillRestoriationMethodes(getSelectedProf(), manaPtrs);
-	refreshSlidersLabels(healthPtrs);
+	refreshSlidersLabels(manaPtrs);
 }
 void NewProfileConfiguartor::healingSlidersChanged(){
 	refreshSlidersLabels(healthPtrs);
@@ -191,14 +191,9 @@ void NewProfileConfiguartor::manaSlidersChanged(){
 	refreshSlidersLabels(manaPtrs);
 }
 void NewProfileConfiguartor::controlsOrAutoLootListAction(){
-	if (ui->_5_ControlBox->currentIndex() == Profile::CONTROLS::CLSSIC_CONTROLS) {
-		ui->_5_AutoLootBox->setEnabled(true);
-		ui->_5_AutoLootBox->setCurrentIndex(0);
-	}
-	else {
-		ui->_5_AutoLootBox->setEnabled(false);
-		ui->_5_AutoLootBox->setCurrentIndex(0);
-	}
+	bool enableAutoLoot = ui->_5_ControlBox->currentIndex() == Profile::CONTROLS::CLSSIC_CONTROLS;
+	ui->_5_AutoLootBox->setEnabled(enableAutoLoot);
+	ui->_5_AutoLootBox->setCurrentIndex(0);
 	ui->_5_AutoLootBox->repaint();
 }
 void NewProfileConfiguartor::professionChanged(){
@@ -259,10 +254,12 @@ void NewProfileConfiguartor::fillSlidersGroup(GuiPointers guiPointers, QList<Res
 		guiPointers.sliders[i]->setValue(current->getThreshold());
 
 		auto keyBox = guiPointers.keyShortCuts[i];
+		keyBox->setEnabled(true);
 		int keyIndex = keyBox->findText(current->getKeyName());
 		keyBox->setCurrentIndex(keyIndex);
 
 		auto methodeBox = guiPointers.methodeNames[i];
+		methodeBox->setEnabled(true);
 		int methodeIndex = methodeBox->findText(current->getName());
 		methodeBox->setCurrentIndex(methodeIndex);
 	}
@@ -367,6 +364,10 @@ void NewProfileConfiguartor::fillFormsFromDataFromProf(Profile& profToEdit){
 	QString professionName = profToEdit.profession.getTypeName();
 	int professionIndex = profComboBox->findText(professionName);
 	profComboBox->setCurrentIndex(professionIndex);
+
+	auto screenBox = ui->screenShotBox;
+	int screenShotKeyIndex = screenBox->findText(profToEdit.screenShotKey.getKeyName());
+	screenBox->setCurrentIndex(screenShotKeyIndex);
 
 	fillSlidersGroup(healthPtrs, profToEdit.healthRestorations);
 	fillSlidersGroup(manaPtrs, profToEdit.manaRestorations);

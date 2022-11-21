@@ -4,7 +4,7 @@ QStringList Key::getListOfAllPossibleKeys(){
 	return KeysAndCodesMap.keys();
 }
 
-QJsonObject Key::toJson() {
+QJsonObject Key::toJson() const {
 	QJsonObject json;
 	json.insert("keyVal", keyVal);
 	json.insert("keyName", keyName);

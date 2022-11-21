@@ -38,7 +38,10 @@ Profile::Profile(QJsonObject obj) {
 
 		if (!obj.contains("screenShotKey"))
 			throw std::exception("No screenShotKey field in profil json file!");
-		this->screenShotKey = Key(obj.value("screenShotKey").toObject());
+		Key key = Key(obj.value("screenShotKey").toObject());
+		if (!key.isValid())
+			throw std::exception("wrong screenShotKey field value!");
+		this->screenShotKey = key;
 	}
 	catch (const std::exception& e){
 		qDebug() << e.what() << endl;

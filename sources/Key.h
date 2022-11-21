@@ -7,16 +7,18 @@
 #include <qjsonobject.h>
 class Key {
 public:
+	static QMap<QString, int> KeysAndCodesMap;
+	static QStringList getListOfAllPossibleKeys();
+
 	Key();
 	Key(int keyVal);
 	Key(QString keyName);
 	Key(QJsonObject obj);
 
-	int getKeyVal() { return keyVal; };
-	QString getKeyName(){ return keyName; };
-	static QMap<QString, int> KeysAndCodesMap;
-	static QStringList getListOfAllPossibleKeys();
-	QJsonObject toJson();
+	int getKeyVal() const { return keyVal; };
+	QString getKeyName() const { return keyName; };
+	QJsonObject toJson() const;
+	bool isValid() const { return !keyName.isEmpty() && keyVal > 0; }
 private:
 	int keyVal;
 	QString keyName;
