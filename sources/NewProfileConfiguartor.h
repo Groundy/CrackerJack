@@ -10,6 +10,7 @@
 #include "JsonParser.h"
 #include "Key.h"
 #include "Profession.h"
+#include "RestorationMethode.h"
 
 namespace Ui { class NewProfileConfiguartor; };
 
@@ -57,7 +58,7 @@ private:
 	//funcs
 	void saveDataToProfile();
 	void refreshSlidersLabels(GuiPointers guiPointers);
-	void fillSlidersGroup(GuiPointers guiPointers, QList<RestorationStruct> stucts);
+	void fillSlidersGroup(GuiPointers guiPointers, QList<RestorationMethode> stucts);
 	void fillRestoriationMethodes(Profession prof, GuiPointers& guiPointers);
 	void counterChanged(GuiPointers guiPointers);
 	void fillFormsFromDataFromProf(const Profile& profToEdit);

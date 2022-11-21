@@ -225,7 +225,7 @@ void NewProfileConfiguartor::refreshSlidersLabels(GuiPointers guiPointers){
 	for (size_t i = 0; i < MAX_NUMBER_OF_ACTIVE_WIDGETS; i++)
 		guiPointers.percentageLabels[i]->setText(textToSetOnSliders[i]);
 }
-void NewProfileConfiguartor::fillSlidersGroup(GuiPointers guiPointers, QList<RestorationStruct> restorationsMethodes){
+void NewProfileConfiguartor::fillSlidersGroup(GuiPointers guiPointers, QList<RestorationMethode> restorationsMethodes){
 	int size = restorationsMethodes.size();
 	guiPointers.activeElementsCounter->setValue(size);
 	for (size_t i = 0; i < size; i++){
@@ -347,14 +347,14 @@ void NewProfileConfiguartor::fillFormsFromDataFromProf(const Profile& profToEdit
 
 	//ToDo fill loot controls loot
 }
-QList<RestorationStruct> NewProfileConfiguartor::getRestorationMethodesFromGUI(GuiPointers guiPotiners){
-	QList<RestorationStruct> toRet = {};
+QList<RestorationMethode> NewProfileConfiguartor::getRestorationMethodesFromGUI(GuiPointers guiPotiners){
+	QList<RestorationMethode> toRet = {};
 	int activeElements = guiPotiners.activeElementsCounter->value();
 	for (size_t i = 0; i < activeElements; i++){
 		int threshold = guiPotiners.sliders[i]->value();
 		QString keyName = guiPotiners.keyShortCuts[i]->currentText();
 		QString methodeName = guiPotiners.methodeNames[i]->currentText();
-		toRet.push_back(RestorationStruct(threshold, Key(keyName), methodeName));
+		toRet.push_back(RestorationMethode(threshold, Key(keyName), methodeName));
 	}
 	return toRet;
 }

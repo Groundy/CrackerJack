@@ -237,6 +237,9 @@
     <ClInclude Include="Profession.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="sources\RestorationMethode.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="sources\ZZ___TO____DO.txt" />

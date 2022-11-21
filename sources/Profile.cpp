@@ -16,7 +16,7 @@ Profile::Profile(QJsonObject obj) {
 			throw std::exception("No healthRestorations field in profil json file!");
 		auto healRestorationArr = obj.value("healthRestorations").toArray();
 		for each (auto var in healRestorationArr){
-			RestorationStruct resStr(var.toObject());
+			RestorationMethode resStr(var.toObject());
 			this->healthRestorations.push_back(resStr);
 		}
 
@@ -24,7 +24,7 @@ Profile::Profile(QJsonObject obj) {
 			throw std::exception("No manaRestorations field in profil json file!");
 		auto manaRestorationArr = obj.value("manaRestorations").toArray();
 		for each (auto var in manaRestorationArr) {
-			RestorationStruct resStr(var.toObject());
+			RestorationMethode resStr(var.toObject());
 			this->manaRestorations.push_back(resStr);
 		}
 

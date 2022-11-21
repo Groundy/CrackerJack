@@ -10,6 +10,7 @@
 #include <qexception.h>
 #include <qjsonarray.h>
 #include "Profession.h"
+#include "RestorationMethode.h"
 struct Frames {
 	QRect gameFrame;
 	QRect miniMapFrame;
@@ -19,59 +20,6 @@ struct Frames {
 	QRect combinedFrame;
 	int howTheyShouldBeRotated;
 };
-class RestorationStruct {
-public:
-	RestorationStruct(int threshold, Key key, QString restorationName) : threshold(threshold), key(key), name(restorationName){
-	}
-	RestorationStruct(QJsonObject jsonObj) {
-		if (!jsonObj.contains("threshold"))
-			throw std::exception("There is no threshold field in RestorationStruct in json prof file");
-		QJsonValue val = jsonObj.value("threshold");
-		if (val.isNull() || !val.isDouble())
-			throw std::exception("Invalid RestorationStruct field value!");
-		int thresholdToSet = val.toInt();
-
-		if (!jsonObj.contains("methodeName"))
-			throw std::exception("There is no methodeName field in RestorationStruct in json prof file");
-		val = jsonObj.value("methodeName");
-		if (val.isNull() || !val.isString())
-			throw std::exception("Invalid RestorationStruct field value!");
-		QString methodeNameToSet = val.toString();
-
-		if (!jsonObj.contains("key"))
-			throw std::exception("There is no key field in RestorationStruct in json prof file");
-		val = jsonObj.value("key");
-		if (val.isNull() || !val.isObject())
-			throw std::exception("Invalid RestorationStruct field value!");
-		Key keyToSet = Key(val.toObject());
-		
-		key = keyToSet;
-		name = methodeNameToSet;
-		threshold = thresholdToSet;
-	}
-
-	QJsonObject toJsonObj() { 
-		QJsonObject mainObj;
-		mainObj.insert("threshold", threshold);
-		mainObj.insert("methodeName", name);
-		mainObj.insert("key", key.toJson());
-		return mainObj;
-	};
-	QString getName() {
-		return name;
-	};
-	int getThreshold() {
-		return threshold;
-	};
-	QString getKeyName() {
-		return key.getKeyName();
-	}
-private:
-	int threshold;
-	Key key;
-	QString name;
-};
-
 class Profile{
 public:
 	Profile();
@@ -88,8 +36,8 @@ public:
 
 	QString profileName;
 	Profession profession;
-	QList<RestorationStruct> manaRestorations;
-	QList<RestorationStruct> healthRestorations;
+	QList<RestorationMethode> manaRestorations;
+	QList<RestorationMethode> healthRestorations;
 	AUTO_LOOT_KEY lootKey;
 	CONTROLS controls;
 	QList<STATES> states;
