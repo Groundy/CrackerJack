@@ -1,0 +1,92 @@
+{
+  "potions": [
+    {
+      "name": "Ultimate Spirit Potion",
+      "health": 500,
+      "mana": 200,
+      "for_mage": false,
+      "for_RP": true,
+      "for_EK": false
+    },
+    {
+      "name": "Great Health Potion",
+      "health": 500,
+      "mana": 0,
+      "for_mage": false,
+      "for_RP": false,
+      "for_EK": true
+    },
+    {
+      "name": "Ultimate Mana Potion",
+      "health": 0,
+      "mana": 500,
+      "for_mage": true,
+      "for_RP": false,
+      "for_EK": false
+    },
+    {
+      "name": "Ultimate Health Potion",
+      "health": 750,
+      "mana": 0,
+      "for_mage": false,
+      "for_RP": false,
+      "for_EK": true
+    },
+    {
+      "name": "Supreme Health Potion",
+      "health": 1000,
+      "mana": 0,
+      "for_mage": false,
+      "for_RP": false,
+      "for_EK": true
+    },
+    {
+      "name": "Strong Mana Potion",
+      "health": 0,
+      "mana": 150,
+      "for_mage": true,
+      "for_RP": true,
+      "for_EK": true
+    },
+    {
+      "name": "Strong Health Potion",
+      "health": 300,
+      "mana": 0,
+      "for_mage": false,
+      "for_RP": true,
+      "for_EK": true
+    },
+    {
+      "name": "Mana Potion",
+      "health": 0,
+      "mana": 100,
+      "for_mage": true,
+      "for_RP": true,
+      "for_EK": true
+    },
+    {
+      "name": "Health Potion",
+      "health": 150,
+      "mana": 0,
+      "for_mage": true,
+      "for_RP": true,
+      "for_EK": true
+    },
+    {
+      "name": "Great Mana Potion",
+      "health": 0,
+      "mana": 200,
+      "for_mage": true,
+      "for_RP": true,
+      "for_EK": false
+    },
+    {
+      "name": "Great Spirit Potion",
+      "health": 300,
+      "mana": 150,
+      "for_mage": false,
+      "for_RP": true,
+      "for_EK": false
+    }
+  ]
+}

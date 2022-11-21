@@ -31,17 +31,11 @@ int main(int argc, char *argv[])
 	test();
 
 	Profile* prof = new Profile();
-	if (true) {
-		SelectProfileWindow win(NULL, prof);
-		bool accepted = win.exec() == QDialog::Accepted;
-		if (!accepted)
-			return 0;
-	}
-	auto mainMenu = std::make_unique<MainMenu>(prof);
-	bool accepted = mainMenu->exec() == QDialog::Accepted;
-	if (!accepted) {
-		delete prof;
+	SelectProfileWindow win(NULL, prof);
+	if (!(win.exec() == QDialog::Accepted))
 		return 0;
-	}
+	auto mainMenu = std::make_unique<MainMenu>(prof);
+	if (!(mainMenu->exec() == QDialog::Accepted))
+		return 0;
 	return app.exec();
 }

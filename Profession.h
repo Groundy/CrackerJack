@@ -1,10 +1,9 @@
 #pragma once
 #include <qstring.h>
 class Profession
-{
+{	
 public:
 	enum class Type{ RP, EK, ED, MS, UNDEFINED };
-
 	Profession() : type(Type::UNDEFINED) {};
 	Profession(Profession::Type type) : type(type) {};
 	Profession(QString profName) {

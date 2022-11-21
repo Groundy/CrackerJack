@@ -15,10 +15,8 @@ Utilities::RestoreMethode Item::toRestoreMethode() {
 	return toRet;
 }
 
-Item::Item(){
-}
-
-Item::Item(QJsonValue jsonValue){
+Item::Item(const QJsonValue& jsonValue){
+	/*
 	name = jsonValue["name"].toString();
 	price = jsonValue["price"].toInt();
 	weight = jsonValue["weight"].toDouble();
@@ -40,6 +38,7 @@ Item::Item(QJsonValue jsonValue){
 	QString typeOfItemStr = jsonValue["type"].toString();
 	Item::TYPE_OF_ITEM typeOfItem = Item::descriptionMap.key(typeOfItemStr);
 	type = typeOfItem;
+	*/
 }
 
 QStringList Item::getListOfCategories(){

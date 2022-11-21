@@ -67,57 +67,40 @@ bool JsonParser::readSpellsJson(QList<Spell>& spells, Spell::SpellType* type, Pr
 	}
 }
 
-bool JsonParser::getPotionsForProf(QList<Potion>& potions, Profession* prof, TypeOfPotion type){
-	QJsonObject obj;
-	bool res = openJsonFile(obj, itemPath);
-	if (!res) {
-		Logger::logPotenialBug("Problem with Json reading", "JsonParser", "getPotionsForProf");
+bool JsonParser::readPotions(QList<Potion>& potions, Profession* prof, Potion::TypeOfPotion* filterType){
+	try{
+		potions.clear();
+		QJsonObject obj;
+		bool openCorrectly = openJsonFile(obj, potionsPath);
+		if (!openCorrectly)
+			throw std::exception("Can't open items json file!");
+
+		if(!obj.contains("potions"))
+			throw std::exception("No potions field in items json file!");
+
+		if(!obj["potions"].isArray())
+			throw std::exception("potions field in items json file is not array type!");
+
+		QJsonArray arr = obj["potions"].toArray();
+		for each (QJsonValue potionJsonVal in arr) {
+			Potion potionToAdd(potionJsonVal.toObject());
+			if (prof != NULL) {
+				if(!potionToAdd.isForProf(*prof))
+					continue;
+			}
+			if (filterType != NULL) {
+				if (!potionToAdd.isType(*filterType))
+					continue;
+			}
+			potions.push_back(potionToAdd);
+		}
+		return true;
+	}
+	catch (const std::exception& e){
+		qDebug() << e.what();
+		Utilities::showMessageBox_INFO(e.what());
 		return false;
 	}
-
-	QJsonArray arr = obj["potions"].toArray();
-	if (arr.size() == 0) {
-		Logger::logPotenialBug("No potions in json file", "JsonParser", "getPotionsForProf");
-		return false;
-	}
-
-	QList<Potion> potionsToRet;
-	for each (QJsonValue var in arr) {
-		Potion potionToAdd;
-		potionToAdd.name = var["name"].toString();
-		potionToAdd.type = Item::TYPE_OF_ITEM::POTIONS;
-		potionToAdd.manaReg = var["mana"].toInt();
-		potionToAdd.healthReg = var["health"].toInt();
-		potionToAdd.forMage = var["for_mage"].toBool();
-		potionToAdd.forRp = var["for_RP"].toBool();
-		potionToAdd.forEk = var["for_EK"].toBool();
-
-		bool healthPotionsWanted = (type == TypeOfPotion::EVERYPOTION || type == TypeOfPotion::HEALTH);
-		bool manaPotionsWanted = (type == TypeOfPotion::EVERYPOTION || type == TypeOfPotion::MANA);
-
-		bool skipCauseHealthCondition = healthPotionsWanted && potionToAdd.healthReg <= 0;
-		bool skipCauseManaCondition = manaPotionsWanted && potionToAdd.manaReg <= 0;
-		if (skipCauseHealthCondition || skipCauseManaCondition)
-			continue;
-
-		bool skipCauseProfCon = true;
-		if (prof == NULL)
-			skipCauseProfCon = false;
-		else if(potionToAdd.forMage && prof->isMage())
-			skipCauseProfCon = false;
-		else if(potionToAdd.forEk && prof->isEK())
-			skipCauseProfCon = false;
-		else if(potionToAdd.forRp && prof->isRP())
-			skipCauseProfCon = false;
-
-
-		if (skipCauseProfCon)
-			continue;
-
-		potionsToRet.push_back(potionToAdd);
-	}
-	potions = potionsToRet;
-	return true;
 }
 
 bool JsonParser::readItemJson(QList<Item>& items){
