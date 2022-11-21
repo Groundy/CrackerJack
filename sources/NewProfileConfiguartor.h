@@ -54,6 +54,7 @@ private:
 	bool checkHealthGroup();
 	bool checkManaGroup();
 	bool checkControlsGroup();
+	bool checkAllKeyBoxes();
 	bool checkAllForms();
 
 

@@ -12,6 +12,7 @@
 #include "Key.h"
 #include "Profession.h"
 #include "RestorationMethode.h"
+#include "Utilities.h"
 struct Frames {
 	QRect gameFrame;
 	QRect miniMapFrame;
@@ -42,7 +43,7 @@ public:
 	AUTO_LOOT_KEY lootKey;
 	CONTROLS controls;
 	QList<STATES> states;
-
+	Key screenShotKey;
 	void clearProfile();
 
 };

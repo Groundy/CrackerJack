@@ -35,9 +35,14 @@ Profile::Profile(QJsonObject obj) {
 		if (!obj.contains("controls"))
 			throw std::exception("No controls field in profil json file!");
 		this->controls = CONTROLS(obj.value("controls").toInt());
+
+		if (!obj.contains("screenShotKey"))
+			throw std::exception("No screenShotKey field in profil json file!");
+		this->screenShotKey = Key(obj.value("screenShotKey").toObject());
 	}
 	catch (const std::exception& e){
 		qDebug() << e.what() << endl;
+		Utilities::showMessageBox_INFO(e.what());
 	}
 }
 
@@ -53,6 +58,7 @@ QJsonObject Profile::toJson(){
 	mainObj.insert("profession", profession.getTypeName());
 	mainObj.insert("healthRestorations", healthArray);
 	mainObj.insert("manaRestorations", manaArray);
+	mainObj.insert("screenShotKey", screenShotKey.toJson());
 	mainObj.insert("lootKey", lootKey);
 	mainObj.insert("controls", controls);
 	return mainObj;

@@ -6,6 +6,8 @@ NewProfileConfiguartor::NewProfileConfiguartor(Profile* prof, QWidget* parent) :
 	ui = new Ui::NewProfileConfiguartor();
 	ui->setupUi(this);
 	fillGuiPtrs();
+	ui->screenShotBox->insertItems(0, Key::getListOfAllPossibleKeys());
+	ui->screenShotBox->setCurrentIndex(-1);
 }
 NewProfileConfiguartor::~NewProfileConfiguartor() {
 	delete ui;
@@ -117,6 +119,28 @@ bool NewProfileConfiguartor::checkHealthGroup() {
 bool NewProfileConfiguartor::checkManaGroup(){
 	return checkSlidersGroup(manaPtrs);
 }
+bool NewProfileConfiguartor::checkAllKeyBoxes(){
+	QVector<QComboBox*> keyBoxes;
+	keyBoxes.append(healthPtrs.keyShortCuts);
+	keyBoxes.append(manaPtrs.keyShortCuts);
+	keyBoxes.append(ui->screenShotBox);
+	QStringList keysName;
+	for each (auto keyBox in keyBoxes){
+		if (!keyBox->isEnabled())
+			continue;
+		if (keyBox->currentIndex() == -1) {
+			Utilities::showMessageBox_INFO("Found one key box without value!");
+			return false;
+		}
+		keysName.append(keyBox->currentText());
+	}
+	int duplicatedKeys = keysName.removeDuplicates();
+	if (duplicatedKeys != 0) {
+		Utilities::showMessageBox_INFO("some key boxes have the same value!");
+		return false;
+	}
+	return true;
+}
 bool NewProfileConfiguartor::checkAllForms(){
 	if (!checkNameGroup())
 		return false;
@@ -125,6 +149,8 @@ bool NewProfileConfiguartor::checkAllForms(){
 	if (!checkManaGroup())
 		return false;
 	if (!checkControlsGroup())
+		return false;
+	if (!checkAllKeyBoxes())
 		return false;
 	return true;
 }
@@ -363,5 +389,6 @@ void NewProfileConfiguartor::saveDataToProfile(){
 	profToEdit->profession = getSelectedProf();
 	profToEdit->healthRestorations = getRestorationMethodesFromGUI(healthPtrs);
 	profToEdit->manaRestorations = getRestorationMethodesFromGUI(manaPtrs);
+	profToEdit->screenShotKey = Key(ui->screenShotBox->currentText());
 	//todo fill controls loot
 }
