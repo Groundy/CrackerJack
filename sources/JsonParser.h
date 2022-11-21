@@ -1,26 +1,25 @@
 #pragma once
 #include <QObject>
 #include <qjsondocument.h>
-#include "qjsonobject.h"
-#include "qjsonvalue.h"
-#include "qjsonarray.h"
-#include "qfile.h"
-#include "qfileinfo.h"
+#include <qjsonobject.h>
+#include <qjsonvalue.h>
+#include <qjsonarray.h>
+#include <qfile.h>
+#include <qfileinfo.h>
 
 #include "Utilities.h"
 #include "Profile.h"
 #include "Item.h"
 #include "Profession.h"
+#include "Spell.h"
 class JsonParser{
-	typedef Utilities::Spell Spell;
 public:
 	JsonParser();
 	~JsonParser();
 
 	enum class TypeOfPotion {HEALTH, MANA, EVERYPOTION};
 	bool openJsonFile(QJsonObject& jsonDoc, QString pathToFile);
-	bool readSpellsJson(QList<Spell>& spells);
-	bool filtrSpells(QList<Spell>& spells, Profession* profession, Spell::TYPE_OF_SPELL* type);
+	bool readSpellsJson(QList<Spell>& spells, Spell::SpellType* type, Profession* profession);
 	bool getPotionsForProf(QList<Potion>& potions, Profession* profession, TypeOfPotion type);
 	bool readItemJson(QList<Item>& items);
 	bool getHealthRestoreMethodes(QStringList incantationsAndSpellsList, QList<Utilities::RestoreMethode>& spellsAndPotionsObjects);
@@ -28,6 +27,7 @@ public:
 	bool getItemsFromCategory(QList<Item> &readItems, Item::TYPE_OF_ITEM type);
 	static bool saveJsonFile(QString pathToFolder, QString fileNameWithExtension, QJsonDocument& docToSave);
 	QMap<QString, int> readAvaibleKeys();
+
 
 	QStringList readNamesOfAllSavedProfiles();
 	void saveProfiles(Profile* prof);
@@ -38,19 +38,18 @@ public:
 	};
 	QStringList getNamesOfHealingPotsAndSpellsForProf(Profession profession) {
 		QList<Potion> potions;
-		QList<Utilities::Spell> spells;
-		readSpellsJson(spells);
-		auto typeOfSpell = Utilities::Spell::TYPE_OF_SPELL::HEALING;
-		filtrSpells(spells, &profession, &typeOfSpell);
+		QList<Spell> spells;
+		auto typeOfSpell = Spell::SpellType::Healing;
+		readSpellsJson(spells, &typeOfSpell, &profession);
 		getPotionsForProf(potions, &profession, JsonParser::TypeOfPotion::HEALTH);
 
-		QStringList namesOfAvaibleHealthRestoreMethodes;
-		for each (auto var in spells)
-			namesOfAvaibleHealthRestoreMethodes.push_back(var.incantations);
+		QStringList avaiableHealthRestoreMethodesNames;
+		for each (auto spell in spells)
+			avaiableHealthRestoreMethodesNames.push_back(spell.getIncantation());
 		for each (auto var in potions)
-			namesOfAvaibleHealthRestoreMethodes.push_back(var.name);
+			avaiableHealthRestoreMethodesNames.push_back(var.name);
 
-		return namesOfAvaibleHealthRestoreMethodes;
+		return avaiableHealthRestoreMethodesNames;
 	}
 	QStringList getNamesOManaPotsForProf(Profession profession) {
 		QList<Potion> potions;

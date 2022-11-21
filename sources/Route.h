@@ -3,6 +3,7 @@
 #include <qdir.h>
 #include "JsonParser.h"
 #include <qmap.h>
+#include "Spell.h"
 class Route{
 
 public:

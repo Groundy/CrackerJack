@@ -7,6 +7,7 @@
 #include <qfiledialog.h>
 #include "SetNameWidnow.h"
 #include "RGBstruct.h"
+#include "Spell.h"
 namespace Ui { class RouteCreator; };
 
 

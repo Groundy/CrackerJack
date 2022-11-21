@@ -31,23 +31,6 @@ public:
 		int mana, cd, cdGroup;
 		TypeOfMethode type;
 	};
-	class Spell {
-	public:
-		enum class TYPE_OF_SPELL { HEALING, SUPPORT, ATTACK };
-		QString name, incantations;
-		bool EK, MS, ED, RP;
-		int mana, cd, cdGroup, soulPoints;
-		TYPE_OF_SPELL typeOfSpell;
-		RestoreMethode toRestoreMethode() {
-			RestoreMethode toRet;
-			toRet.name = this->name;
-			toRet.mana = this->mana;
-			toRet.cd = this->cd;
-			toRet.cdGroup = this->cdGroup;
-			toRet.type = RestoreMethode::TypeOfMethode::SPELL;
-			return toRet;
-		}
-	};	
 
 	static int showMessageBox(QString title, QString text, QFlags<QMessageBox::StandardButton> buttons);
 	static void showMessageBox_INFO(QString text);

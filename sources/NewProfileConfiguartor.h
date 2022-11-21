@@ -11,6 +11,7 @@
 #include "Key.h"
 #include "Profession.h"
 #include "RestorationMethode.h"
+#include "Spell.h"
 
 namespace Ui { class NewProfileConfiguartor; };
 

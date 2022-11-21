@@ -26,91 +26,45 @@ bool JsonParser::openJsonFile(QJsonObject& jsonDoc, QString pathToFile){
 	return true;
 }
 
-bool JsonParser::readSpellsJson(QList<Spell>& spells){
-	QJsonObject obj;
+bool JsonParser::readSpellsJson(QList<Spell>& spells, Spell::SpellType* type, Profession* profession){
+	try{
+		QJsonObject obj;
+		bool openCorrectly = openJsonFile(obj, spellsPath);
+		if (!openCorrectly)
+			throw std::exception("Can't read json file with spells");
 
-	bool res = openJsonFile(obj, spellsPath);
-	if (!res) {
-		Logger::logPotenialBug("Problem with Json reading", "JsonParser", "readSpellsJson");
-		return false;
-	}
+		if(!obj.contains("spells"))
+			throw std::exception("No spells field in json file with spells");
 
-	QJsonArray arr = obj["spells"].toArray();
-	if (arr.size() == 0) {
-		Logger::logPotenialBug("No spells in json file", "JsonParser", "readSpellsJson");
-		return false;
-	}
+		if (!obj["spells"].isArray())
+			throw std::exception("spell field in json file is not an array!");
 
-	QList<Spell> spellsToRet;
-	for (size_t i = 0; i < arr.size(); i++){
-		QJsonValue val = arr.at(i);
-		Spell objToAdd;
-		objToAdd.name = val["name"].toString();
-		objToAdd.incantations = val["incantantion"].toString();
-		objToAdd.EK = val["EK"].toBool();
-		objToAdd.RP = val["RP"].toBool();
-		objToAdd.MS = val["MS"].toBool();
-		objToAdd.ED = val["ED"].toBool();
-		objToAdd.mana = val["mana"].toInt();
-		objToAdd.cd = val["CD"].toInt();
-		objToAdd.cdGroup = val["CDGROUP"].toInt();
-		objToAdd.soulPoints = val["SoulPoints"].toInt();
-		QString typeAsStr = val["TYPE"].toString();
-		Spell::TYPE_OF_SPELL type;
-		if (typeAsStr == "HEALING")
-			type = Spell::TYPE_OF_SPELL::HEALING;
-		else if (typeAsStr == "SUPPORT")
-			type = Spell::TYPE_OF_SPELL::SUPPORT;
-		else if (typeAsStr == "ATTACK")
-			type = Spell::TYPE_OF_SPELL::ATTACK;
-		else {
-			Logger::logPotenialBug("Type value read from json file is other than 3 allowed types", "JsonParser", "readSpellsJson");
-			return false;
+		QJsonArray arr = obj["spells"].toArray();
+		if (arr.isEmpty())
+			throw std::exception("spell array in json file is empty!");
+
+		for (size_t i = 0; i < arr.size(); i++){
+			QJsonObject singleSpellJsonObj = arr.at(i).toObject();
+			
+			//Spell toAdd(singleSpellJsonObj);
+			if (profession != NULL) {//filtr by prof
+				//if (!toAdd.isForProf(*profession))
+				//	continue;
+			}
+			if (type != NULL) {//filtr by type
+			//	if (!toAdd.isSpellType(*type))
+				//	continue;
+			}
+			//spells.push_back(toAdd);
 		}
-		objToAdd.typeOfSpell = type;
-		spellsToRet.push_back(objToAdd);
+		return true;
 	}
-	spells = spellsToRet;
-	return true;
-}
-
-bool JsonParser::filtrSpells(QList<Spell>& spells, Profession* profession, Spell::TYPE_OF_SPELL* type){
-	if (profession == NULL && type == NULL)
+	catch (const std::exception& e){
+		qDebug() << e.what();
+		Utilities::showMessageBox_INFO(e.what());
 		return false;
-	typedef Utilities::Spell Spell;
 
-	bool filtrByProf = profession != NULL;
-	bool filtrByType = type != NULL;
-	QList<Spell> spellsCopy = spells;      
-	QList<Spell> spelsToRet;
-	for each (Spell var in spellsCopy) {
-		if (filtrByProf) {
-			/*
-			bool isProperProf = false;
-			auto professionType = profession->getType();
-			if (professionType == Profession::ED)
-				isProperProf = var.ED;
-			else if (professionType == Profession::EK)
-				isProperProf = var.EK;
-			else if (professionType == Profession::MS)
-				isProperProf = var.MS;
-			else if (professionType == Profession::RP)
-				isProperProf = var.RP;
-
-			if (!isProperProf)
-				continue;
-				*/
-			//todo
-		}
-		if (filtrByType) {
-			bool isProperType = var.typeOfSpell == *type;
-			if (!isProperType)
-				continue;
-		}
-		spelsToRet.push_back(var);
 	}
-	spells = spelsToRet;
-	return true;
 }
 
 bool JsonParser::getPotionsForProf(QList<Potion>& potions, Profession* prof, TypeOfPotion type){
@@ -192,11 +146,12 @@ bool JsonParser::readItemJson(QList<Item>& items){
 }
 
 bool JsonParser::getHealthRestoreMethodes(QStringList incantationsAndSpellsList, QList<Utilities::RestoreMethode>& spellsAndPotionsObjects) {
+	/*
 	typedef Utilities::RestoreMethode RestoreMethode;
 	QList<Item> potions;
 	QList<Spell> spells;
-	bool sucess = readSpellsJson(spells);
-	Spell::TYPE_OF_SPELL typeToFiltr = Spell::TYPE_OF_SPELL::HEALING;
+	Spell::SpellType typeToFiltr = Spell::SpellType::Healing;
+	bool sucess = readSpellsJson(spells, &typeToFiltr);
 	bool sucess2 = filtrSpells(spells, NULL, &typeToFiltr);
 	getItemsFromCategory(potions, Item::TYPE_OF_ITEM::POTIONS);
 
@@ -234,6 +189,8 @@ bool JsonParser::getHealthRestoreMethodes(QStringList incantationsAndSpellsList,
 	spellsAndPotionsObjects = restoreMethodesToRet;
 	bool allWentGood = incantationsAndSpellsList.size() == restoreMethodesToRet.size();
 	return allWentGood;
+	*/
+	return true;
 }
 
 bool JsonParser::getManaRestoreMethodes(QStringList potionNameToBeFound, QList<Item>& potionToReturn){

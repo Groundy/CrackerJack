@@ -37,10 +37,9 @@ int main(int argc, char *argv[])
 		if (!accepted)
 			return 0;
 	}
-	MainMenu* mainMenu = new MainMenu(prof);
+	auto mainMenu = std::make_unique<MainMenu>(prof);
 	bool accepted = mainMenu->exec() == QDialog::Accepted;
 	if (!accepted) {
-		delete mainMenu;
 		delete prof;
 		return 0;
 	}

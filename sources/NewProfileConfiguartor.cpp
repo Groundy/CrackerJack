@@ -242,39 +242,27 @@ void NewProfileConfiguartor::fillSlidersGroup(GuiPointers guiPointers, QList<Res
 	}
 }
 void NewProfileConfiguartor::fillRestoriationMethodes(Profession profession, GuiPointers& guiPointers){
+	QStringList methodesNames = {};
+	if (&guiPointers == &healthPtrs)
+		methodesNames = JsonParser().getNamesOfHealingPotsAndSpellsForProf(profession);
+	else if (&guiPointers == &manaPtrs)
+		methodesNames = JsonParser().getNamesOManaPotsForProf(profession);
+	else
+		return;
+
+	int slotsToFill = guiPointers.activeElementsCounter->value();
 	QStringList allPossibleKeys = Key::getListOfAllPossibleKeys();
-	if (&guiPointers == &healthPtrs) {
-		QStringList healthMethodes = JsonParser().getNamesOfHealingPotsAndSpellsForProf(profession);
-		int healthSlotsToFill = healthPtrs.activeElementsCounter->value();
-		for (size_t i = 0; i < MAX_NUMBER_OF_ACTIVE_WIDGETS; i++){
-			QComboBox* methodeBox = healthPtrs.methodeNames[i];
-			QComboBox* keyBox = healthPtrs.keyShortCuts[i];
-			methodeBox->clear();
-			keyBox->clear();
-			bool enable = i < healthSlotsToFill;
-			if (enable) {
-				methodeBox->insertItems(0, healthMethodes);
-				methodeBox->setCurrentIndex(-1);
-				keyBox->insertItems(0, allPossibleKeys);
-				keyBox->setCurrentIndex(-1);
-			}
-		}
-	}
-	else if (&guiPointers == &manaPtrs) {
-		QStringList manaMethodes = JsonParser().getNamesOManaPotsForProf(profession);
-		int manaSlotsToFill = manaPtrs.activeElementsCounter->value();
-		for (size_t i = 0; i < MAX_NUMBER_OF_ACTIVE_WIDGETS; i++) {
-			QComboBox* methodeBox = manaPtrs.methodeNames[i];
-			QComboBox* keyBox = manaPtrs.keyShortCuts[i];
-			methodeBox->clear();
-			keyBox->clear();
-			bool manaSlotShouldBeActive = i < manaSlotsToFill;
-			if (manaSlotShouldBeActive) {
-				methodeBox->insertItems(0, manaMethodes);
-				methodeBox->setCurrentIndex(0);
-				keyBox->insertItems(0, allPossibleKeys);
-				keyBox->setCurrentIndex(0);
-			}
+	for (size_t i = 0; i < MAX_NUMBER_OF_ACTIVE_WIDGETS; i++){
+		QComboBox* methodeBox = guiPointers.methodeNames[i];
+		QComboBox* keyBox = guiPointers.keyShortCuts[i];
+		methodeBox->clear();
+		keyBox->clear();
+		bool enable = i < slotsToFill;
+		if (enable) {
+			methodeBox->insertItems(0, methodesNames);
+			methodeBox->setCurrentIndex(-1);
+			keyBox->insertItems(0, allPossibleKeys);
+			keyBox->setCurrentIndex(-1);
 		}
 	}
 }

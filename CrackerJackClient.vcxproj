@@ -277,6 +277,7 @@ xcopy /y /d ".\dependencies\64-bit\libcrypto-1_1-x64.dll" "$(OutDir)"
     <ClInclude Include="sources\Route.h" />
     <ClInclude Include="sources\Point3D.h" />
     <QtMoc Include="sources\SetNameWidnow.h" />
+    <ClInclude Include="sources\Spell.h" />
     <ClInclude Include="version.h" />
     <ClInclude Include="sources\VariablesClass.h" />
     <ClInclude Include="sources\ScreenSaver.h" />
