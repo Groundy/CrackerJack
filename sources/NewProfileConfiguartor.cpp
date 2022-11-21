@@ -138,7 +138,7 @@ void NewProfileConfiguartor::finishButtonAction(){
 	bool accepted = Utilities::showMessageBox_NO_YES(text);
 	if (accepted) {
 		saveDataToProfile();
-		JsonParser().saveProfiles(profToEdit);
+		JsonParser().saveProfile(profToEdit);
 		this->accept();
 	}
 }

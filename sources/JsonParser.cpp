@@ -46,16 +46,16 @@ bool JsonParser::readSpellsJson(QList<Spell>& spells, Spell::SpellType* type, Pr
 		for (size_t i = 0; i < arr.size(); i++){
 			QJsonObject singleSpellJsonObj = arr.at(i).toObject();
 			
-			//Spell toAdd(singleSpellJsonObj);
+			Spell toAdd(singleSpellJsonObj);
 			if (profession != NULL) {//filtr by prof
-				//if (!toAdd.isForProf(*profession))
-				//	continue;
+				if (!toAdd.isForProf(*profession))
+					continue;
 			}
 			if (type != NULL) {//filtr by type
-			//	if (!toAdd.isSpellType(*type))
-				//	continue;
+				if (!toAdd.isSpellType(*type))
+					continue;
 			}
-			//spells.push_back(toAdd);
+			spells.push_back(toAdd);
 		}
 		return true;
 	}
@@ -275,7 +275,7 @@ QStringList JsonParser::readNamesOfAllSavedProfiles(){
 	return profilesDir.entryList(fillters, QDir::Files);
 }
 
-void JsonParser::saveProfiles(Profile* prof){
+void JsonParser::saveProfile(Profile* prof){
 	const QString fileName = prof->profileName + ".json";
 	QJsonDocument docToSave(prof->toJson());
 	saveJsonFile(pathToProfileFolder, fileName, docToSave);

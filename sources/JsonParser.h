@@ -30,7 +30,7 @@ public:
 
 
 	QStringList readNamesOfAllSavedProfiles();
-	void saveProfiles(Profile* prof);
+	void saveProfile(Profile* prof);
 	Profile loadProfiles(QString profileName);
 	void deleteProfileFile(QString profileName) {
 		QString profileFileName = profileName + ".json";

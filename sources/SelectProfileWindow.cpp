@@ -25,7 +25,7 @@ void SelectProfileWindow::addNewProfileButtonAction(){
 	NewProfileConfiguartor newProfWind(&profile, this);
 	int result = newProfWind.exec();
 	if (result == QDialog::Accepted) {
-		JsonParser().saveProfiles(&profile);
+		JsonParser().saveProfile(&profile);
 		Sleep(20);
 		refreshProfilesOnList();
 	}
@@ -37,7 +37,7 @@ void SelectProfileWindow::editProfileButtonAction(){
 	newProfDialog->fillFormsFromDataFromProf(profToEdit);
 	bool accepted = newProfDialog->exec() == QDialog::Accepted;
 	if (accepted) {
-		JsonParser().saveProfiles(&profToEdit);	
+		JsonParser().saveProfile(&profToEdit);	
 		refreshProfilesOnList();
 	}
 }
