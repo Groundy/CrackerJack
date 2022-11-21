@@ -1,5 +1,4 @@
 #include "JsonParser.h"
-#include "Utilities.h"
 JsonParser::JsonParser()
 {
 }
@@ -311,6 +310,12 @@ QMap<QString, int> JsonParser::readAvaibleKeys(){
 	}
 
 	return keys;
+}
+
+QStringList JsonParser::readNamesOfAllSavedProfiles(){
+	QDir profilesDir(pathToProfileFolder);
+	QStringList fillters = QStringList() << "*.json";
+	return profilesDir.entryList(fillters, QDir::Files);
 }
 
 void JsonParser::saveProfiles(Profile* prof){

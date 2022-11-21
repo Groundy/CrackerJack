@@ -43,7 +43,7 @@ Profile::Profile(QJsonObject obj) {
 
 QJsonObject Profile::toJson(){
 	QJsonObject mainObj;
-		QJsonArray healthArray, manaArray;
+	QJsonArray healthArray, manaArray;
 	for each (auto var in healthRestorations)
 		healthArray.push_back(var.toJsonObj());
 	for each (auto var in manaRestorations)
@@ -52,7 +52,7 @@ QJsonObject Profile::toJson(){
 	mainObj.insert("profileName", profileName);
 	mainObj.insert("profession", profession.getTypeName());
 	mainObj.insert("healthRestorations", healthArray);
-	mainObj.insert("manaRestorations", healthArray);
+	mainObj.insert("manaRestorations", manaArray);
 	mainObj.insert("lootKey", lootKey);
 	mainObj.insert("controls", controls);
 	return mainObj;

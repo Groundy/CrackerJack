@@ -33,6 +33,7 @@ public:
 		}
 	}
 	Type getType() { return type; };
+
 	bool isMage() {
 		return isED() || isMS();
 	}

@@ -11,13 +11,28 @@ QJsonObject Key::toJson() {
 	return json;
 }
 
-Key::Key(int codeOfKey){
-	bool thereIsSuchCode = KeysAndCodesMap.values().contains(codeOfKey);
-	this->keyVal = thereIsSuchCode ? codeOfKey : -1;
+Key::Key(int keyValue){
+	bool valueAvaible = KeysAndCodesMap.values().contains(keyValue);
+	if (!valueAvaible) {
+		keyVal = -1;
+		keyName = QString();
+		return;
+	}
+
+	keyVal = keyValue;
+	keyName = KeysAndCodesMap.key(keyVal, QString());
 }
 
-Key::Key(QString keyCodeAsStr){
-	this->keyVal = KeysAndCodesMap.value(keyCodeAsStr, -1);
+Key::Key(QString keyNameToSet){
+	bool NameAvaible = KeysAndCodesMap.keys().contains(keyNameToSet);
+	if (!NameAvaible) {
+		keyVal = -1;
+		keyName = QString();
+		return;
+	}
+
+	keyVal = KeysAndCodesMap.value(keyNameToSet, -1);
+	keyName = keyNameToSet;
 }
 
 Key::Key(QJsonObject obj){

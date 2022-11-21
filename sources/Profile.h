@@ -1,14 +1,15 @@
 #pragma once
-#include "qmap.h"
+#include <qmap.h>
 #include <QObject>
 #include <string>
-#include "qstring.h"
-#include "qvector.h"
-#include "qkeysequence.h"
-#include "Key.h"
-#include "Windows.h"
-#include <qexception.h>
 #include <qjsonarray.h>
+#include <qstring.h>
+#include <qvector.h>
+#include <qkeysequence.h>
+#include <Windows.h>
+#include <qlist.h>
+
+#include "Key.h"
 #include "Profession.h"
 #include "RestorationMethode.h"
 struct Frames {
@@ -29,7 +30,7 @@ public:
 	void copyFrom(Profile& profToCopyFrom);
 	QStringList getHealthRestorationNames();
 	QStringList getManaRestorationNames();
-public:
+
 	enum AUTO_LOOT_KEY { RIGHT_MOUSE_BUTTON, SHIFT_RIGHT, LEFT_MOUSE_BUTTON };//enable only if controls
 	enum CONTROLS { CLSSIC_CONTROLS, REGULARCONTROLS, LEFT_SMART_CLICK };
 	enum STATES { HASTE, BATTLE, PROTECTOR_ZONE, POISONED, PARALYZED, UPGRADED };

@@ -8,8 +8,8 @@
 class Key {
 public:
 	Key();
-	Key(int codeOfKey);
-	Key(QString keyCodeAsStr);
+	Key(int keyVal);
+	Key(QString keyName);
 	Key(QJsonObject obj);
 
 	int getKeyVal() { return keyVal; };

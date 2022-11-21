@@ -29,9 +29,13 @@ public:
 	static bool saveJsonFile(QString pathToFolder, QString fileNameWithExtension, QJsonDocument& docToSave);
 	QMap<QString, int> readAvaibleKeys();
 
+	QStringList readNamesOfAllSavedProfiles();
 	void saveProfiles(Profile* prof);
 	Profile loadProfiles(QString profileName);
-	void deleteProfileFile(QString profileName) {};
+	void deleteProfileFile(QString profileName) {
+		QString profileFileName = profileName + ".json";
+		QDir(pathToProfileFolder).remove(profileFileName);
+	};
 	QStringList getNamesOfHealingPotsAndSpellsForProf(Profession profession) {
 		QList<Potion> potions;
 		QList<Utilities::Spell> spells;

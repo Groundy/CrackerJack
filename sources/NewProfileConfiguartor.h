@@ -32,6 +32,7 @@ public slots:
 	void controlsOrAutoLootListAction();
 	void professionChanged();
 
+	void fillFormsFromDataFromProf(Profile& profToEdit);
 private:
 	struct GuiPointers {
 		QVector<QAbstractSlider*> sliders;
@@ -61,8 +62,7 @@ private:
 	void fillSlidersGroup(GuiPointers guiPointers, QList<RestorationMethode> stucts);
 	void fillRestoriationMethodes(Profession prof, GuiPointers& guiPointers);
 	void counterChanged(GuiPointers guiPointers);
-	void fillFormsFromDataFromProf(const Profile& profToEdit);
-	QList<RestorationStruct> getRestorationMethodesFromGUI(GuiPointers guiPotiners);
+	QList<RestorationMethode> getRestorationMethodesFromGUI(GuiPointers guiPotiners);
 	Profession getSelectedProf();
 	void fillGuiPtrs();
 };

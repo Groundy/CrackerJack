@@ -229,10 +229,16 @@ void NewProfileConfiguartor::fillSlidersGroup(GuiPointers guiPointers, QList<Res
 	int size = restorationsMethodes.size();
 	guiPointers.activeElementsCounter->setValue(size);
 	for (size_t i = 0; i < size; i++){
-		RestorationStruct* current = &restorationsMethodes[i];
-		guiPointers.keyShortCuts[i]->setCurrentText(current->getKeyName());
-		guiPointers.methodeNames[i]->setCurrentText(current->getName());
+		RestorationMethode* current = &restorationsMethodes[i];
 		guiPointers.sliders[i]->setValue(current->getThreshold());
+
+		auto keyBox = guiPointers.keyShortCuts[i];
+		int keyIndex = keyBox->findText(current->getKeyName());
+		keyBox->setCurrentIndex(keyIndex);
+
+		auto methodeBox = guiPointers.methodeNames[i];
+		int methodeIndex = methodeBox->findText(current->getName());
+		methodeBox->setCurrentIndex(methodeIndex);
 	}
 }
 void NewProfileConfiguartor::fillRestoriationMethodes(Profession profession, GuiPointers& guiPointers){
@@ -340,8 +346,14 @@ void NewProfileConfiguartor::counterChanged(GuiPointers guiPointers){
 		}
 	}
 }
-void NewProfileConfiguartor::fillFormsFromDataFromProf(const Profile& profToEdit){
-	ui->_1_nameEdit->setText(profToEdit.profileName); 
+void NewProfileConfiguartor::fillFormsFromDataFromProf(Profile& profToEdit){
+	ui->_1_nameEdit->setText(profToEdit.profileName);
+
+	auto profComboBox = ui->professionCombBox;
+	QString professionName = profToEdit.profession.getTypeName();
+	int professionIndex = profComboBox->findText(professionName);
+	profComboBox->setCurrentIndex(professionIndex);
+
 	fillSlidersGroup(healthPtrs, profToEdit.healthRestorations);
 	fillSlidersGroup(manaPtrs, profToEdit.manaRestorations);
 
