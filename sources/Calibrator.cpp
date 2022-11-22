@@ -1,8 +1,6 @@
 #include "Calibrator.h"
-Calibrator::Calibrator(QImage& fullScreenImg, VariablesClass& varClass, Profile* profileToPass){
-	var = &varClass;
-	fullScreen = &fullScreenImg;
-	profile = profileToPass;
+Calibrator::Calibrator(QImage& fullScreen, std::shared_ptr<VariablesClass> var, Profile* profile) :
+	var(var), profile(profile), fullScreen(&fullScreen){
 }
 
 Calibrator::~Calibrator()
@@ -37,7 +35,7 @@ void Calibrator::getMapWithPotionsImgCodes(QMap<QString, QString>& name_code_lig
 	name_code_dark.insert("Great Health Potion", "17_2_#41#2#0_#15#1#0_#51#2#0_#32#2#0_#59#1#0_#61#1#0_#68#1#0_#66#1#0_#74#10#12_#72#1#0_#72#31#38_#73#10#12_#70#26#31_#65#17#20_#47#2#0_#49#11#12_#55#1#0_#48#1#0_#51#1#0_#59#2#0_#43#2#0_#48#2#0_#44#2#0_#37#3#0_#44#2#0_#41#2#0_#45#1#0_#42#2#0_#44#1#0_#44#1#0_#35#1#0_#32#1#0_#35#1#0_#30#1#0_");
 }
 
-int Calibrator::fillRectWithPotsInVarClass(QImage& fullscreen, QStringList nameOfPotionsToLookFor) {
+bool Calibrator::fillRectWithPotsInVarClass(QImage& fullscreen, QStringList nameOfPotionsToLookFor) {
 	QStringList foundPotions;
 	QList<QRect> rectsWithPotions;
 	findPotionsOnBottomBar(nameOfPotionsToLookFor, foundPotions, rectsWithPotions, fullscreen);
@@ -49,7 +47,7 @@ int Calibrator::fillRectWithPotsInVarClass(QImage& fullscreen, QStringList nameO
 			allPotionsFound = false;
 	}
 	if (!allPotionsFound)
-		return NOT_ALL_POTS_FOUND;
+		return false;
 
 	for (size_t i = 0; i < rectsWithPotions.size(); i++) {
 		QRect rectToAdd = rectsWithPotions[i];
@@ -57,7 +55,7 @@ int Calibrator::fillRectWithPotsInVarClass(QImage& fullscreen, QStringList nameO
 		var->potionName_rectPosOnScreen_map[nameOfPot] = rectToAdd;//[CHANGE]
 	}
 
-	return OK;
+	return true;
 }
 
 QList<QPoint> Calibrator::findStartPositionInImg_mulitpeImgs(QList<QImage*> imgsToFind, QImage& imgToShareWithin) {
@@ -270,31 +268,30 @@ QList<QPoint> Calibrator::findStartPositionInImg(const QImage& imgToFind, const 
 	return startPointsListToRet;
 }
 
-int Calibrator::calibrateManaAndHealthBar(){
+bool Calibrator::calibrateManaAndHealthBar(){
 	QList<QRect> importantRectangles;
 	bool sucessfullyRead = getRectsFromProfile(importantRectangles);
 	bool readValuesAreWrong = false;
 
 	if(sucessfullyRead) {
-		ERR res = (ERR)categorizeWindows(*fullScreen, importantRectangles);
-		if (res == OK)
-			return OK;
+		bool resultOk = categorizeWindows(*fullScreen, importantRectangles);
+		if (resultOk)
+			return true;
 		else
 			readValuesAreWrong = true;
 	}
 	bool scan = !sucessfullyRead || readValuesAreWrong;
 	if(scan){
-		ERR res = (ERR)findWindowsOnScreen(*this->fullScreen, importantRectangles);
-		if (res == OK) {
-			ERR res2 = (ERR)categorizeWindows(*fullScreen, importantRectangles);
-			ERR toRet = res2 == OK ? OK : res;
-			return toRet;
+		bool resultOk = findWindowsOnScreen(*this->fullScreen, importantRectangles);
+		if (resultOk) {
+			bool result2Ok = categorizeWindows(*fullScreen, importantRectangles);
+			return result2Ok;
 		}
 	}
-	return UNDEFINED_ERR;
+	return false;
 }
 
-int Calibrator::findIndexesOfRectangleThatContainsSlashes(QImage& fullScreen, QList<QRect> importantFrames, QList<int>& indexesOfFramesWithSlashesVert, QList<int>& indexesOfFramesWithSlashesHor, int& indexOfFrameCombined) {
+bool Calibrator::findIndexesOfRectangleThatContainsSlashes(QImage& fullScreen, QList<QRect> importantFrames, QList<int>& indexesOfFramesWithSlashesVert, QList<int>& indexesOfFramesWithSlashesHor, int& indexOfFrameCombined) {
 	QImage vertSlashes = ImgEditor::fromCharToImg(QChar(47));
 	QImage horSlashes = ImgEditor::fromCharToImg(QChar(92));
 	QList<int> indexesVert, indexesHor;
@@ -319,167 +316,40 @@ int Calibrator::findIndexesOfRectangleThatContainsSlashes(QImage& fullScreen, QL
 			indexesHor.push_back(i);
 		}
 	}
-	bool noSlashesFound = indexesVert.size() == 0 && indexesHor.size() == 0;
-	if (noSlashesFound)
-		return NO_SLASHES_FOUND_IN_GAME_SCREEN;
-	else {
+
+	bool slashesFound = (indexesVert.size() + indexesHor.size()) >= 2;
+	if (slashesFound) {
 		indexesOfFramesWithSlashesHor = indexesHor;
 		indexesOfFramesWithSlashesVert = indexesVert;
-		return OK;
+		return true;
 	}
+	else
+		return false;
 }
 
-void Calibrator::sortByXAndYPoints(QList<QPoint>& points, QList<QPoint>& pointsSortedByX, QList<QPoint>& pointsSortedByY) {
-	QMap<int, int> sortedByX; //x is key
-	QMap<int, int> sortedByY; //y is key
-	QList<QPoint> copyOfInput = points;
-	for each (QPoint var in copyOfInput) {
-		sortedByX.insert(var.x(), var.y());
-		sortedByY.insert(var.y(), var.x());//inverted order of XY
-	}
-	QList<QPoint>sortedByXToRet;
-	QList<QPoint>sortedByYToRet;
-	for (auto mapEle : sortedByX.keys()) {
-		int x = mapEle;
-		int y = sortedByX.value(mapEle);
-		sortedByXToRet.push_back(QPoint(x, y));
-	}
-	for (auto mapEle : sortedByY.keys()) {
-		int y = mapEle;
-		int x = sortedByY.value(mapEle);
-		sortedByYToRet.push_back(QPoint(x, y));
-	}
-
-	//it's possibility that two points in vector have diffrent one of cordinates but
-	//second cordinate differ by few pixels, next part of fun is designed to
-	//make set for both cordinates the same value
-	bool fixPoints = true; //turn on/off that fixing
-	if (fixPoints) {
-		bool needToReWriteLists = false;
-		const int MAX_DIFFRENCE_IN_PIXELS = 4;
-		for (int i = 1; i < sortedByXToRet.size(); i++) {
-			bool areTheSame = sortedByXToRet[i].x() - sortedByXToRet[i - 1].x() <= MAX_DIFFRENCE_IN_PIXELS;
-			if (areTheSame) {
-				needToReWriteLists = true;
-				int toSet = sortedByXToRet[i - 1].x();
-				sortedByXToRet[i].setX(toSet);
-				//making the same change in second container
-				int yValueOfmodifiedPoint = sortedByXToRet[i].y();
-				for (QPoint& point : sortedByYToRet) {
-					if (point.y() == yValueOfmodifiedPoint)
-						point.setX(toSet);
-				}
-			}
-		}
-		for (int i = 1; i < sortedByYToRet.size(); i++) {
-			bool areTheSame = sortedByYToRet[i].y() - sortedByYToRet[i - 1].y() <= MAX_DIFFRENCE_IN_PIXELS;
-			if (areTheSame) {
-				needToReWriteLists = true;
-				int toSet = sortedByYToRet[i - 1].y();
-				sortedByYToRet[i].setY(toSet);
-				int xValueOfmodifiedPoint = sortedByYToRet[i].x();
-				for (QPoint& point : sortedByXToRet) {
-					if (point.x() == xValueOfmodifiedPoint)
-						point.setY(toSet);
-				}
-			}
-		}
-		if (needToReWriteLists) {
-			//ReWriting begining of fun to eliminate duplicates
-			QMap<int, int> sortedByX_TMP; //x is key
-			QMap<int, int> sortedByY_TMP; //y is key
-			QList<QPoint> copyOfInput = points;
-
-			for each (QPoint var in sortedByXToRet)
-				sortedByX_TMP.insert(var.x(), var.y());
-
-			for each (QPoint var in sortedByYToRet)
-				sortedByY_TMP.insert(var.y(), var.x());//inverted order
-
-			QList<QPoint>sortedByXToRet_TMP;
-			QList<QPoint>sortedByYToRet_TMP;
-			for (auto mapEle : sortedByX_TMP.keys()) {
-				int x = mapEle;
-				int y = sortedByX.value(mapEle);
-				sortedByXToRet_TMP.push_back(QPoint(x, y));
-			}
-			for (auto mapEle : sortedByY_TMP.keys()) {
-				int y = mapEle;
-				int x = sortedByY.value(mapEle);
-				sortedByYToRet_TMP.push_back(QPoint(x, y));
-			}
-			pointsSortedByX = sortedByXToRet_TMP;
-			pointsSortedByY = sortedByYToRet_TMP;
-			return;
-		}//end of rewriting
-	}//end of slightly correcting
-
-	pointsSortedByX = sortedByXToRet;
-	pointsSortedByY = sortedByYToRet;
-}
-
-int Calibrator::sortByXAndYRects(QList<QRect>& inputRects, QList<QRect>& rectsSortedByPosX, QList<QRect>& rectsSortedByPosY) {
-	if (inputRects.size() == 0)
-		return UNDEFINED_ERR;
-
-	QList<QRect> sortedByX, sortedByY;
-	sortedByX.push_back(inputRects[0]);
-	sortedByY.push_back(inputRects[0]);
-
-	for (int i = 1; i < inputRects.size(); i++) {
-		QRect rect = inputRects[i];
-		int startPosX = rect.x();
-		int startPosY = rect.y();
-
-		int indexToInsertNewElement_X = -1;
-		int indexToInsertNewElement_Y = -1;
-
-		int size = sortedByX.size();
-		for (int i = 0; i < size; i++) {
-			if (startPosX <= sortedByX[i].x()) {
-				indexToInsertNewElement_X = i;
-				break;
-			}
-		}
-		for (int i = 0; i < size; i++) {
-			if (startPosY <= sortedByY[i].y()) {
-				indexToInsertNewElement_Y = i;
-				break;
-			}
-		}
-		if (indexToInsertNewElement_X == -1)
-			indexToInsertNewElement_X = size;
-		if (indexToInsertNewElement_Y == -1)
-			indexToInsertNewElement_Y = size;
-		sortedByX.insert(indexToInsertNewElement_X, rect);
-		sortedByY.insert(indexToInsertNewElement_Y, rect);
-	}
-	rectsSortedByPosX = sortedByX;
-	rectsSortedByPosY = sortedByY;
-	return OK;
-}
-
-int Calibrator::setPositionHealthImgs(QImage& fullscreen, QList<QRect> listOfImportantRectangles, int& indexOfHealth, int& indexOfMana, int& indexOfManaShield, int& indexOfManaAndManaShieldCombined, int& howTheyShouldBeRotated) {
+bool Calibrator::setPositionHealthImgs(QImage& fullscreen, QList<QRect> listOfImportantRectangles, int& indexOfHealth, int& indexOfMana, int& indexOfManaShield, int& indexOfManaAndManaShieldCombined, int& howTheyShouldBeRotated) {
 	QList<int> indexesOfRectWithSlashVert;
 	QList<int> indexesOfRectWithSlashHor;
 	int indexOfFrameWithManaShieldAndMana;
 	findIndexesOfRectangleThatContainsSlashes(fullscreen, listOfImportantRectangles, indexesOfRectWithSlashVert, indexesOfRectWithSlashHor, indexOfFrameWithManaShieldAndMana);
-	
 	{
 		enum positionsOfInterface { TOP, RIGHT, DOWN, LEFT };
 		positionsOfInterface position;
 		QPoint midOfScreen(fullscreen.width() / 2, fullscreen.height() / 2);
 
+		bool slashesFoundInGameScreen = false;
 		if (indexesOfRectWithSlashVert.size() != 0) {
 			QRect first = listOfImportantRectangles[indexesOfRectWithSlashVert[0]];
 			position = first.x() < midOfScreen.x() ? LEFT : RIGHT;
+			slashesFoundInGameScreen = true;
 		}
 		else if (indexesOfRectWithSlashHor.size() != 0) {
 			QRect first = listOfImportantRectangles[indexesOfRectWithSlashHor[0]];
 			position = first.y() < midOfScreen.y() ? TOP : DOWN;
+			slashesFoundInGameScreen = true;
 		}
-		else
-			return NO_SLASHES_FOUND_IN_GAME_SCREEN;
+		if (!slashesFoundInGameScreen)
+			return false;
 
 
 		bool combined = indexOfFrameWithManaShieldAndMana != -1;
@@ -490,7 +360,7 @@ int Calibrator::setPositionHealthImgs(QImage& fullscreen, QList<QRect> listOfImp
 			QList<QRect> sortedByX, sortedByY, rectangles;
 			for each (int var in indexesOfRectWithSlashHor)
 				rectangles.push_back(listOfImportantRectangles[var]);
-			sortByXAndYRects(rectangles, sortedByX, sortedByY);
+			sortByXY(rectangles, sortedByX, sortedByY);
 
 			if (combined && size == 2) {
 				bool isParallelStyle = sortedByY[0].y() != sortedByY[1].y();
@@ -510,7 +380,7 @@ int Calibrator::setPositionHealthImgs(QImage& fullscreen, QList<QRect> listOfImp
 			else if (!combined && size == 3) {
 				indexOfHealth = listOfImportantRectangles.indexOf(sortedByX[0]);
 				rectangles.removeOne(sortedByX[0]);
-				sortByXAndYRects(rectangles, sortedByX, sortedByY);
+				sortByXY(rectangles, sortedByX, sortedByY);
 				indexOfMana = listOfImportantRectangles.indexOf(sortedByY[0]);
 				indexOfManaShield = listOfImportantRectangles.indexOf(sortedByY[1]);
 				indexOfManaAndManaShieldCombined = -1;
@@ -528,9 +398,8 @@ int Calibrator::setPositionHealthImgs(QImage& fullscreen, QList<QRect> listOfImp
 					indexOfMana = listOfImportantRectangles.indexOf(sortedByY[1]);
 				}
 			}
-			else {
-				return ERROR_IN_SETTING_POSITION_OF_INTERFACE;
-			}
+			else
+				return false;
 
 			for each (QRect var in sortedByX)
 				listOfImportantRectangles.removeOne(var);
@@ -543,7 +412,7 @@ int Calibrator::setPositionHealthImgs(QImage& fullscreen, QList<QRect> listOfImp
 			QList<QRect> sortedByX, sortedByY, rectangles;
 			for each (int var in indexesOfRectWithSlashVert)
 				rectangles.push_back(listOfImportantRectangles[var]);
-			sortByXAndYRects(rectangles, sortedByX, sortedByY);
+			sortByXY(rectangles, sortedByX, sortedByY);
 
 			if (size == 2 && !combined) {
 				//no mana shield
@@ -577,7 +446,7 @@ int Calibrator::setPositionHealthImgs(QImage& fullscreen, QList<QRect> listOfImp
 				indexOfManaAndManaShieldCombined = -1;
 			}
 			else
-				return ERROR_IN_SETTING_POSITION_OF_INTERFACE;
+				return false;
 
 			for each (QRect var in sortedByX)
 				listOfImportantRectangles.removeOne(var);
@@ -591,7 +460,7 @@ int Calibrator::setPositionHealthImgs(QImage& fullscreen, QList<QRect> listOfImp
 			for each (int var in indexesOfRectWithSlashVert)
 				rectangles.push_back(listOfImportantRectangles[var]);
 
-			sortByXAndYRects(rectangles, sortedByX, sortedByY);
+			sortByXY(rectangles, sortedByX, sortedByY);
 			if (size == 2 && !combined) {//no mana shield
 				bool isParallelStyle = sortedByY[0].y() == sortedByY[1].y();
 
@@ -622,7 +491,7 @@ int Calibrator::setPositionHealthImgs(QImage& fullscreen, QList<QRect> listOfImp
 				indexOfManaShield = listOfImportantRectangles.indexOf(sortedByX[0]);
 			}
 			else {
-				return ERROR_IN_SETTING_POSITION_OF_INTERFACE;
+				return false;
 			}
 
 			for each (QRect var in sortedByX)
@@ -631,19 +500,18 @@ int Calibrator::setPositionHealthImgs(QImage& fullscreen, QList<QRect> listOfImp
 			break;
 		};
 		default: {
-			return ERROR_IN_SETTING_POSITION_OF_INTERFACE;
-			break;
+			return false;
 		}
 		}
 	}
 
-	return OK;
+	return true;
 }
 
-int Calibrator::categorizeWindows(QImage& fullscreen, QList<QRect>& importantRectangles) {
+bool Calibrator::categorizeWindows(QImage& fullscreen, QList<QRect>& importantRectangles) {
 	//4 cause 1-minimap 2-gameScreen 3-health 4-mana, those 4 have to be found
 	if (importantRectangles.size() < 4)
-		return NO_ENOUGH_FRAMES_FOUND;
+		return false;
 
 	//game Frame
 	{
@@ -675,7 +543,7 @@ int Calibrator::categorizeWindows(QImage& fullscreen, QList<QRect>& importantRec
 
 		bool enoughFramesFound = healthFound && (manaFound || combinedBoxFound);
 		if (!enoughFramesFound)
-			return ERROR_IN_SETTING_POSITION_OF_INTERFACE;
+			return false;
 
 		bool deleteHelath = false, deleteMana = false, deleteManaShield = false, deleteCombined = false;
 		if (healthFound) {
@@ -716,10 +584,10 @@ int Calibrator::categorizeWindows(QImage& fullscreen, QList<QRect>& importantRec
 		importantRectangles.removeOne(miniMapRect);
 	}
 
-	return OK;
+	return true;
 }
 
-int Calibrator::findWindowsOnScreen(QImage& fullScreen, QList<QRect>& importantRectangles) {
+bool Calibrator::findWindowsOnScreen(QImage& fullScreen, QList<QRect>& importantRectangles) {
 	const int WIDTH = fullScreen.width();
 	const int HEIGHT = fullScreen.height();
 	const uint BLACK_PIX_COL = qRgb(0, 0, 0);
@@ -791,9 +659,7 @@ int Calibrator::findWindowsOnScreen(QImage& fullScreen, QList<QRect>& importantR
 	}
 
 	importantRectangles = frameToRet;
-
-	ERR toRet = frameToRet.size() >= 4 ? OK : NO_FRAMES_FOUND;
-	return toRet;
+	return frameToRet.size() >= 4;
 }
 
 void Calibrator::TEST_setPositionHealthImhs(QString pathToFolderWithDiffrentPositionsStylesScreen, QString pathToOutPutFolder) {

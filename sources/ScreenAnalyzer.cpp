@@ -29,7 +29,7 @@ void ScreenAnalyzer::run() {
 		ERROR_CODE openCorrectly = (ERROR_CODE)loadScreen(img);
 		if (openCorrectly != OK)
 			continue;
-		Calibrator calibrator(img, *var, profile);
+		Calibrator calibrator(img, var, profile);
 		int retCode = calibrator.calibrateManaAndHealthBar();
 		if (retCode != OK)
 			continue;
