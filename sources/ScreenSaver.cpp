@@ -27,7 +27,7 @@ void ScreenSaver::sendScreenRequestToGame(){
 
 void ScreenSaver::threadLoop(){
 	while (true){
-		msleep(timeBetweenScreensMS);
+		msleep(SLEEP_TIME);
 		if (!var->checkTakingScreensState())
 			continue;
 		sendScreenRequestToGame();

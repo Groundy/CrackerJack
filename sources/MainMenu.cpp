@@ -6,7 +6,7 @@ MainMenu::MainMenu(Profile* selectedProf, QWidget* parent)
 	ui = new Ui::MainMenu();
 	ui->setupUi(this);
 	var = std::shared_ptr<VariablesClass>(new VariablesClass());
-	gameConnector = std::shared_ptr<GameConnecter>(new GameConnecter(this));
+	gameConnector = std::shared_ptr<GameConnecter>(new GameConnecter(this, var));
 	ui->profileNameLabel->setText(prof->getName());
 	threadStarter();
 	signalSlotConnector();
@@ -91,10 +91,10 @@ void MainMenu::threadStarter(){
 	activityThread = new ActiveGameThread(this, var);
 	activityThread->start();
 
-	/*
+
 	screenSaverThread = new ScreenSaver(this, var, gameConnector, prof);
 	screenSaverThread->start();
-
+	/*
 	screenAnalyzer = new ScreenAnalyzer(this, var, prof);
 	screenAnalyzer->start();
 

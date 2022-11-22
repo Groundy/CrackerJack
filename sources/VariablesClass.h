@@ -79,6 +79,8 @@ public:
 	void setPid(uint newPid) { pid = newPid; }
 	QString getNameOfGameWindow() { return nameOfGameWindow; }
 	void setNameOfGameWindow(QString newNameOfGameWindow) { nameOfGameWindow = newNameOfGameWindow; }
+	HWND getHandlerToGameThread() { return handlerToGameThread; }
+	void setHandlerToGameThread(HWND newHandlerToGameThread) { handlerToGameThread = newHandlerToGameThread; }
 
 private:
 	std::mutex fullImgMutex;
@@ -88,5 +90,6 @@ private:
 	std::atomic<bool> keepRestoringManaAngHealth;
 	std::atomic<bool> keepTakingScreenShots;
 	std::atomic<uint> pid;
+	std::atomic<HWND> handlerToGameThread;
 	QString nameOfGameWindow;
 };

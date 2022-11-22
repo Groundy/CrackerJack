@@ -28,6 +28,7 @@ private:
 	const QString GAME_BROWESER_TITLE = "Tibia - Free Multiplayer Online Role Playing Game";
 	const uint SLEEP_TIME = 1234;
 	std::shared_ptr<VariablesClass> var;
+	HWND previousGameHandler = 0;
 
 	uint getGamePid(QMap<QString, unsigned int>& processes);
 	QString getGameWindowTitile();
@@ -39,4 +40,5 @@ private:
 		bool good = connect(this, signal, parent, slot);
 	}
 	int windowIsAccessible(unsigned int PID, QString windowTitle);
+	HWND getHandlerToGameWindow(unsigned int PID, QString WindowName);
 };

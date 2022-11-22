@@ -58,6 +58,7 @@ void SelectProfileWindow::selectListAction(){
 }
 void SelectProfileWindow::profSelected(){
 	QString profName = getSelectedProfName();
+	*profileToBeChoosen = JsonParser().loadProfiles(profName);
 	this->accept();
 }
 

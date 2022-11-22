@@ -85,7 +85,10 @@ int ActiveGameThread::checkGameState(){
         if (windowTitle.isEmpty())
             throw std::exception("Can't get GameWindowTitle");
         int gameWinState = windowIsAccessible(PID, windowTitle);
-        if (gameWinState == ACTIVE) {
+        if (gameWinState == ACTIVE) {     
+            HWND handlerToGameThread = getHandlerToGameWindow(PID, windowTitle);
+            if (handlerToGameThread != previousGameHandler)
+                var->setHandlerToGameThread(handlerToGameThread);
             if (var->getNameOfGameWindow() != windowTitle)
                 var->setNameOfGameWindow(windowTitle);
             if (var->getPid() != PID)
@@ -117,5 +120,22 @@ QMap<QString, unsigned int> ActiveGameThread::getListOfRunningProcess() {
         CloseHandle(hSnapshot);
     }
     return toRet;
+}
+HWND ActiveGameThread::getHandlerToGameWindow(unsigned int PID, QString WindowName) {
+    LPCWSTR nameOfWindowLPCWSTR = (const wchar_t*)WindowName.utf16();
+    HWND handler = FindWindow(NULL, nameOfWindowLPCWSTR);
+    if (handler == NULL) {
+        Logger::logPotenialBug("Can't get handler to window: " + WindowName, "Utilities", "clickRight");
+        return HWND();
+    }
+    DWORD tmp = PID;
+    DWORD hThread = GetWindowThreadProcessId(handler, &tmp);
+
+    if (hThread != NULL)
+        return handler;
+    else {
+        Logger::logPotenialBug("Can't get thread PID for used handler", "Utilities", "clickRight");
+        return HWND();
+    }
 }
 
