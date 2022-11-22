@@ -58,13 +58,13 @@ Profile::Profile(const Profile& profile) {
 	this->screenShotKey = profile.screenShotKey;
 }
 
-QJsonObject Profile::toJson(){
+QJsonObject Profile::toJson() const{
 	QJsonObject mainObj;
 	QJsonArray healthArray, manaArray;
 	for each (auto var in healthRestorations)
-		healthArray.push_back(var.toJsonObj());
+		healthArray.push_back(var.toJson());
 	for each (auto var in manaRestorations)
-		manaArray.push_back(var.toJsonObj());
+		manaArray.push_back(var.toJson());
 	
 	mainObj.insert("profileName", profileName);
 	mainObj.insert("profession", profession.getTypeName());

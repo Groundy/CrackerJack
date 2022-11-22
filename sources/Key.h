@@ -3,9 +3,10 @@
 #include <qstring.h>
 #include "qsplitter.h"
 #include "qmap.h"
-#include "Logger.h"
 #include <qjsonobject.h>
-class Key {
+
+#include "JsonClass.h"
+class Key : JsonClass {
 public:
 	static QMap<QString, int> KeysAndCodesMap;
 	static QStringList getListOfAllPossibleKeys();

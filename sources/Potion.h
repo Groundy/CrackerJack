@@ -2,10 +2,10 @@
 #include <qobject.h>
 #include <qjsonvalue.h>
 
-#include "RestorationMethode.h";
+#include "RestorationMethode.h"
 #include "Profession.h"
 #include "Utilities.h"
-class Potion {
+class Potion{
 public:
 	enum class TypeOfPotion { HEALTH, MANA };
 	Potion() {};

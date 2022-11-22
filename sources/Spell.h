@@ -4,6 +4,7 @@
 #include "Utilities.h"
 #include "Profession.h"
 #include "RestorationMethode.h"
+#include "JsonClass.h"
 class Spell
 {
 public:

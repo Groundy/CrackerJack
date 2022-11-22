@@ -2,7 +2,7 @@
 #include <qstring.h>
 
 #include "Key.h"
-
+#include "JsonClass.h"
 class RestoreActionEntity {
 public:
 	enum class EnitityType { POTION, SPELL };
@@ -16,7 +16,7 @@ private:
 	EnitityType type;
 };
 
-class RestorationMethode
+class RestorationMethode : JsonClass
 {
 public:
 	RestorationMethode(int threshold, Key key, QString restorationName) : 
@@ -53,7 +53,7 @@ public:
 		threshold = thresholdToSet;
 		//actionEntity = std::move(entityTmp);
 	}
-	QJsonObject toJsonObj() const { 
+	QJsonObject toJson() const { 
 		QJsonObject mainObj;
 		mainObj.insert("threshold", threshold);
 		mainObj.insert("methodeName", name);

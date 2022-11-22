@@ -13,8 +13,9 @@
 #include "Profession.h"
 #include "RestorationMethode.h"
 #include "Utilities.h"
+#include "JsonClass.h"
 
-class Profile{
+class Profile : JsonClass{
 public:
 	enum AutoLootKey { RIGHT_MOUSE_BUTTON, SHIFT_RIGHT, LEFT_MOUSE_BUTTON };//enable only if controls
 	enum Controls { CLSSIC_CONTROLS, REGULARCONTROLS, LEFT_SMART_CLICK };
@@ -25,7 +26,7 @@ public:
 
 	//funcs()
 	void clearProfile();
-	QJsonObject toJson();
+	QJsonObject toJson() const;
 	QStringList getManaRestorationNames();
 	QStringList getHealthRestorationNames();
 
