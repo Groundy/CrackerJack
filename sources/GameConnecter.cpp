@@ -20,49 +20,6 @@ void GameConnecter::clickRight(QPoint pt) {
 	PostMessage(gameThreadHandler, WM_RBUTTONUP, 4, lParam);
 }
 bool GameConnecter::sendKeyStrokeToProcess(Key key) {
-	/*
-	LPCWSTR nameOfWindowLPCWSTR = (const wchar_t*)var->getNameOfGameWindow().utf16();
-	HWND handler = FindWindow(NULL, nameOfWindowLPCWSTR);
-	if (handler == NULL) {
-		Logger::logPotenialBug("Can't get handler to window: " + var->getNameOfGameWindow(), "Utilities", "sendKeyStrokeToProcess");
-		return false;
-	}
-	DWORD tmp = var->getPid();
-	DWORD hThread = GetWindowThreadProcessId(handler, &tmp);
-
-	if (hThread != NULL) {
-		int g = 0x1470001;
-		PostMessage(handler, WM_KEYDOWN, key.getKeyVal(), g);
-		PostMessage(handler, WM_KEYUP, key.getKeyVal(), g);
-		return true;
-	}
-	else {
-		Logger::logPotenialBug("Can't get thread PID for used handler", "Utilities", "sendKeyStrokeToProcess");
-		return false;
-	}
-	/*
-	/*
-	LPCWSTR nameOfWindowLPCWSTR = (const wchar_t*)nameOfWindow.utf16();
-	HWND handler = FindWindow(NULL, nameOfWindowLPCWSTR);
-	if (handler == NULL) {
-		Logger::logPotenialBug("Can't get handler to window: " + nameOfWindow, "Utilities", "sendKeyStrokeToProcess");
-		return false;
-	}
-	DWORD tmp = PID;
-	DWORD hThread = GetWindowThreadProcessId(handler, &tmp);
-	
-	if (hThread != NULL) {
-		int g = 0x1470001;
-		PostMessage(handler, WM_KEYDOWN, key.getKeyVal(), g);
-		PostMessage(handler, WM_KEYUP, key.getKeyVal(), g);
-		return true;
-	}
-	else {
-		Logger::logPotenialBug("Can't get thread PID for used handler", "Utilities", "sendKeyStrokeToProcess");
-		return false;
-	}
-	*/
-	
 	const int weirdConst = 0x1470001;
 	HWND gameThreadHandler = var->getHandlerToGameThread();
 	PostMessage(gameThreadHandler, WM_KEYDOWN, key.getKeyVal(), weirdConst);
