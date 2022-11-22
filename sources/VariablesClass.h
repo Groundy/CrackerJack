@@ -5,6 +5,7 @@
 #include <basetsd.h>
 #include <atomic>
 class VariablesClass{
+	typedef LONG64 TIME;
 public:
 	struct Frames {
 		QRect gameFrame;
@@ -33,12 +34,12 @@ public:
 	bool newData;
 	
 	//
-	LONG64 lastTimeMethodeUsed_Healing[5];
-	LONG64 lastTimeMethodeUsed_Mana[5];
-	LONG64 lastTimeUsed_spell_healing;
-	LONG64 lastTimeUsed_spell_attack;
-	LONG64 lastTimeUsed_spell_support;
-	LONG64 lastTimeUsed_item;
+	//TIME lastTimeMethodeUsed_Healing[5];
+	//TIME lastTimeMethodeUsed_Mana[5];
+	TIME lastTimeUsed_spell_healing;
+	TIME lastTimeUsed_spell_attack;
+	TIME lastTimeUsed_spell_support;
+	TIME lastTimeUsed_item;
 
 	//
 	QMap<QString, QRect> potionName_rectPosOnScreen_map = getMapWithRects();
@@ -47,4 +48,8 @@ public:
 	static QMap<QString, QRect> getMapWithRects();
 	VariablesClass();
 	~VariablesClass();
+
+
+
+
 };

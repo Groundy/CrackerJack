@@ -61,10 +61,10 @@ private:
 	//funcs
 	void saveDataToProfile();
 	void refreshSlidersLabels(GuiPointers guiPointers);
-	void fillSlidersGroup(GuiPointers guiPointers, QList<RestorationMethode> stucts);
+	void fillSlidersGroup(GuiPointers guiPointers, QVector<RestorationMethode> stucts);
 	void fillRestoriationMethodes(Profession prof, GuiPointers& guiPointers);
 	void counterChanged(GuiPointers guiPointers);
-	QList<RestorationMethode> getRestorationMethodesFromGUI(GuiPointers guiPotiners);
+	QVector<RestorationMethode> getRestorationMethodesFromGUI(GuiPointers guiPotiners);
 	Profession getSelectedProf();
 	void fillGuiPtrs();
 };

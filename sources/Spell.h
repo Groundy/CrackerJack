@@ -3,7 +3,7 @@
 
 #include "Utilities.h"
 #include "Profession.h"
-
+#include "RestorationMethode.h"
 class Spell
 {
 public:
@@ -50,6 +50,10 @@ public:
 		}
 	};
 	~Spell() {};
+	RestoreActionEntity toRestorationEntity() {
+		return RestoreActionEntity(mana, cd, cdGroup, RestoreActionEntity::EnitityType::SPELL);
+	}
+
 	enum class SpellType { Healing, Support, Attack };
 	bool isForProf(const Profession& prof) { return profesUsingSpell.contains(prof); }
 	bool isSpellType(SpellType type) { return spellType == type; }
@@ -65,14 +69,3 @@ private:
 	QString name, incantations;	
 	int mana = 0, cd = 0, cdGroup = 0, soulPoints = 0;
 };
-
-	/*
-	RestorationMethode toRestorationMethode() {
-		toRestorationMethode toRet;
-		toRet.name = this->name;
-		toRet.mana = this->mana;
-		toRet.cd = this->cd;
-		toRet.cdGroup = this->cdGroup;
-		toRet.type = RestoreMethode::TypeOfMethode::SPELL;
-		return toRet;
-	}*/

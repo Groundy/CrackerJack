@@ -12,6 +12,7 @@
 #include "Item.h"
 #include "Profession.h"
 #include "Spell.h"
+#include "Potion.h"
 class JsonParser{
 public:
 	JsonParser();
@@ -19,8 +20,8 @@ public:
 
 	bool openJsonFile(QJsonObject& jsonDoc, QString pathToFile);
 	bool readItemJson(QList<Item>& items);
-	bool getHealthRestoreMethodes(QStringList incantationsAndSpellsList, QList<Utilities::RestoreMethode>& spellsAndPotionsObjects);
-	bool getManaRestoreMethodes(QStringList potionNameList, QList<Item>& potionToReturn);
+	//bool getHealthRestoreMethodes(QStringList incantationsAndSpellsList, QList<Rest>& spellsAndPotionsObjects);
+	bool getManaRestoreMethodes(QStringList potionNameList, QList<Potion>& potionToReturn);
 	bool getItemsFromCategory(QList<Item> &readItems, Item::TYPE_OF_ITEM type);
 	static bool saveJsonFile(QString pathToFolder, QString fileNameWithExtension, QJsonDocument& docToSave);
 	QMap<QString, int> readAvaibleKeys();

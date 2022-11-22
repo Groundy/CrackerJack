@@ -127,9 +127,8 @@ bool JsonParser::readItemJson(QList<Item>& items){
 	else
 		return true;
 }
-
+/*
 bool JsonParser::getHealthRestoreMethodes(QStringList incantationsAndSpellsList, QList<Utilities::RestoreMethode>& spellsAndPotionsObjects) {
-	/*
 	typedef Utilities::RestoreMethode RestoreMethode;
 	QList<Item> potions;
 	QList<Spell> spells;
@@ -172,11 +171,12 @@ bool JsonParser::getHealthRestoreMethodes(QStringList incantationsAndSpellsList,
 	spellsAndPotionsObjects = restoreMethodesToRet;
 	bool allWentGood = incantationsAndSpellsList.size() == restoreMethodesToRet.size();
 	return allWentGood;
-	*/
+
 	return true;
 }
-
-bool JsonParser::getManaRestoreMethodes(QStringList potionNameToBeFound, QList<Item>& potionToReturn){
+*/
+bool JsonParser::getManaRestoreMethodes(QStringList potionNameToBeFound, QList<Potion>& potionToReturn){
+	/*
 	QList<Item> allExistingPotions;
 	getItemsFromCategory(allExistingPotions, Item::TYPE_OF_ITEM::POTIONS);
 
@@ -196,6 +196,7 @@ bool JsonParser::getManaRestoreMethodes(QStringList potionNameToBeFound, QList<I
 	potionToReturn = foundPotions;
 	bool allWentGood = foundPotions.size() == potionNameToBeFound.size();
 	return allWentGood;
+	*/ return true;
 }
 
 bool JsonParser::getItemsFromCategory(QList<Item>& itemsToRet, Item::TYPE_OF_ITEM type){

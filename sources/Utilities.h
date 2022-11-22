@@ -24,13 +24,6 @@ public:
 		LAST_USED_LOGIN,
 		LAST_USED_PROFILE_NAME,
 	};
-	class RestoreMethode {
-	public:
-		enum class TypeOfMethode{ POTION, SPELL };
-		QString name;
-		int mana, cd, cdGroup;
-		TypeOfMethode type;
-	};
 
 	static int showMessageBox(QString title, QString text, QFlags<QMessageBox::StandardButton> buttons);
 	static void showMessageBox_INFO(QString text);

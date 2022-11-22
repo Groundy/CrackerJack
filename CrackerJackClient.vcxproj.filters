@@ -164,6 +164,9 @@
     <QtMoc Include="sources\GameConnecter.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <QtMoc Include="sources\Potion.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="sources\SelectProfileWindow.ui">

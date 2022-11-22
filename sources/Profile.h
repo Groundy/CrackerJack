@@ -34,15 +34,15 @@ public:
 	QString getName() const { return profileName; }
 	void setProfession(Profession profession) { this->profession = profession; }
 	Profession getProfession() const { return profession; }
-	QList<RestorationMethode> getRestMethodesHealth() const { return healthRestorations; };
-	QList<RestorationMethode> getRestMethodesMana() const { return manaRestorations; };
-	void setRestMethodesHealth(QList<RestorationMethode> healthRestMethodes) { this->healthRestorations = healthRestMethodes; }
-	void setRestMethodesMana(QList<RestorationMethode> manaRestMethodes) { this->manaRestorations = manaRestMethodes; }
+	QVector<RestorationMethode> getRestMethodesHealth() const { return healthRestorations; };
+	QVector<RestorationMethode> getRestMethodesMana() const { return manaRestorations; };
+	void setRestMethodesHealth(QVector<RestorationMethode> healthRestMethodes) { this->healthRestorations = healthRestMethodes; }
+	void setRestMethodesMana(QVector<RestorationMethode> manaRestMethodes) { this->manaRestorations = manaRestMethodes; }
 	Key getScreenShotKey() const { return screenShotKey; }
 	void setScreenShotKey(Key key) { this->screenShotKey = key; }
 private:	
-	QList<RestorationMethode> manaRestorations;
-	QList<RestorationMethode> healthRestorations;
+	QVector<RestorationMethode> manaRestorations;
+	QVector<RestorationMethode> healthRestorations;
 	Profession profession;
 	QString profileName;
 	AutoLootKey lootKey;

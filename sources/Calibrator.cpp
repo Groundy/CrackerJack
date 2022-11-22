@@ -791,3 +791,23 @@ bool Calibrator::getRectsFromProfile(QList<QRect>& importRectsFromProf) {
 	return true;
 }
 
+void  Calibrator::sortByXY(QList<QPoint>& points, QList<QPoint>& sortedByX, QList<QPoint>& sortedByY) {
+	QMap<int, QPoint> mapX;
+	QMap<int, QPoint> mapY;
+	for each (QPoint point in points) {
+		mapX.insert(point.x(), point);
+		mapY.insert(point.y(), point);
+	}
+	sortedByX = mapX.values();
+	sortedByY = mapY.values();
+}
+void  Calibrator::sortByXY(QList<QRect>& inputRects, QList<QRect>& sortedByX, QList<QRect>& sortedByY) {
+	QMap<int, QRect> mapX;
+	QMap<int, QRect> mapY;
+	for each (QRect rect in inputRects) {
+		mapX.insert(rect.x(), rect);
+		mapY.insert(rect.y(), rect);
+	}
+	sortedByX = mapX.values();
+	sortedByY = mapY.values();
+}
