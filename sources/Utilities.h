@@ -31,7 +31,6 @@ public:
 
 	static LONG64 getCurrentTimeInMiliSeconds();
 	static QDir getDirWithCrackerJackTmpFolder(FOLDERS_OF_TMP_FOLDER folderType);
-	static void sendStringToGame(QString str, HWND handler);
 	static QMap<FieldsOfIniFile, QString> get_Field_NamesFromIni_map();
 	static QString readFromIniFile(FieldsOfIniFile nameOfField);
 	static void writeIniFile(FieldsOfIniFile nameOfField, QString value);
@@ -55,7 +54,7 @@ public:
 				key = Key("END");
 			else
 				key = Key("F11");
-			gameConnecter->sendKeyStrokeToProcess(key, pid, winTitle);
+			gameConnecter->sendKeyStrokeToProcess(key);
 			Sleep(125 * 100);
 			i++;
 			i = i % 3;

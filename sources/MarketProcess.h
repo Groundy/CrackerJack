@@ -117,7 +117,6 @@ private:
 	Pos pos;
 	std::shared_ptr<VariablesClass> var;
 	QImage currentImg;
-	HWND handlerToGame;
 	const int HEIGH_OF_OFFER_ROW = 16 ;
 	const int HEIGH_OF_OFFER_FIELD = 177;
 	QList<AlreadyPostedOffer> myCurrentOffers_SELL, myCurrentOffers_BUY;

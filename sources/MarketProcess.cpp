@@ -183,25 +183,25 @@ void MarketProcess::mainLoop() {
 		return;
 
 	recalculatePositions(leftTopCorner);
-	gameConnector->clickLeft(pos.myOffer_offerHistory_Button.center(), handlerToGame);
+	gameConnector->clickLeft(pos.myOffer_offerHistory_Button.center());
 	Sleep(1000);
 
 	readAllMyOfferts();
-	gameConnector->clickLeft(pos.Close_ReturnToMarket_Button.center(), handlerToGame);
+	gameConnector->clickLeft(pos.Close_ReturnToMarket_Button.center());
 	Sleep(20);
-	gameConnector->clickLeft(pos.makeOffer_anonymousBox.center(),handlerToGame);
+	gameConnector->clickLeft(pos.makeOffer_anonymousBox.center());
 	for (size_t i = 0; i < userOfferList.size() && loopEnabled; i++) {
 		Offer offer = userOfferList[i];
 		sendTextToDisplay(Actions::LOOKING_FOR_ITEM, offer.itemName);
 		emit paintProgressOnBar(i, userOfferList.size());
 
-		gameConnector->clickLeft(pos.clearItemNameButton.center(), handlerToGame);
+		gameConnector->clickLeft(pos.clearItemNameButton.center());
 		Sleep(100);
-		gameConnector->clickLeft(pos.insertItemNameBar.center(), handlerToGame);
+		gameConnector->clickLeft(pos.insertItemNameBar.center());
 		Sleep(10);
-		Utilities::sendStringToGame(offer.itemName, handlerToGame);
+		gameConnector->sendStringToGame(offer.itemName);
 		Sleep(1000);
-		gameConnector->clickLeft(pos.firstItemOnListOnLeftSide.center(), handlerToGame);
+		gameConnector->clickLeft(pos.firstItemOnListOnLeftSide.center());
 		Sleep(1100);
 		bool breakLoop = false;
 		do {
@@ -416,7 +416,7 @@ void MarketProcess::cancelOffer(QString itemName, Type type){
 			break;
 		}
 	}
-	gameConnector->clickLeft(pos.myOffer_offerHistory_Button.center(), handlerToGame);
+	gameConnector->clickLeft(pos.myOffer_offerHistory_Button.center());
 
 	const int MAX_SCROLL_TIMES = 13;
 	for (int timesScrolled = 0; timesScrolled < MAX_SCROLL_TIMES && loopEnabled; ){
@@ -439,10 +439,10 @@ void MarketProcess::cancelOffer(QString itemName, Type type){
 			}
 		}
 		if (offerFound) {
-			gameConnector->clickLeft(pointWithOffer, handlerToGame);
+			gameConnector->clickLeft(pointWithOffer);
 			QPoint cancelButtonPos = sellType ? pos.myOffersWin_cancelOfferButton_SELL.center() : pos.myOffersWin_cancelOfferButton_BUY.center();
 			Sleep(50);
-			gameConnector->clickLeft(cancelButtonPos, handlerToGame);
+			gameConnector->clickLeft(cancelButtonPos);
 			{
 				QString priceStr = QString::number(offerList->at(indexInListOffer).price);
 				QString amountStr = QString::number(offerList->at(indexInListOffer).amount);
@@ -466,7 +466,7 @@ void MarketProcess::cancelOffer(QString itemName, Type type){
 			appendStrToTradeLog(text);
 		}
 	}
-	gameConnector->clickLeft(pos.Close_ReturnToMarket_Button.center(), handlerToGame);
+	gameConnector->clickLeft(pos.Close_ReturnToMarket_Button.center());
 }
 
 int MarketProcess::howMuchMoneyDoIHave(){
@@ -528,7 +528,7 @@ MarketProcess::TradeAction MarketProcess::decideWhatToDo(int currentCash, int am
 void MarketProcess::scrollDownListOfmyOffers(Type type){
 	QPoint scrollDownPoint = type == Type::SELL ? pos.myOffersWin_goDOWN_SELL.center() : pos.myOffersWin_goDOWN_BUY.center();
 	for (size_t i = 0; i < 8; i++) {
-		gameConnector->clickLeft(scrollDownPoint, handlerToGame);
+		gameConnector->clickLeft(scrollDownPoint);
 		Sleep(20);
 	}
 }
@@ -560,20 +560,20 @@ void MarketProcess::setOffer(Type typeOfOfferToSet, int lastOfferPrice, int cash
 	int howManyItemsICanTrade = (cash / (newPrice * factor));
 	int howManyItemsIShouldTrade = min(offer.amount, howManyItemsICanTrade);
 
-	gameConnector->clickLeft(typeOfPlacedOffer, handlerToGame);
+	gameConnector->clickLeft(typeOfPlacedOffer);
 	Sleep(20);
-	gameConnector->clickLeft(piecePriceBar, handlerToGame);
+	gameConnector->clickLeft(piecePriceBar);
 	Sleep(20);
 	QString priceStr = QString::number(newPrice);
-	Utilities::sendStringToGame(priceStr,handlerToGame);
+	gameConnector->sendStringToGame(priceStr);
 	Sleep(30);
 	for (size_t i = 0; i < howManyItemsIShouldTrade - 1; i++){
-		gameConnector->clickLeft(moreItemsButtonPoint, handlerToGame);
+		gameConnector->clickLeft(moreItemsButtonPoint);
 		Sleep(20);
 	}
 	if (!loopEnabled)
 		return;
-	gameConnector->clickLeft(createOffer, handlerToGame);
+	gameConnector->clickLeft(createOffer);
 	QList<AlreadyPostedOffer>* listPtr = isSellType ? &myCurrentOffers_SELL : &myCurrentOffers_BUY;
 	AlreadyPostedOffer toAdd(modifiedItemName, newPrice, howManyItemsIShouldTrade);
 	listPtr->push_back(toAdd);
@@ -608,11 +608,11 @@ void MarketProcess::buyLastOffer(int currentlyPossesedCash, int priceOfLastOffer
 
 	QPoint pt = pos.moreItems_SELL.center();
 	for (size_t i = 0; i < howManyItemsICanBuy - 1; i++) {
-		gameConnector->clickLeft(pt, handlerToGame);
+		gameConnector->clickLeft(pt);
 		Sleep(20);
 	}
 	pt = pos.acceptOffer_SELL.center();
-	gameConnector->clickLeft(pt, handlerToGame);
+	gameConnector->clickLeft(pt);
 	{
 		QString amountStr = QString::number(howManyItemsICanBuy);
 		QString priceStr = QString::number(priceOfLastOffer_SELL);

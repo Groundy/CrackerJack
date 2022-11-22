@@ -1,38 +1,40 @@
 #include "ScreenSaver.h"
 
-ScreenSaver::ScreenSaver(QObject* parent, std::shared_ptr<VariablesClass> var, std::shared_ptr<GameConnecter> gameConnecter)
-	: QThread(parent), var(var), gameConnecter(gameConnecter){
+ScreenSaver::ScreenSaver(QObject* parent, std::shared_ptr<VariablesClass> var, std::shared_ptr<GameConnecter> gameConnecter, Profile* profile)
+	: QThread(parent), var(var), gameConnecter(gameConnecter), profile(profile){
 }
 
 ScreenSaver::~ScreenSaver(){
 	this->terminate();
 }
 
-
-void ScreenSaver::sendScreenRequestToGame(Key keyCodeForScreen){
-	uint pid = var->var_pidOfGame;
-	QString winTitle = var->var_winTitleOfGame;
-	bool wrongParameters = pid == 0 || winTitle.isEmpty();
-	if (wrongParameters) {
-		Logger::logPotenialBug("Wrong parameters of game(pid or game window title)", "ScreenSaver", "sendScreenRequestToGame");
-		return;
+void ScreenSaver::sendScreenRequestToGame(){
+	try{
+		uint pid = var->getPid();
+		if (pid == 0)
+			throw std::exception("Can't send screenshot key to game, there is no known pid!");
+		QString winTitle = var->getNameOfGameWindow();
+		if (winTitle.isEmpty())
+			throw std::exception("Can't send screenshot key to game, there is no known title of window!");
+		Key key = profile->getScreenShotKey();
+		gameConnecter->sendKeyStrokeToProcess(key);
 	}
-	Key key(keyCodeForScreen);
-	gameConnecter->sendKeyStrokeToProcess(key, pid, winTitle);
+	catch (const std::exception& e){
+		qDebug() << e.what();
+	}
+
 }
 
-void ScreenSaver::screenLoop(){
+void ScreenSaver::threadLoop(){
 	while (true){
-		if (!enableScreenCapture) {
-			msleep(5 * timeBetweenScreens);
+		msleep(timeBetweenScreensMS);
+		if (!var->checkTakingScreensState())
 			continue;
-		}
-		sendScreenRequestToGame(Key("HOME"));
-		msleep(timeBetweenScreens);
+		sendScreenRequestToGame();
 	}
 }
 
 void ScreenSaver::run(){
 	setPriority(QThread::Priority::HighestPriority);
-	screenLoop();
+	threadLoop();
 }

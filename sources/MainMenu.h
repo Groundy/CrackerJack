@@ -1,11 +1,11 @@
 #pragma once
 #include <QDialog>
-#include "memory"
+#include <memory>
+#include <qdatetime.h>
 
 #include "Profile.h"
 #include "ScreenSaver.h"
 #include "activeGameThread.h"
-#include "qdatetime.h"
 #include "VariablesClass.h"
 #include "Utilities.h"
 #include "Key.h"

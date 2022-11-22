@@ -7,14 +7,16 @@
 class GameConnecter  : public QObject
 {
 	Q_OBJECT
-
 public:
 	GameConnecter(QObject *parent);
 	~GameConnecter();
-	void clickLeft(QPoint pt, HWND handler);
-	void clickRight(QPoint pt, HWND handler);
-	bool sendKeyStrokeToProcess(Key key, unsigned int PID, QString WindowName);
+	void clickLeft(QPoint pt);
+	void clickRight(QPoint pt);
+	void sendStringToGame(QString str);
+	bool sendKeyStrokeToProcess(Key key);
 private:
 	HWND gameHandler;
+	unsigned int PID;
 	HWND getHandlerToGameWindow(unsigned int PID, QString WindowName);
+
 };

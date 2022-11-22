@@ -53,8 +53,8 @@ void MainMenu::onGameStateChanged(int state){
 	ui->gameActiveLabel->repaint();
 
 	bool shouldBeActive = state == Type::ACTIVE;
-	this->screenAnalyzer->enableScreenAnalyzer = shouldBeActive;
-	this->screenSaverThread->enableScreenCapture = shouldBeActive;
+	//this->screenAnalyzer->enableScreenAnalyzer = shouldBeActive;
+	this->var->changeTakingScreensState(shouldBeActive);
 	
 }
 
@@ -91,7 +91,8 @@ void MainMenu::threadStarter(){
 	activityThread = new ActiveGameThread(this, var);
 	activityThread->start();
 
-	screenSaverThread = new ScreenSaver(this, var, gameConnector);
+	/*
+	screenSaverThread = new ScreenSaver(this, var, gameConnector, prof);
 	screenSaverThread->start();
 
 	screenAnalyzer = new ScreenAnalyzer(this, var, prof);
@@ -99,9 +100,11 @@ void MainMenu::threadStarter(){
 
 	healthManaStateAnalyzer = new ManaHealthStateAnalyzer(this, prof , var);
 	healthManaStateAnalyzer->start();
+	*/
 }
 
 void MainMenu::signalSlotConnector(){
+	/*
 	QObject *sigSender, *slotRec;
 	const char *sig, *slot;
 	
@@ -123,12 +126,13 @@ void MainMenu::signalSlotConnector(){
 	sig = SIGNAL(sendInfoAboutPotAmountsToGUI(QStringList));
 	slot = SLOT(getAndDisplayPotionAmountInfo(QStringList));
 	bool connectionAccepted_4 = connect(sigSender, sig, slotRec, slot, Qt::UniqueConnection);
+	*/
 }
 
 
 void MainMenu::autoHealAndManaRegCheckBoxChanged() {
 	bool stateOfSwitch = ui->autoManaHealChechBox->isChecked();
-	var->HealthAndManaRestorationShouldBeActive = stateOfSwitch;
+	var->changeRestoringState(stateOfSwitch);
 }
 
 void MainMenu::changeProfileButtonAction(){

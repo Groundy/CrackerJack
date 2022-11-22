@@ -142,8 +142,7 @@ void ScreenAnalyzer::mainLoop(){
 			deleteScreenShotFolder();
 			notifyOtherProcessOfStateOfAnalyzer(true);
 			cutImportantImgsFromWholeScreenAndSendThemToVarClass(img);
-			var->wholeImg = img;
-			var->newData = true;
+			var->setNewImg(img);
 		}
 		else
 			notifyOtherProcessOfStateOfAnalyzer(false);

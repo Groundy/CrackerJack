@@ -193,6 +193,7 @@ int ManaHealthStateAnalyzer::findNearestThresholdIndex(int currentValue, const Q
 			if (currentValue > thresholds[i])
 				return (i == 0) ? 0 : i - 1;
 		}
+		return -1;//not sure
 	}
 	catch (const std::exception& e){
 		qDebug() << e.what();
@@ -225,13 +226,12 @@ bool ManaHealthStateAnalyzer::checkIfEverythingIsCorrectToProcess(){
 }
 
 void ManaHealthStateAnalyzer::writeDataToVariableClass(){
-	float healthInfoToSend = (100.0f * health)/maxHealth;
-	float manaInfoToSend = (100.0f * mana) / maxMana;
-	float manaShieldInfoToSend = (maxManaShield != 0) ? (100.0f * manaShield) / maxManaShield : 0;
-	var->health = healthInfoToSend;
-	var->mana = manaInfoToSend;
-	var->manashield = manaShieldInfoToSend;
-	var->newData = true;
+	double currentHealthPercentage = (100.0f * health)/maxHealth;
+	double currentManaPercentage = (100.0f * mana) / maxMana;
+	double currentMSPercentage = (maxManaShield != 0) ? (100.0f * manaShield) / maxManaShield : 0;
+	var->setCurrentHealthPercentage(currentHealthPercentage);
+	var->setCurrentManaPercentage(currentManaPercentage);
+	var->setCurrentMSPercentage(currentMSPercentage);
 }
 
 void ManaHealthStateAnalyzer::setupRestorationMethodes(QStringList listOfRestorationMethode_Health, QStringList listOfRestorationMethode_Mana){
@@ -326,7 +326,8 @@ void ManaHealthStateAnalyzer::getAmountsOfPotions() {
 	QMap<QString,QRect> map_copy = var->potionName_rectPosOnScreen_map;
 	QList<int> amountOfPots;
 	QStringList namesOfPots;
-	QImage wholeImg = var->wholeImg;
+	QImage wholeImg;
+	var->getCopyOfCurrentFullImg(wholeImg);
 	for each (QString nameOfPot in map_copy.keys()) {
 		QRect rect = map_copy[nameOfPot];
 		if (rect.isEmpty())
