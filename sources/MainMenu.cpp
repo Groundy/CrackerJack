@@ -7,7 +7,7 @@ MainMenu::MainMenu(Profile* selectedProf, QWidget* parent)
 	ui->setupUi(this);
 	var = std::shared_ptr<VariablesClass>(new VariablesClass());
 	gameConnector = std::shared_ptr<GameConnecter>(new GameConnecter(this));
-	ui->profileNameLabel->setText(prof->profileName);
+	ui->profileNameLabel->setText(prof->getName());
 	threadStarter();
 	signalSlotConnector();
 	this->activityThread->exit();

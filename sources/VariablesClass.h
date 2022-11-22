@@ -6,6 +6,7 @@
 #include <atomic>
 class VariablesClass{
 public:
+	enum STATES { HASTE, BATTLE, PROTECTOR_ZONE, POISONED, PARALYZED, UPGRADED };
 	uint var_pidOfGame;
 	QString var_winTitleOfGame;
 

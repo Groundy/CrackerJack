@@ -259,7 +259,7 @@ QStringList JsonParser::readNamesOfAllSavedProfiles(){
 }
 
 void JsonParser::saveProfile(Profile* prof){
-	const QString fileName = prof->profileName + ".json";
+	const QString fileName = prof->getName() + ".json";
 	QJsonDocument docToSave(prof->toJson());
 	saveJsonFile(pathToProfileFolder, fileName, docToSave);
 }

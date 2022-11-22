@@ -191,7 +191,7 @@ void NewProfileConfiguartor::manaSlidersChanged(){
 	refreshSlidersLabels(manaPtrs);
 }
 void NewProfileConfiguartor::controlsOrAutoLootListAction(){
-	bool enableAutoLoot = ui->_5_ControlBox->currentIndex() == Profile::CONTROLS::CLSSIC_CONTROLS;
+	bool enableAutoLoot = ui->_5_ControlBox->currentIndex() == Profile::Controls::CLSSIC_CONTROLS;
 	ui->_5_AutoLootBox->setEnabled(enableAutoLoot);
 	ui->_5_AutoLootBox->setCurrentIndex(0);
 	ui->_5_AutoLootBox->repaint();
@@ -358,19 +358,19 @@ void NewProfileConfiguartor::counterChanged(GuiPointers guiPointers){
 	}
 }
 void NewProfileConfiguartor::fillFormsFromDataFromProf(Profile& profToEdit){
-	ui->_1_nameEdit->setText(profToEdit.profileName);
+	ui->_1_nameEdit->setText(profToEdit.getName());
 
 	auto profComboBox = ui->professionCombBox;
-	QString professionName = profToEdit.profession.getTypeName();
+	QString professionName = profToEdit.getProfession().getTypeName();
 	int professionIndex = profComboBox->findText(professionName);
 	profComboBox->setCurrentIndex(professionIndex);
 
 	auto screenBox = ui->screenShotBox;
-	int screenShotKeyIndex = screenBox->findText(profToEdit.screenShotKey.getKeyName());
+	int screenShotKeyIndex = screenBox->findText(profToEdit.getScreenShotKey().getKeyName());
 	screenBox->setCurrentIndex(screenShotKeyIndex);
 
-	fillSlidersGroup(healthPtrs, profToEdit.healthRestorations);
-	fillSlidersGroup(manaPtrs, profToEdit.manaRestorations);
+	fillSlidersGroup(healthPtrs, profToEdit.getRestMethodesHealth());
+	fillSlidersGroup(manaPtrs, profToEdit.getRestMethodesMana());
 
 	//ToDo fill loot controls loot
 }
@@ -386,10 +386,10 @@ QList<RestorationMethode> NewProfileConfiguartor::getRestorationMethodesFromGUI(
 	return toRet;
 }
 void NewProfileConfiguartor::saveDataToProfile(){
-	profToEdit->profileName = ui->_1_nameEdit->text();
-	profToEdit->profession = getSelectedProf();
-	profToEdit->healthRestorations = getRestorationMethodesFromGUI(healthPtrs);
-	profToEdit->manaRestorations = getRestorationMethodesFromGUI(manaPtrs);
-	profToEdit->screenShotKey = Key(ui->screenShotBox->currentText());
+	profToEdit->setName(ui->_1_nameEdit->text());
+	profToEdit->setProfession(getSelectedProf());
+	profToEdit->setRestMethodesHealth(getRestorationMethodesFromGUI(healthPtrs));
+	profToEdit->setRestMethodesMana(getRestorationMethodesFromGUI(manaPtrs));
+	profToEdit->setScreenShotKey(Key(ui->screenShotBox->currentText()));
 	//todo fill controls loot
 }
