@@ -525,7 +525,7 @@ bool Calibrator::categorizeWindows(QImage& fullscreen, QList<QRect>& importantRe
 				indexOfBiggestWindow = i;
 			}
 		}
-		var->frames.gameFrame = importantRectangles[indexOfBiggestWindow];
+		var->setMainArea(importantRectangles[indexOfBiggestWindow]);
 		importantRectangles.removeAt(indexOfBiggestWindow);
 	}
 
@@ -533,7 +533,7 @@ bool Calibrator::categorizeWindows(QImage& fullscreen, QList<QRect>& importantRe
 	{
 		int indexOfHealth, indexOfMana, indexOfManaShield, howTheyShouldBeRotated, indexOfCombinedBox;
 		setPositionHealthImgs(fullscreen, importantRectangles, indexOfHealth, indexOfMana, indexOfManaShield, indexOfCombinedBox, howTheyShouldBeRotated);
-		var->frames.howTheyShouldBeRotated = howTheyShouldBeRotated;
+		var->setRotation(howTheyShouldBeRotated);
 
 		int size = importantRectangles.size();
 		bool healthFound = indexOfHealth != -1 && indexOfHealth >= 0 && indexOfHealth <= size;
@@ -545,31 +545,27 @@ bool Calibrator::categorizeWindows(QImage& fullscreen, QList<QRect>& importantRe
 		if (!enoughFramesFound)
 			return false;
 
-		bool deleteHelath = false, deleteMana = false, deleteManaShield = false, deleteCombined = false;
+		QVector<QRect> rectsToDelete;
 		if (healthFound) {
-			var->frames.healthFrame = importantRectangles[indexOfHealth];
-			deleteHelath = true;
+			var->setHealthArea(importantRectangles[indexOfHealth]);
+			rectsToDelete.push_back(importantRectangles[indexOfHealth]);
 		}
 
 		if (manaFound) {
-			var->frames.manaFrame = importantRectangles[indexOfMana];
-			deleteHelath = true;
+			var->setManaArea(importantRectangles[indexOfMana]);
+			rectsToDelete.push_back(importantRectangles[indexOfMana]);
 		}
 
 		if (manaShieldFound) {
-			var->frames.manaShieldFrame = importantRectangles[indexOfManaShield];
-			deleteManaShield = true;
+			var-> setMSArea(importantRectangles[indexOfManaShield]);
+			rectsToDelete.push_back(importantRectangles[indexOfManaShield]);
 		}
 
 		if (combinedBoxFound) {
-			var->frames.combinedFrame = importantRectangles[indexOfCombinedBox];
-			deleteCombined = true;
+			var->setCombinedArea(importantRectangles[indexOfCombinedBox]);
+			rectsToDelete.push_back(importantRectangles[indexOfCombinedBox]);
 		}
-		QList<QRect> rectsToDelete;
-		if (deleteHelath) rectsToDelete.push_back(importantRectangles[indexOfHealth]);
-		if (deleteMana) rectsToDelete.push_back(importantRectangles[indexOfMana]);
-		if (deleteManaShield) rectsToDelete.push_back(importantRectangles[indexOfManaShield]);
-		if (deleteCombined) rectsToDelete.push_back(importantRectangles[indexOfCombinedBox]);
+
 		for each (QRect var in rectsToDelete)
 			importantRectangles.removeOne(var);
 	}
@@ -580,7 +576,7 @@ bool Calibrator::categorizeWindows(QImage& fullscreen, QList<QRect>& importantRe
 		for each (QRect var in importantRectangles)
 			startX_Rect_map.insert(var.x(), var);
 		QRect miniMapRect = startX_Rect_map.last();
-		var->frames.miniMapFrame = miniMapRect;
+		var->setMiniMapArea(miniMapRect);
 		importantRectangles.removeOne(miniMapRect);
 	}
 
@@ -758,7 +754,7 @@ void Calibrator::TEST_setPositionHealthImhs(QString pathToFolderWithDiffrentPosi
 
 bool Calibrator::getRectsFromProfile(QList<QRect>& importRectsFromProf) {
 	importRectsFromProf.clear();
-
+	/*
 	//they have to be;
 	bool isEmpty_gameFram = var->frames.gameFrame.isEmpty();
 	bool isEmpty_healthFrame = var->frames.healthFrame.isEmpty();
@@ -789,6 +785,7 @@ bool Calibrator::getRectsFromProfile(QList<QRect>& importRectsFromProf) {
 		importRectsFromProf.push_back(var->frames.manaShieldFrame);
 
 	return true;
+	*/return false;
 }
 
 void  Calibrator::sortByXY(QList<QPoint>& points, QList<QPoint>& sortedByX, QList<QPoint>& sortedByY) {

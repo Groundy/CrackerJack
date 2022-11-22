@@ -94,13 +94,13 @@ void MainMenu::threadStarter(){
 
 	screenSaverThread = new ScreenSaver(this, var, gameConnector, prof);
 	screenSaverThread->start();
-	/*
+	
 	screenAnalyzer = new ScreenAnalyzer(this, var, prof);
 	screenAnalyzer->start();
 
 	healthManaStateAnalyzer = new ManaHealthStateAnalyzer(this, prof , var);
 	healthManaStateAnalyzer->start();
-	*/
+
 }
 
 void MainMenu::signalSlotConnector(){

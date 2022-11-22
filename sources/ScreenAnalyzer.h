@@ -6,6 +6,7 @@
 #include <qmap.h>
 #include <qdebug.h>
 #include <qdatetime.h>
+#include <qdebug.h>
 
 #include "Calibrator.h"
 #include "Profile.h"
@@ -18,33 +19,23 @@ class ScreenAnalyzer : public QThread
 	Q_OBJECT
 
 public:
-	enum ERROR_CODE {
-		OK = 0,
-		UNDEFINED_ERROR = 2,
-		CANT_LOAD_SCREEN_FROM_SCREENSHOT_FOLDER = 4,
-		NO_ENOUGH_FRAMES_FOUND = 8
-	};
-
 	ScreenAnalyzer( QObject *parent, std::shared_ptr<VariablesClass> var, Profile* prof);
 	~ScreenAnalyzer();
 	void run();
+
 	bool enableScreenAnalyzer = true;
-	int loadScreen(QImage& img);
-	void deleteScreenShotFolder();
-signals:
-	void sendAllowenceToAnalyze(bool state);
-private:
-	std::shared_ptr<VariablesClass> var;
-	Profile* profile;
-	int timeBetweenNextCheckingsOfScrennShotFolder = 100;
 	bool isManaHealthClassEnabledToAnalyzeImgs = false;
-
-
+	bool loadScreen(QImage& img);
 	void mainLoop();
-	int cutImportantImgsFromWholeScreenAndSendThemToVarClass(QImage& fullscreen);
+	int cutImportantImgsFromWholeScreenAndSendThemToVarClass(const QImage& fullscreen);
 	QString getNameOfLastTakenScreenShot();
-	int getNameOfLastTakenScreenshotWithTries(QString& toRet, const int maxTries);
+
+private:
+	const int SLEEP_TIME = 50;
+	std::shared_ptr<VariablesClass> var;
 	QDir screenShotFolder;
+	Profile* profile;
+
+	void deleteScreenShotFolder();
 	QDir setUpScreenFolder();
-	void notifyOtherProcessOfStateOfAnalyzer(bool worksGood);
 };

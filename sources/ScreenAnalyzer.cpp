@@ -1,128 +1,61 @@
 #include "ScreenAnalyzer.h"
 
-ScreenAnalyzer::ScreenAnalyzer(QObject *parent, std::shared_ptr<VariablesClass> var, Profile* profToSet)
-	: QThread(parent), var(var){
-	profile = profToSet;
+ScreenAnalyzer::ScreenAnalyzer(QObject *parent, std::shared_ptr<VariablesClass> var, Profile* profile)
+	: QThread(parent), var(var), profile(profile){
 	screenShotFolder = setUpScreenFolder();
-	/*
-	[CHANGE]
-	QStringList listOfPotionNamesToLookFor;
-	QStringList nameOfAllMethodesFromProf;
-	nameOfAllMethodesFromProf.append(prof->healthRestoreMethodeNames);
-	nameOfAllMethodesFromProf.append(prof->manaRestoreMethodeNames);
-	for each (QString var in nameOfAllMethodesFromProf){
-		bool isPotionName = var.contains(QString(" Potion"));
-		if(isPotionName)
-			listOfPotionNamesToLookFor.push_back(var);
-	}
-	*/
+	var->changeLoadingState(true);
 }
 
 ScreenAnalyzer::~ScreenAnalyzer(){
 	this->terminate();
 }
 
-void ScreenAnalyzer::run() {	
-	while (true) {
-		Sleep(1000);
-		QImage img;
-		ERROR_CODE openCorrectly = (ERROR_CODE)loadScreen(img);
-		if (openCorrectly != OK)
-			continue;
-		Calibrator calibrator(img, var, profile);
-		int retCode = calibrator.calibrateManaAndHealthBar();
-		if (retCode != OK)
-			continue;
-		mainLoop();
-	}
+void ScreenAnalyzer::run() {
+	mainLoop();
 }
-
-int ScreenAnalyzer::loadScreen(QImage& img){
-	QString nameOfImgToCapture;
-	ERROR_CODE code = (ERROR_CODE)getNameOfLastTakenScreenshotWithTries(nameOfImgToCapture, 55);
-	if (code != OK)
-		return code;
+bool ScreenAnalyzer::loadScreen(QImage& img){
+	QString nameOfImgToCapture = getNameOfLastTakenScreenShot();
+	if (nameOfImgToCapture.isEmpty())
+		return false;
 	QString pathToImg = screenShotFolder.absoluteFilePath(nameOfImgToCapture);
 	bool openCorrectly = img.load(pathToImg);
-	int toRet = openCorrectly ? OK : CANT_LOAD_SCREEN_FROM_SCREENSHOT_FOLDER;
-	return toRet;
+	return openCorrectly;
 }
-
-
 QString ScreenAnalyzer::getNameOfLastTakenScreenShot(){
-	QStringList filtr = QStringList() << "*_*_*_Hotkey.png";
-	screenShotFolder.refresh();
-	QStringList litOfFIles = screenShotFolder.entryList(filtr, QDir::Files);
-	if (litOfFIles.isEmpty())
+	try{
+		QStringList filtr = QStringList() << "*_*_*_Hotkey.png";
+		screenShotFolder.refresh();
+		QStringList listOfFIlesNames = screenShotFolder.entryList(filtr, QDir::Files);
+		if (listOfFIlesNames.isEmpty())
+			throw std::exception("There is no screenshot file in screenshot folder");
+
+		return listOfFIlesNames[0];
+	}
+	catch (const std::exception& e){
+		qDebug() << e.what();
 		return QString();
-
-
-	QList<long long> listOfOnlyDatesAndTimes;
-	//geting QStrin with last digit of year, 2 digits of month, 2 digits of day
-	//2 digits of hour, 2 digits of minute, 2 of seconds, 3 of miliseconds
-	for each (QString var in litOfFIles)
-		listOfOnlyDatesAndTimes << var.remove("-").remove("_").mid(3,14).toLongLong();
-
-	int index = -1;
-	long long biggestValue = 0;
-	for (int i = 0; i < listOfOnlyDatesAndTimes.size(); i++) {
-		if (listOfOnlyDatesAndTimes[i] > biggestValue) {
-			biggestValue = listOfOnlyDatesAndTimes[i];
-			index = i;
-		}
 	}
-
-	bool indexIsOutOfRange = litOfFIles.size() - 1 < index || index < 0;
-	QString toRet = !indexIsOutOfRange ? litOfFIles[index] : "";
-	return toRet;
 }
-
-int ScreenAnalyzer::getNameOfLastTakenScreenshotWithTries(QString& toRet, const int MAX_TRIES) {
-	for (int tries = 0; tries < MAX_TRIES; tries++) {
-		toRet = getNameOfLastTakenScreenShot();
-		if (!toRet.isEmpty())
-			return ERROR_CODE::OK;
-		else 
-			msleep(100);
-	}
-	Logger::logPotenialBug("No files In screenshot folder", "ScreenAnalyzer", "getNameOfLastTakenScreenShot");
-	return CANT_LOAD_SCREEN_FROM_SCREENSHOT_FOLDER;
-}
-
 QDir ScreenAnalyzer::setUpScreenFolder(){
-	QDir dir = QDir::tempPath();
-	bool ok1 = dir.cdUp();
-	bool ok2 = dir.cd("Tibia");
-	bool ok3 = dir.cd("packages");
-	bool ok4 = dir.cd("Tibia");
-	bool ok5 = dir.cd("screenshots");
-	bool ok = ok1 && ok2 && ok3 && ok4 && ok5;
-	if (ok)
+	try{
+		QDir dir = QDir::tempPath();
+		if (!dir.cdUp())
+			throw std::exception("Error in setting up screenshot folder");
+		if(!dir.cd("Tibia"))
+			throw std::exception(QString("Error in finding screenshot folder, No Tibia folder in : %1").arg(dir.path()).toStdString().c_str());
+		if (!dir.cd("packages"))
+			throw std::exception(QString("Error in finding screenshot folder, No packages folder in : %1").arg(dir.path()).toStdString().c_str());
+		if (!dir.cd("Tibia"))
+			throw std::exception(QString("Error in finding screenshot folder, No Tibia folder in : %1").arg(dir.path()).toStdString().c_str());
+		if (!dir.cd("screenshots"))
+			throw std::exception(QString("Error in finding screenshot folder, No screenshots folder in : %1").arg(dir.path()).toStdString().c_str());
 		return dir;
-	else {
-		QString textToUser = tr("Could not find game screenshot folder.");
-		QString logText = "Could not find game screenshot folder.";
-		Logger::logPotenialBug(logText, "ScreenAnalyzer", "setUpScreenFolder");
-		Utilities::showMessageBox_INFO(textToUser);
+	}
+	catch (const std::exception& e){
+		qDebug() << e.what();
 		return QDir();
 	}
 }
-
-void ScreenAnalyzer::notifyOtherProcessOfStateOfAnalyzer(bool worksGood){
-	if (isManaHealthClassEnabledToAnalyzeImgs && worksGood)
-		;
-	else if (!isManaHealthClassEnabledToAnalyzeImgs && worksGood) {
-		isManaHealthClassEnabledToAnalyzeImgs = true;
-		emit sendAllowenceToAnalyze(true);
-	}
-	else if (isManaHealthClassEnabledToAnalyzeImgs && !worksGood) {
-		isManaHealthClassEnabledToAnalyzeImgs = false;
-		emit sendAllowenceToAnalyze(false);
-	}
-	else if (!isManaHealthClassEnabledToAnalyzeImgs && !worksGood)
-		;
-}
-
 void ScreenAnalyzer::deleteScreenShotFolder(){
 	QStringList filterPatter("*_*_*_Hotkey.png");//yyyy-MM-dd_hhmmsszzzz_CharNick_Methode.png
 	screenShotFolder.setNameFilters(filterPatter);
@@ -132,60 +65,57 @@ void ScreenAnalyzer::deleteScreenShotFolder(){
 	foreach(QString dirFile, namesOfFoundFiles)
 		screenShotFolder.remove(dirFile);
 }
-
 void ScreenAnalyzer::mainLoop(){
-	while (enableScreenAnalyzer){
-		msleep(timeBetweenNextCheckingsOfScrennShotFolder);
+	while (true){
+		msleep(SLEEP_TIME);
+		if (!var->checkLoadingState())
+			continue;
+
 		QImage img;
-		ERROR_CODE openCorrectly = (ERROR_CODE)loadScreen(img);
-		if (openCorrectly == OK) {
-			deleteScreenShotFolder();
-			notifyOtherProcessOfStateOfAnalyzer(true);
-			cutImportantImgsFromWholeScreenAndSendThemToVarClass(img);
-			var->setNewImg(img);
-		}
-		else
-			notifyOtherProcessOfStateOfAnalyzer(false);
+		bool openCorrectly = loadScreen(img);
+		if (!openCorrectly)
+			continue;
+
+		deleteScreenShotFolder();
+		cutImportantImgsFromWholeScreenAndSendThemToVarClass(img);
+		var->setNewImg(img);			
 	}
 }
 
-int ScreenAnalyzer::cutImportantImgsFromWholeScreenAndSendThemToVarClass(QImage& fullscreen){
-	bool healthFrameFound = !var->frames.healthFrame.isEmpty();
-	bool manaFrameFound = !var->frames.manaFrame.isEmpty();
-	bool manaShieldFound = !var->frames.manaShieldFrame.isEmpty();
-	bool combinedBoxFound = !var->frames.combinedFrame.isEmpty();
+int ScreenAnalyzer::cutImportantImgsFromWholeScreenAndSendThemToVarClass(const QImage& fullscreen){
+	bool healthFrameFound = !var->getHealthArea().isEmpty();
+	bool manaFrameFound = !var->getManaArea().isEmpty();
+	bool manaShieldFound = !var->getMSArea().isEmpty();
+	bool combinedBoxFound = !var->getCombinedArea().isEmpty();
 
 	bool notEnoughFramesFound = !((manaFrameFound || combinedBoxFound) && healthFrameFound);
-	if(notEnoughFramesFound)
-		return NO_ENOUGH_FRAMES_FOUND;
+	if (notEnoughFramesFound)
+		return false;
 
+	const int ROTATION = var->getRotation();
 	if (healthFrameFound) {
-		QImage healthValueImg = fullscreen.copy(var->frames.healthFrame);
-		if (var->frames.howTheyShouldBeRotated != 0)
-			ImgEditor::rotateImgToRight(healthValueImg, var->frames.howTheyShouldBeRotated);
-		var->var_healthPieceImg = healthValueImg;
+		QImage healthValueImg = fullscreen.copy(var->getHealthArea());
+		if (ROTATION != 0)
+			ImgEditor::rotateImgToRight(healthValueImg, ROTATION);
+		var->setImageHealth(healthValueImg);
 	}
 	if (manaFrameFound) {
-		QImage manaValueImg = fullscreen.copy(var->frames.manaFrame);
-		if (var->frames.howTheyShouldBeRotated != 0)
-			ImgEditor::rotateImgToRight(manaValueImg, var->frames.howTheyShouldBeRotated);
-		var->var_manaPieceImg = manaValueImg;
+		QImage manaValueImg = fullscreen.copy(var->getManaArea());
+		if (ROTATION != 0)
+			ImgEditor::rotateImgToRight(manaValueImg, ROTATION);
+		var->setImageMana(manaValueImg);
 	}
 	if (manaShieldFound) {
-		QImage manaShieldValueImg = fullscreen.copy(var->frames.manaShieldFrame);
-		if (var->frames.howTheyShouldBeRotated != 0)
-			ImgEditor::rotateImgToRight(manaShieldValueImg, var->frames.howTheyShouldBeRotated);
-		var->var_manaShieldPieceImg = manaShieldValueImg;
+		QImage manaShieldValueImg = fullscreen.copy(var->getMSArea());
+		if (ROTATION != 0)
+			ImgEditor::rotateImgToRight(manaShieldValueImg, ROTATION);
+		var->setImageMS(manaShieldValueImg);
 	}
 	if (combinedBoxFound) {
-		QImage combinedValueImg = fullscreen.copy(var->frames.combinedFrame);
-		if (var->frames.howTheyShouldBeRotated != 0)
-			ImgEditor::rotateImgToRight(combinedValueImg, var->frames.howTheyShouldBeRotated);
-		var->var_combinedBoxPieceImg = combinedValueImg;
+		QImage combinedValueImg = fullscreen.copy(var->getCombinedArea());
+		if (ROTATION != 0)
+			ImgEditor::rotateImgToRight(combinedValueImg, ROTATION);
+		var->setImageCombined(combinedValueImg);
 	}
-	var->healthFound = healthFrameFound;
-	var->manaFound = manaFrameFound;
-	var->manaShieldFound = manaShieldFound;
-	var->combinedFound = combinedBoxFound;
-	return OK;
+	return true;
 }
