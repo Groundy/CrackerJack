@@ -657,7 +657,7 @@ int Calibrator::categorizeWindows(QImage& fullscreen, QList<QRect>& importantRec
 				indexOfBiggestWindow = i;
 			}
 		}
-		profile->frames.gameFrame = importantRectangles[indexOfBiggestWindow];
+		var->frames.gameFrame = importantRectangles[indexOfBiggestWindow];
 		importantRectangles.removeAt(indexOfBiggestWindow);
 	}
 
@@ -665,7 +665,7 @@ int Calibrator::categorizeWindows(QImage& fullscreen, QList<QRect>& importantRec
 	{
 		int indexOfHealth, indexOfMana, indexOfManaShield, howTheyShouldBeRotated, indexOfCombinedBox;
 		setPositionHealthImgs(fullscreen, importantRectangles, indexOfHealth, indexOfMana, indexOfManaShield, indexOfCombinedBox, howTheyShouldBeRotated);
-		profile->frames.howTheyShouldBeRotated = howTheyShouldBeRotated;
+		var->frames.howTheyShouldBeRotated = howTheyShouldBeRotated;
 
 		int size = importantRectangles.size();
 		bool healthFound = indexOfHealth != -1 && indexOfHealth >= 0 && indexOfHealth <= size;
@@ -679,22 +679,22 @@ int Calibrator::categorizeWindows(QImage& fullscreen, QList<QRect>& importantRec
 
 		bool deleteHelath = false, deleteMana = false, deleteManaShield = false, deleteCombined = false;
 		if (healthFound) {
-			profile->frames.healthFrame = importantRectangles[indexOfHealth];
+			var->frames.healthFrame = importantRectangles[indexOfHealth];
 			deleteHelath = true;
 		}
 
 		if (manaFound) {
-			profile->frames.manaFrame = importantRectangles[indexOfMana];
+			var->frames.manaFrame = importantRectangles[indexOfMana];
 			deleteHelath = true;
 		}
 
 		if (manaShieldFound) {
-			profile->frames.manaShieldFrame = importantRectangles[indexOfManaShield];
+			var->frames.manaShieldFrame = importantRectangles[indexOfManaShield];
 			deleteManaShield = true;
 		}
 
 		if (combinedBoxFound) {
-			profile->frames.combinedFrame = importantRectangles[indexOfCombinedBox];
+			var->frames.combinedFrame = importantRectangles[indexOfCombinedBox];
 			deleteCombined = true;
 		}
 		QList<QRect> rectsToDelete;
@@ -712,7 +712,7 @@ int Calibrator::categorizeWindows(QImage& fullscreen, QList<QRect>& importantRec
 		for each (QRect var in importantRectangles)
 			startX_Rect_map.insert(var.x(), var);
 		QRect miniMapRect = startX_Rect_map.last();
-		profile->frames.miniMapFrame = miniMapRect;
+		var->frames.miniMapFrame = miniMapRect;
 		importantRectangles.removeOne(miniMapRect);
 	}
 
@@ -894,33 +894,33 @@ bool Calibrator::getRectsFromProfile(QList<QRect>& importRectsFromProf) {
 	importRectsFromProf.clear();
 
 	//they have to be;
-	bool isEmpty_gameFram = profile->frames.gameFrame.isEmpty();
-	bool isEmpty_healthFrame = profile->frames.healthFrame.isEmpty();
-	bool isEmpty_minimapFrame = profile->frames.miniMapFrame.isEmpty();
+	bool isEmpty_gameFram = var->frames.gameFrame.isEmpty();
+	bool isEmpty_healthFrame = var->frames.healthFrame.isEmpty();
+	bool isEmpty_minimapFrame = var->frames.miniMapFrame.isEmpty();
 
 	if (isEmpty_gameFram || isEmpty_healthFrame || isEmpty_minimapFrame)
 		return false;
 
 	//one of them have to be;
-	bool isEmpty_manaFrame = profile->frames.manaFrame.isEmpty();
-	bool isEmpty_combinedFrame = profile->frames.combinedFrame.isEmpty();
+	bool isEmpty_manaFrame = var->frames.manaFrame.isEmpty();
+	bool isEmpty_combinedFrame = var->frames.combinedFrame.isEmpty();
 
 	if (isEmpty_manaFrame && isEmpty_combinedFrame)
 		return false;
 
 	//one that can be or not
-	bool isEmpty_manaShieldFrame = profile->frames.manaShieldFrame.isEmpty();
+	bool isEmpty_manaShieldFrame = var->frames.manaShieldFrame.isEmpty();
 
-	importRectsFromProf.push_back(profile->frames.gameFrame);
-	importRectsFromProf.push_back(profile->frames.healthFrame);
-	importRectsFromProf.push_back(profile->frames.miniMapFrame);
+	importRectsFromProf.push_back(var->frames.gameFrame);
+	importRectsFromProf.push_back(var->frames.healthFrame);
+	importRectsFromProf.push_back(var->frames.miniMapFrame);
 
 	if (!isEmpty_manaFrame)
-		importRectsFromProf.push_back(profile->frames.manaFrame);
+		importRectsFromProf.push_back(var->frames.manaFrame);
 	if (!isEmpty_combinedFrame)
-		importRectsFromProf.push_back(profile->frames.combinedFrame);
+		importRectsFromProf.push_back(var->frames.combinedFrame);
 	if (!isEmpty_manaShieldFrame)
-		importRectsFromProf.push_back(profile->frames.manaShieldFrame);
+		importRectsFromProf.push_back(var->frames.manaShieldFrame);
 
 	return true;
 }

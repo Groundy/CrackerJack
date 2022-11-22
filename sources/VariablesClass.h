@@ -6,6 +6,16 @@
 #include <atomic>
 class VariablesClass{
 public:
+	struct Frames {
+		QRect gameFrame;
+		QRect miniMapFrame;
+		QRect healthFrame;
+		QRect manaFrame;
+		QRect manaShieldFrame;
+		QRect combinedFrame;
+		int howTheyShouldBeRotated;
+	};
+	Frames frames;
 	enum STATES { HASTE, BATTLE, PROTECTOR_ZONE, POISONED, PARALYZED, UPGRADED };
 	uint var_pidOfGame;
 	QString var_winTitleOfGame;

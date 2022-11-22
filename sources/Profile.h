@@ -16,29 +16,18 @@
 
 class Profile{
 public:
-	struct Frames {
-		QRect gameFrame;
-		QRect miniMapFrame;
-		QRect healthFrame;
-		QRect manaFrame;
-		QRect manaShieldFrame;
-		QRect combinedFrame;
-		int howTheyShouldBeRotated;
-	};
 	enum AutoLootKey { RIGHT_MOUSE_BUTTON, SHIFT_RIGHT, LEFT_MOUSE_BUTTON };//enable only if controls
 	enum Controls { CLSSIC_CONTROLS, REGULARCONTROLS, LEFT_SMART_CLICK };
 
 	Profile();
 	Profile(QJsonObject obj);
 	Profile(const Profile& profile);
-	Frames frames;
 
 	//funcs()
 	void clearProfile();
 	QJsonObject toJson();
 	QStringList getManaRestorationNames();
 	QStringList getHealthRestorationNames();
-	
 
 	//getters setters
 	void setName(QString name) { this->profileName = name; }

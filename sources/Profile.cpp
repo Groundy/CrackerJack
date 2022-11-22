@@ -51,7 +51,6 @@ Profile::Profile(QJsonObject obj) {
 Profile::Profile(const Profile& profile) {
 	this->healthRestorations = profile.healthRestorations;
 	this->manaRestorations = profile.manaRestorations;
-	this->frames = profile.frames;
 	this->profession = profile.profession;
 	this->lootKey = profile.lootKey;
 	this->controls = profile.controls;

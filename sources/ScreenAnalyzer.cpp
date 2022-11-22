@@ -151,37 +151,37 @@ void ScreenAnalyzer::mainLoop(){
 }
 
 int ScreenAnalyzer::cutImportantImgsFromWholeScreenAndSendThemToVarClass(QImage& fullscreen){
-	bool healthFrameFound = !profile->frames.healthFrame.isEmpty();
-	bool manaFrameFound = !profile->frames.manaFrame.isEmpty();
-	bool manaShieldFound = !profile->frames.manaShieldFrame.isEmpty();
-	bool combinedBoxFound = !profile->frames.combinedFrame.isEmpty();
+	bool healthFrameFound = !var->frames.healthFrame.isEmpty();
+	bool manaFrameFound = !var->frames.manaFrame.isEmpty();
+	bool manaShieldFound = !var->frames.manaShieldFrame.isEmpty();
+	bool combinedBoxFound = !var->frames.combinedFrame.isEmpty();
 
 	bool notEnoughFramesFound = !((manaFrameFound || combinedBoxFound) && healthFrameFound);
 	if(notEnoughFramesFound)
 		return NO_ENOUGH_FRAMES_FOUND;
 
 	if (healthFrameFound) {
-		QImage healthValueImg = fullscreen.copy(profile->frames.healthFrame);
-		if (profile->frames.howTheyShouldBeRotated != 0)
-			ImgEditor::rotateImgToRight(healthValueImg, profile->frames.howTheyShouldBeRotated);
+		QImage healthValueImg = fullscreen.copy(var->frames.healthFrame);
+		if (var->frames.howTheyShouldBeRotated != 0)
+			ImgEditor::rotateImgToRight(healthValueImg, var->frames.howTheyShouldBeRotated);
 		var->var_healthPieceImg = healthValueImg;
 	}
 	if (manaFrameFound) {
-		QImage manaValueImg = fullscreen.copy(profile->frames.manaFrame);
-		if (profile->frames.howTheyShouldBeRotated != 0)
-			ImgEditor::rotateImgToRight(manaValueImg, profile->frames.howTheyShouldBeRotated);
+		QImage manaValueImg = fullscreen.copy(var->frames.manaFrame);
+		if (var->frames.howTheyShouldBeRotated != 0)
+			ImgEditor::rotateImgToRight(manaValueImg, var->frames.howTheyShouldBeRotated);
 		var->var_manaPieceImg = manaValueImg;
 	}
 	if (manaShieldFound) {
-		QImage manaShieldValueImg = fullscreen.copy(profile->frames.manaShieldFrame);
-		if (profile->frames.howTheyShouldBeRotated != 0)
-			ImgEditor::rotateImgToRight(manaShieldValueImg, profile->frames.howTheyShouldBeRotated);
+		QImage manaShieldValueImg = fullscreen.copy(var->frames.manaShieldFrame);
+		if (var->frames.howTheyShouldBeRotated != 0)
+			ImgEditor::rotateImgToRight(manaShieldValueImg, var->frames.howTheyShouldBeRotated);
 		var->var_manaShieldPieceImg = manaShieldValueImg;
 	}
 	if (combinedBoxFound) {
-		QImage combinedValueImg = fullscreen.copy(profile->frames.combinedFrame);
-		if (profile->frames.howTheyShouldBeRotated != 0)
-			ImgEditor::rotateImgToRight(combinedValueImg, profile->frames.howTheyShouldBeRotated);
+		QImage combinedValueImg = fullscreen.copy(var->frames.combinedFrame);
+		if (var->frames.howTheyShouldBeRotated != 0)
+			ImgEditor::rotateImgToRight(combinedValueImg, var->frames.howTheyShouldBeRotated);
 		var->var_combinedBoxPieceImg = combinedValueImg;
 	}
 	var->healthFound = healthFrameFound;
