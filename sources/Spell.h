@@ -1,9 +1,7 @@
 #pragma once
 #include <qvector.h>
 
-#include "Utilities.h"
 #include "Profession.h"
-#include "RestorationMethode.h"
 #include "JsonClass.h"
 class Spell
 {
@@ -47,14 +45,10 @@ public:
 		}
 		catch (const std::exception& e) {
 			qDebug() << e.what();
-			Utilities::showMessageBox_INFO(e.what());
+			//Utilities::showMessageBox_INFO(e.what());
 		}
 	};
 	~Spell() {};
-	RestorationObject toRestorationObject() {
-		return RestorationObject(mana, cd, cdGroup, RestorationObject::Type::SPELL);
-	}
-
 	enum class SpellType { Healing, Support, Attack };
 	bool isForProf(const Profession& prof) { return profesUsingSpell.contains(prof); }
 	bool isSpellType(SpellType type) { return spellType == type; }
@@ -64,6 +58,9 @@ public:
 	bool forED() { return profesUsingSpell.contains(Profession::Type::ED); }
 	bool forEK() { return profesUsingSpell.contains(Profession::Type::EK); }
 	bool forMS() { return profesUsingSpell.contains(Profession::Type::MS); }
+	int getManaNeeded() const { return mana; };
+	int getCd() const {	return cd; };
+	int getCdGroup() const { return cdGroup; };
 private:
 	QVector<Profession> profesUsingSpell;
 	SpellType spellType;

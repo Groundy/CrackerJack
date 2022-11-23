@@ -80,22 +80,25 @@ private:
 		
 		for (size_t i = 0; i < restorationMethodes.size(); i++){
 			QString name = restorationMethodes[i].getName();
+			bool alreadySet = false;
 			for each (auto spell in spells){
 				if (spell.getIncantation() == name){
-					restorationMethodes[i].setRestorationObject(spell.toRestorationObject());
+					restorationMethodes[i].fillDataDetails(spell);
+					alreadySet = true;
 					break;
 				}
 			}
-			if (restorationMethodes[i].restObjSet())
+			if (alreadySet)
 				continue;
 
 			for each (auto potion in potions){
 				if (potion.getName() == name) {
-					restorationMethodes[i].setRestorationObject(potion.toRestorationObject());
+					restorationMethodes[i].fillDataDetails(potion);
+					alreadySet = true;
 					break;
 				}
 			}
-			if (!restorationMethodes[i].restObjSet())
+			if (!alreadySet)
 				throw std::exception("Cant get details for rest methode");
 		}
 	}

@@ -16,7 +16,7 @@ public:
 	void clickRight(QPoint pt);
 	void sendStringToGame(QString str);
 	bool sendKeyStrokeToProcess(Key key);
-	void useRestorationMethode(RestorationMethode methode) {
+	void useRestorationMethode(const RestorationMethode& methode) {
 		;
 	}
 private:

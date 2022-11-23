@@ -43,7 +43,7 @@ public:
 	static QString getPathToSettingsFile();
 	static void getMapWithNumbersFromBottomBar(QMap<QString, int>& lightToRet, QMap<QString, int>& darkToRet);
 	static QString StrCodeToLetter(QString code);
-
+	/*
 	static void TOOL_manaSit(int pid, QString winTitle, std::shared_ptr<GameConnecter> gameConnecter){
 		int i = 0;
 		while (true) {
@@ -60,6 +60,7 @@ public:
 			i = i % 3;
 		} 
 	}
+	*/
 	/*
 	static void UNSUED_findBoredersOfFrames(QImage fullScreen);
 	static void UNUSED_imgToOneColor(QImage& img, QRgb minimalColorValues, QRgb maxColorValues, QRgb colorToSet, bool allOfThem);

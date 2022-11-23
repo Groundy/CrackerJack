@@ -14,11 +14,13 @@ int Utilities::showMessageBox(QString title, QString text = "", QFlags<QMessageB
 }
 
 void Utilities::showMessageBox_INFO(QString text){
+	/*
 	QMessageBox box;
 	box.setText(text);
 	box.setWindowTitle("CrackerJack");
 	box.setStandardButtons(QMessageBox::StandardButton::Ok);
 	box.exec();
+	*/
 }
 
 bool Utilities::showMessageBox_NO_YES(QString text)

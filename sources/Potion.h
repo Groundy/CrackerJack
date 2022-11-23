@@ -2,9 +2,7 @@
 #include <qobject.h>
 #include <qjsonvalue.h>
 
-#include "RestorationMethode.h"
 #include "Profession.h"
-#include "Utilities.h"
 class Potion{
 public:
 	enum class TypeOfPotion { HEALTH, MANA };
@@ -52,10 +50,6 @@ public:
 		}
 	};
 	~Potion() {};
-	RestorationObject toRestorationObject() {
-		return RestorationObject(0, 1, 1, RestorationObject::Type::POTION);
-	}
-
 	bool isForProf(const Profession& prof) const { return userProfessions.contains(prof); }
 	bool isType(const TypeOfPotion& type) const {
 		if (type == TypeOfPotion::HEALTH)
@@ -65,13 +59,13 @@ public:
 		else {
 			QString msg = "Error Potion::isType";
 			qDebug() << msg;
-			Utilities::showMessageBox_INFO(msg);
+			//Utilities::showMessageBox_INFO(msg);
 			return false;
 		}
 	}
-	bool isHealing() const { return healthReg > 0; }
-	bool isMana() const { return manaReg > 0; }
-	QString getName() const { return name; }
+	bool isHealing() const { return healthReg > 0; };
+	bool isMana() const { return manaReg > 0; };
+	QString getName() const { return name; };
 
 private:
 	int manaReg, healthReg;
