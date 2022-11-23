@@ -227,7 +227,6 @@ xcopy /y /d ".\dependencies\64-bit\libcrypto-1_1-x64.dll" "$(OutDir)"
     <ClCompile Include="sources\GameConnecter.cpp" />
     <ClCompile Include="sources\ImgEditor.cpp" />
     <ClCompile Include="sources\Item.cpp" />
-    <ClCompile Include="sources\Logger.cpp" />
     <ClCompile Include="sources\ActiveGameThread.cpp" />
     <ClCompile Include="sources\Calibrator.cpp" />
     <ClCompile Include="sources\JsonParser.cpp" />
@@ -281,7 +280,7 @@ xcopy /y /d ".\dependencies\64-bit\libcrypto-1_1-x64.dll" "$(OutDir)"
     <QtMoc Include="sources\SetNameWidnow.h" />
     <ClInclude Include="sources\Spell.h" />
     <ClInclude Include="version.h" />
-    <ClInclude Include="sources\VariablesClass.h" />
+    <QtMoc Include="sources\VariablesClass.h" />
     <ClInclude Include="sources\ScreenSaver.h" />
     <QtMoc Include="sources\MainMenu.h" />
     <QtMoc Include="sources\ActiveGameThread.h" />
@@ -290,7 +289,7 @@ xcopy /y /d ".\dependencies\64-bit\libcrypto-1_1-x64.dll" "$(OutDir)"
     <ClInclude Include="sources\RGBstruct.h" />
     <ClInclude Include="sources\JsonParser.h" />
     <ClInclude Include="sources\Calibrator.h" />
-    <ClInclude Include="sources\Logger.h" />
+    <QtMoc Include="sources\Logger.h" />
     <QtMoc Include="sources\NewProfileConfiguartor.h" />
     <ClInclude Include="sources\Key.h" />
     <ClInclude Include="sources\Utilities.h" />

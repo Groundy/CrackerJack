@@ -12,12 +12,12 @@ bool JsonParser::openJsonFile(QJsonObject& jsonDoc, QString pathToFile){
 	file.setFileName(pathToFile);
 	bool sucess = file.open(QIODevice::ReadOnly | QIODevice::Text);
 	if (!sucess) {
-		Logger::logPotenialBug("Can't open that json file, probably it doesnt exist", "JsonParser", "openJsonFile");
+		//Logger::logPotenialBug("Can't open that json file, probably it doesnt exist", "JsonParser", "openJsonFile");
 		return false;
 	}
 	QString val = file.readAll();
 	if (val.size() == 0) {
-		Logger::logPotenialBug("opened but can't be read that json file, probably no rights to read/it's empty/ it not vaild", "JsonParser", "openJsonFile");
+		//Logger::logPotenialBug("opened but can't be read that json file, probably no rights to read/it's empty/ it not vaild", "JsonParser", "openJsonFile");
 		return false;
 	}
 	file.close();
@@ -108,7 +108,7 @@ bool JsonParser::readItemJson(QList<Item>& items){
 	QJsonObject obj;
 	bool res = openJsonFile(obj, itemPath);
 	if (!res) {
-		Logger::logPotenialBug("Problem with Json reading", "JsonParser", "readSpellsJson");
+		//Logger::logPotenialBug("Problem with Json reading", "JsonParser", "readSpellsJson");
 		return false;
 	}
 
@@ -121,7 +121,7 @@ bool JsonParser::readItemJson(QList<Item>& items){
 
 
 	if (items.size() == 0) {
-		Logger::logPotenialBug("No items in json file", "JsonParser", "readSpellsJson");
+		//Logger::logPotenialBug("No items in json file", "JsonParser", "readSpellsJson");
 		return false;
 	}
 	else
@@ -219,19 +219,19 @@ bool JsonParser::saveJsonFile(QString pathToFolder, QString fileNameWithExtensio
 	QFileInfo folderInfo = QFileInfo(pathToFolder);
 	bool isDir = folderInfo.isDir();
 	if (!isDir){
-		Logger::logPotenialBug("Error, path is not folder", "JsonParser", "saveJsonFile");
+		//Logger::logPotenialBug("Error, path is not folder", "JsonParser", "saveJsonFile");
 		return false;
 	}
 	bool isWritable = folderInfo.isWritable();
 	if (!isWritable) {
-		Logger::logPotenialBug("Error, path is not writable folder", "JsonParser", "saveJsonFile");
+		//Logger::logPotenialBug("Error, path is not writable folder", "JsonParser", "saveJsonFile");
 		return false;
 	}
 	QString pathToFile = pathToFolder + "\\" + fileNameWithExtension;
 	QFile file(pathToFile);
 	bool ok = file.open(QIODevice::OpenModeFlag::WriteOnly);
 	if (!ok) {
-		Logger::logPotenialBug("Another Error", "JsonParser", "saveJsonFile");
+		//Logger::logPotenialBug("Another Error", "JsonParser", "saveJsonFile");
 		return false;
 	}
 	file.write(docToSave.toJson());

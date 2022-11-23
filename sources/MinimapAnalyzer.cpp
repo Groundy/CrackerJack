@@ -39,9 +39,9 @@ uint MinimapAnalyzer::getFloorNumber(){
 
 	QRect rectWithSliderOnly = QRect(109, 0, minimapWithSlider.width() - 109, minimapWithSlider.height());
 	QImage imgWithSliderOnly = minimapWithSlider.copy(rectWithSliderOnly);
-	QList<QPoint> sliderPosition = Calibrator::findStartPositionInImg(SLIDER_IMG, imgWithSliderOnly);
+	QList<QPoint> sliderPosition = ImgEditor::findStartPositionInImg(SLIDER_IMG, imgWithSliderOnly);
 	if (sliderPosition.size() != 1) {
-		Logger::logPotenialBug("Slider of floor not found or found multiple times", "getFloorNumber", "MinimapAnalyzer");
+		//Logger::logPotenialBug("Slider of floor not found or found multiple times", "getFloorNumber", "MinimapAnalyzer");
 		return 0;
 	}
 
@@ -53,7 +53,7 @@ uint MinimapAnalyzer::getFloorNumber(){
 
 	bool resultIsNotPossible = toRet < 0 || toRet > 15;
 	if (resultIsNotPossible) {
-		Logger::logPotenialBug("Result is not possible", "getFloorNumber", "MinimapAnalyzer");
+		//Logger::logPotenialBug("Result is not possible", "getFloorNumber", "MinimapAnalyzer");
 		return 0;
 	}
 	return toRet;

@@ -6,74 +6,32 @@ ManaHealthStateAnalyzer::ManaHealthStateAnalyzer(QObject *parent, Profile* profi
 	: QThread(parent), var(var){
 	PopulateHealthManaMaps(profile);
 	var->changeRestoringState(true);
-
-
-	//setupRestorationMethodes(restorationMethodeList_Health, restorationMethodeList_Mana);
-	/*
-	for each (auto var in restorationMethodeList_Health)
-		lastTimeUsedHealthMethode.push_back(0);
-	lastTimeUsed_Potion = 0;
-	lastTimeUsed_Spell = 0;
-	*/
 }
 ManaHealthStateAnalyzer::~ManaHealthStateAnalyzer(){
 	this->terminate();
 }
 void ManaHealthStateAnalyzer::run(){
-	mainLoop();
-}
-
-
-void ManaHealthStateAnalyzer::mainLoop(){
 	while (true) {
 		msleep(SLEEP_TIME);
-		if (!var->checkRestoringState())
+
+		ValuesDoubles percentages = getCurrentPercentage();
+		if (!percentages.isValid())
 			continue;
 
-		ImageValues imgs = getImages();
-		FoundFlags flags = getFoundFlags();
-		ValuesStrs strsValues = ImagesToStrs(flags, imgs);
-		qDebug() << strsValues.health;
-		/*
-		ImagesToStrs(imgs
-		
-		getValuesFromStringsToGlobablVariables();
-		PreapareAndSendInfoToGuiInMainThread();
-		writeDataToVariableClass();
-		sleepAppropirateTimeToNextAnalyze();
-		getAmountsOfPotions();
-		Key healthKey, manaKey;
-		bool sucess = getKeyThatShouldBeSendToKeySenderClass(healthKey, manaKey) == OK;
-		bool thereIsHealthKey = (healthKey.getKeyVal() != -1) && sucess;
-		bool thereIsManaKey = (manaKey.getKeyVal() != -1) && sucess;
-		if (thereIsHealthKey)
-			//Utilities::sendKeyStrokeToProcess(healthKey, var->var_pidOfGame, var->var_winTitleOfGame);
-		if (thereIsManaKey) {
-			Sleep(extraTimeToWaitBetweenManaPotUse);
-			//Utilities::sendKeyStrokeToProcess(manaKey, var->var_pidOfGame, var->var_winTitleOfGame);
-		}
-		*/
+		sendDataToGui(percentages);
+		auto healthMetode = findRestorationToUse(percentages.health, healthMap);
+		auto manahMetode = findRestorationToUse(percentages.mana, manaMap);
+
+		var->log("health should use: " + healthMetode.getName(), false, true, true);
+		var->log("m: " + manahMetode.getName(), false, true, true);
 	}
 }
 
 
 
-bool ManaHealthStateAnalyzer::checkIfEverythingIsCorrectToProcess(){
-	/*
-
-	int res = changeImgsToStrings();
-	if (res != OK) {
-		emit demandReCalibration();
-		emit sendValueToMainThread(NULL, NULL, NULL);
-		msleep(miliSecBetweenCheckingForNewValuesImg*5);
-		return false;
-	}	*/
-	return true;
-
-}
-
+/*
 void ManaHealthStateAnalyzer::setupRestorationMethodes(QStringList listOfRestorationMethode_Health, QStringList listOfRestorationMethode_Mana){
-	/*
+	
 	JsonParser parser;
 	QList<Utilities::RestoreMethode> spellsAndPotions;
 	QList<Item> manaPotions;
@@ -83,10 +41,10 @@ void ManaHealthStateAnalyzer::setupRestorationMethodes(QStringList listOfRestora
 
 	healthMethodes = spellsAndPotions;
 	manaMethodes = manaPotions;
-	*/
+	
 }
 bool ManaHealthStateAnalyzer::getKeysForConnectorClass(Key& healthKey, Key& manaKey) {
-	/*
+
 		int indexOfHealthThreshold = findNearestThresholdIndex(healthPercentage, healthThresholds);
 	int indexOfManaThreshold = findNearestThresholdIndex(manaPercentage, manaThresholds);
 
@@ -143,21 +101,11 @@ bool ManaHealthStateAnalyzer::getKeysForConnectorClass(Key& healthKey, Key& mana
 	manaKey = potionKey;
 	healthKey = spellKey;
 	return OK;
-	*/
+	
 	return true;
 }
-void ManaHealthStateAnalyzer::sleepAppropirateTimeToNextAnalyze(){
-	LONG64 currentTime = Utilities::getCurrentTimeInMiliSeconds();
-	LONG64 time = 1015;
-	LONG64 timeToSleep = time - (currentTime - lastTimeAnalyzed);
-	if (timeToSleep > time)
-		timeToSleep = time;
-	if (timeToSleep < 0)
-		timeToSleep = 0;
-	lastTimeAnalyzed = currentTime + timeToSleep;
-	Sleep(timeToSleep);
-}
 void ManaHealthStateAnalyzer::getAmountsOfPotions() {
+	
 	QMap<QString,QRect> map_copy = var->potionName_rectPosOnScreen_map;
 	QList<int> amountOfPots;
 	QStringList namesOfPots;
@@ -179,4 +127,6 @@ void ManaHealthStateAnalyzer::getAmountsOfPotions() {
 		infoToSendToMainThread.push_back(toAdd);
 	}
 	sendInfoAboutPotAmountsToGUI(infoToSendToMainThread);
+	
 }
+*/

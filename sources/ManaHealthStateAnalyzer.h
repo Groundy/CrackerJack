@@ -25,48 +25,69 @@ signals:
 private:
 	struct FoundFlags {
 		bool health, mana, combined, shield;
+		bool isValid() {
+			if (!health)
+				return false;
+			if (!mana && !combined)
+				return false;
+			return true;
+		}
 	};
 	struct ImageValues {
 		QImage health, mana, manaShield, combined;
+		bool isValid() {
+			if (health.isNull())
+				return false;
+			if (mana.isNull() && combined.isNull())
+				return false;
+			return true;
+		}
 	};
 	struct ValuesStrs {
 		QString health, mana, manaShield, combined;
+		bool isValid() {
+			if (health.isEmpty())
+				return false;
+			if (mana.isEmpty() && combined.isEmpty())
+				return false;
+			return true;
+		}
 	};
 	struct ValuesInts {
 		int health, maxHealth;
 		int mana, maxMana;
 		int shield, maxShield;
+		bool isValid() {
+			if (maxHealth <= 0)
+				return false;
+			if (maxMana <= 0)
+				return false;
+			if (health > maxHealth)
+				return false;
+			if (mana > maxMana)
+				return false;
+			return true;
+		}
 	};
 	struct ValuesDoubles {
 		ValuesDoubles(double health, double mana, double manaShield) :
 			health(health), mana(mana), manaShield(manaShield) {}
 		ValuesDoubles() :
-			health(NULL), mana(NULL), manaShield(NULL) {}
+			health(-1), mana(-1), manaShield(-1) {}
+		bool isValid() {
+			bool isValid = health >= 0.0 && health <= 100.0 && mana >= 0.0 && mana <= 100.0 && manaShield >= 0.0 && manaShield <= 100.0;
+			return isValid;
+		}
 		double health, mana, manaShield;
 	};
 
 
-	//QVector<RestorationMethode> healthRestorationsMethode, manaRestorationsMethode;
-	//QVector<int> healthThresholds, manaThresholds;
-	//QList<Utilities::RestoreMethode> healthMethodes;
-	//QList<Item> manaMethodes;
-
-	void mainLoop();
-	bool checkIfEverythingIsCorrectToProcess();
-	void setupRestorationMethodes(QStringList listOfRestorationMethode_Health, QStringList listOfRestorationMethode_Mana);
-	bool getKeysForConnectorClass(Key& healthKey, Key& manaKey);
-	void sleepAppropirateTimeToNextAnalyze();
-	void getAmountsOfPotions();
-//	void readManaBreak();
-
-
 	std::shared_ptr<VariablesClass> var;
 	QMap<int, RestorationMethode> healthMap, manaMap;	
-	int extraTimeToWaitBetweenManaPotUse = 1400;
+	//int extraTimeToWaitBetweenManaPotUse = 1400;
 	const int SLEEP_TIME = 500;
-	LONG64 lastTimeAnalyzed = 0;
 
-	ValuesDoubles ChangeToPercentages(ValuesInts currentValues) {
+	ValuesDoubles toDoubles(ValuesInts currentValues) {
 		bool healthValuesOk = 
 			currentValues.health <= currentValues.maxHealth && 
 			currentValues.health >= 0 && 
@@ -96,32 +117,28 @@ private:
 			manaShieldPercentage = 100.0 * currentValues.shield / currentValues.maxShield;
 		else
 			manaShieldPercentage = NULL;
-		ValuesDoubles toRet(healthPercentage, manaShieldValusOk, manaShieldPercentage);
+		ValuesDoubles toRet(healthPercentage, manaPercentage, manaShieldPercentage);
 		return toRet;
-	}
-	QVector<int> GetThresholdsOfRestorationMethodes(const QVector<RestorationMethode>& restorationMethodes) {
-		QVector<int> thresholds;
-		for each (auto var in restorationMethodes)
-			thresholds.push_back(var.getThreshold());
-		return thresholds;
 	}
 	bool PopulateHealthManaMaps(const Profile* profile) {
 		try{
 			auto healthRestorationsMethode = profile->getRestMethodesHealth();
-			auto healthThresholds = GetThresholdsOfRestorationMethodes(healthRestorationsMethode);
+			QVector<int> healthThresholds;
+			for each (auto var in healthRestorationsMethode)
+				healthThresholds.push_back(var.getThreshold());
 			if (healthThresholds.size() != healthRestorationsMethode.size())
 				throw std::exception("wrong sizes of health restoration methodes passed to ManaHealthAnalyzer!");
-
 			for (size_t i = 0; i < healthThresholds.size(); i++)
 				healthMap.insert(healthThresholds[i], healthRestorationsMethode[i]);
 			
 			auto manaRestorationsMethode = profile->getRestMethodesMana();
-			auto manaThresholds = GetThresholdsOfRestorationMethodes(manaRestorationsMethode);
+			QVector<int> manaThresholds;
+			for each (auto var in manaRestorationsMethode)
+				manaThresholds.push_back(var.getThreshold());
 			if (manaThresholds.size() != manaRestorationsMethode.size())
 				throw std::exception("wrong sizes of health restoration methodes passed to ManaHealthAnalyzer!");
-
 			for (size_t i = 0; i < manaThresholds.size(); i++)
-				healthMap.insert(manaThresholds[i], manaRestorationsMethode[i]);
+				manaMap.insert(manaThresholds[i], manaRestorationsMethode[i]);
 
 			return true;
 		}
@@ -130,7 +147,7 @@ private:
 			return false;
 		}
 	}
-	ValuesInts ValuesToInts(FoundFlags foundFlags, ValuesStrs valueStrs) {
+	ValuesInts toIntsValues(FoundFlags foundFlags, ValuesStrs valueStrs) {
 		ValuesInts valuesInts;
 		if (foundFlags.health)
 			getValuesFromStringRegularCase(valueStrs.health, valuesInts.health, valuesInts.maxHealth);
@@ -142,7 +159,7 @@ private:
 			getValuesFromStringRegularCase(valueStrs.mana, valuesInts.mana, valuesInts.maxMana);
 		return valuesInts;
 	};
-	ValuesStrs ImagesToStrs(FoundFlags foundFlags, ImageValues imgVals) {
+	ValuesStrs toStrsValues(FoundFlags foundFlags, ImageValues imgVals) {
 		try {
 			ValuesStrs strVals;
 			if (foundFlags.health)
@@ -169,7 +186,7 @@ private:
 			const int MIN_LENGTH_FOR_CORR_STR = 3;
 			if (strVals.health.length() < MIN_LENGTH_FOR_CORR_STR)
 				throw std::exception("Error in converting ims with health bar to str form");
-			if (strVals.mana.length() < MIN_LENGTH_FOR_CORR_STR)
+			if (strVals.mana.length() < MIN_LENGTH_FOR_CORR_STR && strVals.combined.length() < MIN_LENGTH_FOR_CORR_STR)
 				throw std::exception("Error in converting ims with mana bar to str form");
 
 			return strVals;
@@ -198,15 +215,15 @@ private:
 	}
 	FoundFlags getFoundFlags() {
 		FoundFlags flags;
-		flags.health = var->getHealthArea().isEmpty();
-		flags.mana = var->getManaArea().isEmpty();
-		flags.combined = var->getCombinedArea().isEmpty();
-		flags.shield = var->getMSArea().isEmpty();
+		flags.health = !var->getHealthArea().isEmpty();
+		flags.mana = !var->getManaArea().isEmpty();
+		flags.combined = !var->getCombinedArea().isEmpty();
+		flags.shield = !var->getMSArea().isEmpty();
 		return flags;
 	}
 	bool getValuesFromStringRegularCase(QString in, int& current, int& max){
 	try{
-		const QStringList partOfStr = in.split("/");//wanted form of input currentVal/maxVal
+		const QStringList partOfStr = in.split("\\");//wanted form of input currentVal/maxVal
 		if (partOfStr.size() != 2)
 			throw std::exception(QString("ManaHealthAnalyzer recived wrong input, input = " + in).toStdString().c_str());
 		const int currentVal = partOfStr[0].toInt();
@@ -227,7 +244,7 @@ private:
 	bool getValuesFromStringOfCombinedBox(QString in, int& currentMana, int& maxMana, int& currentManaShield, int& maxManaShield) {
 		//wanted form of input manaMinVal/maxVal(minShieldValue/maxShieldValue)
 		try {
-			bool inputOk = in.count("/") == 3 && in.count("(") == 1 && in.count(")") == 1;
+			bool inputOk = in.count("\\") == 2 && in.count("(") == 1 && in.count(")") == 1;
 			if (!inputOk) {
 				QString msg = "Wrong input in splitting str with values of mana combined with magic shield, input = " + in;
 				throw std::exception(msg.toStdString().c_str());
@@ -258,24 +275,46 @@ private:
 			return false;
 		}
 	}
-	int findNearestThresholdIndex(int currentValue, const QVector<int>& thresholds) {
+	RestorationMethode findRestorationToUse(double currentValue, const QMap<int, RestorationMethode>& methodes) {
 		try {
-			bool wrongInput = currentValue < 0 || currentValue > 100 || thresholds.size() > 5 || thresholds.size() < 0;
+			bool wrongInput = currentValue < 0.0 || currentValue > 100.0 || methodes.size() > 5;
 			if (wrongInput)
 				throw std::exception("Wrong input passed to fun looking for neareast threshold");
 
-			if (thresholds.size() == 0)
-				return -1;
+			if (methodes.size() == 0)
+				return RestorationMethode();
 
-			for (int i = 0; i < thresholds.size(); i++) {
-				if (currentValue > thresholds[i])
-					return (i == 0) ? 0 : i - 1;
+			auto thresholds = methodes.keys();
+			for (int i = thresholds.size() - 1; i >= 0; i--) {
+				if (currentValue <= thresholds[i])
+					return methodes[thresholds[i]];
 			}
-			return -1;//not sure
+			return RestorationMethode();//not sure
 		}
 		catch (const std::exception& e) {
 			qDebug() << e.what();
-			return -1;
+			return RestorationMethode();
 		}
+	}
+	ValuesDoubles getCurrentPercentage() {
+		if (!var->checkRestoringState())
+			return ValuesDoubles();
+		ImageValues imgs = getImages();
+		if (!imgs.isValid())
+			return ValuesDoubles();
+		FoundFlags flags = getFoundFlags();
+		if (!flags.isValid())
+			return ValuesDoubles();
+		ValuesStrs strsValues = toStrsValues(flags, imgs);
+		if (!strsValues.isValid())
+			return ValuesDoubles();
+		ValuesInts intsValues = toIntsValues(flags, strsValues);
+		if (!intsValues.isValid())
+			return ValuesDoubles();
+		ValuesDoubles percentages = toDoubles(intsValues);
+		if (!percentages.isValid())
+			return ValuesDoubles();
+
+		return percentages;
 	}
 };

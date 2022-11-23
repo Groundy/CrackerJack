@@ -24,7 +24,7 @@ int ImgEditor::getNumberFromBottomBar(QImage& imgToShearchWithin){
 		listWithLightAndDarkLetterImg.push_back(&lightLetter);
 
 		int digit = lightMap[lightCodes[i]];
-		QList<QPoint> listOfStartingPoints = Calibrator::findStartPositionInImg_mulitpeImgs(listWithLightAndDarkLetterImg, imgToShearchWithin);// (listWithLightAndDarkLetterImg, imgToShearchWithin);
+		QList<QPoint> listOfStartingPoints = ImgEditor::findStartPositionInImg_mulitpeImgs(listWithLightAndDarkLetterImg, imgToShearchWithin);// (listWithLightAndDarkLetterImg, imgToShearchWithin);
 		for each (QPoint var in listOfStartingPoints)
 			anotherMap.insert(var.x(), digit);
 	}
@@ -60,7 +60,7 @@ QImage ImgEditor::fromCharToImg(QChar CharToImg){
 		return imgToRet;
 	}
 	else {
-		Logger::logPotenialBug("Wrong structure of char code for char: " + QString(CharToImg), "Utilities", "fromCharToImg");
+		//Logger::logPotenialBug("Wrong structure of char code for char: " + QString(CharToImg), "Utilities", "fromCharToImg");
 		return QImage();
 	}
 }
@@ -307,6 +307,119 @@ QImage ImgEditor::getImageFromAdvancedCode(QString codeOfImg){
 		}
 	}
 	return imgToCreate;
+}
+QList<QPoint> ImgEditor::findStartPositionInImg_mulitpeImgs(QList<QImage*> imgsToFind, QImage& imgToShareWithin) {
+	// this fun return starting points from imgToSharePoints than consist pixels from one of imgsToFind
+
+	QImage::Format formatBig = imgToShareWithin.format();
+	for each (QImage * var in imgsToFind) {
+		if (formatBig != var->format()) {
+			////Logger::logPotenialBug("Not all imgs have the same format!", "Calibrator", "findStartPositionInImg_mulitpeImgs");
+			return QList<QPoint>();//[TO DO zamienic ta funkcje zeby zwracala error code]
+		}
+	}
+
+	const int WIDTH_OF_FIRST_IMG = imgsToFind[0]->width();
+	const int HEIGHT_OF_FIRST_IMG = imgsToFind[0]->height();
+	for each (QImage * var in imgsToFind) {
+		bool widthIsGood = var->width() == WIDTH_OF_FIRST_IMG;
+		bool heightIsGood = var->height() == HEIGHT_OF_FIRST_IMG;
+		bool isAllRight = widthIsGood && heightIsGood;
+		if (!isAllRight) {
+			//Logger::logPotenialBug("Not all imgs have the same size!", "Calibrator", "findStartPositionInImg_mulitpeImgs");
+			return QList<QPoint>();//[TO DO zamienic ta funkcje zeby zwracala error code]
+		}
+	}
+
+	const int MAX_WIDTH_VAL_TO_SHEARCH = imgToShareWithin.width() - WIDTH_OF_FIRST_IMG;
+	const int MAX_HEIGHT_VAL_TO_SHEARCH = imgToShareWithin.height() - HEIGHT_OF_FIRST_IMG;
+
+	QList<QPoint> startPointsListToRet;
+	for (int x = 0; x <= MAX_WIDTH_VAL_TO_SHEARCH; x++) {
+		for (int y = 0; y <= MAX_HEIGHT_VAL_TO_SHEARCH; y++) {
+			bool atLeastOnePixIsMatched = false;
+			uint pixFromImg_big = imgToShareWithin.pixel(x, y);
+
+			for each (QImage * var in imgsToFind) {
+				uint pixFromImg_small = var->pixel(0, 0);
+				if (pixFromImg_big == pixFromImg_small) {
+					atLeastOnePixIsMatched = true;
+					break;
+				}
+			}
+
+			if (atLeastOnePixIsMatched) {
+				//first pix matched, looking for more
+				int wrongPixels = WIDTH_OF_FIRST_IMG * HEIGHT_OF_FIRST_IMG;
+				for (int x_TMP = 0; x_TMP < WIDTH_OF_FIRST_IMG; x_TMP++) {
+					for (int y_TMP = 0; y_TMP < HEIGHT_OF_FIRST_IMG; y_TMP++) {
+						uint pixFromImg_big2 = imgToShareWithin.pixel(x + x_TMP, y + y_TMP);
+						bool metReq = false;
+						for each (QImage * var in imgsToFind) {
+							uint pixFromImg_small2 = var->pixel(x_TMP, y_TMP);
+							bool pixMatched = pixFromImg_big2 == pixFromImg_small2;
+							if (pixMatched) {
+								metReq = true;
+								break;
+							}
+						}
+						if (metReq)
+							wrongPixels--;
+					}
+				}
+				if (wrongPixels == 0)
+					startPointsListToRet.push_back(QPoint(x, y));
+			}
+		}
+	}
+	return startPointsListToRet;
+}
+QList<QPoint> ImgEditor::findStartPositionInImg(const QImage& imgToFind, const QImage& imgToSearchWithin) {
+	//fun return list of start positions of imgToFind, position is lef down corner
+	const int WIDTH_SMALL_PIC = imgToFind.width();
+	const int HEIGHT_SMALL_PIC = imgToFind.height();
+	const int WIDTH_BIG_PIC = imgToSearchWithin.width();
+	const int HEIGHT_BIG_PIC = imgToSearchWithin.height();
+
+	bool errEmpty = WIDTH_SMALL_PIC <= 0 || HEIGHT_SMALL_PIC <= 0 || WIDTH_BIG_PIC <= 0 || HEIGHT_BIG_PIC <= 0;
+	bool errWidth = WIDTH_SMALL_PIC >= WIDTH_BIG_PIC;
+	bool errHeight = HEIGHT_SMALL_PIC >= HEIGHT_BIG_PIC;
+	bool errFormat = imgToFind.format() != imgToSearchWithin.format();
+	bool anyErr = errWidth || errHeight || errFormat || errEmpty;
+	if (anyErr) {
+		//Logger::logPotenialBug("Wrong input of two img", "Calibrator", "findStartPositionInImg");
+		return QList<QPoint>();
+	}
+
+	const int MAX_X_INDEX_TO_CHECK = WIDTH_BIG_PIC - WIDTH_SMALL_PIC;
+	const int MAX_Y_INDEX_TO_CHECK = HEIGHT_BIG_PIC - HEIGHT_SMALL_PIC;
+
+	QList<QPoint> startPointsListToRet;
+	for (int x = 0; x <= MAX_X_INDEX_TO_CHECK; x++) {
+		for (int y = 0; y <= MAX_Y_INDEX_TO_CHECK; y++) {
+			uint pixSmallImg = imgToFind.pixel(0, 0);
+			uint pixBigImg = imgToSearchWithin.pixel(x, y);
+			bool firstPixelMatched = pixSmallImg == pixBigImg;
+			if (firstPixelMatched) {
+				bool foundPosition = true;
+				for (int x_TMP = 1; x_TMP < WIDTH_SMALL_PIC; x_TMP++) {
+					for (int y_TMP = 1; y_TMP < HEIGHT_SMALL_PIC; y_TMP++) {
+						pixSmallImg = imgToFind.pixel(x_TMP, y_TMP);
+						pixBigImg = imgToSearchWithin.pixel(x + x_TMP, y + y_TMP);
+						bool pixNotMatched = pixSmallImg != pixBigImg;
+						if (pixNotMatched) {
+							x_TMP = WIDTH_SMALL_PIC;
+							y_TMP = HEIGHT_SMALL_PIC;
+							foundPosition = false;
+						}
+					}
+				}
+				if (foundPosition)
+					startPointsListToRet.push_back(QPoint(x, y));
+			}
+		}
+	}
+	return startPointsListToRet;
 }
 
 

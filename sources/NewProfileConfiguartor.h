@@ -67,4 +67,36 @@ private:
 	QVector<RestorationMethode> getRestorationMethodesFromGUI(GuiPointers guiPotiners);
 	Profession getSelectedProf();
 	void fillGuiPtrs();
+	void fillRestorationMethodesDetails(QVector<RestorationMethode>& restorationMethodes) {
+		if (restorationMethodes.size() == 0)
+			return;
+
+		QList<Spell> spells;
+		QList<Potion> potions;
+		Profession profession = getSelectedProf();
+		auto spellType = Spell::SpellType::Healing;
+		JsonParser().readSpellsJson(spells, &spellType, &profession);
+		JsonParser().readPotions(potions, &profession, NULL);
+		
+		for (size_t i = 0; i < restorationMethodes.size(); i++){
+			QString name = restorationMethodes[i].getName();
+			for each (auto spell in spells){
+				if (spell.getIncantation() == name){
+					restorationMethodes[i].setRestorationObject(spell.toRestorationObject());
+					break;
+				}
+			}
+			if (restorationMethodes[i].restObjSet())
+				continue;
+
+			for each (auto potion in potions){
+				if (potion.getName() == name) {
+					restorationMethodes[i].setRestorationObject(potion.toRestorationObject());
+					break;
+				}
+			}
+			if (!restorationMethodes[i].restObjSet())
+				throw std::exception("Cant get details for rest methode");
+		}
+	}
 };

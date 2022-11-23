@@ -51,8 +51,8 @@ public:
 		}
 	};
 	~Spell() {};
-	RestoreActionEntity toRestorationEntity() {
-		return RestoreActionEntity(mana, cd, cdGroup, RestoreActionEntity::EnitityType::SPELL);
+	RestorationObject toRestorationObject() {
+		return RestorationObject(mana, cd, cdGroup, RestorationObject::Type::SPELL);
 	}
 
 	enum class SpellType { Healing, Support, Attack };

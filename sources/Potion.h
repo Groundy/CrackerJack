@@ -52,8 +52,8 @@ public:
 		}
 	};
 	~Potion() {};
-	RestoreActionEntity toRestorationEnity() {
-		return RestoreActionEntity(0, 1, 1, RestoreActionEntity::EnitityType::POTION);
+	RestorationObject toRestorationObject() {
+		return RestorationObject(0, 1, 1, RestorationObject::Type::POTION);
 	}
 
 	bool isForProf(const Profession& prof) const { return userProfessions.contains(prof); }

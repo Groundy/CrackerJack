@@ -119,7 +119,7 @@ QMap<QString, QString>  Utilities::getQmapWithCodes() {
     return letters;
  }
 
-long long Utilities::getCurrentTimeInMiliSeconds() {
+qint64 Utilities::getCurrentTimeInMiliSeconds() {
 	QDateTime date = QDateTime::currentDateTime();
 	qint64 mseconds = date.currentMSecsSinceEpoch();
 	return mseconds;
@@ -162,7 +162,7 @@ QDir Utilities::getDirWithCrackerJackTmpFolder(FOLDERS_OF_TMP_FOLDER folderType)
 		bool dirCreationFailed = dir.mkdir("CrackerJack");
 		if (dirCreationFailed) {
 			QString text = QString("Failed to create sub-dir %1 in %2").arg("CrackerJack", dir.absolutePath());
-			Logger::logPotenialBug(text, "Utilities", "getDirWithCrackerJackTmpFolder");
+			//Logger::logPotenialBug(text, "Utilities", "getDirWithCrackerJackTmpFolder");
 			return QDir::current();
 		}
 	}
@@ -186,7 +186,7 @@ QDir Utilities::getDirWithCrackerJackTmpFolder(FOLDERS_OF_TMP_FOLDER folderType)
 		bool dirCreationFailed = dir.mkdir(nameOfSubFolder);
 		if (dirCreationFailed) {
 			QString text = QString("Failed to create sub-dir %1 in %2").arg(nameOfSubFolder, dir.absolutePath());
-			Logger::logPotenialBug(text, "Utilities", "getDirWithCrackerJackTmpFolder");
+			//Logger::logPotenialBug(text, "Utilities", "getDirWithCrackerJackTmpFolder");
 			return QDir::current();
 		}
 	}
@@ -268,7 +268,7 @@ QString Utilities::getPathToSettingsFile() {
 	if (!crackerJackDirExist) {
 		bool sucess = dir.rmpath(pathToCrackerJackTmpFolder);
 		if (!sucess) {
-			Logger::logPotenialBug("Can't make path to crackerJack main tmp folder","Utilities","getPathToSettingsFile");
+			//Logger::logPotenialBug("Can't make path to crackerJack main tmp folder","Utilities","getPathToSettingsFile");
 			;//TODO fatal error
 		}
 	}

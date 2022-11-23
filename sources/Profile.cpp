@@ -38,6 +38,7 @@ Profile::Profile(QJsonObject obj) {
 
 		if (!obj.contains("screenShotKey"))
 			throw std::exception("No screenShotKey field in profil json file!");
+
 		Key key = Key(obj.value("screenShotKey").toObject());
 		if (!key.isValid())
 			throw std::exception("wrong screenShotKey field value!");
@@ -89,7 +90,6 @@ QStringList Profile::getHealthRestorationNames(){
 		toRet.push_back(var.getName());
 	return toRet;
 }
-
 QStringList Profile::getManaRestorationNames(){
 	QStringList toRet;
 	for each (auto var in manaRestorations)

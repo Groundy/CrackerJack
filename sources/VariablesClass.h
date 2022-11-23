@@ -5,7 +5,9 @@
 #include <basetsd.h>
 #include <atomic>
 #include <mutex>
-class VariablesClass{
+#include "Logger.h"
+class VariablesClass : QObject{
+	Q_OBJECT
 public:	
 	typedef LONG64 TIME;
 	struct HealthManaFrames {
@@ -42,16 +44,20 @@ public:
 	};
 	enum STATES { HASTE, BATTLE, PROTECTOR_ZONE, POISONED, PARALYZED, UPGRADED };
 
-
-	QString var_winTitleOfGame;
-	TIME lastTimeUsed_spell_healing;
-	TIME lastTimeUsed_spell_attack;
-	TIME lastTimeUsed_spell_support;
-	TIME lastTimeUsed_item;
 	QMap<QString, QRect> potionName_rectPosOnScreen_map = getMapWithRects();
 	static QMap<QString, QRect> getMapWithRects();
 	VariablesClass();
 	~VariablesClass();
+
+	void log(QString msg, bool sendToDebug = true, bool sendToUserConsol = true, bool addTimeSTamp = true) {
+		logger.log(msg, sendToDebug, sendToUserConsol, addTimeSTamp);
+	}
+	bool framesAreValid() {
+		bool manaHealthFramesOk =
+			!getHealthArea().isEmpty() &&
+			(!getCombinedArea().isEmpty() || !getManaArea().isEmpty());
+		return manaHealthFramesOk;
+	}
 
 	//getters setters
 	void setNewImg(QImage& newImage) {
@@ -84,24 +90,26 @@ public:
 	void changeLoadingState(bool enable) { this->keepLoadingScreenShots = enable; };
 	bool checkLoadingState() { return keepLoadingScreenShots; }
 
+	//health, mana, combined, shield frames
 	void setRotation(int rotation) { healthManaFrames.howTheyShouldBeRotated = rotation; }
-	int getRotation() { return healthManaFrames.howTheyShouldBeRotated; }
 	void setHealthArea(QRect toSet) { healthManaFrames.healthFrame = toSet; }
-	QRect getHealthArea() { return healthManaFrames.healthFrame; }
 	void setManaArea(QRect toSet) { healthManaFrames.manaFrame = toSet; }
-	QRect getManaArea() { return healthManaFrames.manaFrame; }
 	void setMSArea(QRect toSet) { healthManaFrames.manaShieldFrame = toSet; }
-	QRect getMSArea() { return healthManaFrames.manaShieldFrame; }
 	void setCombinedArea(QRect toSet) { healthManaFrames.combinedFrame = toSet; }
+	int getRotation() { return healthManaFrames.howTheyShouldBeRotated; }
+	QRect getHealthArea() { return healthManaFrames.healthFrame; }
+	QRect getManaArea() { return healthManaFrames.manaFrame; }
+	QRect getMSArea() { return healthManaFrames.manaShieldFrame; }
 	QRect getCombinedArea() { return healthManaFrames.combinedFrame; }
 
+	//otherFrames
 	void setMiniMapArea(QRect toSet) { otherFrames.miniMapFrame = toSet; }
 	QRect getMiniMapArea() { return otherFrames.miniMapFrame; }
 	void setMainArea(QRect toSet) { otherFrames.gameFrame = toSet; }
 	QRect getMainArea() { return otherFrames.gameFrame; }
 
-
-	void setImageHealth(QImage& img) { healthImg.setImg(img); /*qDebug() << "set new img!";*/ }
+	//health, mana, combined, shield IMG piececs
+	void setImageHealth(QImage& img) { healthImg.setImg(img);}
 	void setImageMana(QImage& img) { manaImg.setImg(img); }
 	void setImageMS(QImage& img) { msImg.setImg(img); }
 	void setImageCombined(QImage& img) { combinedImg.setImg(img); }
@@ -125,6 +133,32 @@ public:
 		if (clear) 
 			combinedImg.clear();
 	}
+
+	//timers
+	qint64 getTimeLastItemUsage() const { return timeLastItemUsage; }
+	qint64 getTimeLastSpellUsageAttack() const { return timeLastSpellAttack; }
+	qint64 getTimeLastSpellUsageHealing() const { return timeLastSpellHealing; }
+	qint64 getTimeLastSpellUsageSupport() const { return timeLastSpellSupport; }
+	qint64 getTimeLastSpellUsed(QString spellName) { 
+		lastTimeUsagesMutex.lock();
+		return lastTimeSpellUsagesMap.value(spellName, 0);
+		lastTimeUsagesMutex.unlock();
+	}
+	void setTimeLastItemUsage() { timeLastItemUsage = now(); }
+	void setTimeLastSpellUsageAttack() { timeLastSpellAttack = now(); }
+	void setTimeLastSpellUsageHealing() { timeLastSpellHealing = now(); }
+	void setTimeLastSpellUsageSupport() { timeLastSpellSupport = now(); }
+	void setTimeLastSpellUsed(QString spellName) {
+		lastTimeUsagesMutex.lock();
+		bool alreadyOnList = lastTimeSpellUsagesMap.contains(spellName);
+		if (alreadyOnList)
+			lastTimeSpellUsagesMap[spellName] = now();
+		else 
+			lastTimeSpellUsagesMap.insert(spellName, now());
+	}
+
+
+	Logger logger;
 private:
 	std::mutex fullImgMutex;
 	QImage fullImage;
@@ -139,4 +173,9 @@ private:
 	HealthManaFrames healthManaFrames;
 	OtherFrames otherFrames;
 	MutexImg healthImg, manaImg, combinedImg, msImg;
+	std::atomic<qint64> timeLastItemUsage, timeLastSpellAttack, timeLastSpellHealing, timeLastSpellSupport;
+	std::mutex lastTimeUsagesMutex;
+	QMap<QString, qint64> lastTimeSpellUsagesMap;
+
+	qint64 now() { return QDateTime::currentMSecsSinceEpoch(); }
 };

@@ -64,20 +64,20 @@ void Market::addItemButtonPressed(){
 	bool valuesOk = minVal > 0 && maxVal > 0 && maxVal >= minVal;
 	if (!valuesOk) {
 		QString text = tr("Both values have to be greater than zero, max value has to be same or greater than min value.");
-		Logger::logPotenialBug(text,"Market","addItemButtonPressed");
+		//Logger::logPotenialBug(text,"Market","addItemButtonPressed");
 		Utilities::showMessageBox_INFO(text);		return;
 	}
 	bool amountOk = amount > 0 && amount <= 64000;
 	if (!amountOk) {
 		QString text = tr("Amount of items should be number between 1 and 640000.");
-		Logger::logPotenialBug(text, "Market", "addItemButtonPressed");
+		//Logger::logPotenialBug(text, "Market", "addItemButtonPressed");
 		Utilities::showMessageBox_INFO(text);
 		return;
 	}
 	bool itemEmpty = itemName.isEmpty();
 	if (itemEmpty) {
 		QString text = tr("Item not selected.");
-		Logger::logPotenialBug(text, "Market", "addItemButtonPressed");
+		//Logger::logPotenialBug(text, "Market", "addItemButtonPressed");
 		Utilities::showMessageBox_INFO(text);
 		return;
 	}
@@ -100,7 +100,7 @@ void Market::addItemButtonPressed(){
 	}
 	else {
 		QString text = tr("Item is already on the list");
-		Logger::logPotenialBug(text, "Market", "addItemButtonPressed");
+		//Logger::logPotenialBug(text, "Market", "addItemButtonPressed");
 		Utilities::showMessageBox_INFO(text);
 	}
 	setAndRepaintInfoLabel();
@@ -275,7 +275,7 @@ void Market::readListFromJsonFile(){
 	QJsonArray arr = obj["offers"].toArray();
 	if (arr.count() == 0) {
 		QString text = tr("File is uncorrect or empty.");
-		Logger::logPotenialBug(text, "Market", "readListFromJsonFile");
+		//Logger::logPotenialBug(text, "Market", "readListFromJsonFile");
 		Utilities::showMessageBox_INFO(text);
 		return;
 	}
@@ -317,7 +317,7 @@ void Market::test() {
 	if (!allThingsAreConnected) {
 		QString textUser = tr("Unexpected error occured, trading process will not begin.");
 		QString textLog = "Error in connecting signals/slots";
-		Logger::logPotenialBug(textLog, "Market", "test");
+		//Logger::logPotenialBug(textLog, "Market", "test");
 		return;
 	}
 

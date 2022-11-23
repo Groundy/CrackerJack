@@ -22,19 +22,13 @@ bool ScreenAnalyzer::loadScreen(QImage& img){
 	return openCorrectly;
 }
 QString ScreenAnalyzer::getNameOfLastTakenScreenShot(){
-	try{
-		QStringList filtr = QStringList() << "*_*_*_Hotkey.png";
-		screenShotFolder.refresh();
-		QStringList listOfFIlesNames = screenShotFolder.entryList(filtr, QDir::Files);
-		if (listOfFIlesNames.isEmpty())
-			throw std::exception("There is no screenshot file in screenshot folder");
-
-		return listOfFIlesNames[0];
-	}
-	catch (const std::exception& e){
-		qDebug() << e.what();
+	QStringList filtr = QStringList() << "*_*_*_Hotkey.png";
+	screenShotFolder.refresh();
+	QStringList listOfFIlesNames = screenShotFolder.entryList(filtr, QDir::Files);
+	if (listOfFIlesNames.isEmpty())
 		return QString();
-	}
+
+	return listOfFIlesNames[0];
 }
 QDir ScreenAnalyzer::setUpScreenFolder(){
 	try{
@@ -75,13 +69,15 @@ void ScreenAnalyzer::mainLoop(){
 		bool openCorrectly = loadScreen(img);
 		if (!openCorrectly)
 			continue;
+		if (!var->framesAreValid()) {
+			Calibrator(img, var, profile).calibrateManaAndHealthBar();
+		}
 
 		deleteScreenShotFolder();
 		cutImportantImgsFromWholeScreenAndSendThemToVarClass(img);
 		var->setNewImg(img);			
 	}
 }
-
 int ScreenAnalyzer::cutImportantImgsFromWholeScreenAndSendThemToVarClass(const QImage& fullscreen){
 	bool healthFrameFound = !var->getHealthArea().isEmpty();
 	bool manaFrameFound = !var->getManaArea().isEmpty();

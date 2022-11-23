@@ -84,9 +84,6 @@
     <ClCompile Include="sources\Calibrator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="sources\Logger.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="sources\Market.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -164,6 +161,12 @@
     <QtMoc Include="sources\GameConnecter.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <QtMoc Include="sources\Logger.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="sources\VariablesClass.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="sources\SelectProfileWindow.ui">
@@ -207,9 +210,6 @@
     <ClInclude Include="sources\Calibrator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="sources\VariablesClass.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="sources\ScreenSaver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -220,9 +220,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="sources\MinimapAnalyzer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="sources\Logger.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="sources\JsonParser.h">

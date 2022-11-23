@@ -3,7 +3,7 @@
 //#include "tlhelp32.h"
 #include <comdef.h> 
 
-#include "Logger.h"
+#include "RestorationMethode.h"
 #include "VariablesClass.h"
 #include "Key.h"
 class GameConnecter  : public QObject
@@ -16,6 +16,9 @@ public:
 	void clickRight(QPoint pt);
 	void sendStringToGame(QString str);
 	bool sendKeyStrokeToProcess(Key key);
+	void useRestorationMethode(RestorationMethode methode) {
+		;
+	}
 private:
 	std::shared_ptr<VariablesClass> var;
 };

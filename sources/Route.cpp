@@ -70,7 +70,7 @@ bool Route::loadFromJsonFile(QString pathToFile){
 	QJsonObject obj;
 	bool fileFound = JsonParser().openJsonFile(obj, pathToFile);
 	if (!fileFound) {
-		Logger::logPotenialBug("Can't find file " + pathToFile, "loadFromJsonFile", "Route");
+		//Logger::logPotenialBug("Can't find file " + pathToFile, "loadFromJsonFile", "Route");
 		QString text = QObject::tr("File: ") + pathToFile + QObject::tr(" doesn't exist.");
 		Utilities::showMessageBox_INFO(text);
 		return false;
@@ -78,7 +78,7 @@ bool Route::loadFromJsonFile(QString pathToFile){
 
 	QJsonArray pointsArray = obj["points"].toArray();
 	if (pointsArray.isEmpty()) {
-		Logger::logPotenialBug(QString("file has wrong structure.").arg(pathToFile), "loadFromJsonFile", "Route");
+		//Logger::logPotenialBug(QString("file has wrong structure.").arg(pathToFile), "loadFromJsonFile", "Route");
 		QString text = QObject::tr("File: ") + pathToFile + QObject::tr(" has wrong structure.");
 		Utilities::showMessageBox_INFO(text);
 		return false;

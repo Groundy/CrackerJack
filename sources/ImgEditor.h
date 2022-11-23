@@ -2,7 +2,6 @@
 
 #include <QObject>
 #include <qimage.h>
-#include "Logger.h"
 #include "Utilities.h"
 class ImgEditor  : public QObject
 {
@@ -23,5 +22,7 @@ public:
 	static QImage getImageFromAdvancedCode(QString codeOfImg);
 	static int getNumberFromBottomBar(QImage& bottomBar);
 	static void cutImgWithLettersToSingleLettersImgList(QImage& img, QList<QImage>& list);
+	static QList<QPoint> findStartPositionInImg_mulitpeImgs(QList<QImage*> imgsToFind, QImage& imgToShareWithin);
+	static QList<QPoint> findStartPositionInImg(const QImage& imgToFind, const QImage& imgToShareWithin);
 
 };

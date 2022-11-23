@@ -6,7 +6,6 @@ Calibrator::Calibrator(QImage& fullScreen, std::shared_ptr<VariablesClass> var, 
 Calibrator::~Calibrator()
 {
 }
-
 void Calibrator::getMapWithPotionsImgCodes(QMap<QString, QString>& name_code_light, QMap<QString, QString>& name_code_dark) {
 	name_code_light.clear();
 	name_code_light.insert("Great Health Potion", "17_2_#139#7#0_#50#3#0_#170#6#0_#109#6#0_#199#2#0_#205#4#0_#228#2#0_#222#2#0_#247#33#39_#242#2#0_#243#105#129_#244#33#39_#236#86#105_#219#58#66_#157#8#0_#163#38#39_#183#5#0_#160#5#0_#171#5#0_#199#6#0_#144#7#0_#160#6#0_#146#7#0_#124#9#0_#147#8#0_#137#7#0_#150#3#0_#142#7#0_#146#4#0_#147#4#0_#117#3#0_#106#4#0_#117#4#0_#101#4#0_");
@@ -34,7 +33,6 @@ void Calibrator::getMapWithPotionsImgCodes(QMap<QString, QString>& name_code_lig
 	name_code_dark.insert("Ultimate Spirit Potion", "4_2_#50#34#18_#57#44#27_#45#27#10_#56#43#27_#38#20#0_#35#19#0_#14#13#13_#33#18#0_");
 	name_code_dark.insert("Great Health Potion", "17_2_#41#2#0_#15#1#0_#51#2#0_#32#2#0_#59#1#0_#61#1#0_#68#1#0_#66#1#0_#74#10#12_#72#1#0_#72#31#38_#73#10#12_#70#26#31_#65#17#20_#47#2#0_#49#11#12_#55#1#0_#48#1#0_#51#1#0_#59#2#0_#43#2#0_#48#2#0_#44#2#0_#37#3#0_#44#2#0_#41#2#0_#45#1#0_#42#2#0_#44#1#0_#44#1#0_#35#1#0_#32#1#0_#35#1#0_#30#1#0_");
 }
-
 bool Calibrator::fillRectWithPotsInVarClass(QImage& fullscreen, QStringList nameOfPotionsToLookFor) {
 	QStringList foundPotions;
 	QList<QRect> rectsWithPotions;
@@ -57,78 +55,10 @@ bool Calibrator::fillRectWithPotsInVarClass(QImage& fullscreen, QStringList name
 
 	return true;
 }
-
-QList<QPoint> Calibrator::findStartPositionInImg_mulitpeImgs(QList<QImage*> imgsToFind, QImage& imgToShareWithin) {
-	// this fun return starting points from imgToSharePoints than consist pixels from one of imgsToFind
-
-	QImage::Format formatBig = imgToShareWithin.format();
-	for each (QImage * var in imgsToFind) {
-		if (formatBig != var->format()) {
-			Logger::logPotenialBug("Not all imgs have the same format!","Calibrator","findStartPositionInImg_mulitpeImgs");
-			return QList<QPoint>();//[TO DO zamienic ta funkcje zeby zwracala error code]
-		}
-	}
-
-	const int WIDTH_OF_FIRST_IMG = imgsToFind[0]->width();
-	const int HEIGHT_OF_FIRST_IMG = imgsToFind[0]->height();
-	for each (QImage * var in imgsToFind) {
-		bool widthIsGood = var->width() == WIDTH_OF_FIRST_IMG;
-		bool heightIsGood = var->height() == HEIGHT_OF_FIRST_IMG;
-		bool isAllRight = widthIsGood && heightIsGood;
-		if (!isAllRight) {
-			Logger::logPotenialBug("Not all imgs have the same size!", "Calibrator", "findStartPositionInImg_mulitpeImgs");
-			return QList<QPoint>();//[TO DO zamienic ta funkcje zeby zwracala error code]
-		}
-	}
-
-	const int MAX_WIDTH_VAL_TO_SHEARCH = imgToShareWithin.width() - WIDTH_OF_FIRST_IMG;
-	const int MAX_HEIGHT_VAL_TO_SHEARCH = imgToShareWithin.height() - HEIGHT_OF_FIRST_IMG;
-
-	QList<QPoint> startPointsListToRet;
-	for (int x = 0; x <= MAX_WIDTH_VAL_TO_SHEARCH; x++) {
-		for (int y = 0; y <= MAX_HEIGHT_VAL_TO_SHEARCH; y++) {
-			bool atLeastOnePixIsMatched = false;
-			uint pixFromImg_big = imgToShareWithin.pixel(x, y);
-
-			for each (QImage * var in imgsToFind) {
-				uint pixFromImg_small = var->pixel(0, 0);
-				if (pixFromImg_big == pixFromImg_small) {
-					atLeastOnePixIsMatched = true;
-					break;
-				}
-			}
-
-			if (atLeastOnePixIsMatched) {
-				//first pix matched, looking for more
-				int wrongPixels = WIDTH_OF_FIRST_IMG * HEIGHT_OF_FIRST_IMG;
-				for (int x_TMP = 0; x_TMP < WIDTH_OF_FIRST_IMG; x_TMP++) {
-					for (int y_TMP = 0; y_TMP < HEIGHT_OF_FIRST_IMG; y_TMP++) {
-						uint pixFromImg_big2 = imgToShareWithin.pixel(x + x_TMP, y + y_TMP);
-						bool metReq = false;
-						for each (QImage * var in imgsToFind) {
-							uint pixFromImg_small2 = var->pixel(x_TMP, y_TMP);
-							bool pixMatched = pixFromImg_big2 == pixFromImg_small2;
-							if (pixMatched) {
-								metReq = true;
-								break;
-							}
-						}
-						if (metReq)
-							wrongPixels--;
-					}
-				}
-				if (wrongPixels == 0)
-					startPointsListToRet.push_back(QPoint(x, y));
-			}
-		}
-	}
-	return startPointsListToRet;
-}
-
 bool Calibrator::findPotionsOnBottomBar(QStringList namesOfPotionsToFind, QStringList& namesOfPotionosFound, QList<QRect>& rectsWithFoundPots, QImage& bottomBarImg) {
 	bool wrongInput = namesOfPotionsToFind.size() == 0 || bottomBarImg.width() <= 0 || bottomBarImg.height() <= 0;
 	if (wrongInput) {
-		Logger::logPotenialBug("Wrong(empty) input", "Calibrator", "findPotionsOnBottomBar");
+		//Logger::logPotenialBug("Wrong(empty) input", "Calibrator", "findPotionsOnBottomBar");
 		return false;
 	}
 
@@ -161,13 +91,13 @@ bool Calibrator::findPotionsOnBottomBar(QStringList namesOfPotionsToFind, QStrin
 		QList<QImage*> potionToLookFor;
 		potionToLookFor.push_back(&potionsImg_light[i]);
 		potionToLookFor.push_back(&potionsImg_dark[i]);
-		QList<QPoint> pointsOfStart = findStartPositionInImg_mulitpeImgs(potionToLookFor, bottomBarImg);
+		QList<QPoint> pointsOfStart = ImgEditor::findStartPositionInImg_mulitpeImgs(potionToLookFor, bottomBarImg);
 		if (pointsOfStart.size() == 1) {
 			potionsOfStartingPotions.push_back(pointsOfStart.first());
 			namesOfFoundPotions.push_back(map_dark.keys()[i]);
 		}
-		else if(pointsOfStart.size() > 1)
-			Logger::logPotenialBug("More than one occurance of Potion in Image", "Calibrator", "findPotionsOnBottomBar");
+		//else if(pointsOfStart.size() > 1)
+			//Logger::logPotenialBug("More than one occurance of Potion in Image", "Calibrator", "findPotionsOnBottomBar");
 	}
 
 	const int WIDTH_HEIGHT_PIC = 32;
@@ -207,8 +137,8 @@ bool Calibrator::findPotionsOnBottomBar(QStringList namesOfPotionsToFind, QStrin
 		int start_y = someWhereInPic.y() - WIDTH_HEIGHT_PIC + 2 * height + 1;
 
 		bool err = start_x < 0 || (start_x + width) > WIDTH || start_y < 0 || (start_y + height) > HEIGHT;
-		if(err)
-			Logger::logPotenialBug("Out of range cordinates of rect to cut, only part of it will be cut", "Calibrator", "findPotionsOnBottomBar");
+		//if(err)
+			//Logger::logPotenialBug("Out of range cordinates of rect to cut, only part of it will be cut", "Calibrator", "findPotionsOnBottomBar");
 
 		QRect toAdd(start_x, start_y, width, height);
 		rectToRet.push_back(toAdd);
@@ -219,55 +149,6 @@ bool Calibrator::findPotionsOnBottomBar(QStringList namesOfPotionsToFind, QStrin
 
 	return true;
 }
-
-QList<QPoint> Calibrator::findStartPositionInImg(const QImage& imgToFind, const QImage& imgToSearchWithin) {
-	//fun return list of start positions of imgToFind, position is lef down corner
-	const int WIDTH_SMALL_PIC = imgToFind.width();
-	const int HEIGHT_SMALL_PIC = imgToFind.height();
-	const int WIDTH_BIG_PIC = imgToSearchWithin.width();
-	const int HEIGHT_BIG_PIC = imgToSearchWithin.height();
-
-	bool errEmpty = WIDTH_SMALL_PIC <= 0 || HEIGHT_SMALL_PIC <= 0 || WIDTH_BIG_PIC <= 0 || HEIGHT_BIG_PIC <= 0;
-	bool errWidth = WIDTH_SMALL_PIC >= WIDTH_BIG_PIC;
-	bool errHeight = HEIGHT_SMALL_PIC >= HEIGHT_BIG_PIC;
-	bool errFormat = imgToFind.format() != imgToSearchWithin.format();
-	bool anyErr = errWidth || errHeight || errFormat || errEmpty;
-	if (anyErr) {
-		Logger::logPotenialBug("Wrong input of two img", "Calibrator", "findStartPositionInImg");
-		return QList<QPoint>();
-	}
-
-	const int MAX_X_INDEX_TO_CHECK = WIDTH_BIG_PIC - WIDTH_SMALL_PIC;
-	const int MAX_Y_INDEX_TO_CHECK = HEIGHT_BIG_PIC - HEIGHT_SMALL_PIC;
-
-	QList<QPoint> startPointsListToRet;
-	for (int x = 0; x <= MAX_X_INDEX_TO_CHECK; x++) {
-		for (int y = 0; y <= MAX_Y_INDEX_TO_CHECK; y++) {
-			uint pixSmallImg = imgToFind.pixel(0, 0);
-			uint pixBigImg = imgToSearchWithin.pixel(x, y);
-			bool firstPixelMatched = pixSmallImg == pixBigImg;
-			if (firstPixelMatched) {
-				bool foundPosition = true;
-				for (int x_TMP = 1; x_TMP < WIDTH_SMALL_PIC; x_TMP++) {
-					for (int y_TMP = 1; y_TMP < HEIGHT_SMALL_PIC; y_TMP++) {
-						pixSmallImg = imgToFind.pixel(x_TMP, y_TMP);
-						pixBigImg = imgToSearchWithin.pixel(x + x_TMP, y + y_TMP);
-						bool pixNotMatched = pixSmallImg != pixBigImg;
-						if (pixNotMatched) {
-							x_TMP = WIDTH_SMALL_PIC;
-							y_TMP = HEIGHT_SMALL_PIC;
-							foundPosition = false;
-						}
-					}
-				}
-				if (foundPosition)
-					startPointsListToRet.push_back(QPoint(x, y));
-			}
-		}
-	}
-	return startPointsListToRet;
-}
-
 bool Calibrator::calibrateManaAndHealthBar(){
 	QList<QRect> importantRectangles;
 	bool sucessfullyRead = getRectsFromProfile(importantRectangles);
@@ -290,7 +171,6 @@ bool Calibrator::calibrateManaAndHealthBar(){
 	}
 	return false;
 }
-
 bool Calibrator::findIndexesOfRectangleThatContainsSlashes(QImage& fullScreen, QList<QRect> importantFrames, QList<int>& indexesOfFramesWithSlashesVert, QList<int>& indexesOfFramesWithSlashesHor, int& indexOfFrameCombined) {
 	QImage vertSlashes = ImgEditor::fromCharToImg(QChar(47));
 	QImage horSlashes = ImgEditor::fromCharToImg(QChar(92));
@@ -300,7 +180,7 @@ bool Calibrator::findIndexesOfRectangleThatContainsSlashes(QImage& fullScreen, Q
 		QImage imgTmp = fullScreen.copy(importantFrames[i]);
 		ImgEditor::imgToBlackAndWhiteAllColors(imgTmp, 250);
 
-		QList<QPoint> pointsVert = findStartPositionInImg(vertSlashes, imgTmp);
+		QList<QPoint> pointsVert = ImgEditor::findStartPositionInImg(vertSlashes, imgTmp);
 		if (pointsVert.size() == 1)
 			indexesVert.push_back(i);
 		else if (pointsVert.size() == 2) {
@@ -308,7 +188,7 @@ bool Calibrator::findIndexesOfRectangleThatContainsSlashes(QImage& fullScreen, Q
 			indexesVert.push_back(i);
 		}
 
-		QList<QPoint> pointsHor = findStartPositionInImg(horSlashes, imgTmp);
+		QList<QPoint> pointsHor = ImgEditor::findStartPositionInImg(horSlashes, imgTmp);
 		if (pointsHor.size() == 1)
 			indexesHor.push_back(i);
 		else if (pointsHor.size() == 2) {
@@ -326,12 +206,11 @@ bool Calibrator::findIndexesOfRectangleThatContainsSlashes(QImage& fullScreen, Q
 	else
 		return false;
 }
-
-bool Calibrator::setPositionHealthImgs(QImage& fullscreen, QList<QRect> listOfImportantRectangles, int& indexOfHealth, int& indexOfMana, int& indexOfManaShield, int& indexOfManaAndManaShieldCombined, int& howTheyShouldBeRotated) {
+bool Calibrator::setPositionHealthImgs(QImage& fullscreen, QList<QRect> listOfImportantRectangles, int& indexOfHealth, int& indexOfMana, int& indexOfManaShield, int& indexOfCombined, int& howTheyShouldBeRotated) {
 	QList<int> indexesOfRectWithSlashVert;
 	QList<int> indexesOfRectWithSlashHor;
 	int indexOfFrameWithManaShieldAndMana;
-	findIndexesOfRectangleThatContainsSlashes(fullscreen, listOfImportantRectangles, indexesOfRectWithSlashVert, indexesOfRectWithSlashHor, indexOfFrameWithManaShieldAndMana);
+	findIndexesOfRectangleThatContainsSlashes(fullscreen, listOfImportantRectangles, indexesOfRectWithSlashVert, indexesOfRectWithSlashHor, indexOfCombined);
 	{
 		enum positionsOfInterface { TOP, RIGHT, DOWN, LEFT };
 		positionsOfInterface position;
@@ -368,13 +247,13 @@ bool Calibrator::setPositionHealthImgs(QImage& fullscreen, QList<QRect> listOfIm
 					indexOfHealth = listOfImportantRectangles.indexOf(sortedByY[0]);
 					indexOfMana = -1;
 					indexOfManaShield = -1;
-					indexOfManaAndManaShieldCombined = listOfImportantRectangles.indexOf(sortedByY[1]);
+					indexOfCombined = listOfImportantRectangles.indexOf(sortedByY[1]);
 				}
 				else {
 					indexOfHealth = listOfImportantRectangles.indexOf(sortedByX[0]);
 					indexOfMana = -1;
 					indexOfManaShield = -1;
-					indexOfManaAndManaShieldCombined = listOfImportantRectangles.indexOf(sortedByX[1]);
+					indexOfCombined = listOfImportantRectangles.indexOf(sortedByX[1]);
 				}
 			}
 			else if (!combined && size == 3) {
@@ -383,10 +262,10 @@ bool Calibrator::setPositionHealthImgs(QImage& fullscreen, QList<QRect> listOfIm
 				sortByXY(rectangles, sortedByX, sortedByY);
 				indexOfMana = listOfImportantRectangles.indexOf(sortedByY[0]);
 				indexOfManaShield = listOfImportantRectangles.indexOf(sortedByY[1]);
-				indexOfManaAndManaShieldCombined = -1;
+				indexOfCombined = -1;
 			}
 			else if (!combined && size == 2) {
-				indexOfManaAndManaShieldCombined = -1;
+				indexOfCombined = -1;
 				indexOfManaShield = -1;
 				bool isParallelStyle = sortedByY[0].y() == sortedByY[1].y();
 				if (isParallelStyle) {
@@ -423,19 +302,19 @@ bool Calibrator::setPositionHealthImgs(QImage& fullscreen, QList<QRect> listOfIm
 					indexOfHealth = listOfImportantRectangles.indexOf(sortedByX[0]);
 					indexOfMana = listOfImportantRectangles.indexOf(sortedByX[1]);
 					indexOfManaShield = -1;
-					indexOfManaAndManaShieldCombined = -1;
+					indexOfCombined = -1;
 				}
 				else {
 					indexOfHealth = listOfImportantRectangles.indexOf(sortedByY[0]);
 					indexOfMana = listOfImportantRectangles.indexOf(sortedByY[1]);
 					indexOfManaShield = -1;
-					indexOfManaAndManaShieldCombined = -1;
+					indexOfCombined = -1;
 				}
 			}
 			else if (size == 2 && combined) {//mana shield, DEFAULT, PARALLEL AND COMPACT STYLE
 				indexOfMana = -1;
 				indexOfManaShield = -1;
-				indexOfManaAndManaShieldCombined = indexOfFrameWithManaShieldAndMana;
+				indexOfCombined = indexOfFrameWithManaShieldAndMana;
 				indexesOfRectWithSlashVert.removeOne(indexOfFrameWithManaShieldAndMana);
 				indexOfHealth = indexesOfRectWithSlashVert[0];
 			}
@@ -443,7 +322,7 @@ bool Calibrator::setPositionHealthImgs(QImage& fullscreen, QList<QRect> listOfIm
 				indexOfHealth = listOfImportantRectangles.indexOf(sortedByX[1]);
 				indexOfMana = listOfImportantRectangles.indexOf(sortedByX[0]);
 				indexOfManaShield = listOfImportantRectangles.indexOf(sortedByX[2]);
-				indexOfManaAndManaShieldCombined = -1;
+				indexOfCombined = -1;
 			}
 			else
 				return false;
@@ -468,25 +347,25 @@ bool Calibrator::setPositionHealthImgs(QImage& fullscreen, QList<QRect> listOfIm
 					indexOfHealth = listOfImportantRectangles.indexOf(sortedByX[0]);
 					indexOfMana = listOfImportantRectangles.indexOf(sortedByX[1]);
 					indexOfManaShield = -1;
-					indexOfManaAndManaShieldCombined = -1;
+					indexOfCombined = -1;
 				}
 				else {
 					indexOfHealth = listOfImportantRectangles.indexOf(sortedByY[0]);
 					indexOfMana = listOfImportantRectangles.indexOf(sortedByY[1]);
 					indexOfManaShield = -1;
-					indexOfManaAndManaShieldCombined = -1;
+					indexOfCombined = -1;
 				}
 			}
 			else if (size == 2 && combined) {//mana shield, DEFAULT, PARALLEL AND COMPACT STYLE
 				indexOfMana = -1;
 				indexOfManaShield = -1;
-				indexOfManaAndManaShieldCombined = indexOfFrameWithManaShieldAndMana;
+				indexOfCombined = indexOfFrameWithManaShieldAndMana;
 				indexesOfRectWithSlashVert.removeOne(indexOfFrameWithManaShieldAndMana);
 				indexOfHealth = indexesOfRectWithSlashVert[0];
 			}
 			else if (size == 3 && !combined) {//mana shields, LARGE
 				indexOfHealth = listOfImportantRectangles.indexOf(sortedByX[1]);
-				indexOfManaAndManaShieldCombined = -1;
+				indexOfCombined = -1;
 				indexOfMana = listOfImportantRectangles.indexOf(sortedByX[2]);
 				indexOfManaShield = listOfImportantRectangles.indexOf(sortedByX[0]);
 			}
@@ -507,7 +386,6 @@ bool Calibrator::setPositionHealthImgs(QImage& fullscreen, QList<QRect> listOfIm
 
 	return true;
 }
-
 bool Calibrator::categorizeWindows(QImage& fullscreen, QList<QRect>& importantRectangles) {
 	//4 cause 1-minimap 2-gameScreen 3-health 4-mana, those 4 have to be found
 	if (importantRectangles.size() < 4)
@@ -572,17 +450,18 @@ bool Calibrator::categorizeWindows(QImage& fullscreen, QList<QRect>& importantRe
 
 	//miniMap Frame
 	{
+		/*
 		QMap<int, QRect> startX_Rect_map;
 		for each (QRect var in importantRectangles)
 			startX_Rect_map.insert(var.x(), var);
 		QRect miniMapRect = startX_Rect_map.last();
 		var->setMiniMapArea(miniMapRect);
 		importantRectangles.removeOne(miniMapRect);
+		*/
 	}
 
 	return true;
 }
-
 bool Calibrator::findWindowsOnScreen(QImage& fullScreen, QList<QRect>& importantRectangles) {
 	const int WIDTH = fullScreen.width();
 	const int HEIGHT = fullScreen.height();
@@ -657,7 +536,6 @@ bool Calibrator::findWindowsOnScreen(QImage& fullScreen, QList<QRect>& important
 	importantRectangles = frameToRet;
 	return frameToRet.size() >= 4;
 }
-
 void Calibrator::TEST_setPositionHealthImhs(QString pathToFolderWithDiffrentPositionsStylesScreen, QString pathToOutPutFolder) {
 	QImage combined, health, mana, manaShield;
 	QDir directory(pathToFolderWithDiffrentPositionsStylesScreen);
@@ -751,7 +629,6 @@ void Calibrator::TEST_setPositionHealthImhs(QString pathToFolderWithDiffrentPosi
 			return;
 	}
 }
-
 bool Calibrator::getRectsFromProfile(QList<QRect>& importRectsFromProf) {
 	importRectsFromProf.clear();
 	/*
@@ -787,10 +664,9 @@ bool Calibrator::getRectsFromProfile(QList<QRect>& importRectsFromProf) {
 	return true;
 	*/return false;
 }
-
 void  Calibrator::sortByXY(QList<QPoint>& points, QList<QPoint>& sortedByX, QList<QPoint>& sortedByY) {
-	QMap<int, QPoint> mapX;
-	QMap<int, QPoint> mapY;
+	QMultiMap<int, QPoint> mapX;
+	QMultiMap<int, QPoint> mapY;
 	for each (QPoint point in points) {
 		mapX.insert(point.x(), point);
 		mapY.insert(point.y(), point);
@@ -799,8 +675,8 @@ void  Calibrator::sortByXY(QList<QPoint>& points, QList<QPoint>& sortedByX, QLis
 	sortedByY = mapY.values();
 }
 void  Calibrator::sortByXY(QList<QRect>& inputRects, QList<QRect>& sortedByX, QList<QRect>& sortedByY) {
-	QMap<int, QRect> mapX;
-	QMap<int, QRect> mapY;
+	QMultiMap<int, QRect> mapX;
+	QMultiMap<int, QRect> mapY;
 	for each (QRect rect in inputRects) {
 		mapX.insert(rect.x(), rect);
 		mapY.insert(rect.y(), rect);

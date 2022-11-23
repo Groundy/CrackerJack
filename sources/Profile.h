@@ -29,6 +29,11 @@ public:
 	QJsonObject toJson() const;
 	QStringList getManaRestorationNames();
 	QStringList getHealthRestorationNames();
+	bool isValid() const {
+		return
+			!profileName.isEmpty() &&
+			screenShotKey.isValid();
+	}
 
 	//getters setters
 	void setName(QString name) { this->profileName = name; }

@@ -135,7 +135,7 @@ bool RouteCreator::loadMap(int floor){
 	floor = 15 - floor;// (15 bottom, 7 ground, 0 top)
 	bool wrongInput = floor < 0 || floor >15;
 	if (wrongInput) {
-		Logger::logPotenialBug("Wrong input, input=" + QString::number(floor), "RouteCreator", "loadMap");
+		//Logger::logPotenialBug("Wrong input, input=" + QString::number(floor), "RouteCreator", "loadMap");
 	}
 
 	QString floorAsStr = QString::number(floor);
@@ -158,7 +158,7 @@ bool RouteCreator::loadMap(int floor){
 	}
 	else {
 		QString text = QString("Can't load file \n %1 \n or \n %2").arg(pathToMap, pathToWalkMap);
-		Logger::logPotenialBug(text, "RouteCreator", "loadMap");
+		//Logger::logPotenialBug(text, "RouteCreator", "loadMap");
 		return false;
 	}
 

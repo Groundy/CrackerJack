@@ -125,7 +125,7 @@ HWND ActiveGameThread::getHandlerToGameWindow(unsigned int PID, QString WindowNa
     LPCWSTR nameOfWindowLPCWSTR = (const wchar_t*)WindowName.utf16();
     HWND handler = FindWindow(NULL, nameOfWindowLPCWSTR);
     if (handler == NULL) {
-        Logger::logPotenialBug("Can't get handler to window: " + WindowName, "Utilities", "clickRight");
+        //Logger::logPotenialBug("Can't get handler to window: " + WindowName, "Utilities", "clickRight");
         return HWND();
     }
     DWORD tmp = PID;
@@ -134,7 +134,7 @@ HWND ActiveGameThread::getHandlerToGameWindow(unsigned int PID, QString WindowNa
     if (hThread != NULL)
         return handler;
     else {
-        Logger::logPotenialBug("Can't get thread PID for used handler", "Utilities", "clickRight");
+        //Logger::logPotenialBug("Can't get thread PID for used handler", "Utilities", "clickRight");
         return HWND();
     }
 }

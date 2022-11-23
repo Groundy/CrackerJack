@@ -4,7 +4,6 @@
 #include <qimage.h>
 #include <qstring.h>
 #include <qpoint.h>
-#include "Logger.h"
 #include "Utilities.h"	
 #include "Calibrator.h"
 #include "qrandom.h"
@@ -20,7 +19,7 @@ public:
 
 		bool wholeStructRead = structStr.left(1) == "[" && structStr.right(1) == "]";
 		if (!wholeStructRead) {
-			Logger::logPotenialBug("error in creating ShearchArea struct", "ShearchArea(QString)", "ShearchArea");
+			//Logger::logPotenialBug("error in creating ShearchArea struct", "ShearchArea(QString)", "ShearchArea");
 			return;
 		}
 		structStr = structStr.mid(1, structStr.size() - 2);
@@ -31,13 +30,13 @@ public:
 			int levelNumber = possibleLevelNumber.toInt(&ok);
 			bool somethingWrong = !ok || levelNumber < 0 || levelNumber > 15;
 			if (somethingWrong) {
-				Logger::logPotenialBug("error in creating ShearchArea struct", "ShearchArea(QString)", "ShearchArea");
+				//Logger::logPotenialBug("error in creating ShearchArea struct", "ShearchArea(QString)", "ShearchArea");
 				return;
 			}
 			lvlStr = lvlStr.right(lvlStr.size() - 2);
 			somethingWrong = lvlStr.left(1) != "[" || lvlStr.right(1) != "]";
 			if (somethingWrong) {
-				Logger::logPotenialBug("error in creating ShearchArea struct", "ShearchArea(QString)", "ShearchArea");
+				//Logger::logPotenialBug("error in creating ShearchArea struct", "ShearchArea(QString)", "ShearchArea");
 				return;
 			}
 			lvlStr = lvlStr.mid(1, lvlStr.size() - 2);
@@ -46,7 +45,7 @@ public:
 			for each (QString rectParametersStr in rectanglesParametersList){
 				QStringList rectParameters = rectParametersStr.split(",", Qt::SkipEmptyParts);
 				if (rectParameters.size() != 4) {
-					Logger::logPotenialBug("error in creating ShearchArea struct", "ShearchArea(QString)", "ShearchArea");
+					//Logger::logPotenialBug("error in creating ShearchArea struct", "ShearchArea(QString)", "ShearchArea");
 					return;
 				}
 				int x = rectParameters[0].toInt();

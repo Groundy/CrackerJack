@@ -15,6 +15,7 @@
 #include "SelectProfileWindow.h"
 #include "RouteCreator.h"
 #include "Market.h"
+#include "MinimapAnalyzer.h"
 namespace Ui { class MainMenu; };
 
 class MainMenu : public QDialog
@@ -32,10 +33,12 @@ public slots:
 	void tradingAction();
 	void skillingAction();
 	void getAndDisplayPotionAmountInfo(QStringList);
+
 	//from threads
 	void autoHealAndManaRegCheckBoxChanged();
 	void onGameStateChanged(int state);
-	void changedValueOfCharHealthOrMana(double healthPercentage, double manaPercentage, double manaShieldPercentage0);
+	void changedValueOfCharHealthOrMana(double healthPercentage, double manaPercentage, double manaShieldPercentage);
+	void printToUserConsol(QStringList msgs);
 private:
 	Ui::MainMenu *ui;
 	Profile* prof;

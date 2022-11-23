@@ -1,21 +1,21 @@
 #pragma once
-#include "qstring.h"
-#include "qmessagebox.h"
-#include <Key.h>
-#include "qprocess.h"
-#include "Windows.h"
+#include <qstring.h>
+#include <qmessagebox.h>
+#include <qprocess.h>
+#include <Windows.h>
 #include <psapi.h>
-#include "qlist.h"
-#include "tlhelp32.h"
+#include <qrgb.h>
+#include <qdatetime.h>
 #include <iostream>
+#include <qlist.h>
+#include <qdir.h>
+#include <qdebug.h>
+#include <tlhelp32.h>
+
 #include "RGBstruct.h"
-#include "qdir.h"
-#include "qdebug.h"
 #include "VariablesClass.h"
-#include "qdatetime.h"
-#include "qrgb.h"
-#include "Logger.h"
 #include "GameConnecter.h"
+#include "Key.h"
 class Utilities {
 public:
 	enum class FOLDERS_OF_TMP_FOLDER {Logs, Profiles, TradeReports, Main, Routes, MarketLists};
@@ -29,7 +29,7 @@ public:
 	static void showMessageBox_INFO(QString text);
 	static bool showMessageBox_NO_YES(QString text);
 
-	static LONG64 getCurrentTimeInMiliSeconds();
+	static qint64 getCurrentTimeInMiliSeconds();
 	static QDir getDirWithCrackerJackTmpFolder(FOLDERS_OF_TMP_FOLDER folderType);
 	static QMap<FieldsOfIniFile, QString> get_Field_NamesFromIni_map();
 	static QString readFromIniFile(FieldsOfIniFile nameOfField);

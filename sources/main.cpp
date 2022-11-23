@@ -22,19 +22,29 @@ void setTranslation(QApplication& app) {
 	bool ok1 = translator.load("Debug\\crackerjackclient_pl");
 	bool ok2 = app.installTranslator(&translator);
 }
+Profile* getProfile() {
+	bool skip = false;
+	if (skip) {
+		Profile prof = JsonParser().loadProfiles("Ek test prof");
+		return &prof;
+	}
+	else {
+		Profile* prof = new Profile();
+		SelectProfileWindow win(NULL, prof);
+		if (!(win.exec() == QDialog::Accepted))
+			exit(0);
+		return prof;
+	}
 
+}
 int main(int argc, char *argv[])
 {
 	QApplication app(argc, argv);
 	setTranslation(app);
 	setStyle(app);
 	test();
-
-	Profile* prof = new Profile();
-	SelectProfileWindow win(NULL, prof);
-	if (!(win.exec() == QDialog::Accepted))
-		return 0;
-	auto mainMenu = std::make_unique<MainMenu>(prof);
+	Profile* profile = getProfile();
+	auto mainMenu = std::make_unique<MainMenu>(profile);
 	if (!(mainMenu->exec() == QDialog::Accepted))
 		return 0;
 	return app.exec();

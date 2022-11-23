@@ -383,6 +383,7 @@ QVector<RestorationMethode> NewProfileConfiguartor::getRestorationMethodesFromGU
 		QString methodeName = guiPotiners.methodeNames[i]->currentText();
 		toRet.push_back(RestorationMethode(threshold, Key(keyName), methodeName));
 	}
+	fillRestorationMethodesDetails(toRet);
 	return toRet;
 }
 void NewProfileConfiguartor::saveDataToProfile(){

@@ -13,10 +13,7 @@ class Calibrator{
 public:
 	Calibrator(QImage& fullScreen, std::shared_ptr<VariablesClass> var, Profile* profileToSet);
 	~Calibrator();	
-	static QList<QPoint> findStartPositionInImg_mulitpeImgs(QList<QImage*> imgsToFind, QImage& imgToShareWithin);
-	static QList<QPoint> findStartPositionInImg(const QImage& imgToFind, const QImage& imgToShareWithin);
 	bool calibrateManaAndHealthBar();
-
 private:
 	QImage* fullScreen;
 	std::shared_ptr<VariablesClass> var;
