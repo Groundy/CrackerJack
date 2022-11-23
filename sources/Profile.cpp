@@ -3,65 +3,74 @@
 Profile::Profile(){
 }
 Profile::Profile(QJsonObject obj) {
-	try{
-		QJsonValue value;
+	try {
 
-		value = obj["profileName"];
-		if(value.isUndefined() || !value.isString())
-			throw std::exception("Error in reading profile from json file, problem with field profileName");
+		QString field = "profileName";
+		QJsonValue value = obj[field];
+		if (value.isUndefined() || !value.isString())
+			throw std::exception(field.toStdString().c_str());
 		this->profileName = value.toString();
 
-		value = obj["profession"];
+		field = "profession";
+		value = obj[field];
 		if (value.isUndefined() || !value.isString())
-			throw std::exception("Error in reading profile from json file, problem with field profession");
+			throw std::exception(field.toStdString().c_str());
 		this->profession = Profession(value.toString());
 
-		value = obj.contains("healthRestorations");
+		field = "healthRestorations";
+		value = obj[field];
 		if(value.isUndefined() || !value.isArray())
-			throw std::exception("Error in reading profile from json file, problem with field healthRestorations");
+			throw std::exception(field.toStdString().c_str());
 		auto healRestorationArr = value.toArray();
 		for each (auto var in healRestorationArr){
 			RestorationMethode resStr(var.toObject());
 			this->healthRestorations.push_back(resStr);
 		}
 
-		value = obj.contains("manaRestorations");
+		field = "manaRestorations";
+		value = obj[field];
 		if (value.isUndefined() || !value.isArray())
-			throw std::exception("Error in reading profile from json file, problem with field manaRestorations");
+			throw std::exception(field.toStdString().c_str());
 		auto manaRestorationArr = value.toArray();
 		for each (auto var in manaRestorationArr) {
 			RestorationMethode resStr(var.toObject());
 			this->manaRestorations.push_back(resStr);
 		}
 
-		value = obj["lootKey"];
+		field = "lootKey";
+		value = obj[field];
 		if (value.isUndefined() || !value.isDouble())
-			throw std::exception("Error in reading profile from json file, problem with field lootKey");
+			throw std::exception(field.toStdString().c_str());
 		this->autoLoot = AutoLoot(value.toInt());
 
-		value = obj["controls"];
+		field = "controls";
+		value = obj[field];
 		if (value.isUndefined() || !value.isDouble())
-			throw std::exception("Error in reading profile from json file, problem with field controls");
+			throw std::exception(field.toStdString().c_str());
 		this->controls = Controls(value.toInt());
 
+		field = "screenShotKey";
 		value = obj["screenShotKey"];
 		if (value.isUndefined() || !value.isObject())
-			throw std::exception("Error in reading profile from json file, problem with field screenShotKey");
+			throw std::exception(field.toStdString().c_str());
 		this->screenShotKey = Key(value.toObject());
 
-		value = obj["leftBars"];
+		field = "leftBars";
+		value = obj[field];
 		if (value.isUndefined() || !value.isDouble())
-			throw std::exception("Error in reading profile from json file, problem with field leftBars");
+			throw std::exception(field.toStdString().c_str());
 		this->barsLeft = value.toInt();
-
-		value = obj["rightBars"];
+	
+		field = "rightBars";
+		value = obj[field];
 		if (value.isUndefined() || !value.isDouble())
-			throw std::exception("Error in reading profile from json file, problem with field rightBars");
+			throw std::exception(field.toStdString().c_str());
 		this->barsRight = value.toInt();
 	}
 	catch (const std::exception& e){
-		qDebug() << e.what() << endl;
-		Utilities::showMessageBox_INFO(e.what());
+		QString msg = QString("Error in reading profile from json file, problem with field %1").arg(e.what());
+		qDebug() << msg << endl;
+		Utilities::showMessageBox_INFO(msg);
 	}
 }
 Profile::Profile(const Profile& profile) {
@@ -77,13 +86,13 @@ Profile::Profile(const Profile& profile) {
 }
 
 QJsonObject Profile::toJson() const{
-	QJsonObject mainObj;
 	QJsonArray healthArray, manaArray;
 	for each (auto var in healthRestorations)
 		healthArray.push_back(var.toJson());
 	for each (auto var in manaRestorations)
 		manaArray.push_back(var.toJson());
-	
+
+	QJsonObject mainObj;
 	mainObj.insert("profileName", profileName);
 	mainObj.insert("profession", profession.getTypeName());
 	mainObj.insert("healthRestorations", healthArray);
