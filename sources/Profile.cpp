@@ -4,45 +4,60 @@ Profile::Profile(){
 }
 Profile::Profile(QJsonObject obj) {
 	try{
-		if (!obj.contains("profileName"))
-			throw std::exception("No profileName field in profil json file!");
-		this->profileName = obj.value("profileName").toString();
+		QJsonValue value;
 
-		if (!obj.contains("profession"))
-			throw std::exception("No profileName field in profil json file!");
-		this->profession = Profession(obj.value("profession").toString());
+		value = obj["profileName"];
+		if(value.isUndefined() || !value.isString())
+			throw std::exception("Error in reading profile from json file, problem with field profileName");
+		this->profileName = value.toString();
 
-		if (!obj.contains("healthRestorations"))
-			throw std::exception("No healthRestorations field in profil json file!");
-		auto healRestorationArr = obj.value("healthRestorations").toArray();
+		value = obj["profession"];
+		if (value.isUndefined() || !value.isString())
+			throw std::exception("Error in reading profile from json file, problem with field profession");
+		this->profession = Profession(value.toString());
+
+		value = obj.contains("healthRestorations");
+		if(value.isUndefined() || !value.isArray())
+			throw std::exception("Error in reading profile from json file, problem with field healthRestorations");
+		auto healRestorationArr = value.toArray();
 		for each (auto var in healRestorationArr){
 			RestorationMethode resStr(var.toObject());
 			this->healthRestorations.push_back(resStr);
 		}
 
-		if (!obj.contains("manaRestorations"))
-			throw std::exception("No manaRestorations field in profil json file!");
-		auto manaRestorationArr = obj.value("manaRestorations").toArray();
+		value = obj.contains("manaRestorations");
+		if (value.isUndefined() || !value.isArray())
+			throw std::exception("Error in reading profile from json file, problem with field manaRestorations");
+		auto manaRestorationArr = value.toArray();
 		for each (auto var in manaRestorationArr) {
 			RestorationMethode resStr(var.toObject());
 			this->manaRestorations.push_back(resStr);
 		}
 
-		if (!obj.contains("lootKey"))
-			throw std::exception("No lootKey field in profil json file!");
-		this->lootKey = AutoLootKey(obj.value("lootkey").toInt());
-		
-		if (!obj.contains("controls"))
-			throw std::exception("No controls field in profil json file!");
-		this->controls = Controls(obj.value("controls").toInt());
+		value = obj["lootKey"];
+		if (value.isUndefined() || !value.isDouble())
+			throw std::exception("Error in reading profile from json file, problem with field lootKey");
+		this->autoLoot = AutoLoot(value.toInt());
 
-		if (!obj.contains("screenShotKey"))
-			throw std::exception("No screenShotKey field in profil json file!");
+		value = obj["controls"];
+		if (value.isUndefined() || !value.isDouble())
+			throw std::exception("Error in reading profile from json file, problem with field controls");
+		this->controls = Controls(value.toInt());
 
-		Key key = Key(obj.value("screenShotKey").toObject());
-		if (!key.isValid())
-			throw std::exception("wrong screenShotKey field value!");
-		this->screenShotKey = key;
+		value = obj["screenShotKey"];
+		if (value.isUndefined() || !value.isObject())
+			throw std::exception("Error in reading profile from json file, problem with field screenShotKey");
+		this->screenShotKey = Key(value.toObject());
+
+		value = obj["leftBars"];
+		if (value.isUndefined() || !value.isDouble())
+			throw std::exception("Error in reading profile from json file, problem with field leftBars");
+		this->barsLeft = value.toInt();
+
+		value = obj["rightBars"];
+		if (value.isUndefined() || !value.isDouble())
+			throw std::exception("Error in reading profile from json file, problem with field rightBars");
+		this->barsRight = value.toInt();
 	}
 	catch (const std::exception& e){
 		qDebug() << e.what() << endl;
@@ -53,10 +68,12 @@ Profile::Profile(const Profile& profile) {
 	this->healthRestorations = profile.healthRestorations;
 	this->manaRestorations = profile.manaRestorations;
 	this->profession = profile.profession;
-	this->lootKey = profile.lootKey;
+	this->autoLoot = profile.autoLoot;
 	this->controls = profile.controls;
 	this->profileName = profile.profileName;
 	this->screenShotKey = profile.screenShotKey;
+	this->barsLeft = profile.barsLeft;
+	this->barsRight = profile.barsRight;
 }
 
 QJsonObject Profile::toJson() const{
@@ -72,8 +89,10 @@ QJsonObject Profile::toJson() const{
 	mainObj.insert("healthRestorations", healthArray);
 	mainObj.insert("manaRestorations", manaArray);
 	mainObj.insert("screenShotKey", screenShotKey.toJson());
-	mainObj.insert("lootKey", lootKey);
+	mainObj.insert("lootKey", autoLoot);
 	mainObj.insert("controls", controls);
+	mainObj.insert("leftBars", barsLeft);
+	mainObj.insert("rightBars", barsRight);
 	return mainObj;
 }
 

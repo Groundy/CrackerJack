@@ -357,22 +357,25 @@ void NewProfileConfiguartor::counterChanged(GuiPointers guiPointers){
 		}
 	}
 }
-void NewProfileConfiguartor::fillFormsFromDataFromProf(Profile& profToEdit){
-	ui->_1_nameEdit->setText(profToEdit.getName());
+void NewProfileConfiguartor::fillFormsFromDataFromProf(Profile& prof){
+	ui->_1_nameEdit->setText(prof.getName());
 
 	auto profComboBox = ui->professionCombBox;
-	QString professionName = profToEdit.getProfession().getTypeName();
+	QString professionName = prof.getProfession().getTypeName();
 	int professionIndex = profComboBox->findText(professionName);
 	profComboBox->setCurrentIndex(professionIndex);
 
 	auto screenBox = ui->screenShotBox;
-	int screenShotKeyIndex = screenBox->findText(profToEdit.getScreenShotKey().getKeyName());
+	int screenShotKeyIndex = screenBox->findText(prof.getScreenShotKey().getKeyName());
 	screenBox->setCurrentIndex(screenShotKeyIndex);
 
-	fillSlidersGroup(healthPtrs, profToEdit.getRestMethodesHealth());
-	fillSlidersGroup(manaPtrs, profToEdit.getRestMethodesMana());
+	fillSlidersGroup(healthPtrs, prof.getRestMethodesHealth());
+	fillSlidersGroup(manaPtrs, prof.getRestMethodesMana());
 
-	//ToDo fill loot controls loot
+	ui->_5_ControlBox->setCurrentIndex(prof.getControls());
+	ui->_5_AutoLootBox->setCurrentIndex(prof.getAutoLoot());
+	ui->_5_LeftAddedBarsSpin->setValue(prof.getBarsLeft());
+	ui->_5_RightAddedBarsSpin->setValue(prof.getBarsRight());
 }
 QVector<RestorationMethode> NewProfileConfiguartor::getRestorationMethodesFromGUI(GuiPointers guiPotiners){
 	QVector<RestorationMethode> toRet = {};
@@ -392,5 +395,7 @@ void NewProfileConfiguartor::saveDataToProfile(){
 	profToEdit->setRestMethodesHealth(getRestorationMethodesFromGUI(healthPtrs));
 	profToEdit->setRestMethodesMana(getRestorationMethodesFromGUI(manaPtrs));
 	profToEdit->setScreenShotKey(Key(ui->screenShotBox->currentText()));
-	//todo fill controls loot
+	profToEdit->setBars(ui->_5_LeftAddedBarsSpin->value(), ui->_5_RightAddedBarsSpin->value());
+	profToEdit->setControls(ui->_5_ControlBox->currentIndex());
+	profToEdit->setAutoLoot(ui->_5_AutoLootBox->currentIndex());
 }
