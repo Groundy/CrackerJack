@@ -24,5 +24,11 @@ public:
 	static void cutImgWithLettersToSingleLettersImgList(QImage& img, QList<QImage>& list);
 	static QList<QPoint> findStartPositionInImg_mulitpeImgs(QList<QImage*> imgsToFind, QImage& imgToShareWithin);
 	static QList<QPoint> findStartPositionInImg(const QImage& imgToFind, const QImage& imgToShareWithin);
-
+	static void saveMultipleImgs(const QImage& fullImg, QList<QRect> frames, QString pathToFolder, QString fileNameWithoutExtension) {
+		for (int i = 0; i < frames.size(); i++){
+			QImage img = fullImg.copy(frames[i]);
+			QString fullPath = QString("%1\\%2_%3.png").arg(pathToFolder, QString::number(i), fileNameWithoutExtension);
+			img.save(fullPath);
+		}
+	}
 };
