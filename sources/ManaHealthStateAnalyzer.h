@@ -66,8 +66,13 @@ private:
 				return false;
 			if (mana > maxMana)
 				return false;
+			if (shield > maxShield)
+				return false;
 			return true;
 		}
+		bool isHealthOk() const { return health <= maxHealth && health >= 0 && maxHealth > 0;	}
+		bool isManaOk() const { return mana <= maxMana && mana >= 0 && maxMana > 0;	}
+		bool isShieldOk() const { return (shield <= maxShield) && (shield > 0) && (maxShield == 0); }
 	};
 	struct ValuesDoubles {
 		ValuesDoubles(double health, double mana, double manaShield) :
@@ -88,32 +93,20 @@ private:
 	const int SLEEP_TIME = 50;
 
 	ValuesDoubles toDoubles(ValuesInts currentValues) {
-		bool healthValuesOk = 
-			currentValues.health <= currentValues.maxHealth && 
-			currentValues.health >= 0 && 
-			currentValues.maxHealth > 0;
-
 		double healthPercentage;
-		if (healthValuesOk)
+		if (currentValues.isHealthOk())
 			healthPercentage = 100.0 * currentValues.health / currentValues.maxHealth;
 		else
 			healthPercentage = NULL;
-
-		bool manaValuesOk = 
-			currentValues.mana <= currentValues.maxMana &&
-			currentValues.mana >= 0 &&
-			currentValues.maxMana > 0;
 			
 		double manaPercentage;
-		if (manaValuesOk)
+		if (currentValues.isManaOk())
 			manaPercentage = 100.0 * currentValues.mana / currentValues.maxMana;
 		else
 			manaPercentage = NULL;
 
-		bool manaShieldValusOk = currentValues.shield <= currentValues.maxShield;
-
 		double manaShieldPercentage;
-		if (manaShieldValusOk && currentValues.maxShield > 0)
+		if (currentValues.isShieldOk())
 			manaShieldPercentage = 100.0 * currentValues.shield / currentValues.maxShield;
 		else
 			manaShieldPercentage = NULL;

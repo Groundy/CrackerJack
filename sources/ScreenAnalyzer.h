@@ -23,13 +23,6 @@ public:
 	~ScreenAnalyzer();
 	void run();
 
-	bool enableScreenAnalyzer = true;
-	bool isManaHealthClassEnabledToAnalyzeImgs = false;
-	bool loadScreen(QImage& img);
-	void mainLoop();
-	int cutImportantImgsFromWholeScreenAndSendThemToVarClass(const QImage& fullscreen);
-	QString getNameOfLastTakenScreenShot();
-
 private:
 	const int SLEEP_TIME = 50;
 	std::shared_ptr<VariablesClass> var;
@@ -38,4 +31,8 @@ private:
 
 	void deleteScreenShotFolder();
 	QDir setUpScreenFolder();
+	QString getNameOfLastTakenScreenShot();
+	bool loadScreen(QImage& img);
+	void mainLoop();
+	int cutImportantImgsFromWholeScreenAndSendThemToVarClass(const QImage& fullscreen);
 };

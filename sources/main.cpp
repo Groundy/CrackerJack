@@ -4,6 +4,7 @@
 #include "Market.h"
 #include <qicon.h>
 void test(){
+	Calibrator::test();
 }
 QIcon getIcon(){
 	QDir dir = QDir::current();
