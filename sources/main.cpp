@@ -4,7 +4,7 @@
 #include "Market.h"
 #include <qicon.h>
 void test(){
-	Calibrator::test();
+	//Calibrator::test();
 }
 QIcon getIcon(){
 	QDir dir = QDir::current();
@@ -24,10 +24,10 @@ void setTranslation(QApplication& app) {
 	bool ok2 = app.installTranslator(&translator);
 }
 Profile* getProfile() {
-	bool skip = false;
+	bool skip = true;
 	if (skip) {
-		Profile prof = JsonParser().loadProfiles("Ek test prof");
-		return &prof;
+		Profile* prof = new Profile(JsonParser().loadProfiles("RPP"));
+		return prof;
 	}
 	else {
 		Profile* prof = new Profile();

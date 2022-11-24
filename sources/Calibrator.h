@@ -4,17 +4,19 @@
 #include <qrect.h>
 #include <qimage.h>
 #include <qmap.h>
+#include <memory>
 
+#include "VariablesClass.h"
 #include "Utilities.h"
 #include "ImgEditor.h"
 #include "Profile.h"
 class Calibrator {
 public:
-	Calibrator(QImage& fullScreen, std::shared_ptr<VariablesClass> var, Profile* profileToSet);
+	Calibrator(std::shared_ptr<VariablesClass> var);
 	~Calibrator();
-	bool calibrateManaAndHealthBar();
+	bool calibrateManaAndHealthBar(const QImage& fullImage);
 	static void test() {
-		auto var = std::shared_ptr<VariablesClass>(new VariablesClass());
+		auto var = std::shared_ptr<VariablesClass>();
 		int totalTime = 0;
 		try {	
 			QStringList namesOfScreenShots;
@@ -28,9 +30,9 @@ public:
 				if (!loaded)
 					throw std::exception("cant load img!");
 
-				auto calibrator = Calibrator(fullScreen, var, NULL);
+				auto calibrator = Calibrator(var);
 				auto start = QDateTime::currentMSecsSinceEpoch();
-				bool categroized = calibrator.calibrateManaAndHealthBar();
+				bool categroized = calibrator.calibrateManaAndHealthBar(fullScreen);
 				auto time = QDateTime::currentMSecsSinceEpoch() - start;
 				if (categroized)
 					qDebug() << "analyzed in : " + QString::number(time);
@@ -45,7 +47,6 @@ public:
 		catch (const std::exception& e) {
 			qDebug() << e.what();
 		}
-
 	}
 
 private:
@@ -80,21 +81,58 @@ private:
 				((ySize == 2 || ySize == 3) && xSize == 0);
 		}
 	};
-	QImage* fullScreen;
+
 	std::shared_ptr<VariablesClass> var;
-	Profile* profile;
 
-	bool fillRectWithPotsInVarClass(QImage& fullscreen, QStringList nameOfPotionsToLookFor);
-	bool findPotionsOnBottomBar(QStringList namesOfPotionsToFind, QStringList& namesOfPotionosFound, QList<QRect>& rectsWithFoundPots, QImage& bottomBarImg);
-	void getMapWithPotionsImgCodes(QMap<QString, QString>& name_code_light, QMap<QString, QString>& name_code_dark);
 	SlashesIndexes getIndexesOfImgsWithSlashes(const QImage& fullScreen, const QList<QRect>& importantFrames);
-	bool categorizeWindows(QImage& fullscreen, QList<QRect>& importantRectangles);
+	bool categorizeWindows(const QImage& fullscreen, QList<QRect>& importantRectangles);
 	bool findWindowsOnScreen(const QImage& fullScreen, QList<QRect>& importantRectangles);
-	void TEST_setPositionHealthImhs(QString pathToFolderWithDiffrentPositionsStylesScreen, QString pathToOutPutFolder);
-	//bool getRectsFromProfile(QList<QRect>& importRectsFromProf);
-
-
 	void sortByXY(QList<QPoint>& points, QList<QPoint>& sortedByX, QList<QPoint>& sortedByY);
 	void sortByXY(QList<QRect>& inputRects, QList<QRect>& sortedByX, QList<QRect>& sortedByY);
 	Indexes getIndexesOfHealthManaBars(const QImage& fullscreen, const QList<QRect>& listOfImportantRectangles);
+	int removeFramesOnEachOther(QList<QRect>& rectangles) {
+		int oldSize = rectangles.size();
+		QVector<int> indexesToDelete;
+		for (size_t i = 0; i < rectangles.size(); i++){
+			QRect* first = &rectangles[i];
+			for (size_t j = 0; j < rectangles.size(); j++){
+				if (i == j)
+					continue;
+				QRect* second = &rectangles[j];
+
+				bool isInRangeX =
+					(second->left() + second->width()) < first->right() ||
+					second->left() > first->right();
+				if (!isInRangeX)
+					continue;
+
+				bool isInRangeY = 
+					(second->top() + second->height()) < first->top() ||
+					second->top() > first->left();
+				if (!isInRangeY)
+					continue;
+
+				int surfFirst = first->width() * first->height();
+				int surfSecond = second->width() * second->height();
+				int indexToDelete = surfFirst > surfSecond ? j : i;
+				indexesToDelete.push_back(indexToDelete);
+			}
+		}
+		QList<QRect> toRet;
+		for (size_t i = 0; i < rectangles.size(); i++) {
+			if (indexesToDelete.contains(i))
+				continue;
+			toRet.push_back(rectangles[i]);
+		}
+	
+		return oldSize;
+	}
+
+	/*
+	void TEST_setPositionHealthImhs(QString pathToFolderWithDiffrentPositionsStylesScreen, QString pathToOutPutFolder);
+	bool getRectsFromProfile(QList<QRect>& importRectsFromProf);	
+	bool fillRectWithPotsInVarClass(QImage& fullscreen, QStringList nameOfPotionsToLookFor);
+	bool findPotionsOnBottomBar(QStringList namesOfPotionsToFind, QStringList& namesOfPotionosFound, QList<QRect>& rectsWithFoundPots, QImage& bottomBarImg);
+	void getMapWithPotionsImgCodes(QMap<QString, QString>& name_code_light, QMap<QString, QString>& name_code_dark);
+	*/
 };

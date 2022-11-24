@@ -70,7 +70,7 @@ void ScreenAnalyzer::mainLoop(){
 		if (!openCorrectly)
 			continue;
 		if (!var->framesAreValid()) {
-			Calibrator(img, var, profile).calibrateManaAndHealthBar();
+			Calibrator(var).calibrateManaAndHealthBar(img);
 		}
 
 		deleteScreenShotFolder();
