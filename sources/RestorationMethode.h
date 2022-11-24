@@ -91,6 +91,9 @@ public:
 	QString getKeyName() const {
 		return key.getKeyName();
 	}
+	Key getKey() const { return key; }
+	int getMana() const { return manaNeeded; }
+	Type getType() const { return type; }
 
 	//setters
 	void fillDataDetails(const Spell& spell) {
@@ -109,6 +112,7 @@ public:
 	//funcs
 	bool isPotion() const { return type == Type::POTION; };
 	bool isSpell() const { return type == Type::SPELL; };
+
 private:
 	int threshold;
 	Key key;
@@ -117,37 +121,3 @@ private:
 	Type type;
 
 };
-		/*
-		QJsonObject obj;
-		obj.insert( "manaNeeded", manaNeeded);
-		obj.insert( "cd", cd);
-		obj.insert( "cdGroup", cdGroup);
-		QString typeStr;
-		if (type == Type::POTION)
-			typeStr == "potion";
-		else if (type == Type::SPELL)
-			typeStr = "spell";
-		else
-			typeStr = "";
-
-		obj.insert("type", typeStr);
-		return obj;
-		*/
-			/*
-			int manaNeededTmp = obj["manaNeeded"].toInt();
-			int cdTmp = obj["cd"].toInt();
-			int cdGroupTmp = obj["cdGroup"].toInt();
-			QString typeStr = obj["type"].toString();
-			Type typeTmp;
-			if (typeStr == "spell")
-				typeTmp = Type::SPELL;
-			else if(typeStr == "potion")
-				typeTmp = Type::POTION;
-			else
-				throw std::exception("wrong value of type in Restoration Object");
-
-			this->manaNeeded = manaNeededTmp;
-			this->cd = cdTmp;
-			this->cdGroup = cdGroupTmp;
-			this->type = typeTmp;
-			*/

@@ -17,7 +17,15 @@ public:
 	void sendStringToGame(QString str);
 	bool sendKeyStrokeToProcess(Key key);
 	void useRestorationMethode(const RestorationMethode& methode) {
-		;
+		if (methode.isSpell()) {
+			var->setTimeLastSpellUsageHealing();
+			var->setTimeLastSpellUsed(methode.getName());
+		}
+		else if(methode.isPotion())
+			var->setTimeLastItemUsage();
+
+		Key key = methode.getKey();
+		sendKeyStrokeToProcess(key);
 	}
 private:
 	std::shared_ptr<VariablesClass> var;

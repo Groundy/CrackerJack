@@ -19,11 +19,13 @@ void ManaHealthStateAnalyzer::run(){
 			continue;
 
 		sendDataToGui(percentages);
-		auto healthMetode = findRestorationToUse(percentages.health, healthMap);
-		auto manahMetode = findRestorationToUse(percentages.mana, manaMap);
+		auto healthMetodes = findRestorationToUse(percentages.health, healthMap);
+		auto manahMetodes = findRestorationToUse(percentages.mana, manaMap);
 
-		var->log("health should use: " + healthMetode.getName(), false, true, true);
-		var->log("m: " + manahMetode.getName(), false, true, true);
+		for each (auto methode in healthMetodes)
+			var->log("h: " + methode.getName(), false, true, true);
+		for each (auto methode in manahMetodes)
+			var->log("m: " + methode.getName(), false, true, true);
 	}
 }
 

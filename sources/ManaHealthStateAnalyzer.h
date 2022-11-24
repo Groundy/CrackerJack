@@ -85,7 +85,7 @@ private:
 	std::shared_ptr<VariablesClass> var;
 	QMap<int, RestorationMethode> healthMap, manaMap;	
 	//int extraTimeToWaitBetweenManaPotUse = 1400;
-	const int SLEEP_TIME = 500;
+	const int SLEEP_TIME = 50;
 
 	ValuesDoubles toDoubles(ValuesInts currentValues) {
 		bool healthValuesOk = 
@@ -200,9 +200,10 @@ private:
 		emit sendValueToMainThread(currentValues.health, currentValues.mana, currentValues.manaShield);
 	}
 	void writeDataToVariableClass(ValuesDoubles values){
-		var->setCurrentHealthPercentage(values.health);
-		var->setCurrentManaPercentage(values.mana);
-		var->setCurrentMSPercentage(values.manaShield);
+		var->setCurrentPercentage(values.health, values.mana, values.manaShield);
+	}
+	void writeDataToVariableClass(ValuesInts values) {
+		var->setCurrentRawValues(values.health, values.mana ,values.shield);
 	}
 	ImageValues getImages() {
 		ImageValues toRet;
@@ -275,25 +276,38 @@ private:
 			return false;
 		}
 	}
-	RestorationMethode findRestorationToUse(double currentValue, const QMap<int, RestorationMethode>& methodes) {
+	QVector<RestorationMethode> findRestorationToUse(double currentValue, const QMap<int, RestorationMethode>& methodes) {
+		QVector<RestorationMethode> toRet = {};
+		if (methodes.size() == 0)
+			return toRet;
+
 		try {
 			bool wrongInput = currentValue < 0.0 || currentValue > 100.0 || methodes.size() > 5;
 			if (wrongInput)
 				throw std::exception("Wrong input passed to fun looking for neareast threshold");
 
-			if (methodes.size() == 0)
-				return RestorationMethode();
-
 			auto thresholds = methodes.keys();
-			for (int i = thresholds.size() - 1; i >= 0; i--) {
-				if (currentValue <= thresholds[i])
-					return methodes[thresholds[i]];
+			for (int i = 0; i < thresholds.size(); i++) {
+				if (currentValue > thresholds[i])
+					continue;
+
+				auto currentMethode = methodes[thresholds[i]];
+				if (toRet.isEmpty())
+					toRet.push_back(currentMethode);
+				else{
+					auto alreadyAssignedType = toRet[0].getType();
+					if(currentMethode.getType() != alreadyAssignedType)
+						toRet.push_back(currentMethode);
+				}
+
+				if (toRet.size() == 2)
+					break;
 			}
-			return RestorationMethode();//not sure
+  			return toRet;
 		}
 		catch (const std::exception& e) {
 			qDebug() << e.what();
-			return RestorationMethode();
+			return toRet;
 		}
 	}
 	ValuesDoubles getCurrentPercentage() {
@@ -314,6 +328,9 @@ private:
 		ValuesDoubles percentages = toDoubles(intsValues);
 		if (!percentages.isValid())
 			return ValuesDoubles();
+
+		writeDataToVariableClass(percentages);
+		writeDataToVariableClass(intsValues);
 
 		return percentages;
 	}

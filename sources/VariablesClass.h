@@ -5,7 +5,9 @@
 #include <basetsd.h>
 #include <atomic>
 #include <mutex>
+
 #include "Logger.h"
+#include "RestorationMethode.h"
 class VariablesClass : QObject{
 	Q_OBJECT
 public:	
@@ -66,9 +68,16 @@ public:
 		newFullImgAwaits = true;
 		fullImgMutex.unlock();
 	}
-	void setCurrentHealthPercentage(double percentage) {this->currentHealthPercentage = percentage;}
-	void setCurrentManaPercentage(double percentage) {this->currentManaPercentage = percentage;}
-	void setCurrentMSPercentage(double percentage) {this->currentMsPercentage = percentage;}
+	void setCurrentPercentage(double health, double mana, double manaShield) {
+		this->currentHealthPercentage = health;
+		this->currentManaPercentage = mana;
+		this->currentMsPercentage = manaShield;
+	}
+	void setCurrentRawValues(int health, int mana, int manaShield) {
+		this->currentHealthRaw = health;
+		this->currentManaRaw = mana;
+		this->currentMSRaw = manaShield;
+	}
 	double getCurrentHealthPercentage() {return currentHealthPercentage; }
 	double getCurrentManaPercentage() { return currentManaPercentage; }
 	double getCurrentMSPercentage() { return currentMsPercentage; }
@@ -156,6 +165,25 @@ public:
 		else 
 			lastTimeSpellUsagesMap.insert(spellName, now());
 	}
+	bool restMethodeCanBeUsed(const RestorationMethode& restMethode) {
+		const qint64 now = this->now();
+		if (restMethode.isSpell()) {
+			if (currentManaRaw < restMethode.getMana())
+				return false;
+			if (now < timeLastSpellHealing +  (1000 * restMethode.getCdGroup()))
+				return false;
+			if (now < getTimeLastSpellUsed(restMethode.getName()) + (1000 * restMethode.getCd()))
+				return false;
+
+			return true;
+		}
+		else if (restMethode.isPotion()) {
+			if(now < timeLastItemUsage)
+				return false;
+			//later should be added checking if char has proper pot!
+			return true;
+		}
+	}
 
 
 	Logger logger;
@@ -164,6 +192,7 @@ private:
 	QImage fullImage;
 	std::atomic<bool> newFullImgAwaits;
 	std::atomic<double> currentHealthPercentage, currentManaPercentage, currentMsPercentage;
+	std::atomic<int> currentHealthRaw, currentManaRaw, currentMSRaw;
 	std::atomic<bool> keepRestoringManaAngHealth;
 	std::atomic<bool> keepTakingScreenShots;
 	std::atomic<bool> keepLoadingScreenShots;
@@ -177,5 +206,5 @@ private:
 	std::mutex lastTimeUsagesMutex;
 	QMap<QString, qint64> lastTimeSpellUsagesMap;
 
-	qint64 now() { return QDateTime::currentMSecsSinceEpoch(); }
+	qint64 now() { return QDateTime::currentMSecsSinceEpoch(); };
 };
