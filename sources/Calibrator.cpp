@@ -151,240 +151,215 @@ bool Calibrator::findPotionsOnBottomBar(QStringList namesOfPotionsToFind, QStrin
 }
 bool Calibrator::calibrateManaAndHealthBar(){
 	QList<QRect> importantRectangles;
-	bool sucessfullyRead = getRectsFromProfile(importantRectangles);
-	bool readValuesAreWrong = false;
+	bool windowsFound = findWindowsOnScreen(*fullScreen, importantRectangles);
+	if (!windowsFound)
+		return false;
 
-	if(sucessfullyRead) {
-		bool resultOk = categorizeWindows(*fullScreen, importantRectangles);
-		if (resultOk)
-			return true;
-		else
-			readValuesAreWrong = true;
-	}
-	bool scan = !sucessfullyRead || readValuesAreWrong;
-	if(scan){
-		bool resultOk = findWindowsOnScreen(*this->fullScreen, importantRectangles);
-		if (resultOk) {
-			bool result2Ok = categorizeWindows(*fullScreen, importantRectangles);
-			return result2Ok;
-		}
-	}
-	return false;
+	bool windowsCategorized = categorizeWindows(*fullScreen, importantRectangles);
+	if(!windowsCategorized)
+		return false;
+	
+	return true;
 }
-bool Calibrator::findIndexesOfRectangleThatContainsSlashes(QImage& fullScreen, QList<QRect> importantFrames, QList<int>& indexesOfFramesWithSlashesVert, QList<int>& indexesOfFramesWithSlashesHor, int& indexOfFrameCombined) {
-	QImage vertSlashes = ImgEditor::fromCharToImg(QChar(47));
-	QImage horSlashes = ImgEditor::fromCharToImg(QChar(92));
-	QList<int> indexesVert, indexesHor;
-	indexOfFrameCombined = -1;
+Calibrator::SlashesIndexes Calibrator::getIndexesOfImgsWithSlashes(const QImage& fullScreen, const QList<QRect>& importantFrames) {
+	const QImage slashYImg = ImgEditor::fromCharToImg(QChar(47));
+	const QImage slashXImg = ImgEditor::fromCharToImg(QChar(92));
+	SlashesIndexes indexes;
 	for (size_t i = 0; i < importantFrames.size(); i++) {
 		QImage imgTmp = fullScreen.copy(importantFrames[i]);
 		ImgEditor::imgToBlackAndWhiteAllColors(imgTmp, 250);
 
-		QList<QPoint> pointsVert = ImgEditor::findStartPositionInImg(vertSlashes, imgTmp);
-		if (pointsVert.size() == 1)
-			indexesVert.push_back(i);
-		else if (pointsVert.size() == 2) {
-			indexOfFrameCombined = i;
-			indexesVert.push_back(i);
+		QList<QPoint> pointsX = ImgEditor::findStartPositionInImg(slashXImg, imgTmp);
+		if (pointsX.size() == 1)
+			indexes.slashesX.push_back(i);
+		else if (pointsX.size() == 2) {
+			indexes.combinedIndex = i;
+			indexes.slashesX.push_back(i);
 		}
-
-		QList<QPoint> pointsHor = ImgEditor::findStartPositionInImg(horSlashes, imgTmp);
-		if (pointsHor.size() == 1)
-			indexesHor.push_back(i);
-		else if (pointsHor.size() == 2) {
-			indexOfFrameCombined = i;
-			indexesHor.push_back(i);
-		}
-	}
-
-	bool slashesFound = (indexesVert.size() + indexesHor.size()) >= 2;
-	if (slashesFound) {
-		indexesOfFramesWithSlashesHor = indexesHor;
-		indexesOfFramesWithSlashesVert = indexesVert;
-		return true;
-	}
-	else
-		return false;
-}
-bool Calibrator::setPositionHealthImgs(QImage& fullscreen, QList<QRect> listOfImportantRectangles, int& indexOfHealth, int& indexOfMana, int& indexOfManaShield, int& indexOfCombined, int& howTheyShouldBeRotated) {
-	QList<int> indexesOfRectWithSlashVert;
-	QList<int> indexesOfRectWithSlashHor;
-	int indexOfFrameWithManaShieldAndMana;
-	findIndexesOfRectangleThatContainsSlashes(fullscreen, listOfImportantRectangles, indexesOfRectWithSlashVert, indexesOfRectWithSlashHor, indexOfCombined);
-	{
-		enum positionsOfInterface { TOP, RIGHT, DOWN, LEFT };
-		positionsOfInterface position;
-		QPoint midOfScreen(fullscreen.width() / 2, fullscreen.height() / 2);
-
-		bool slashesFoundInGameScreen = false;
-		if (indexesOfRectWithSlashVert.size() != 0) {
-			QRect first = listOfImportantRectangles[indexesOfRectWithSlashVert[0]];
-			position = first.x() < midOfScreen.x() ? LEFT : RIGHT;
-			slashesFoundInGameScreen = true;
-		}
-		else if (indexesOfRectWithSlashHor.size() != 0) {
-			QRect first = listOfImportantRectangles[indexesOfRectWithSlashHor[0]];
-			position = first.y() < midOfScreen.y() ? TOP : DOWN;
-			slashesFoundInGameScreen = true;
-		}
-		if (!slashesFoundInGameScreen)
-			return false;
-
-
-		bool combined = indexOfFrameWithManaShieldAndMana != -1;
-		switch (position) {
-		case TOP: case DOWN: {
-			int size = indexesOfRectWithSlashHor.size();
-			howTheyShouldBeRotated = 0;
-			QList<QRect> sortedByX, sortedByY, rectangles;
-			for each (int var in indexesOfRectWithSlashHor)
-				rectangles.push_back(listOfImportantRectangles[var]);
-			sortByXY(rectangles, sortedByX, sortedByY);
-
-			if (combined && size == 2) {
-				bool isParallelStyle = sortedByY[0].y() != sortedByY[1].y();
-				if (isParallelStyle) {
-					indexOfHealth = listOfImportantRectangles.indexOf(sortedByY[0]);
-					indexOfMana = -1;
-					indexOfManaShield = -1;
-					indexOfCombined = listOfImportantRectangles.indexOf(sortedByY[1]);
-				}
-				else {
-					indexOfHealth = listOfImportantRectangles.indexOf(sortedByX[0]);
-					indexOfMana = -1;
-					indexOfManaShield = -1;
-					indexOfCombined = listOfImportantRectangles.indexOf(sortedByX[1]);
-				}
-			}
-			else if (!combined && size == 3) {
-				indexOfHealth = listOfImportantRectangles.indexOf(sortedByX[0]);
-				rectangles.removeOne(sortedByX[0]);
-				sortByXY(rectangles, sortedByX, sortedByY);
-				indexOfMana = listOfImportantRectangles.indexOf(sortedByY[0]);
-				indexOfManaShield = listOfImportantRectangles.indexOf(sortedByY[1]);
-				indexOfCombined = -1;
-			}
-			else if (!combined && size == 2) {
-				indexOfCombined = -1;
-				indexOfManaShield = -1;
-				bool isParallelStyle = sortedByY[0].y() == sortedByY[1].y();
-				if (isParallelStyle) {
-					indexOfHealth = listOfImportantRectangles.indexOf(sortedByX[0]);
-					indexOfMana = listOfImportantRectangles.indexOf(sortedByX[1]);
-				}
-				else {
-					indexOfHealth = listOfImportantRectangles.indexOf(sortedByY[0]);
-					indexOfMana = listOfImportantRectangles.indexOf(sortedByY[1]);
-				}
-			}
-			else
-				return false;
-
-			for each (QRect var in sortedByX)
-				listOfImportantRectangles.removeOne(var);
-
+		if (indexes.isValid())
 			break;
-		};
+		
+
+		QList<QPoint> pointsY = ImgEditor::findStartPositionInImg(slashYImg, imgTmp);
+		if (pointsY.size() == 1)
+			indexes.slashesY.push_back(i);
+		else if (pointsY.size() == 2) {
+			indexes.combinedIndex = i;
+			indexes.slashesY.push_back(i);
+		}
+		if (indexes.isValid())
+			break;
+
+	}
+	return indexes;
+}
+Calibrator::Indexes Calibrator::getIndexesOfHealthManaBars(const QImage& fullscreen, const QList<QRect>& listOfImportantRectangles) {
+	try {
+		Indexes indexes;
+		SlashesIndexes slashesIndexes = getIndexesOfImgsWithSlashes(fullscreen, listOfImportantRectangles);
+		if (!slashesIndexes.isValid())
+			throw std::exception("No enough frames with slashes on full screen");
+		indexes.combined = slashesIndexes.combinedIndex;
+
+		int SlashesXSize = slashesIndexes.sizeX();
+		int SlashesYSize = slashesIndexes.sizeY();
+		bool foundSlsahesX = SlashesXSize >= 2 && SlashesYSize == 0;
+		bool foundSlsahesY = SlashesYSize >= 2 && SlashesXSize == 0;
+		if (!foundSlsahesY && !foundSlsahesX)
+			throw std::exception("Wrong slsashes frame in configuration!");
+
+		BarsPostion position;
+		QPoint midOfScreen(fullscreen.width() / 2, fullscreen.height() / 2);
+		if (foundSlsahesY) {
+			QRect firstRectangle = listOfImportantRectangles[slashesIndexes.slashesY[0]];
+			position = firstRectangle.x() < midOfScreen.x() ? LEFT : RIGHT;
+		}
+		else {
+			QRect firstRectangle = listOfImportantRectangles[slashesIndexes.slashesX[0]];
+			position = firstRectangle.y() < midOfScreen.y() ? TOP : DOWN;
+		}
+
+		ManaShieldType shieldType;
+		if (indexes.combined != -1)
+			shieldType = COMBINED;
+		else {
+			if (SlashesXSize == 3 || SlashesYSize == 3)
+				shieldType = SEPARATE;
+			else if (SlashesXSize == 2 || SlashesYSize == 2)
+				shieldType = NO_SHIELD;
+		}
+
+		switch (position) {
 		case LEFT: {
-			int size = indexesOfRectWithSlashVert.size();
-			howTheyShouldBeRotated = 1;//  1*90degree to right
+			indexes.rotation = 1;
 			QList<QRect> sortedByX, sortedByY, rectangles;
-			for each (int var in indexesOfRectWithSlashVert)
+			for each (int var in slashesIndexes.slashesY)
 				rectangles.push_back(listOfImportantRectangles[var]);
 			sortByXY(rectangles, sortedByX, sortedByY);
-
-			if (size == 2 && !combined) {
-				//no mana shield
-				int w = listOfImportantRectangles[indexesOfRectWithSlashVert[0]].width();
+			switch (shieldType) {
+			case NO_SHIELD: {
 				//25 is more less width of big bar, smaller is half of its width
+				int w = listOfImportantRectangles[slashesIndexes.slashesY[0]].width();
+				indexes.shield = -1;
+				indexes.combined = -1;
 				bool isParallelStyle = sortedByX[0].x() != sortedByX[1].x();
 				if (isParallelStyle) {
-					indexOfHealth = listOfImportantRectangles.indexOf(sortedByX[0]);
-					indexOfMana = listOfImportantRectangles.indexOf(sortedByX[1]);
-					indexOfManaShield = -1;
-					indexOfCombined = -1;
+					indexes.health = listOfImportantRectangles.indexOf(sortedByX[0]);
+					indexes.mana = listOfImportantRectangles.indexOf(sortedByX[1]);
 				}
 				else {
-					indexOfHealth = listOfImportantRectangles.indexOf(sortedByY[0]);
-					indexOfMana = listOfImportantRectangles.indexOf(sortedByY[1]);
-					indexOfManaShield = -1;
-					indexOfCombined = -1;
+					indexes.health = listOfImportantRectangles.indexOf(sortedByY[0]);
+					indexes.mana = listOfImportantRectangles.indexOf(sortedByY[1]);
 				}
+				break;
 			}
-			else if (size == 2 && combined) {//mana shield, DEFAULT, PARALLEL AND COMPACT STYLE
-				indexOfMana = -1;
-				indexOfManaShield = -1;
-				indexOfCombined = indexOfFrameWithManaShieldAndMana;
-				indexesOfRectWithSlashVert.removeOne(indexOfFrameWithManaShieldAndMana);
-				indexOfHealth = indexesOfRectWithSlashVert[0];
+			case COMBINED: {
+				indexes.mana = -1;
+				indexes.shield = -1;
+				indexes.health = slashesIndexes.slashesY[1];
+				break;
 			}
-			else if (size == 3 && !combined) {//mana shields, LARGE
-				indexOfHealth = listOfImportantRectangles.indexOf(sortedByX[1]);
-				indexOfMana = listOfImportantRectangles.indexOf(sortedByX[0]);
-				indexOfManaShield = listOfImportantRectangles.indexOf(sortedByX[2]);
-				indexOfCombined = -1;
+			case SEPARATE: {
+				indexes.health = listOfImportantRectangles.indexOf(sortedByX[1]);
+				indexes.mana = listOfImportantRectangles.indexOf(sortedByX[0]);
+				indexes.shield = listOfImportantRectangles.indexOf(sortedByX[2]);
+				indexes.combined = -1;
+				break;
 			}
-			else
-				return false;
-
-			for each (QRect var in sortedByX)
-				listOfImportantRectangles.removeOne(var);
-
+			}
 			break;
-		};
+		}
 		case RIGHT: {
-			int size = indexesOfRectWithSlashVert.size();
-			howTheyShouldBeRotated = -1;//  -1*90degree to right
+			indexes.rotation = -1;
 			QList<QRect> sortedByX, sortedByY, rectangles;
-			for each (int var in indexesOfRectWithSlashVert)
+			for each (int var in slashesIndexes.slashesY)
 				rectangles.push_back(listOfImportantRectangles[var]);
-
 			sortByXY(rectangles, sortedByX, sortedByY);
-			if (size == 2 && !combined) {//no mana shield
+			switch (shieldType) {
+			case NO_SHIELD: {
 				bool isParallelStyle = sortedByY[0].y() == sortedByY[1].y();
-
+				indexes.shield = -1;
+				indexes.combined = -1;
 				if (isParallelStyle) {
-					indexOfHealth = listOfImportantRectangles.indexOf(sortedByX[0]);
-					indexOfMana = listOfImportantRectangles.indexOf(sortedByX[1]);
-					indexOfManaShield = -1;
-					indexOfCombined = -1;
+					indexes.health = listOfImportantRectangles.indexOf(sortedByX[0]);
+					indexes.mana = listOfImportantRectangles.indexOf(sortedByX[1]);
 				}
 				else {
-					indexOfHealth = listOfImportantRectangles.indexOf(sortedByY[0]);
-					indexOfMana = listOfImportantRectangles.indexOf(sortedByY[1]);
-					indexOfManaShield = -1;
-					indexOfCombined = -1;
+					indexes.health = listOfImportantRectangles.indexOf(sortedByY[0]);
+					indexes.mana = listOfImportantRectangles.indexOf(sortedByY[1]);
 				}
+				break;
 			}
-			else if (size == 2 && combined) {//mana shield, DEFAULT, PARALLEL AND COMPACT STYLE
-				indexOfMana = -1;
-				indexOfManaShield = -1;
-				indexOfCombined = indexOfFrameWithManaShieldAndMana;
-				indexesOfRectWithSlashVert.removeOne(indexOfFrameWithManaShieldAndMana);
-				indexOfHealth = indexesOfRectWithSlashVert[0];
+			case COMBINED: {
+				indexes.mana = -1;
+				indexes.shield = -1;
+				indexes.health = slashesIndexes.slashesY[1];
+				break;
 			}
-			else if (size == 3 && !combined) {//mana shields, LARGE
-				indexOfHealth = listOfImportantRectangles.indexOf(sortedByX[1]);
-				indexOfCombined = -1;
-				indexOfMana = listOfImportantRectangles.indexOf(sortedByX[2]);
-				indexOfManaShield = listOfImportantRectangles.indexOf(sortedByX[0]);
+			case SEPARATE: {
+				indexes.health = listOfImportantRectangles.indexOf(sortedByX[1]);
+				indexes.combined = -1;
+				indexes.mana = listOfImportantRectangles.indexOf(sortedByX[2]);
+				indexes.shield = listOfImportantRectangles.indexOf(sortedByX[0]);
+				break;
 			}
-			else {
-				return false;
 			}
-
-			for each (QRect var in sortedByX)
-				listOfImportantRectangles.removeOne(var);
-
 			break;
-		};
-		default: {
-			return false;
+		}
+		case DOWN: case TOP: {
+			indexes.rotation = 0;
+			QList<QRect> sortedByX, sortedByY, rectangles;
+			for each (int var in slashesIndexes.slashesX)
+				rectangles.push_back(listOfImportantRectangles[var]);
+			sortByXY(rectangles, sortedByX, sortedByY);
+			switch (shieldType) {
+			case NO_SHIELD: {
+				indexes.combined = -1;
+				indexes.shield = -1;
+				bool isParallelStyle = sortedByY[0].y() == sortedByY[1].y();
+				if (isParallelStyle) {
+					indexes.health = listOfImportantRectangles.indexOf(sortedByX[0]);
+					indexes.mana = listOfImportantRectangles.indexOf(sortedByX[1]);
+				}
+				else {
+					indexes.health = listOfImportantRectangles.indexOf(sortedByY[0]);
+					indexes.mana = listOfImportantRectangles.indexOf(sortedByY[1]);
+				}
+				break;
+			}
+			case COMBINED: {
+				bool isParallelStyle = sortedByY[0].y() != sortedByY[1].y();
+				indexes.mana = -1;
+				indexes.shield = -1;
+				if (isParallelStyle) {
+					indexes.health = listOfImportantRectangles.indexOf(sortedByY[0]);
+					indexes.combined = listOfImportantRectangles.indexOf(sortedByY[1]);
+				}
+				else {
+					indexes.health = listOfImportantRectangles.indexOf(sortedByX[0]);
+					indexes.combined = listOfImportantRectangles.indexOf(sortedByX[1]);
+				}
+				break;
+			}
+			case SEPARATE: {
+				indexes.health = listOfImportantRectangles.indexOf(sortedByX[0]);
+				rectangles.removeOne(sortedByX[0]);
+				sortByXY(rectangles, sortedByX, sortedByY);
+				indexes.mana = listOfImportantRectangles.indexOf(sortedByY[0]);
+				indexes.shield = listOfImportantRectangles.indexOf(sortedByY[1]);
+				indexes.combined = -1;
+				break;
+			}
+			}
+			break;
 		}
 		}
+		return indexes;
 	}
-
-	return true;
+	catch (const std::exception& e) {
+		qDebug() << e.what();
+		return Indexes();
+	}
 }
 bool Calibrator::categorizeWindows(QImage& fullscreen, QList<QRect>& importantRectangles) {
 	//4 cause 1-minimap 2-gameScreen 3-health 4-mana, those 4 have to be found
@@ -409,39 +384,31 @@ bool Calibrator::categorizeWindows(QImage& fullscreen, QList<QRect>& importantRe
 
 	//indexOfHealth, indexOfMana, indexOfManaShield, howTheyShouldBeRotated, indexOfCombinedBox;
 	{
-		int indexOfHealth, indexOfMana, indexOfManaShield, howTheyShouldBeRotated, indexOfCombinedBox;
-		setPositionHealthImgs(fullscreen, importantRectangles, indexOfHealth, indexOfMana, indexOfManaShield, indexOfCombinedBox, howTheyShouldBeRotated);
-		var->setRotation(howTheyShouldBeRotated);
-
+		Indexes indexes = getIndexesOfHealthManaBars(fullscreen, importantRectangles);
 		int size = importantRectangles.size();
-		bool healthFound = indexOfHealth != -1 && indexOfHealth >= 0 && indexOfHealth <= size;
-		bool manaFound = indexOfMana != -1 && indexOfMana >= 0 && indexOfMana <= size;
-		bool manaShieldFound = indexOfManaShield != -1 && indexOfManaShield >= 0 && indexOfManaShield <= size;
-		bool combinedBoxFound = indexOfCombinedBox != -1 && indexOfCombinedBox >= 0 && indexOfCombinedBox <= size;
-
-		bool enoughFramesFound = healthFound && (manaFound || combinedBoxFound);
-		if (!enoughFramesFound)
+		if (!indexes.isValid(size))
 			return false;
 
+		var->setRotation(indexes.rotation);
 		QVector<QRect> rectsToDelete;
-		if (healthFound) {
-			var->setHealthArea(importantRectangles[indexOfHealth]);
-			rectsToDelete.push_back(importantRectangles[indexOfHealth]);
+		if (indexes.healthFound(size)) {
+			var->setHealthArea(importantRectangles[indexes.health]);
+			rectsToDelete.push_back(importantRectangles[indexes.health]);
 		}
 
-		if (manaFound) {
-			var->setManaArea(importantRectangles[indexOfMana]);
-			rectsToDelete.push_back(importantRectangles[indexOfMana]);
+		if (indexes.manaFound(size)) {
+			var->setManaArea(importantRectangles[indexes.mana]);
+			rectsToDelete.push_back(importantRectangles[indexes.mana]);
 		}
 
-		if (manaShieldFound) {
-			var-> setMSArea(importantRectangles[indexOfManaShield]);
-			rectsToDelete.push_back(importantRectangles[indexOfManaShield]);
+		if (indexes.shieldFound(size)) {
+			var-> setMSArea(importantRectangles[indexes.shield]);
+			rectsToDelete.push_back(importantRectangles[indexes.shield]);
 		}
 
-		if (combinedBoxFound) {
-			var->setCombinedArea(importantRectangles[indexOfCombinedBox]);
-			rectsToDelete.push_back(importantRectangles[indexOfCombinedBox]);
+		if (indexes.combinedFound(size)) {
+			var->setCombinedArea(importantRectangles[indexes.combined]);
+			rectsToDelete.push_back(importantRectangles[indexes.combined]);
 		}
 
 		for each (QRect var in rectsToDelete)
@@ -462,7 +429,7 @@ bool Calibrator::categorizeWindows(QImage& fullscreen, QList<QRect>& importantRe
 
 	return true;
 }
-bool Calibrator::findWindowsOnScreen(QImage& fullScreen, QList<QRect>& importantRectangles) {
+bool Calibrator::findWindowsOnScreen(const QImage& fullScreen, QList<QRect>& importantRectangles) {
 	const int WIDTH = fullScreen.width();
 	const int HEIGHT = fullScreen.height();
 	const uint BLACK_PIX_COL = qRgb(0, 0, 0);
@@ -501,6 +468,7 @@ bool Calibrator::findWindowsOnScreen(QImage& fullScreen, QList<QRect>& important
 			startOfFrames.push_back(QPoint(x, y));
 		}
 	}
+
 	//looking for rectangles from start points of frames
 	QList<QRect> frameToRet;
 	const int MIN_WIDTH = 5, MIN_HEIGHT = 5;
@@ -525,17 +493,74 @@ bool Calibrator::findWindowsOnScreen(QImage& fullScreen, QList<QRect>& important
 		}
 		bool accept = currentHeight > MIN_HEIGHT && currentWidth > MIN_WIDTH;
 		if (accept) {
-			int x = startPoint.x();
-			int y = startPoint.y();
-			int w = currentWidth;
-			int h = currentHeight;
-			frameToRet.push_back(QRect(x + 1, y + 1, w - 1, h - 1));
+			int x = startPoint.x() + 1;
+			int y = startPoint.y() + 1;
+			int w = currentWidth - 1;
+			int h = currentHeight - 1;
+			frameToRet.push_back(QRect(x, y, w, h));
 		}
 	}
 
 	importantRectangles = frameToRet;
 	return frameToRet.size() >= 4;
 }
+void Calibrator::sortByXY(QList<QPoint>& points, QList<QPoint>& sortedByX, QList<QPoint>& sortedByY) {
+	QMultiMap<int, QPoint> mapX;
+	QMultiMap<int, QPoint> mapY;
+	for each (QPoint point in points) {
+		mapX.insert(point.x(), point);
+		mapY.insert(point.y(), point);
+	}
+	sortedByX = mapX.values();
+	sortedByY = mapY.values();
+}
+void Calibrator::sortByXY(QList<QRect>& inputRects, QList<QRect>& sortedByX, QList<QRect>& sortedByY) {
+	QMultiMap<int, QRect> mapX;
+	QMultiMap<int, QRect> mapY;
+	for each (QRect rect in inputRects) {
+		mapX.insert(rect.x(), rect);
+		mapY.insert(rect.y(), rect);
+	}
+	sortedByX = mapX.values();
+	sortedByY = mapY.values();
+}
+
+/*
+bool Calibrator::getRectsFromProfile(QList<QRect>& importRectsFromProf) {
+	importRectsFromProf.clear();
+	//they have to be;
+	bool isEmpty_gameFram = var->frames.gameFrame.isEmpty();
+	bool isEmpty_healthFrame = var->frames.healthFrame.isEmpty();
+	bool isEmpty_minimapFrame = var->frames.miniMapFrame.isEmpty();
+
+	if (isEmpty_gameFram || isEmpty_healthFrame || isEmpty_minimapFrame)
+		return false;
+
+	//one of them have to be;
+	bool isEmpty_manaFrame = var->frames.manaFrame.isEmpty();
+	bool isEmpty_combinedFrame = var->frames.combinedFrame.isEmpty();
+
+	if (isEmpty_manaFrame && isEmpty_combinedFrame)
+		return false;
+
+	//one that can be or not
+	bool isEmpty_manaShieldFrame = var->frames.manaShieldFrame.isEmpty();
+
+	importRectsFromProf.push_back(var->frames.gameFrame);
+	importRectsFromProf.push_back(var->frames.healthFrame);
+	importRectsFromProf.push_back(var->frames.miniMapFrame);
+
+	if (!isEmpty_manaFrame)
+		importRectsFromProf.push_back(var->frames.manaFrame);
+	if (!isEmpty_combinedFrame)
+		importRectsFromProf.push_back(var->frames.combinedFrame);
+	if (!isEmpty_manaShieldFrame)
+		importRectsFromProf.push_back(var->frames.manaShieldFrame);
+
+	return true;
+}
+*/
+/*
 void Calibrator::TEST_setPositionHealthImhs(QString pathToFolderWithDiffrentPositionsStylesScreen, QString pathToOutPutFolder) {
 	QImage combined, health, mana, manaShield;
 	QDir directory(pathToFolderWithDiffrentPositionsStylesScreen);
@@ -629,58 +654,4 @@ void Calibrator::TEST_setPositionHealthImhs(QString pathToFolderWithDiffrentPosi
 			return;
 	}
 }
-bool Calibrator::getRectsFromProfile(QList<QRect>& importRectsFromProf) {
-	importRectsFromProf.clear();
-	/*
-	//they have to be;
-	bool isEmpty_gameFram = var->frames.gameFrame.isEmpty();
-	bool isEmpty_healthFrame = var->frames.healthFrame.isEmpty();
-	bool isEmpty_minimapFrame = var->frames.miniMapFrame.isEmpty();
-
-	if (isEmpty_gameFram || isEmpty_healthFrame || isEmpty_minimapFrame)
-		return false;
-
-	//one of them have to be;
-	bool isEmpty_manaFrame = var->frames.manaFrame.isEmpty();
-	bool isEmpty_combinedFrame = var->frames.combinedFrame.isEmpty();
-
-	if (isEmpty_manaFrame && isEmpty_combinedFrame)
-		return false;
-
-	//one that can be or not
-	bool isEmpty_manaShieldFrame = var->frames.manaShieldFrame.isEmpty();
-
-	importRectsFromProf.push_back(var->frames.gameFrame);
-	importRectsFromProf.push_back(var->frames.healthFrame);
-	importRectsFromProf.push_back(var->frames.miniMapFrame);
-
-	if (!isEmpty_manaFrame)
-		importRectsFromProf.push_back(var->frames.manaFrame);
-	if (!isEmpty_combinedFrame)
-		importRectsFromProf.push_back(var->frames.combinedFrame);
-	if (!isEmpty_manaShieldFrame)
-		importRectsFromProf.push_back(var->frames.manaShieldFrame);
-
-	return true;
-	*/return false;
-}
-void  Calibrator::sortByXY(QList<QPoint>& points, QList<QPoint>& sortedByX, QList<QPoint>& sortedByY) {
-	QMultiMap<int, QPoint> mapX;
-	QMultiMap<int, QPoint> mapY;
-	for each (QPoint point in points) {
-		mapX.insert(point.x(), point);
-		mapY.insert(point.y(), point);
-	}
-	sortedByX = mapX.values();
-	sortedByY = mapY.values();
-}
-void  Calibrator::sortByXY(QList<QRect>& inputRects, QList<QRect>& sortedByX, QList<QRect>& sortedByY) {
-	QMultiMap<int, QRect> mapX;
-	QMultiMap<int, QRect> mapY;
-	for each (QRect rect in inputRects) {
-		mapX.insert(rect.x(), rect);
-		mapY.insert(rect.y(), rect);
-	}
-	sortedByX = mapX.values();
-	sortedByY = mapY.values();
-}
+*/
