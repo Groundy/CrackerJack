@@ -1,5 +1,5 @@
 #include "MarketProcess.h"
-
+/*
 MarketProcess::MarketProcess(std::shared_ptr<VariablesClass> var, QList<Offer> offersThatShouldBeSet, std::shared_ptr<GameConnecter> gameConnector, QWidget* parent = NULL) :
 	var(var), userOfferList(offersThatShouldBeSet), gameConnector(gameConnector){
 	this->setParent(parent);
@@ -669,3 +669,4 @@ void MarketProcess::endProcess(){
 	emit paintProgressOnBar(100, 100);
 	loopEnabled = false;
 }
+*/

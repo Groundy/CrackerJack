@@ -1,6 +1,6 @@
 #include "RouteCreator.h"
 #include "ui_RouteCreator.h"
-
+/*
 RouteCreator::RouteCreator(QDialog* parent)
 	: QDialog(parent){
 	ui = new Ui::RouteCreator();
@@ -477,3 +477,4 @@ Route::FIELDS_TYPE RouteCreator::getFieldTypeComboBox() {
 
 	return (Route::FIELDS_TYPE)index;
 }
+*/

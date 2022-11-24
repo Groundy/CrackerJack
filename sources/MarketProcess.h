@@ -8,6 +8,7 @@
 #include "MarketProcessGui.h"
 #include "GameConnecter.h"
 #include <memory>
+/*
 struct AlreadyPostedOffer {
 	AlreadyPostedOffer() {};
 	AlreadyPostedOffer(QString nameToSet, int priceToSet, int amountToSet) {
@@ -25,6 +26,8 @@ struct AlreadyPostedOffer {
 	int price;
 	int amount;
 };
+*/
+/*
 struct Pos {
 	QRect itemListOnTheLeftOnWholeScreen;
 	QRect insertItemNameBar;
@@ -87,11 +90,15 @@ struct Pos {
 	QRect firstOffer_Price_Buy;
 	QRect firstOffer_Amount_Buy;
 };
+*/
+
 namespace Ui { class MarketProcess; };
 
 class MarketProcess : public QThread {
 	Q_OBJECT
+		/*
 public:
+
 	MarketProcess(std::shared_ptr<VariablesClass> var, QList<Offer> offersThatShouldBe, std::shared_ptr<GameConnecter> gameConnector, QWidget* parent);
 	~MarketProcess();
 	enum class Type { BUY, SELL };
@@ -150,5 +157,6 @@ private:
 	void buyLastOffer(int currentlyPossesedCash, int priceOfLastOffer_SELL,int amountOfLastOffer_SELL, QString itemName);
 	void sendTextToDisplay(Actions action, QString itemName);
 	void run();
+	*/
 };
 

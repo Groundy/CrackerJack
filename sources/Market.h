@@ -9,17 +9,18 @@
 #include "Calibrator.h"
 #include "Offer.h"
 #include <QTranslator>
-///test
 #include "activeGameThread.h"
 #include "GameConnecter.h"
 #include <memory>
+/*
 namespace Ui { class Market; };
 typedef Item::SELLER Seller;
 typedef Item::TYPE_OF_ITEM ItemType;
-
+*/
 
 class Market : public QDialog{
 	Q_OBJECT
+/*
 public slots:
 	void sellerFiltrChange();
 	void categoryChanged();
@@ -54,4 +55,5 @@ private:
 	void repaitOfertsList();
 	bool twoListAreTheSame(QList<Offer> &list1, QList<Offer> &list2);
 	void setAndRepaintInfoLabel();
+	*/
 };

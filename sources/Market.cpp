@@ -1,6 +1,6 @@
 #include "Market.h"
 #include "ui_Market.h"
-
+/*
 Market::Market(std::shared_ptr<VariablesClass> var, std::shared_ptr<GameConnecter> gameConnector) :
 	var(var), gameConnector(gameConnector)
 {
@@ -361,3 +361,4 @@ void Market::editItemButtonClicked(){
 	}
 	removeItem();
 }
+*/

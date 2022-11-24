@@ -113,8 +113,9 @@ void MainMenu::manualHuntAction(){
 void MainMenu::autoHuntAction(){
 }
 void MainMenu::tradingAction(){
-	Market market(var, gameConnector);
-	market.exec();
+	//Market market(var, gameConnector);
+	//market.exec();
+	;
 }
 void MainMenu::skillingAction(){
 }

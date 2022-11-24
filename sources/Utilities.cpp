@@ -1,43 +1,11 @@
 #include "Utilities.h"
-#include <QRgb>
-#include <QtCore/qsettings.h>
-#include <Calibrator.h>
-
-int Utilities::showMessageBox(QString title, QString text = "", QFlags<QMessageBox::StandardButton> buttons = QMessageBox::Ok) {
-	QMessageBox box;
-	box.setText(text);
-	box.setWindowTitle(title);
-	box.setStandardButtons(buttons);
-	//box.setDefaultButton(buttons);
-	int ret = box.exec();
-	return ret;
-}
-
-void Utilities::showMessageBox_INFO(QString text){
-	/*
-	QMessageBox box;
-	box.setText(text);
-	box.setWindowTitle("CrackerJack");
-	box.setStandardButtons(QMessageBox::StandardButton::Ok);
-	box.exec();
-	*/
-}
-
-bool Utilities::showMessageBox_NO_YES(QString text)
- {
-    QFlags<QMessageBox::StandardButton> flags = { QMessageBox::StandardButton::Yes, QMessageBox::StandardButton::No };
-    int res = Utilities::showMessageBox("CrakerJack", text, flags);
-    bool toRet = res == QMessageBox::StandardButton::Yes;
-    return toRet;
- }
 
 QString Utilities::StrCodeToLetter(QString code){
     //todo, it's terrible solution, it has to be changed
 	QMap<QString, QString> letters = getQmapWithCodes();
 	return letters[code];
  }
-
-QMap<QString, QString>  Utilities::getQmapWithCodes() {
+QMap<QString, QString> Utilities::getQmapWithCodes() {
     QMap<QString, QString> letters;
     letters.insert("6_8_011111101111111110000001100000011111111101111110", "0");
     letters.insert("4_8_01000001111111111111111100000001", "1");
@@ -120,13 +88,28 @@ QMap<QString, QString>  Utilities::getQmapWithCodes() {
 	letters.insert("2_3_111111", "'");
     return letters;
  }
-
-qint64 Utilities::getCurrentTimeInMiliSeconds() {
-	QDateTime date = QDateTime::currentDateTime();
-	qint64 mseconds = date.currentMSecsSinceEpoch();
-	return mseconds;
+bool Utilities::showMessageBox_NO_YES(QString text)
+ {
+    QFlags<QMessageBox::StandardButton> flags = { QMessageBox::StandardButton::Yes, QMessageBox::StandardButton::No };
+    int res = Utilities::showMessageBox("CrakerJack", text, flags);
+    bool toRet = res == QMessageBox::StandardButton::Yes;
+    return toRet;
+ }
+int Utilities::showMessageBox(QString title, QString text = "", QFlags<QMessageBox::StandardButton> buttons = QMessageBox::Ok) {
+	QMessageBox box;
+	box.setText(text);
+	box.setWindowTitle(title);
+	box.setStandardButtons(buttons);
+	//box.setDefaultButton(buttons);
+	return box.exec();
 }
-
+void Utilities::showMessageBox_INFO(QString text){
+	QMessageBox box;
+	box.setText(text);
+	box.setWindowTitle("CrackerJack");
+	box.setStandardButtons(QMessageBox::StandardButton::Ok);
+	box.exec();
+}
 void Utilities::getMapWithNumbersFromBottomBar(QMap<QString, int>& lightToRet, QMap<QString, int>& darkToRet){
 	QMap<QString, int> lightVersion;
 	lightVersion.insert("4_6_#125#125#125_#223#223#223_#223#223#223_#223#223#223_#223#223#223_#180#180#180_#208#208#208_#83#83#83_#0#0#0_#0#0#0_#29#29#29_#223#223#223_#194#194#194_#125#125#125_#56#56#56_#56#56#56_#111#111#111_#223#223#223_#83#83#83_#223#223#223_#223#223#223_#223#223#223_#223#223#223_#111#111#111_", 0);
@@ -155,6 +138,18 @@ void Utilities::getMapWithNumbersFromBottomBar(QMap<QString, int>& lightToRet, Q
 	darkToRet = darkVersion;
 }
 
+
+
+
+/*
+qint64 Utilities::getCurrentTimeInMiliSeconds() {
+	QDateTime date = QDateTime::currentDateTime();
+	qint64 mseconds = date.currentMSecsSinceEpoch();
+	return mseconds;
+}
+*/
+
+/*
 QDir Utilities::getDirWithCrackerJackTmpFolder(FOLDERS_OF_TMP_FOLDER folderType){
 	typedef FOLDERS_OF_TMP_FOLDER Sub;
 	QDir dir = QDir::tempPath();
@@ -194,7 +189,8 @@ QDir Utilities::getDirWithCrackerJackTmpFolder(FOLDERS_OF_TMP_FOLDER folderType)
 	}
 	return dir;
 }
-
+*/
+/*
 QMap<Utilities::FieldsOfIniFile, QString> Utilities::get_Field_NamesFromIni_map(){
 	typedef Utilities::FieldsOfIniFile Field;
 	QMap<Field, QString> toRet;
@@ -205,7 +201,8 @@ QMap<Utilities::FieldsOfIniFile, QString> Utilities::get_Field_NamesFromIni_map(
 
 	return toRet;
 }
-
+*/
+/*
 QString Utilities::readFromIniFile(FieldsOfIniFile nameOfField){
 	QString filePath = getPathToSettingsFile();
 	QSettings setttings(filePath, QSettings::IniFormat);
@@ -214,25 +211,68 @@ QString Utilities::readFromIniFile(FieldsOfIniFile nameOfField){
 	QString readVal = setttings.value(nameOfFieldAsStr).toString();
 	return readVal;
 }
-
-void Utilities::writeIniFile(FieldsOfIniFile nameOfField, QString value){
-	QString filePath = getPathToSettingsFile();
-	QSettings setttings(filePath, QSettings::IniFormat);
-	auto map = get_Field_NamesFromIni_map();
-	QString nameOfFieldAsStr = map[nameOfField];
-	setttings.setValue(nameOfFieldAsStr, value);
+*/
+/*
+void Utilities::TOOL_convertMapsFromOrgNameToSqrName(QString inputFolder) {
+	for (size_t i = 0; i < 16; i++) {
+		qDebug() << QString::number(i);
+		QString path = inputFolder + "\\" + QString::number(i);
+		QDir directory(path);
+		QStringList litOfFIles = directory.entryList(QStringList() << "*.png", QDir::Files);
+		for each (QString var in litOfFIles) {
+			QStringList partOfNames = var.split("_");
+			partOfNames[2] = QString::number(partOfNames[2].toInt() / 256);
+			partOfNames[3] = QString::number(partOfNames[3].toInt() / 256);
+			QString newName = partOfNames.join("_");
+			QString pathToFileOld = path + "\\" + var;
+			QString pathToFileNew = path + "\\" + newName;
+			QFile::rename(pathToFileOld, pathToFileNew);
+		}
+	}
 }
+*/
+/*
+QStringList Utilities::TOOL_getCodesOfAllInFolder_regular(QString pathToInputFolder, QString pathToOutputFolder) {
+    QDir directory(pathToInputFolder);
+    QStringList litOfFIles = directory.entryList(QStringList() << "*.png", QDir::Files);
+    QList<QString> list;
+    for (size_t i = 0; i < litOfFIles.size(); i++) {
+	    QString pathToFile = pathToInputFolder + "\\" + litOfFIles[i];
+	    QImage img = QImage(pathToFile);
+		ImgEditor::imgToBlackAndWhiteOneColor(img, 200);
+		QString name = pathToOutputFolder + "\\" + litOfFIles[i];
+		TOOL_saveImgToOutPutFolder(img,name);
+	    QString code = ImgEditor::letterImgToLetterCodeStr(&img);
 
-void Utilities::TOOL_saveImgToOutPutFolder(QImage& img, QString extraName){
-	QString prefixOfName;
-	if (extraName.isEmpty())
-		prefixOfName = QDateTime::currentDateTime().toString("mm_ss_zzz");
-	else
-		prefixOfName = extraName;
-	QString fullname = "C:\\Users\\ADMIN\\Desktop\\output\\_" + prefixOfName + ".png";
-	img.save(fullname);
+	    //changing "slash.png" to "slash"
+	    QString tmp = litOfFIles[i].left(litOfFIles[i].size() - 4);
+	    litOfFIles[i] = tmp;
+
+		QString codeToDisplay = litOfFIles[i] + QString("___") + code;
+	    list.push_back(codeToDisplay);
+		qDebug() << codeToDisplay;
+    }
+    return list;
+ }
+*/
+/*
+QString Utilities::getPathToSettingsFile() {
+	QDir dir = QDir::temp();
+	dir.cdUp();
+	QString pathToCrackerJackTmpFolder = dir.path() + "/CrackerJack";
+	bool crackerJackDirExist = QDir(pathToCrackerJackTmpFolder).exists();
+	if (!crackerJackDirExist) {
+		bool sucess = dir.rmpath(pathToCrackerJackTmpFolder);
+		if (!sucess) {
+			//Logger::logPotenialBug("Can't make path to crackerJack main tmp folder","Utilities","getPathToSettingsFile");
+			;//TODO fatal error
+		}
+	}
+	pathToCrackerJackTmpFolder.append("/settings.ini");
+	return pathToCrackerJackTmpFolder;
 }
-
+*/
+/*
 QStringList Utilities::TOOL_getCodesOfAllInFolder_bottom(QString pathToInputFolder) {
 	QDir directory(pathToInputFolder);
 	QStringList litOfFIles = directory.entryList(QStringList() << "*.png", QDir::Files);
@@ -262,65 +302,28 @@ QStringList Utilities::TOOL_getCodesOfAllInFolder_bottom(QString pathToInputFold
 	return list;
 }
 
-QString Utilities::getPathToSettingsFile() {
-	QDir dir = QDir::temp();
-	dir.cdUp();
-	QString pathToCrackerJackTmpFolder = dir.path() + "/CrackerJack";
-	bool crackerJackDirExist = QDir(pathToCrackerJackTmpFolder).exists();
-	if (!crackerJackDirExist) {
-		bool sucess = dir.rmpath(pathToCrackerJackTmpFolder);
-		if (!sucess) {
-			//Logger::logPotenialBug("Can't make path to crackerJack main tmp folder","Utilities","getPathToSettingsFile");
-			;//TODO fatal error
-		}
-	}
-	pathToCrackerJackTmpFolder.append("/settings.ini");
-	return pathToCrackerJackTmpFolder;
-}
-
-QStringList Utilities::TOOL_getCodesOfAllInFolder_regular(QString pathToInputFolder, QString pathToOutputFolder) {
-    QDir directory(pathToInputFolder);
-    QStringList litOfFIles = directory.entryList(QStringList() << "*.png", QDir::Files);
-    QList<QString> list;
-    for (size_t i = 0; i < litOfFIles.size(); i++) {
-	    QString pathToFile = pathToInputFolder + "\\" + litOfFIles[i];
-	    QImage img = QImage(pathToFile);
-		ImgEditor::imgToBlackAndWhiteOneColor(img, 200);
-		QString name = pathToOutputFolder + "\\" + litOfFIles[i];
-		TOOL_saveImgToOutPutFolder(img,name);
-	    QString code = ImgEditor::letterImgToLetterCodeStr(&img);
-
-	    //changing "slash.png" to "slash"
-	    QString tmp = litOfFIles[i].left(litOfFIles[i].size() - 4);
-	    litOfFIles[i] = tmp;
-
-		QString codeToDisplay = litOfFIles[i] + QString("___") + code;
-	    list.push_back(codeToDisplay);
-		qDebug() << codeToDisplay;
-    }
-    return list;
- }
-
+*/
 /*
-
-void Utilities::TOOL_convertMapsFromOrgNameToSqrName(QString inputFolder) {
-	for (size_t i = 0; i < 16; i++) {
-		qDebug() << QString::number(i);
-		QString path = inputFolder + "\\" + QString::number(i);
-		QDir directory(path);
-		QStringList litOfFIles = directory.entryList(QStringList() << "*.png", QDir::Files);
-		for each (QString var in litOfFIles) {
-			QStringList partOfNames = var.split("_");
-			partOfNames[2] = QString::number(partOfNames[2].toInt() / 256);
-			partOfNames[3] = QString::number(partOfNames[3].toInt() / 256);
-			QString newName = partOfNames.join("_");
-			QString pathToFileOld = path + "\\" + var;
-			QString pathToFileNew = path + "\\" + newName;
-			QFile::rename(pathToFileOld, pathToFileNew);
-		}
-	}
+void Utilities::TOOL_saveImgToOutPutFolder(QImage& img, QString extraName){
+	QString prefixOfName;
+	if (extraName.isEmpty())
+		prefixOfName = QDateTime::currentDateTime().toString("mm_ss_zzz");
+	else
+		prefixOfName = extraName;
+	QString fullname = "C:\\Users\\ADMIN\\Desktop\\output\\_" + prefixOfName + ".png";
+	img.save(fullname);
 }
-
+*/
+/*
+void Utilities::writeIniFile(FieldsOfIniFile nameOfField, QString value){
+	QString filePath = getPathToSettingsFile();
+	QSettings setttings(filePath, QSettings::IniFormat);
+	auto map = get_Field_NamesFromIni_map();
+	QString nameOfFieldAsStr = map[nameOfField];
+	setttings.setValue(nameOfFieldAsStr, value);
+}
+*/
+/*
 void Utilities::TOOL_generateMapAsText(QString inputFolder){
 	//it takes so fucking long approximately 210s
 	const long start_xPos = 124, start_yPos = 120;
@@ -373,7 +376,8 @@ void Utilities::TOOL_generateMapAsText(QString inputFolder){
 	
 	int endLoop = 4;
 }
-
+*/
+/*
 void Utilities::UNSUED_findBoredersOfFrames(QImage fullScreen){
 	QImage screeOfFrames(fullScreen);
 	auto  minBlack = qRgb(19, 19, 19);
@@ -414,23 +418,53 @@ void Utilities::UNSUED_findBoredersOfFrames(QImage fullScreen){
 
 	QImage startOfFrame = QImage(3, 3, QImage::Format::Format_RGB32);
 }
-
-void convertMapToNoise(QImage& img, quint32 seed) {
-	auto generator = QRandomGenerator(seed);
-	//that fun needs #include "qrandom.h" to be used;
-	quint64 AMOUNT_OF_POSSIBLE_COLOURS = 15;
-	for (int x = 0; x < img.width(); x++) {
-		for (int y = 0; y < img.height(); y++) {
-			uint basic = generator.generate64() % (256 - AMOUNT_OF_POSSIBLE_COLOURS);
-			RGBstruct rgb(img.pixel(x,y));
-			uint sumOfColorsToAdd = rgb.r + rgb.g + rgb.b;
-			uint toSet = basic + sumOfColorsToAdd;
-			uint colourToSet= RGBstruct(toSet, toSet, toSet).toUint();
-			img.setPixelColor(x, y, colourToSet);
-		}
-	}
+*/
+/*
+void Utilities::UNUSED_changeGreyPixelsToBlack(QImage& img, int minGreyVal, int maxGreyVal) {
+    int width = img.width();
+    int height = img.height();
+    for (size_t x = 0; x < width; x++) {
+	    for (size_t y = 0; y < height; y++) {
+		    uint pixVal = img.pixel(x,y);
+		    bool shouldBeBlacked = RGBstruct::isPixelInRangeOfGrey(pixVal, minGreyVal, maxGreyVal);
+		    if (shouldBeBlacked)
+			    img.setPixel(x, y, qRgb(0,0,0));
+	    }
+    }
+ }
+*/
+/*
+ int Utilities::UNUSED_modifyBit(int numberToEdit, int postition, int zeroOrOne){
+	int mask = 1 << postition;
+	return (numberToEdit & ~mask) | ((zeroOrOne << postition) & mask);
 }
+*/
+/*
+void Utilities::UNUSED_imgAvoideOneColor(QImage& img, QRgb minimalColorValues, QRgb maxColorValues, bool allOfThem){
+    int width = img.width();
+    int height = img.height();
+    RGBstruct minV((uint)minimalColorValues);
+    RGBstruct maxV((uint)maxColorValues);
 
+    for (size_t x = 0; x < width; x++) {
+	    for (size_t y = 0; y < height; y++) {
+		    QRgb colorOfPixel = img.pixel(x, y);
+		    RGBstruct current(colorOfPixel);
+
+		    bool redIsEnough = (current.r >= minV.r) && (current.r <= maxV.r);
+		    bool greenIsEnough = (current.g >= minV.g) && (current.g <= maxV.g);
+		    bool blueIsEnough = (current.b >= minV.b) && (current.b <= maxV.b);
+
+		    bool setGiveColor;
+		    allOfThem = allOfThem ? (redIsEnough && greenIsEnough && blueIsEnough) : (redIsEnough || greenIsEnough || blueIsEnough);
+
+		    if (setGiveColor)
+			    img.setPixel(x, y, qRgb(0, 0, 0));
+	    }
+    }
+ }
+*/
+/*
 void Utilities::UNUSED_imgToOneColor(QImage& img, QRgb minimalColorValues, QRgb maxColorValues, QRgb colorToSet, bool allOfThem){
     int width = img.width();
     int height = img.height();
@@ -462,46 +496,21 @@ void Utilities::UNUSED_imgToOneColor(QImage& img, QRgb minimalColorValues, QRgb 
 	    }
     }
  }
- 
-void Utilities::UNUSED_imgAvoideOneColor(QImage& img, QRgb minimalColorValues, QRgb maxColorValues, bool allOfThem){
-    int width = img.width();
-    int height = img.height();
-    RGBstruct minV((uint)minimalColorValues);
-    RGBstruct maxV((uint)maxColorValues);
-
-    for (size_t x = 0; x < width; x++) {
-	    for (size_t y = 0; y < height; y++) {
-		    QRgb colorOfPixel = img.pixel(x, y);
-		    RGBstruct current(colorOfPixel);
-
-		    bool redIsEnough = (current.r >= minV.r) && (current.r <= maxV.r);
-		    bool greenIsEnough = (current.g >= minV.g) && (current.g <= maxV.g);
-		    bool blueIsEnough = (current.b >= minV.b) && (current.b <= maxV.b);
-
-		    bool setGiveColor;
-		    allOfThem = allOfThem ? (redIsEnough && greenIsEnough && blueIsEnough) : (redIsEnough || greenIsEnough || blueIsEnough);
-
-		    if (setGiveColor)
-			    img.setPixel(x, y, qRgb(0, 0, 0));
-	    }
-    }
- }
-
-void Utilities::UNUSED_changeGreyPixelsToBlack(QImage& img, int minGreyVal, int maxGreyVal) {
-    int width = img.width();
-    int height = img.height();
-    for (size_t x = 0; x < width; x++) {
-	    for (size_t y = 0; y < height; y++) {
-		    uint pixVal = img.pixel(x,y);
-		    bool shouldBeBlacked = RGBstruct::isPixelInRangeOfGrey(pixVal, minGreyVal, maxGreyVal);
-		    if (shouldBeBlacked)
-			    img.setPixel(x, y, qRgb(0,0,0));
-	    }
-    }
- }
-
- int Utilities::UNUSED_modifyBit(int numberToEdit, int postition, int zeroOrOne){
-	int mask = 1 << postition;
-	return (numberToEdit & ~mask) | ((zeroOrOne << postition) & mask);
+*/
+/*
+void convertMapToNoise(QImage& img, quint32 seed) {
+	auto generator = QRandomGenerator(seed);
+	//that fun needs #include "qrandom.h" to be used;
+	quint64 AMOUNT_OF_POSSIBLE_COLOURS = 15;
+	for (int x = 0; x < img.width(); x++) {
+		for (int y = 0; y < img.height(); y++) {
+			uint basic = generator.generate64() % (256 - AMOUNT_OF_POSSIBLE_COLOURS);
+			RGBstruct rgb(img.pixel(x,y));
+			uint sumOfColorsToAdd = rgb.r + rgb.g + rgb.b;
+			uint toSet = basic + sumOfColorsToAdd;
+			uint colourToSet= RGBstruct(toSet, toSet, toSet).toUint();
+			img.setPixelColor(x, y, colourToSet);
+		}
+	}
 }
-*/ 
+*/

@@ -8,6 +8,7 @@
 #include "SetNameWidnow.h"
 #include "RGBstruct.h"
 #include "Spell.h"
+
 namespace Ui { class RouteCreator; };
 
 
@@ -15,7 +16,7 @@ class RouteCreator : public QDialog
 {
 	
 	Q_OBJECT
-
+/*
 public:
 	RouteCreator(QDialog* parent = Q_NULLPTR);
 	~RouteCreator();
@@ -71,4 +72,5 @@ private:
 	Route::FIELDS_TYPE getFieldTypeComboBox();
 	void TRANSLATE_addNamesOfFieldTypesToList();
 	void TRANSLATE_gui();
+*/
 };
