@@ -70,16 +70,24 @@ void ImgEditor::rotateImgToRight(QImage& imgToRotate, int timesToRotateRight){
 	rotating.rotate(degreeToRotateToRight,Qt::Axis::ZAxis);
 	imgToRotate = imgToRotate.transformed(rotating);
 }
-bool ImgEditor::isItPixelFromFrame(uint color, int minValueAcceptable, int maxValueAcceptable, bool requireSameValuesOfRGB){
+bool ImgEditor::isItPixelFromFrame(const uint& color, const int& minValueAcceptable, const int& maxValueAcceptable, bool requireSameValuesOfRGB){
 	RGBstruct rgb(color);
-	int minValueFound = rgb.getMinColVal();
+
 	int maxValueFound = rgb.getMaxColVal();
+	if (maxValueFound > maxValueAcceptable)
+		return false;
+
+	int minValueFound = rgb.getMinColVal();
+	if (minValueFound <  minValueAcceptable)
+		return false;
+
+
 	if (requireSameValuesOfRGB) {
 		if (maxValueFound - minValueFound > 1)
 			return false;
 	}
-	bool isPixOfFrame = minValueFound >= minValueAcceptable && maxValueFound <= maxValueAcceptable;
-	return isPixOfFrame;
+
+	return true;
 }
 void ImgEditor::imgToBlackAndWhiteOneColor(QImage& img, int threshold) {
 	const int WIDTH = img.width();
