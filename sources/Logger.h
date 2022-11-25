@@ -24,6 +24,9 @@ public:
 		if (sendToUserConsol)
 			emit sendMsgToUserConsol(QStringList() << msg);
 	}
+	static void staticLog(QString msg) {
+		qDebug() << msg;
+	}
 
 private:
 	std::atomic<long long> time;

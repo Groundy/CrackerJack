@@ -158,6 +158,9 @@
     <QtMoc Include="sources\VariablesClass.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <QtMoc Include="sources\ImgEditor.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="sources\SelectProfileWindow.ui">
@@ -235,9 +238,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="sources\Tools.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="sources\ImgEditor.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

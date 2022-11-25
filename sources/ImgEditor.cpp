@@ -246,7 +246,7 @@ QString ImgEditor::imgWithStrToStr(QImage& img) {
     for (size_t i = 0; i < lettersImgs.size(); i++) {
 		QImage tmp = lettersImgs.at(i);
 	    cutBlackBordersOfImg(tmp);
-	    QString letterCode = letterImgToLetterCodeStr(tmp);
+	    QString letterCode = binaryLetterImgToLetterStr(tmp);
 	    QString letter = Utilities::StrCodeToLetter(letterCode);
 		if (letter == '\0')
 			continue;
@@ -254,15 +254,14 @@ QString ImgEditor::imgWithStrToStr(QImage& img) {
     }
     return toRet;
  }
-QString ImgEditor::letterImgToLetterCodeStr(QImage& SingleLetterImg) {
-    const int WIDTH = SingleLetterImg.width();
-    const int HEIGHT = SingleLetterImg.height();
-    const QString FLOOR = QString("_");
+QString ImgEditor::binaryLetterImgToLetterStr(QImage& singleLetterImg) {
+    const int WIDTH = singleLetterImg.width();
+    const int HEIGHT = singleLetterImg.height();
     const QString ZERO = QString("0"), ONE = QString("1");
-    QString toRet = QString::number(WIDTH) + FLOOR + QString::number(HEIGHT) + FLOOR;
+	QString toRet = QString("%1_%2_").arg(QString::number(WIDTH), QString::number(HEIGHT));
     for (size_t x = 0; x < WIDTH; x++) {
 	    for (size_t y = 0; y < HEIGHT; y++) {
-		    uint pixelColor = SingleLetterImg.pixel(x, y);
+		    uint pixelColor = singleLetterImg.pixel(x, y);
 			bool isBlack = RGBstruct(pixelColor).isBlack();
 		    QString toAppend = isBlack ? ZERO : ONE;
 		    toRet.append(toAppend);
@@ -429,6 +428,3 @@ QList<QPoint> ImgEditor::findStartPositionInImg(const QImage& imgToFind, const Q
 	}
 	return startPointsListToRet;
 }
-
-
-
