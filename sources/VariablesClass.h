@@ -167,26 +167,6 @@ public:
 		else 
 			lastTimeSpellUsagesMap.insert(spellName, now());
 	}
-	bool restMethodeCanBeUsed(const RestorationMethode& restMethode) {
-		const qint64 now = this->now();
-		if (restMethode.isSpell()) {
-			if (currentManaRaw < restMethode.getMana())
-				return false;
-			if (now < timeLastSpellHealing +  (1000 * restMethode.getCdGroup()))
-				return false;
-			if (now < getTimeLastSpellUsed(restMethode.getName()) + (1000 * restMethode.getCd()))
-				return false;
-
-			return true;
-		}
-		else if (restMethode.isPotion()) {
-			if(now < timeLastItemUsage)
-				return false;
-			//later should be added checking if char has proper pot!
-			return true;
-		}
-	}
-
 
 	Logger logger;
 private:

@@ -104,4 +104,5 @@ private:
 	bool getValuesFromStringOfCombinedBox(QString in, int& currentMana, int& maxMana, int& currentManaShield, int& maxManaShield);
 	QVector<RestorationMethode> findRestorationToUse(double currentValue, const QMap<int, RestorationMethode>& methodes);
 	ValuesDoubles getCurrentPercentage();
+	bool restMethodeCanBeUsed(const RestorationMethode& restMethode);
 };

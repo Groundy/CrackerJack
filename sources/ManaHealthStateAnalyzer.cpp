@@ -265,7 +265,30 @@ ManaHealthStateAnalyzer::ImageValues ManaHealthStateAnalyzer::getImages() {
 	var->getImageCombined(toRet.combined, clearImgs);
 	return toRet;
 }
+bool ManaHealthStateAnalyzer::restMethodeCanBeUsed(const RestorationMethode& restMethode) {
+	const qint64 now = var->now();
+	switch (restMethode.getType())
+	{
+	case RestorationMethode::Type::POTION:
+		if (now < var->getTimeLastItemUsage() + (1000 * restMethode.getCd()))
+			return false;
+		//later should be added checking if char has proper pot!
+		return true;
+	case RestorationMethode::Type::SPELL:
+		if (var->getCurrentRawManaVal() < restMethode.getMana())
+			return false;
+		if (now < var->getTimeLastSpellUsageHealing() + (1000 * restMethode.getCdGroup()))
+			return false;
+		if (now < var->getTimeLastSpellUsed(restMethode.getName()) + (1000 * restMethode.getCd()))
+			return false;
 
+		return true;
+		break;
+	default: 
+		return false;
+		break;
+	}
+}
 /*
 void ManaHealthStateAnalyzer::setupRestorationMethodes(QStringList listOfRestorationMethode_Health, QStringList listOfRestorationMethode_Mana){
 	
