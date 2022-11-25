@@ -42,7 +42,7 @@
      </property>
      <layout class="QGridLayout" name="manaLayout">
       <item row="2" column="3">
-       <widget class="QComboBox" name="_4_comboBox">
+       <widget class="QComboBox" name="manaMethodeName_1">
         <property name="enabled">
          <bool>false</bool>
         </property>
@@ -67,7 +67,7 @@
        </widget>
       </item>
       <item row="5" column="3">
-       <widget class="QComboBox" name="_4_comboBox_4">
+       <widget class="QComboBox" name="manaMethodeName_4">
         <property name="enabled">
          <bool>false</bool>
         </property>
@@ -92,7 +92,7 @@
        </widget>
       </item>
       <item row="3" column="3">
-       <widget class="QComboBox" name="_4_comboBox_2">
+       <widget class="QComboBox" name="manaMethodeName_2">
         <property name="enabled">
          <bool>false</bool>
         </property>
@@ -117,7 +117,7 @@
        </widget>
       </item>
       <item row="4" column="3">
-       <widget class="QComboBox" name="_4_comboBox_3">
+       <widget class="QComboBox" name="manaMethodeName_3">
         <property name="enabled">
          <bool>false</bool>
         </property>
@@ -161,7 +161,7 @@
        </widget>
       </item>
       <item row="3" column="1">
-       <widget class="QLabel" name="_4_label_2">
+       <widget class="QLabel" name="manaLabel_2">
         <property name="enabled">
          <bool>false</bool>
         </property>
@@ -199,7 +199,7 @@
        </widget>
       </item>
       <item row="2" column="2">
-       <widget class="QComboBox" name="_4_shortKey_1">
+       <widget class="QComboBox" name="manaKey_1">
         <property name="enabled">
          <bool>false</bool>
         </property>
@@ -218,7 +218,7 @@
        </widget>
       </item>
       <item row="4" column="1">
-       <widget class="QLabel" name="_4_label_3">
+       <widget class="QLabel" name="manaLabel_3">
         <property name="enabled">
          <bool>false</bool>
         </property>
@@ -256,7 +256,7 @@
        </widget>
       </item>
       <item row="3" column="2">
-       <widget class="QComboBox" name="_4_shortKey_2">
+       <widget class="QComboBox" name="manaKey_2">
         <property name="enabled">
          <bool>false</bool>
         </property>
@@ -275,7 +275,7 @@
        </widget>
       </item>
       <item row="5" column="1">
-       <widget class="QLabel" name="_4_label_4">
+       <widget class="QLabel" name="manaLabel_4">
         <property name="enabled">
          <bool>false</bool>
         </property>
@@ -325,7 +325,7 @@
        </widget>
       </item>
       <item row="6" column="2">
-       <widget class="QComboBox" name="_4_shortKey_5">
+       <widget class="QComboBox" name="manaKey_5">
         <property name="enabled">
          <bool>false</bool>
         </property>
@@ -344,7 +344,7 @@
        </widget>
       </item>
       <item row="6" column="1">
-       <widget class="QLabel" name="_4_label_5">
+       <widget class="QLabel" name="manaLabel_5">
         <property name="enabled">
          <bool>false</bool>
         </property>
@@ -363,7 +363,7 @@
        </widget>
       </item>
       <item row="4" column="2">
-       <widget class="QComboBox" name="_4_shortKey_3">
+       <widget class="QComboBox" name="manaKey_3">
         <property name="enabled">
          <bool>false</bool>
         </property>
@@ -382,7 +382,7 @@
        </widget>
       </item>
       <item row="2" column="1">
-       <widget class="QLabel" name="_4_label_1">
+       <widget class="QLabel" name="manaLabel_1">
         <property name="enabled">
          <bool>false</bool>
         </property>
@@ -420,7 +420,7 @@
        </widget>
       </item>
       <item row="6" column="3">
-       <widget class="QComboBox" name="_4_comboBox_5">
+       <widget class="QComboBox" name="manaMethodeName_5">
         <property name="enabled">
          <bool>false</bool>
         </property>
@@ -445,7 +445,7 @@
        </widget>
       </item>
       <item row="5" column="2">
-       <widget class="QComboBox" name="_4_shortKey_4">
+       <widget class="QComboBox" name="manaKey_4">
         <property name="enabled">
          <bool>false</bool>
         </property>
@@ -536,7 +536,7 @@
      </property>
      <layout class="QGridLayout" name="nameLayout">
       <item row="0" column="0">
-       <widget class="QLineEdit" name="_1_nameEdit">
+       <widget class="QLineEdit" name="nameField">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
           <horstretch>0</horstretch>
@@ -592,7 +592,7 @@
      </property>
      <layout class="QGridLayout" name="healthLayout">
       <item row="4" column="1">
-       <widget class="QLabel" name="_3_label_3">
+       <widget class="QLabel" name="healthLabel_3">
         <property name="enabled">
          <bool>false</bool>
         </property>
@@ -654,7 +654,7 @@
        </widget>
       </item>
       <item row="1" column="2" rowspan="2">
-       <widget class="QComboBox" name="_3_shortKey_1">
+       <widget class="QComboBox" name="healthKey_1">
         <property name="enabled">
          <bool>false</bool>
         </property>
@@ -679,7 +679,7 @@
        </widget>
       </item>
       <item row="6" column="3">
-       <widget class="QComboBox" name="_3_comboBox_5">
+       <widget class="QComboBox" name="healthMethodeName_5">
         <property name="enabled">
          <bool>false</bool>
         </property>
@@ -704,7 +704,7 @@
        </widget>
       </item>
       <item row="3" column="2">
-       <widget class="QComboBox" name="_3_shortKey_2">
+       <widget class="QComboBox" name="healthKey_2">
         <property name="enabled">
          <bool>false</bool>
         </property>
@@ -760,7 +760,7 @@
        </widget>
       </item>
       <item row="1" column="1" rowspan="2">
-       <widget class="QLabel" name="_3_label_1">
+       <widget class="QLabel" name="healthLabel_1">
         <property name="enabled">
          <bool>false</bool>
         </property>
@@ -791,7 +791,7 @@
        </widget>
       </item>
       <item row="5" column="1">
-       <widget class="QLabel" name="_3_label_4">
+       <widget class="QLabel" name="healthLabel_4">
         <property name="enabled">
          <bool>false</bool>
         </property>
@@ -822,7 +822,7 @@
        </widget>
       </item>
       <item row="4" column="2">
-       <widget class="QComboBox" name="_3_shortKey_3">
+       <widget class="QComboBox" name="healthKey_3">
         <property name="enabled">
          <bool>false</bool>
         </property>
@@ -847,7 +847,7 @@
        </widget>
       </item>
       <item row="6" column="1">
-       <widget class="QLabel" name="_3_label_5">
+       <widget class="QLabel" name="healthLabel_5">
         <property name="enabled">
          <bool>false</bool>
         </property>
@@ -878,7 +878,7 @@
        </widget>
       </item>
       <item row="4" column="3">
-       <widget class="QComboBox" name="_3_comboBox_3">
+       <widget class="QComboBox" name="healthMethodeName_3">
         <property name="enabled">
          <bool>false</bool>
         </property>
@@ -903,7 +903,7 @@
        </widget>
       </item>
       <item row="5" column="2">
-       <widget class="QComboBox" name="_3_shortKey_4">
+       <widget class="QComboBox" name="healthKey_4">
         <property name="enabled">
          <bool>false</bool>
         </property>
@@ -959,7 +959,7 @@
        </widget>
       </item>
       <item row="5" column="3">
-       <widget class="QComboBox" name="_3_comboBox_4">
+       <widget class="QComboBox" name="healthMethodeName_4">
         <property name="enabled">
          <bool>false</bool>
         </property>
@@ -1015,7 +1015,7 @@
        </widget>
       </item>
       <item row="6" column="2">
-       <widget class="QComboBox" name="_3_shortKey_5">
+       <widget class="QComboBox" name="healthKey_5">
         <property name="enabled">
          <bool>false</bool>
         </property>
@@ -1040,7 +1040,7 @@
        </widget>
       </item>
       <item row="3" column="1">
-       <widget class="QLabel" name="_3_label_2">
+       <widget class="QLabel" name="healthLabel_2">
         <property name="enabled">
          <bool>false</bool>
         </property>
@@ -1071,7 +1071,7 @@
        </widget>
       </item>
       <item row="3" column="3">
-       <widget class="QComboBox" name="_3_comboBox_2">
+       <widget class="QComboBox" name="healthMethodeName_2">
         <property name="enabled">
          <bool>false</bool>
         </property>
@@ -1136,7 +1136,7 @@
        </widget>
       </item>
       <item row="1" column="3" rowspan="2">
-       <widget class="QComboBox" name="_3_comboBox">
+       <widget class="QComboBox" name="healthMethodeName_1">
         <property name="enabled">
          <bool>false</bool>
         </property>
@@ -1279,7 +1279,7 @@
          </widget>
         </item>
         <item row="0" column="1">
-         <widget class="QComboBox" name="_5_ControlBox">
+         <widget class="QComboBox" name="controlsBox">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
             <horstretch>0</horstretch>
@@ -1323,7 +1323,7 @@
          </widget>
         </item>
         <item row="1" column="1">
-         <widget class="QComboBox" name="_5_AutoLootBox">
+         <widget class="QComboBox" name="autoLootBox">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
             <horstretch>0</horstretch>
@@ -1361,7 +1361,7 @@
          </widget>
         </item>
         <item row="2" column="1">
-         <widget class="QSpinBox" name="_5_LeftAddedBarsSpin">
+         <widget class="QSpinBox" name="leftBarsCounter">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
             <horstretch>0</horstretch>
@@ -1396,7 +1396,7 @@
          </widget>
         </item>
         <item row="3" column="1">
-         <widget class="QSpinBox" name="_5_RightAddedBarsSpin">
+         <widget class="QSpinBox" name="rightBarsCounter">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
             <horstretch>0</horstretch>

@@ -16,7 +16,7 @@ NewProfileConfiguartor::~NewProfileConfiguartor() {
 //correctnessCheck
 bool NewProfileConfiguartor::checkNameGroup(){
 	try {
-		QString nameOfProf = ui->_1_nameEdit->text();
+		QString nameOfProf = ui->nameField->text();
 		bool wrongLength = nameOfProf.size() > 50 || nameOfProf.size() < 3;
 		if (wrongLength)
 			throw std::exception("Profile name must be between 3 and 50 characters long");
@@ -44,16 +44,16 @@ bool NewProfileConfiguartor::checkNameGroup(){
 bool NewProfileConfiguartor::checkControlsGroup() {
 	//change //TODO
 	try{
-		int indexOfControlBox = ui->_5_ControlBox->currentIndex();
+		int indexOfControlBox = ui->controlsBox->currentIndex();
 		bool controlsWrong = indexOfControlBox < 0 ||
-			indexOfControlBox > ui->_5_ControlBox->count() - 1 ||
+			indexOfControlBox > ui->controlsBox->count() - 1 ||
 			indexOfControlBox < 0;
 		if (controlsWrong)
 			throw std::exception("Something is wrong with selected controls");
 
-		int indexOfAutoLootlBox = ui->_5_AutoLootBox->currentIndex();
+		int indexOfAutoLootlBox = ui->autoLootBox->currentIndex();
 		bool autoLootWrongs = indexOfControlBox < 0 ||
-			indexOfAutoLootlBox > ui->_5_AutoLootBox->count() - 1 ||
+			indexOfAutoLootlBox > ui->autoLootBox->count() - 1 ||
 			indexOfAutoLootlBox < 0;
 		if (autoLootWrongs)
 			throw std::exception("Something is wrong with selected auto loot key");
@@ -191,10 +191,10 @@ void NewProfileConfiguartor::manaSlidersChanged(){
 	refreshSlidersLabels(manaPtrs);
 }
 void NewProfileConfiguartor::controlsOrAutoLootListAction(){
-	bool enableAutoLoot = ui->_5_ControlBox->currentIndex() == Profile::Controls::CLSSIC_CONTROLS;
-	ui->_5_AutoLootBox->setEnabled(enableAutoLoot);
-	ui->_5_AutoLootBox->setCurrentIndex(0);
-	ui->_5_AutoLootBox->repaint();
+	bool enableAutoLoot = ui->autoLootBox->currentIndex() == Profile::Controls::CLSSIC_CONTROLS;
+	ui->autoLootBox->setEnabled(enableAutoLoot);
+	ui->autoLootBox->setCurrentIndex(0);
+	ui->autoLootBox->repaint();
 }
 void NewProfileConfiguartor::professionChanged(){
 	Profession profession = getSelectedProf();
@@ -302,42 +302,42 @@ void NewProfileConfiguartor::fillGuiPtrs() {
 	manaPtrs.sliders.push_back(ui->manaSlider_4);
 	manaPtrs.sliders.push_back(ui->manaSlider_5);
 
-	healthPtrs.percentageLabels.push_back(ui->_3_label_1);
-	healthPtrs.percentageLabels.push_back(ui->_3_label_2);
-	healthPtrs.percentageLabels.push_back(ui->_3_label_3);
-	healthPtrs.percentageLabels.push_back(ui->_3_label_4);
-	healthPtrs.percentageLabels.push_back(ui->_3_label_5);
+	healthPtrs.percentageLabels.push_back(ui->healthLabel_1);
+	healthPtrs.percentageLabels.push_back(ui->healthLabel_2);
+	healthPtrs.percentageLabels.push_back(ui->healthLabel_3);
+	healthPtrs.percentageLabels.push_back(ui->healthLabel_4);
+	healthPtrs.percentageLabels.push_back(ui->healthLabel_5);
 
-	manaPtrs.percentageLabels.push_back(ui->_4_label_1);
-	manaPtrs.percentageLabels.push_back(ui->_4_label_2);
-	manaPtrs.percentageLabels.push_back(ui->_4_label_3);
-	manaPtrs.percentageLabels.push_back(ui->_4_label_4);
-	manaPtrs.percentageLabels.push_back(ui->_4_label_5);
+	manaPtrs.percentageLabels.push_back(ui->manaLabel_1);
+	manaPtrs.percentageLabels.push_back(ui->manaLabel_2);
+	manaPtrs.percentageLabels.push_back(ui->manaLabel_3);
+	manaPtrs.percentageLabels.push_back(ui->manaLabel_4);
+	manaPtrs.percentageLabels.push_back(ui->manaLabel_5);
 
-	healthPtrs.methodeNames.push_back(ui->_3_comboBox);
-	healthPtrs.methodeNames.push_back(ui->_3_comboBox_2);
-	healthPtrs.methodeNames.push_back(ui->_3_comboBox_3);
-	healthPtrs.methodeNames.push_back(ui->_3_comboBox_4);
-	healthPtrs.methodeNames.push_back(ui->_3_comboBox_5);
+	healthPtrs.methodeNames.push_back(ui->healthMethodeName_1);
+	healthPtrs.methodeNames.push_back(ui->healthMethodeName_2);
+	healthPtrs.methodeNames.push_back(ui->healthMethodeName_3);
+	healthPtrs.methodeNames.push_back(ui->healthMethodeName_4);
+	healthPtrs.methodeNames.push_back(ui->healthMethodeName_5);
 
-	manaPtrs.methodeNames.push_back(ui->_4_comboBox);
-	manaPtrs.methodeNames.push_back(ui->_4_comboBox_2);
-	manaPtrs.methodeNames.push_back(ui->_4_comboBox_3);
-	manaPtrs.methodeNames.push_back(ui->_4_comboBox_4);
-	manaPtrs.methodeNames.push_back(ui->_4_comboBox_5);
+	manaPtrs.methodeNames.push_back(ui->manaMethodeName_1);
+	manaPtrs.methodeNames.push_back(ui->manaMethodeName_2);
+	manaPtrs.methodeNames.push_back(ui->manaMethodeName_3);
+	manaPtrs.methodeNames.push_back(ui->manaMethodeName_4);
+	manaPtrs.methodeNames.push_back(ui->manaMethodeName_5);
 
 
-	healthPtrs.keyShortCuts.push_back(ui->_3_shortKey_1);
-	healthPtrs.keyShortCuts.push_back(ui->_3_shortKey_2);
-	healthPtrs.keyShortCuts.push_back(ui->_3_shortKey_3);
-	healthPtrs.keyShortCuts.push_back(ui->_3_shortKey_4);
-	healthPtrs.keyShortCuts.push_back(ui->_3_shortKey_5);
+	healthPtrs.keyShortCuts.push_back(ui->healthKey_1);
+	healthPtrs.keyShortCuts.push_back(ui->healthKey_2);
+	healthPtrs.keyShortCuts.push_back(ui->healthKey_3);
+	healthPtrs.keyShortCuts.push_back(ui->healthKey_4);
+	healthPtrs.keyShortCuts.push_back(ui->healthKey_5);
 
-	manaPtrs.keyShortCuts.push_back(ui->_4_shortKey_1);
-	manaPtrs.keyShortCuts.push_back(ui->_4_shortKey_2);
-	manaPtrs.keyShortCuts.push_back(ui->_4_shortKey_3);
-	manaPtrs.keyShortCuts.push_back(ui->_4_shortKey_4);
-	manaPtrs.keyShortCuts.push_back(ui->_4_shortKey_5);
+	manaPtrs.keyShortCuts.push_back(ui->manaKey_1);
+	manaPtrs.keyShortCuts.push_back(ui->manaKey_2);
+	manaPtrs.keyShortCuts.push_back(ui->manaKey_3);
+	manaPtrs.keyShortCuts.push_back(ui->manaKey_4);
+	manaPtrs.keyShortCuts.push_back(ui->manaKey_5);
 
 	healthPtrs.activeElementsCounter = ui->amountHealthRegMethodes;
 	manaPtrs.activeElementsCounter = ui->amountManaRegMethodes;
@@ -358,7 +358,7 @@ void NewProfileConfiguartor::counterChanged(GuiPointers guiPointers){
 	}
 }
 void NewProfileConfiguartor::fillFormsFromDataFromProf(Profile& prof){
-	ui->_1_nameEdit->setText(prof.getName());
+	ui->nameField->setText(prof.getName());
 
 	auto profComboBox = ui->professionCombBox;
 	QString professionName = prof.getProfession().getTypeName();
@@ -372,10 +372,10 @@ void NewProfileConfiguartor::fillFormsFromDataFromProf(Profile& prof){
 	fillSlidersGroup(healthPtrs, prof.getRestMethodesHealth());
 	fillSlidersGroup(manaPtrs, prof.getRestMethodesMana());
 
-	ui->_5_ControlBox->setCurrentIndex(prof.getControls());
-	ui->_5_AutoLootBox->setCurrentIndex(prof.getAutoLoot());
-	ui->_5_LeftAddedBarsSpin->setValue(prof.getBarsLeft());
-	ui->_5_RightAddedBarsSpin->setValue(prof.getBarsRight());
+	ui->controlsBox->setCurrentIndex(prof.getControls());
+	ui->autoLootBox->setCurrentIndex(prof.getAutoLoot());
+	ui->leftBarsCounter->setValue(prof.getBarsLeft());
+	ui->rightBarsCounter->setValue(prof.getBarsRight());
 }
 QVector<RestorationMethode> NewProfileConfiguartor::getRestorationMethodesFromGUI(GuiPointers guiPotiners){
 	QVector<RestorationMethode> toRet = {};
@@ -390,12 +390,12 @@ QVector<RestorationMethode> NewProfileConfiguartor::getRestorationMethodesFromGU
 	return toRet;
 }
 void NewProfileConfiguartor::saveDataToProfile(){
-	profToEdit->setName(ui->_1_nameEdit->text());
+	profToEdit->setName(ui->nameField->text());
 	profToEdit->setProfession(getSelectedProf());
 	profToEdit->setRestMethodesHealth(getRestorationMethodesFromGUI(healthPtrs));
 	profToEdit->setRestMethodesMana(getRestorationMethodesFromGUI(manaPtrs));
 	profToEdit->setScreenShotKey(Key(ui->screenShotBox->currentText()));
-	profToEdit->setBars(ui->_5_LeftAddedBarsSpin->value(), ui->_5_RightAddedBarsSpin->value());
-	profToEdit->setControls(ui->_5_ControlBox->currentIndex());
-	profToEdit->setAutoLoot(ui->_5_AutoLootBox->currentIndex());
+	profToEdit->setBars(ui->leftBarsCounter->value(), ui->rightBarsCounter->value());
+	profToEdit->setControls(ui->controlsBox->currentIndex());
+	profToEdit->setAutoLoot(ui->autoLootBox->currentIndex());
 }
