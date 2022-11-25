@@ -38,15 +38,20 @@ Profile* getProfile() {
 	}
 
 }
-int main(int argc, char *argv[])
+int main(int argc, char* argv[])
 {
 	QApplication app(argc, argv);
 	setTranslation(app);
 	setStyle(app);
 	test();
-	Profile* profile = getProfile();
-	auto mainMenu = std::make_unique<MainMenu>(profile);
-	if (!(mainMenu->exec() == QDialog::Accepted))
-		return 0;
+	while (true) {
+		Profile* profile = getProfile();
+		auto mainMenu = new MainMenu(profile);
+		bool endProgram = mainMenu->exec() != QDialog::Accepted;
+		delete mainMenu;
+		delete profile;
+		if (endProgram)
+			break;
+	}
 	return app.exec();
 }

@@ -27,12 +27,8 @@ public:
 	~MainMenu();
 public slots:
 	void changeProfileButtonAction();
-	void editProfileButtonAction();
-	void manualHuntAction();
-	void autoHuntAction();
-	void tradingAction();
-	void skillingAction();
-	void getAndDisplayPotionAmountInfo(QStringList);
+	void updateResourcesAmounts();
+	void takeScreenShotCheckBoxChanged();
 
 	//from threads
 	void autoHealAndManaRegCheckBoxChanged();

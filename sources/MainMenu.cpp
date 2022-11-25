@@ -6,23 +6,23 @@ MainMenu::MainMenu(Profile* selectedProf, QWidget* parent)
 	: QDialog(parent), prof(selectedProf){
 	ui = new Ui::MainMenu();
 	ui->setupUi(this);
+
 	var = std::shared_ptr<VariablesClass>(new VariablesClass());
 	gameConnector = std::shared_ptr<GameConnecter>(new GameConnecter(this, var));
 	ui->profileNameLabel->setText(prof->getName());
 	threadStarter();
 	signalSlotConnector();
-	this->activityThread->exit();//???
+	//this->activityThread->exit();//???
+
 }
 MainMenu::~MainMenu(){
-	/*
 	delete activityThread;
+
 	delete screenSaverThread;
 	delete screenAnalyzer;
 	delete healthManaStateAnalyzer;
+
 	delete ui;
-	ProfileDataBaseManager db;
-	db.saveProfileToDataBase(*this->prof);
-	*/
 }
 
 
@@ -82,58 +82,13 @@ void MainMenu::signalSlotConnector(){
 
 //slots
 void MainMenu::changeProfileButtonAction(){
-	/*
-	ProfileDataBaseManager db;
-	db.saveProfileToDataBase(*this->prof);
-	Profile profTmp;
-	SelectProfileWindow selectProfWin(this, &profTmp);
-	int res = selectProfWin.exec();
-	if (res == QDialog::Accepted) {
-		this->prof->copyFrom(profTmp);
-		this->ui->profileNameLabel->setText(this->prof->profileName);
-		this->ui->profileNameLabel->repaint();
-	}
-	*/
-}
-void MainMenu::editProfileButtonAction(){
-	/*
-	Profile profTmp;
-	NewProfileConfiguartor profConfig(&profTmp,this);
-	profConfig.fillWidgetsWithDataFromProf(this->prof);
-	int res = profConfig.exec();
-	if (res == QDialog::Accepted) {
-		this->prof->copyFrom(profTmp);
-		this->ui->profileNameLabel->setText(this->prof->profileName);
-		this->ui->profileNameLabel->repaint();
-	}
-	*/
-}
-void MainMenu::manualHuntAction(){
-}
-void MainMenu::autoHuntAction(){
+	this->accept();
 }
 void MainMenu::takeScreenShotCheckBoxChanged() {
 	bool toSet = ui->takeScreenshotCheckBox->isChecked();
 	var->setSettingTakingScreensState(toSet);
 }
-void MainMenu::skillingAction(){
-}
-void MainMenu::getAndDisplayPotionAmountInfo(QStringList list){
-	const int MAX_POSIBLE_LIST_LENGTH = 3;
-	QList<QLabel*> labels;
-	labels.push_back(ui->potion_label_1);
-	labels.push_back(ui->potion_label_2);
-	labels.push_back(ui->potion_label_3);
-
-	for (size_t i = 0; i < MAX_POSIBLE_LIST_LENGTH; i++){
-		bool shouldBeDisplayed = i < list.size();
-		if (shouldBeDisplayed) {
-			QString textToSet = shouldBeDisplayed ? list[i] : QString();
-			labels[i]->setText(textToSet);	
-		}
-		labels[i]->setVisible(shouldBeDisplayed);
-		labels[i]->repaint();
-	}
+void MainMenu::updateResourcesAmounts(){
 }
 void MainMenu::autoHealAndManaRegCheckBoxChanged() {
 	bool stateOfSwitch = ui->restoreHealthMana->isChecked();
@@ -166,10 +121,7 @@ void MainMenu::onGameStateChanged(int state){
 	ui->gameActiveLabel->setText(toWrite);
 	ui->gameActiveLabel->repaint();
 
-	bool shouldBeActive = state == Type::ACTIVE;
-	//this->screenAnalyzer->enableScreenAnalyzer = shouldBeActive;
-	this->var->changeTakingScreensState(shouldBeActive);
-	
+	bool shouldBeActive = state == Type::ACTIVE;	
 }
 void MainMenu::changedValueOfCharHealthOrMana(double healthPercentage, double manaPercentage, double manaShieldPercentage){
 	const QString NO_DATA_INFO = tr("No data to display");
