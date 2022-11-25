@@ -152,8 +152,9 @@ public:
 	qint64 getTimeLastSpellUsageSupport() const { return timeLastSpellSupport; }
 	qint64 getTimeLastSpellUsed(QString spellName) { 
 		lastTimeUsagesMutex.lock();
-		return lastTimeSpellUsagesMap.value(spellName, 0);
+		qint64 value = lastTimeSpellUsagesMap.value(spellName, 0);
 		lastTimeUsagesMutex.unlock();
+		return value;
 	}
 	void setTimeLastItemUsage() { timeLastItemUsage = now(); }
 	void setTimeLastSpellUsageAttack() { timeLastSpellAttack = now(); }
@@ -173,8 +174,8 @@ private:
 	std::mutex fullImgMutex;
 	QImage fullImage;
 	std::atomic<bool> newFullImgAwaits;
-	std::atomic<double> currentHealthPercentage, currentManaPercentage, currentMsPercentage;
-	std::atomic<int> currentHealthRaw, currentManaRaw, currentMSRaw;
+	std::atomic<double> currentHealthPercentage = 0.0, currentManaPercentage = 0.0, currentMsPercentage = 0.0;
+	std::atomic<int> currentHealthRaw = 0, currentManaRaw = 0, currentMSRaw = 0;
 	std::atomic<bool> keepRestoringManaAngHealth;
 	std::atomic<bool> keepTakingScreenShots;
 	std::atomic<bool> keepLoadingScreenShots;
