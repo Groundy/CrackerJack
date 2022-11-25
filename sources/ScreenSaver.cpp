@@ -2,7 +2,7 @@
 
 ScreenSaver::ScreenSaver(QObject* parent, std::shared_ptr<VariablesClass> var, std::shared_ptr<GameConnecter> gameConnecter, Profile* profile)
 	: QThread(parent), var(var), gameConnecter(gameConnecter), profile(profile){
-	var->changeTakingScreensState(true);
+	var->setSettingTakingScreensState(true);
 }
 
 ScreenSaver::~ScreenSaver(){
@@ -28,7 +28,7 @@ void ScreenSaver::sendScreenRequestToGame(){
 void ScreenSaver::threadLoop(){
 	while (true){
 		msleep(SLEEP_TIME);
-		if (!var->checkTakingScreensState())
+		if (!var->getSettingTakingScreensState())
 			continue;
 		sendScreenRequestToGame();
 	}

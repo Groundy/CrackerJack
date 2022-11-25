@@ -86,18 +86,20 @@ public:
 		img = fullImage.copy();
 		fullImgMutex.unlock();
 	}
-	void changeRestoringState(bool enable) { this->keepRestoringManaAngHealth = enable; };
-	bool checkRestoringState() { return keepRestoringManaAngHealth; }
-	void changeTakingScreensState(bool enable) { this->keepTakingScreenShots = enable; };
-	bool checkTakingScreensState() { return keepTakingScreenShots; }
 	uint getPid() { return pid; }
 	void setPid(uint newPid) { pid = newPid; }
 	QString getNameOfGameWindow() { return nameOfGameWindow; }
 	void setNameOfGameWindow(QString newNameOfGameWindow) { nameOfGameWindow = newNameOfGameWindow; }
 	HWND getHandlerToGameThread() { return handlerToGameThread; }
 	void setHandlerToGameThread(HWND newHandlerToGameThread) { handlerToGameThread = newHandlerToGameThread; }
-	void changeLoadingState(bool enable) { this->keepLoadingScreenShots = enable; };
-	bool checkLoadingState() { return keepLoadingScreenShots; }
+
+	//options
+	void setSettingRestoringState(bool enable) { this->keepRestoringManaAngHealth = enable; };
+	void setSettingTakingScreensState(bool enable) { this->keepTakingScreenShots = enable; };
+	void setSettingLoadingState(bool enable) { this->keepLoadingScreenShots = enable; };
+	bool getSettingTakingScreensState() const { return keepTakingScreenShots; }
+	bool getSettingRestoringState() const { return keepRestoringManaAngHealth; }
+	bool getSettingLoadingState() const { return keepLoadingScreenShots; }
 
 	//health, mana, combined, shield frames
 	void setRotation(int rotation) { healthManaFrames.howTheyShouldBeRotated = rotation; }

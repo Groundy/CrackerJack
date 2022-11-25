@@ -112,10 +112,9 @@ void MainMenu::manualHuntAction(){
 }
 void MainMenu::autoHuntAction(){
 }
-void MainMenu::tradingAction(){
-	//Market market(var, gameConnector);
-	//market.exec();
-	;
+void MainMenu::takeScreenShotCheckBoxChanged() {
+	bool toSet = ui->takeScreenshotCheckBox->isChecked();
+	var->setSettingTakingScreensState(toSet);
 }
 void MainMenu::skillingAction(){
 }
@@ -137,8 +136,8 @@ void MainMenu::getAndDisplayPotionAmountInfo(QStringList list){
 	}
 }
 void MainMenu::autoHealAndManaRegCheckBoxChanged() {
-	bool stateOfSwitch = ui->autoManaHealChechBox->isChecked();
-	var->changeRestoringState(stateOfSwitch);
+	bool stateOfSwitch = ui->restoreHealthMana->isChecked();
+	var->setSettingRestoringState(stateOfSwitch);
 }
 void MainMenu::onGameStateChanged(int state){	
 	QString toWrite = tr("Game status: ");

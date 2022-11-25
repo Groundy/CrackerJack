@@ -5,7 +5,7 @@
 ManaHealthStateAnalyzer::ManaHealthStateAnalyzer(QObject *parent, Profile* profile, std::shared_ptr<VariablesClass> var)
 	: QThread(parent), var(var){
 	PopulateHealthManaMaps(profile);
-	var->changeRestoringState(true);
+	var->setSettingRestoringState(true);
 }
 ManaHealthStateAnalyzer::~ManaHealthStateAnalyzer(){
 	this->terminate();

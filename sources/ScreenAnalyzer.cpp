@@ -3,7 +3,7 @@
 ScreenAnalyzer::ScreenAnalyzer(QObject *parent, std::shared_ptr<VariablesClass> var, Profile* profile)
 	: QThread(parent), var(var), profile(profile){
 	screenShotFolder = setUpScreenFolder();
-	var->changeLoadingState(true);
+	var->setSettingLoadingState(true);
 }
 
 ScreenAnalyzer::~ScreenAnalyzer(){
@@ -62,7 +62,7 @@ void ScreenAnalyzer::deleteScreenShotFolder(){
 void ScreenAnalyzer::mainLoop(){
 	while (true){
 		msleep(SLEEP_TIME);
-		if (!var->checkLoadingState())
+		if (!var->getSettingLoadingState())
 			continue;
 
 		QImage img;
