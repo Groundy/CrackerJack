@@ -149,9 +149,6 @@
     <QtMoc Include="sources\MarketProcessGui.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="sources\ImgEditor.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
     <QtMoc Include="sources\GameConnecter.h">
       <Filter>Header Files</Filter>
     </QtMoc>
@@ -238,6 +235,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="sources\Tools.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\ImgEditor.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

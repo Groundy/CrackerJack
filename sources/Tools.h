@@ -8,7 +8,7 @@
 class Tools
 {
 public:
-	static void saveJsonFileWithCodesOfImgsInFolder(QString inputFolderPath, QString outputFolderPath) {	
+	static void saveJsonFileWithCodesOfImgsInFolderColor(QString inputFolderPath, QString outputFolderPath) {	
 		// patern width_height_digits
 		QDir directory(inputFolderPath);
 		QStringList litOfFIles = directory.entryList(QStringList() << "*.png", QDir::Files);
@@ -32,6 +32,28 @@ public:
 			obj.insert("value", strWithCode);
 			arr.push_back(obj);
 			QString toDisplay = fileName + "----->" + strWithCode;
+			qDebug() << toDisplay;
+		}
+		QJsonDocument docToSave(arr);
+		JsonParser().saveJsonFile(outputFolderPath, "imgsCodes.json", docToSave);
+	}
+	static void saveJsonFileWithCodesOfImgsInFolderBinary(QString inputFolderPath, QString outputFolderPath) {
+		// patern width_height_digits
+		QDir directory(inputFolderPath);
+		QStringList litOfFIles = directory.entryList(QStringList() << "*.png", QDir::Files);
+		QJsonArray arr;
+		for each (QString fileName in litOfFIles) {
+			QString pathToFile = QString("%1\\%2").arg(inputFolderPath, fileName);
+			QImage img(pathToFile);
+			const int THRESHOLD = 200;
+			ImgEditor::imgToBlackAndWhiteOneColor(img, THRESHOLD);
+			QString imgPixelsValues = ImgEditor::binaryLetterImgToLetterStr(img);
+			const QString fileNameWithoutExtension = fileName.left(fileName.size() - 4);
+			QJsonObject obj;
+			obj.insert("name", fileNameWithoutExtension);
+			obj.insert("value", imgPixelsValues);
+			arr.push_back(obj);
+			QString toDisplay = fileName + "----->" + imgPixelsValues;
 			qDebug() << toDisplay;
 		}
 		QJsonDocument docToSave(arr);

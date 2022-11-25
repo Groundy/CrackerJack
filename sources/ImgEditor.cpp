@@ -270,26 +270,43 @@ QString ImgEditor::letterImgToLetterCodeStr(QImage& SingleLetterImg) {
     }
     return toRet;
  }
-QImage ImgEditor::getImageFromAdvancedCode(QString codeOfImg){
-	QStringList partsOfCode = codeOfImg.split(QString("_"), Qt::SkipEmptyParts);
-	int width = partsOfCode[0].toInt();
-	int height = partsOfCode[1].toInt();
-	partsOfCode.removeFirst();
-	partsOfCode.removeFirst();
-	QImage imgToCreate(width, height, QImage::Format::Format_ARGB32);
-	int i = 0;
-	for (size_t x = 0; x < width; x++){
-		for (size_t y = 0; y < height; y++){
-			QStringList rgb = partsOfCode[i].split(QString("#"), Qt::SkipEmptyParts);
-			i++;
-			int r = rgb[0].toInt();
-			int g = rgb[1].toInt();
-			int b = rgb[2].toInt();
-			uint pixToSet = qRgb(r, g, b);
-			imgToCreate.setPixel(x, y, pixToSet);
+QImage ImgEditor::getColorImageFromCode(const QString& codeOfImg){
+	try{
+		QStringList partsOfCode = codeOfImg.split(QString("#"), Qt::SkipEmptyParts);
+		if(partsOfCode.size() != 3)
+			throw std::exception(" Wrong format of color img code!");
+
+		const int WIDTH = partsOfCode[0].toInt();
+		const int HEIGHT = partsOfCode[1].toInt();
+
+		if (WIDTH <= 0 || HEIGHT <= 0)
+			throw std::exception(" Wrong format of color img code!, sizesz should be positive!");
+
+
+		const int HEX_LENGTH = 8;
+		if (partsOfCode[2].size() % HEX_LENGTH != 0)
+			throw std::exception(" Wrong format of color img code!, pixValues are not n*8 length!");
+
+		QStringList hexValuesOfPixels = {};
+		for (size_t i = 0; i <= partsOfCode[2].size(); i += HEX_LENGTH)
+			hexValuesOfPixels.push_back(partsOfCode[3].mid(i, HEX_LENGTH));
+
+
+		QImage imgToCreate(WIDTH, HEIGHT, QImage::Format::Format_ARGB32);
+		int i = 0;
+		for (size_t x = 0; x < WIDTH; x++){
+			for (size_t y = 0; y < HEIGHT; y++){
+				uint pixVal = hexValuesOfPixels[i].toUInt();
+				imgToCreate.setPixel(x, y, pixVal);
+				i++;
+			}
 		}
+		return imgToCreate;
 	}
-	return imgToCreate;
+	catch (const std::exception& e){
+		Logger::staticLog(e.what());
+		return QImage();
+	}
 }
 
 QList<QPoint> ImgEditor::findStartPositionInImg_mulitpeImgs(QList<QImage*> imgsToFind, QImage& imgToShareWithin) {

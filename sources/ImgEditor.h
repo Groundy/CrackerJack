@@ -19,7 +19,7 @@ public:
 	static QImage fromCharToImg(QChar CharToImg);
 	static void rotateImgToRight(QImage& imgToRotate, int timesToRotateRight);
 	static bool isItPixelFromFrame(const uint& color, const int& minValueAcceptable, const int& maxValueAcceptable, bool requireSameValuesOfRGB);
-	static QImage getImageFromAdvancedCode(QString codeOfImg);
+	static QImage getColorImageFromCode(const QString& codeOfImg);
 	static void cutImgWithLettersToSingleLettersImgList(QImage& img, QList<QImage>& list);
 	static QList<QPoint> findStartPositionInImg_mulitpeImgs(QList<QImage*> imgsToFind, QImage& imgToShareWithin);
 	static QList<QPoint> findStartPositionInImg(const QImage& imgToFind, const QImage& imgToShareWithin);
