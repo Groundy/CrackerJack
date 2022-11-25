@@ -1,5 +1,5 @@
 #include "MinimapAnalyzer.h"
-typedef QList<int> Histogram;
+/*
 
 MinimapAnalyzer::MinimapAnalyzer(){
 }
@@ -7,7 +7,6 @@ MinimapAnalyzer::MinimapAnalyzer(VariablesClass* var) {
 	test_varClass = var;
 	test();
 }
-
 MinimapAnalyzer::~MinimapAnalyzer(){
 }
 
@@ -21,19 +20,16 @@ QString MinimapAnalyzer::getNameOfMapFileToLoad(int floor, bool regularMapType){
 	QString toRet = "floor-" + number + "-" + type + ".png";
 	return toRet;
 }
-
 QString MinimapAnalyzer::setPathToFolderMap(){
 	//todo przerobic w final version
 	QDir dir = QDir::current();
 	dir.cd("maps");
 	return dir.absolutePath();
 }
-
 QImage MinimapAnalyzer::setSliderImg(){
 	const QString SLIDER_IMG_CODE = "4_5_#155#155#155_#101#101#101_#101#101#101_#101#101#101_#37#38#38_#101#101#101_#101#101#101_#101#101#101_#101#101#101_#101#101#101_#101#101#101_#101#101#101_#101#101#101_#101#101#101_#101#101#101_#120#120#120_#120#120#120_#120#120#120_#120#120#120_#120#120#120_";
 	return ImgEditor::getImageFromAdvancedCode(SLIDER_IMG_CODE);
 }
-
 uint MinimapAnalyzer::getFloorNumber(){
 	uint toRet = 0;
 
@@ -58,7 +54,6 @@ uint MinimapAnalyzer::getFloorNumber(){
 	}
 	return toRet;
 }
-
 QList<uint> MinimapAnalyzer::test_getAllPossibleMapColors(){
 	QList<uint> toRet;
 	toRet.push_back(RGBstruct(0, 0, 0).toUint());
@@ -78,10 +73,8 @@ QList<uint> MinimapAnalyzer::test_getAllPossibleMapColors(){
 	toRet.push_back(RGBstruct(255, 255,255).toUint());
 	return toRet;
 }
-
 void MinimapAnalyzer::test(){
 }
-
 QList<QRect> MinimapAnalyzer::test_fillListWithRectsPosOfMiniMapParts(){
 	QList<QRect> toCut;
 	toCut.push_back(QRect(0, 0, 53, 54));
@@ -96,7 +89,6 @@ QList<QRect> MinimapAnalyzer::test_fillListWithRectsPosOfMiniMapParts(){
 	toCut.push_back(QRect(55, 56, 51, 53));
 	return toCut;
 }
-
 QRect MinimapAnalyzer::test_cutImgToShearchFromDarkAndWater(QImage& img){
 	//return Qrect that was cut;
 	int cutLines_TOP = 0, cutLines_LEFT = 0, cutLines_DOWN = 0, cutLines_RIGHT = 0;
@@ -169,7 +161,6 @@ QRect MinimapAnalyzer::test_cutImgToShearchFromDarkAndWater(QImage& img){
 	img = img.copy(rectThatShouldBeCut);
 	return rectThatShouldBeCut;
 }
-
 void MinimapAnalyzer::test_TEST_PERFORMANCE(){
 	QImage map;
 	QString pathToMap = "C:\\Users\\ADMIN\\Desktop\\" + QString("map2") + ".png";
@@ -209,7 +200,6 @@ void MinimapAnalyzer::test_TEST_PERFORMANCE(){
 	}
 	int b = 5;
 }
-
 QPair<QImage, QPoint> MinimapAnalyzer::test_cutRandomAreaFromMap(QImage& map){
 	QDateTime dateTimeObj;
 	QRandomGenerator gen(dateTimeObj.currentMSecsSinceEpoch());
@@ -221,7 +211,6 @@ QPair<QImage, QPoint> MinimapAnalyzer::test_cutRandomAreaFromMap(QImage& map){
 	QPair<QImage, QPoint> toRet{snipet, startPosition};
 	return toRet;
 }
-
 QList<QImage> MinimapAnalyzer::test_splitMiniMapScreenToListWithoutCross(QImage& miniMapScreen){
 	QList<QImage> toRet;
 	for each (QRect rect in test_miniMapParts) {
@@ -230,7 +219,6 @@ QList<QImage> MinimapAnalyzer::test_splitMiniMapScreenToListWithoutCross(QImage&
 	}
 	return toRet;
 }
-
 QPoint MinimapAnalyzer::test_findPlayerPositionByParts(QImage& snipet, QImage& map){
 	bool errWrongSize = snipet.width() != WIDTH_OF_MAP_ONLY_AREA || snipet.height() != HEIGHT_OF_WHOLE_PASSED_IMG;
 	if (errWrongSize) 
@@ -252,7 +240,6 @@ QPoint MinimapAnalyzer::test_findPlayerPositionByParts(QImage& snipet, QImage& m
 	}
 	return QPoint();
 }
-
 QList<QPoint> MinimapAnalyzer::test_findPlayerOnMap(QImage& snipet, QImage& map){
 	QList<QPoint> startPointsListToRet;
 	QImage snipetCopy = snipet;
@@ -336,13 +323,11 @@ QList<QPoint> MinimapAnalyzer::test_findPlayerOnMap(QImage& snipet, QImage& map)
 
 	return startPointsListToRet;
 }
-
 void MinimapAnalyzer::test_showImg(QImage img){
 	QMessageBox msgBox;
 	msgBox.setIconPixmap(QPixmap::fromImage(img));
 	msgBox.exec();
 }
-
 QList<QPoint> MinimapAnalyzer::test_fillForbiddenPixPositions(){
 	QList<QPoint> toRet;
 	toRet.push_back(QPoint(51, 54));
@@ -367,3 +352,4 @@ QList<QPoint> MinimapAnalyzer::test_fillForbiddenPixPositions(){
 	toRet.push_back(QPoint(56, 55));
 	return toRet;
 }
+*/

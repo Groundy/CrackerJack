@@ -10,8 +10,9 @@
 #include "VariablesClass.h"
 #include "qdatetime.h"
 #include "Utilities.h"
+/*
 class ShearchArea {
-public:
+	public:
 	QMap<int, QList<QRect>> areas;
 	ShearchArea() {};
 	ShearchArea(QString structStr) {
@@ -103,9 +104,11 @@ public:
 			this->areas.insert(i, listToAdd);
 	};
 };
+*/
 
 class MinimapAnalyzer{
-public:
+/*
+	public:
 	MinimapAnalyzer();
 	MinimapAnalyzer(VariablesClass* varClass);
 	~MinimapAnalyzer();
@@ -145,4 +148,6 @@ private:
 	const QPoint POSITION_OF_PLAYER_ON_MINIMAP =QPoint(53,54);
 	const uint RED_COLOR_ON_MAP = qRgb(255, 51, 0);
 	
+*/
+
 };
