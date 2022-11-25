@@ -5,37 +5,33 @@ class RGBstruct{
 public:
 	RGBstruct(uint rgb);
 	RGBstruct(uint r, uint g, uint b);
-	bool operator==(const RGBstruct& rgb) {
-		return (this->r == rgb.r) && (this->b == rgb.b) && (this->g == rgb.g);
-	}
-	uint toUint();
 	~RGBstruct();
-	bool isGrey() {
+	bool operator==(const RGBstruct& rgb) {
+		return (r == rgb.r) && (b == rgb.b) && (g == rgb.g);
+	}
+	uint toUint() const;
+	bool isGrey() const {
 		return r == g && g == b;
 	}
-	bool isYellow() {
+	bool isYellow() const  {
 		return r == 255 && g == 255 && b == 0;
 	}
-	bool isBlack() {
+	bool isBlack() const {
 		return r == 0 && g == 0 && b == 0;
 	}
-	bool allColsEqualOrAboveThreshold(uint threshold) {
+	bool allColsEqualOrAboveThreshold(uint threshold)  const {
 		return r >= threshold && g >= threshold && b >= threshold;
 	}
-	uint getMinColVal() {
+	uint getMinColVal() const {
 		return min(min(r, g), b);
 	}
 	uint getMaxColVal() {
-		return min(min(r, g), b);
+		return max(max(r, g), b);
 	}
-	bool oneColEqualOrAboveThreshold(uint threshold) {
+	bool oneColEqualOrAboveThreshold(uint threshold) const {
 		return r >= threshold || g >= threshold || b >= threshold;
 	}
-	QString toString() {
-		const QString HASH = QString("#");
-		const QString FLOOR = QString("_");
-		return HASH + r + HASH + g + HASH + b + FLOOR;
-	}
+	QString toString() const;
 	bool isPixelInRangeOfGrey(uint minValue, uint maxValue);
 private:
 	uint r, g, b;

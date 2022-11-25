@@ -11,8 +11,7 @@
 namespace Ui { class RouteCreator; };
 
 
-class RouteCreator : public QDialog
-{
+class RouteCreator : public QDialog{
 	
 	Q_OBJECT
 /*

@@ -13,7 +13,7 @@ public:
 	static void imgToBlackAndWhiteAllColors(QImage& img, int threshold);	
 	static void imgToBlackAndWhiteOneColor(QImage& img, int threshold);
 	static void cutBlackBordersOfImg(QImage& img);
-	static QString letterImgToLetterCodeStr(QImage* SingleLetterImg);
+	static QString letterImgToLetterCodeStr(QImage& SingleLetterImg);
 
 	static QString imgWithStrToStr(QImage& img);
 	static QImage fromCharToImg(QChar CharToImg);

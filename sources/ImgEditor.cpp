@@ -240,28 +240,29 @@ void ImgEditor::cutImgWithLettersToSingleLettersImgList(QImage& img, QList<QImag
 QString ImgEditor::imgWithStrToStr(QImage& img) {
 	imgToBlackAndWhiteAllColors(img, 240);
 	cutBlackBordersOfImg(img);
-    QList<QImage> imgs;
-	cutImgWithLettersToSingleLettersImgList(img, imgs);
+    QList<QImage> lettersImgs;
+	cutImgWithLettersToSingleLettersImgList(img, lettersImgs);
     QString toRet;
-    for (size_t i = 0; i < imgs.size(); i++) {
-		QImage tmp = imgs.at(i);
+    for (size_t i = 0; i < lettersImgs.size(); i++) {
+		QImage tmp = lettersImgs.at(i);
 	    cutBlackBordersOfImg(tmp);
-	    QString letterCode = letterImgToLetterCodeStr(&tmp);
+	    QString letterCode = letterImgToLetterCodeStr(tmp);
 	    QString letter = Utilities::StrCodeToLetter(letterCode);
-		if(letter != '\0')
-			toRet.append(letter);
+		if (letter == '\0')
+			continue;
+		toRet.append(letter);
     }
     return toRet;
  }
-QString ImgEditor::letterImgToLetterCodeStr(QImage* SingleLetterImg) {
-    const int WIDTH = SingleLetterImg->width();
-    const int HEIGHT = SingleLetterImg->height();
+QString ImgEditor::letterImgToLetterCodeStr(QImage& SingleLetterImg) {
+    const int WIDTH = SingleLetterImg.width();
+    const int HEIGHT = SingleLetterImg.height();
     const QString FLOOR = QString("_");
     const QString ZERO = QString("0"), ONE = QString("1");
     QString toRet = QString::number(WIDTH) + FLOOR + QString::number(HEIGHT) + FLOOR;
     for (size_t x = 0; x < WIDTH; x++) {
 	    for (size_t y = 0; y < HEIGHT; y++) {
-		    uint pixelColor = SingleLetterImg->pixel(x, y);
+		    uint pixelColor = SingleLetterImg.pixel(x, y);
 			bool isBlack = RGBstruct(pixelColor).isBlack();
 		    QString toAppend = isBlack ? ZERO : ONE;
 		    toRet.append(toAppend);
@@ -290,6 +291,7 @@ QImage ImgEditor::getImageFromAdvancedCode(QString codeOfImg){
 	}
 	return imgToCreate;
 }
+
 QList<QPoint> ImgEditor::findStartPositionInImg_mulitpeImgs(QList<QImage*> imgsToFind, QImage& imgToShareWithin) {
 	// this fun return starting points from imgToSharePoints than consist pixels from one of imgsToFind
 

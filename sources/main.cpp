@@ -3,8 +3,9 @@
 #include <qtranslator.h>
 #include "Market.h"
 #include <qicon.h>
+#include "Tools.h"
 void test(){
-	//Calibrator::test();
+
 }
 QIcon getIcon(){
 	QDir dir = QDir::current();

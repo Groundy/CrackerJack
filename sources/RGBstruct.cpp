@@ -17,8 +17,14 @@ RGBstruct::RGBstruct(uint r, uint g, uint b) :
 	r(r), g(g), b(b) {
 }
 
-uint RGBstruct::toUint() {
+uint RGBstruct::toUint() const{
 	return r << 16 | g << 8 | b;
+}
+
+QString RGBstruct::toString() const {
+	uint decimal = this->toUint();
+	QString hexvalue = QString("%1").arg(decimal, 8, 16, QLatin1Char('0'));
+	return hexvalue;
 }
 
 RGBstruct::~RGBstruct()

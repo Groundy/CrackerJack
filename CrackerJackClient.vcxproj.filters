@@ -237,9 +237,9 @@
     <ClInclude Include="sources\Potion.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="sources\ZZ___TO____DO.txt" />
+    <ClInclude Include="sources\Tools.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <QtTranslation Include="crackerjackclient_pl.ts">
