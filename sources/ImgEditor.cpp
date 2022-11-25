@@ -7,33 +7,8 @@ ImgEditor::ImgEditor(QObject *parent)
 ImgEditor::~ImgEditor()
 {}
 
-int ImgEditor::getNumberFromBottomBar(QImage& imgToShearchWithin){
-	QMap<QString, int> lightMap, darkMap;
-	Utilities::getMapWithNumbersFromBottomBar(lightMap, darkMap);
-	QStringList lightCodes = lightMap.keys();
-	QStringList darkCodes = darkMap.keys();
 
-	QMap<int, int> anotherMap; // <positionX, value>
 
-	for (size_t i = 0; i < lightCodes.size(); i++){
-		QList<QImage*> listWithLightAndDarkLetterImg;
-		QImage darkLetter = ImgEditor::getImageFromAdvancedCode(darkCodes[i]);
-		QImage lightLetter = ImgEditor::getImageFromAdvancedCode(lightCodes[i]);
-		listWithLightAndDarkLetterImg.push_back(&darkLetter);
-		listWithLightAndDarkLetterImg.push_back(&lightLetter);
-
-		int digit = lightMap[lightCodes[i]];
-		QList<QPoint> listOfStartingPoints = ImgEditor::findStartPositionInImg_mulitpeImgs(listWithLightAndDarkLetterImg, imgToShearchWithin);// (listWithLightAndDarkLetterImg, imgToShearchWithin);
-		for each (QPoint var in listOfStartingPoints)
-			anotherMap.insert(var.x(), digit);
-	}
-
-	QString strToRe;
-	for each (auto key in anotherMap.keys())
-		strToRe.push_back(QString::number(anotherMap[key]));
-    
-	return strToRe.toInt();
-}
 QImage ImgEditor::fromCharToImg(QChar CharToImg){
 	auto mapWithCodes = Utilities::getQmapWithCodes();
 	QString keyCode = mapWithCodes.key(CharToImg);

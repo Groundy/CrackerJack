@@ -28,8 +28,6 @@ public:
 	static void showMessageBox_INFO(QString text);
 	static bool showMessageBox_NO_YES(QString text);
 	static int showMessageBox(QString title, QString text, QFlags<QMessageBox::StandardButton> buttons);
-	static void getMapWithNumbersFromBottomBar(QMap<QString, int>& lightToRet, QMap<QString, int>& darkToRet);
-
 	/*
 	enum class FOLDERS_OF_TMP_FOLDER {Logs, Profiles, TradeReports, Main, Routes, MarketLists};
 	enum class FieldsOfIniFile {

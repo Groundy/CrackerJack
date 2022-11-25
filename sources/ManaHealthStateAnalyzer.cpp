@@ -2,8 +2,12 @@
 
 ManaHealthStateAnalyzer::ManaHealthStateAnalyzer(QObject *parent, Profile* profile, std::shared_ptr<VariablesClass> var, std::shared_ptr<GameConnecter> gameConnector)
 	: QThread(parent), var(var), gameConnector(gameConnector){
-	PopulateHealthManaMaps(profile);
+	populateHealthManaMaps(profile);
 	var->setSettingRestoringState(true);
+
+	QMap<QString, int> a,b;
+	populareMapsWithBottomBarsLetters(a,b);
+	int g = 3;
 }
 ManaHealthStateAnalyzer::~ManaHealthStateAnalyzer(){
 	this->terminate();
@@ -54,7 +58,7 @@ ManaHealthStateAnalyzer::ValuesDoubles ManaHealthStateAnalyzer::toDoubles(Values
 	ValuesDoubles toRet(healthPercentage, manaPercentage, manaShieldPercentage);
 	return toRet;
 }
-bool ManaHealthStateAnalyzer::PopulateHealthManaMaps(const Profile* profile) {
+bool ManaHealthStateAnalyzer::populateHealthManaMaps(const Profile* profile) {
 	try {
 		auto healthRestorationsMethode = profile->getRestMethodesHealth();
 		QVector<int> healthThresholds;
@@ -297,6 +301,44 @@ bool ManaHealthStateAnalyzer::restMethodeCanBeUsed(const RestorationMethode& res
 	default: 
 		return false;
 		break;
+	}
+}
+bool ManaHealthStateAnalyzer::populareMapsWithBottomBarsLetters(QMap<QString, int>& lightMap, QMap<QString, int>& darkMap) {
+	try {
+		QString path = "C:\\Moje\\pliki\\repos\\CrackerJackClient\\ResourcesUsing\\bottomBarsDigits.json";//tmp
+		QJsonObject obj;
+		bool readCorrectly = JsonParser().openJsonFile(obj, path);
+		if (!readCorrectly)
+			throw std::exception("Error, can't find bottomBarsDigits.json file");
+
+		QJsonValue value = obj["darkNumbers"];
+		if (value.isUndefined() || !value.isArray())
+			throw std::exception("No darkNumbers field in bottomBar json file!");
+		QJsonArray array = value.toArray();
+		for each (auto singleValue in array) {
+			QJsonObject singleObject = singleValue.toObject();
+			int intVal = singleObject["name"].toString().toInt();
+			QString pixValues = singleObject["value"].toString();
+			darkMap.insert(pixValues, intVal);
+		}
+
+
+		value = obj["lightNumbers"];
+		if (value.isUndefined() || !value.isArray())
+			throw std::exception("No lightNumbers field in bottomBar json file!");
+		array = value.toArray();
+		for each (auto singleValue in array) {
+			QJsonObject singleObject = singleValue.toObject();
+			int intVal = singleObject["name"].toInt();
+			QString pixValues = singleObject["value"].toString();
+			lightMap.insert(pixValues, intVal);
+		}
+		bool toRet = lightMap.size() == 10 && darkMap.size() == 10;
+		return toRet;
+	}
+	catch (const std::exception& e) {
+		var->log(e.what(), true, false, false);
+		return false;
 	}
 }
 
