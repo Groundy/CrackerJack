@@ -2,7 +2,10 @@
 #include <QThread>
 #include <qimage.h>
 #include <qdatetime.h>
+#include <QChar>
 
+#include "GameConnecter.h"
+#include "ImgEditor.h"
 #include "ImgEditor.h"
 #include "VariablesClass.h"
 #include "Utilities.h"

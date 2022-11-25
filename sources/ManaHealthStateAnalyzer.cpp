@@ -1,6 +1,4 @@
 #include "ManaHealthStateAnalyzer.h"
-#include <QChar>
-#include <ImgEditor.h>
 
 ManaHealthStateAnalyzer::ManaHealthStateAnalyzer(QObject *parent, Profile* profile, std::shared_ptr<VariablesClass> var, std::shared_ptr<GameConnecter> gameConnector)
 	: QThread(parent), var(var), gameConnector(gameConnector){
@@ -19,13 +17,18 @@ void ManaHealthStateAnalyzer::run(){
 			continue;
 
 		sendDataToGui(percentages);
-		auto healthMetodes = findRestorationToUse(percentages.health, healthMap);
-		auto manahMetodes = findRestorationToUse(percentages.mana, manaMap);
 
-		for each (auto methode in healthMetodes)
-			var->log("h: " + methode.getName(), false, true, true);
-		for each (auto methode in manahMetodes)
-			var->log("m: " + methode.getName(), false, true, true);
+		auto healthMetodes = findRestorationToUse(percentages.health, healthMap);
+		for each (auto methode in healthMetodes) {
+			gameConnector->useRestorationMethode(methode);
+			msleep(10);
+		}
+
+		auto manahMetodes = findRestorationToUse(percentages.mana, manaMap);
+		for each (auto methode in manahMetodes) {
+			gameConnector->useRestorationMethode(methode);
+			msleep(10);		
+		}
 	}
 }
 
@@ -204,17 +207,24 @@ QVector<RestorationMethode> ManaHealthStateAnalyzer::findRestorationToUse(double
 			if (currentValue > thresholds[i])
 				continue;
 
-			auto currentMethode = methodes[thresholds[i]];
-			if (toRet.isEmpty())
-				toRet.push_back(currentMethode);
-			else {
-				auto alreadyAssignedType = toRet[0].getType();
-				if (currentMethode.getType() != alreadyAssignedType)
-					toRet.push_back(currentMethode);
-			}
-
 			if (toRet.size() == 2)
 				break;
+
+			auto currentMethode = methodes[thresholds[i]];
+			bool suchTypeIsAlreadyOnList = false;
+			for each (auto var in toRet){
+				if (var.isType(currentMethode.getType())){
+					suchTypeIsAlreadyOnList = true;
+					break;
+				}
+			}
+			if (suchTypeIsAlreadyOnList)
+				continue;
+
+			if(!restMethodeCanBeUsed(currentMethode))
+				continue;
+
+			toRet.push_back(currentMethode);
 		}
 		return toRet;
 	}
