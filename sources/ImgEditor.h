@@ -31,4 +31,6 @@ public:
 			img.save(fullPath);
 		}
 	}
+
+
 };

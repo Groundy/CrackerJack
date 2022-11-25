@@ -1,5 +1,4 @@
 #include "ImgEditor.h"
-#include <Calibrator.h>
 
 ImgEditor::ImgEditor(QObject *parent)
 	: QObject(parent)

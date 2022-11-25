@@ -6,9 +6,9 @@
 #include <qmap.h>
 #include <memory>
 
+#include "ImgEditor.h"
 #include "VariablesClass.h"
 #include "Utilities.h"
-#include "ImgEditor.h"
 #include "Profile.h"
 class Calibrator {
 public:
@@ -90,44 +90,10 @@ private:
 	void sortByXY(QList<QPoint>& points, QList<QPoint>& sortedByX, QList<QPoint>& sortedByY);
 	void sortByXY(QList<QRect>& inputRects, QList<QRect>& sortedByX, QList<QRect>& sortedByY);
 	Indexes getIndexesOfHealthManaBars(const QImage& fullscreen, const QList<QRect>& listOfImportantRectangles);
-	int removeFramesOnEachOther(QList<QRect>& rectangles) {
-		int oldSize = rectangles.size();
-		QVector<int> indexesToDelete;
-		for (size_t i = 0; i < rectangles.size(); i++){
-			QRect* first = &rectangles[i];
-			for (size_t j = 0; j < rectangles.size(); j++){
-				if (i == j)
-					continue;
-				QRect* second = &rectangles[j];
-
-				bool isInRangeX =
-					(second->left() + second->width()) < first->right() ||
-					second->left() > first->right();
-				if (!isInRangeX)
-					continue;
-
-				bool isInRangeY = 
-					(second->top() + second->height()) < first->top() ||
-					second->top() > first->left();
-				if (!isInRangeY)
-					continue;
-
-				int surfFirst = first->width() * first->height();
-				int surfSecond = second->width() * second->height();
-				int indexToDelete = surfFirst > surfSecond ? j : i;
-				indexesToDelete.push_back(indexToDelete);
-			}
-		}
-		QList<QRect> toRet;
-		for (size_t i = 0; i < rectangles.size(); i++) {
-			if (indexesToDelete.contains(i))
-				continue;
-			toRet.push_back(rectangles[i]);
-		}
-	
-		return oldSize;
-	}
-
+	QList<QPoint> getStartOfPossibleFrames(const QImage& fullScreen, int minVal, int maxVal);
+	QList<QRect> getAreasInsideFrames(const QImage& fullScreen, const QList<QPoint>& startOfFrames, const int MIN_DIM);
+	QList<QRect> filterAreasCoveredByFrameFromBottomRight(const QImage& fullScreen, const QList<QRect>& areas);
+};
 	/*
 	void TEST_setPositionHealthImhs(QString pathToFolderWithDiffrentPositionsStylesScreen, QString pathToOutPutFolder);
 	bool getRectsFromProfile(QList<QRect>& importRectsFromProf);	
@@ -135,4 +101,3 @@ private:
 	bool findPotionsOnBottomBar(QStringList namesOfPotionsToFind, QStringList& namesOfPotionosFound, QList<QRect>& rectsWithFoundPots, QImage& bottomBarImg);
 	void getMapWithPotionsImgCodes(QMap<QString, QString>& name_code_light, QMap<QString, QString>& name_code_dark);
 	*/
-};

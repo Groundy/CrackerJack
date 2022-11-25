@@ -13,8 +13,6 @@ bool Calibrator::calibrateManaAndHealthBar(const QImage& fullscreen){
 	if (!windowsFound)
 		return false;
 
-	//removeFramesOnEachOther(importantRectangles);
-
 	bool windowsCategorized = categorizeWindows(fullscreen, importantRectangles);
 	if(!windowsCategorized)
 		return false;
@@ -39,7 +37,7 @@ Calibrator::SlashesIndexes Calibrator::getIndexesOfImgsWithSlashes(const QImage&
 			indexes.slashesX.push_back(i);
 		}
 		if (indexes.isValid())
-			; break;
+			break;
 		
 
 		QList<QPoint> pointsY = ImgEditor::findStartPositionInImg(slashYImg, imgTmp);
@@ -50,7 +48,7 @@ Calibrator::SlashesIndexes Calibrator::getIndexesOfImgsWithSlashes(const QImage&
 			indexes.slashesY.push_back(i);
 		}
 		if (indexes.isValid())
-			; break;
+			break;
 
 	}
 	return indexes;
@@ -294,14 +292,48 @@ bool Calibrator::categorizeWindows(const QImage& fullscreen, QList<QRect>& impor
 bool Calibrator::findWindowsOnScreen(const QImage& fullScreen, QList<QRect>& importantRectangles) {
 	const int WIDTH = fullScreen.width();
 	const int HEIGHT = fullScreen.height();
-	const uint BLACK_PIX_COL = qRgb(0, 0, 0);
 	const uint MIN_ACCEPTABLE_VAL = 17;
 	const uint MAX_ACCEPTABLE_VAL = 29;
-	QList<QPoint> startOfFrames;
-	for (size_t x = 0; x < WIDTH - 2; x++) {
-		for (size_t y = 0; y < HEIGHT - 2; y++) {
+
+	QList<QPoint> startOfFrames = getStartOfPossibleFrames(fullScreen, MIN_ACCEPTABLE_VAL, MAX_ACCEPTABLE_VAL);
+	QList<QRect> areasWithoutFrames = getAreasInsideFrames(fullScreen, startOfFrames, 10);
+	QList<QRect> areasWithinFullFrames = filterAreasCoveredByFrameFromBottomRight(fullScreen, areasWithoutFrames);
+	importantRectangles = areasWithinFullFrames;
+	return areasWithoutFrames.size() >= 4;
+}
+void Calibrator::sortByXY(QList<QPoint>& points, QList<QPoint>& sortedByX, QList<QPoint>& sortedByY) {
+	QMultiMap<int, QPoint> mapX;
+	QMultiMap<int, QPoint> mapY;
+	for each (QPoint point in points) {
+		mapX.insert(point.x(), point);
+		mapY.insert(point.y(), point);
+	}
+	sortedByX = mapX.values();
+	sortedByY = mapY.values();
+}
+void Calibrator::sortByXY(QList<QRect>& inputRects, QList<QRect>& sortedByX, QList<QRect>& sortedByY) {
+	QMultiMap<int, QRect> mapX;
+	QMultiMap<int, QRect> mapY;
+	for each (QRect rect in inputRects) {
+		mapX.insert(rect.x(), rect);
+		mapY.insert(rect.y(), rect);
+	}
+	sortedByX = mapX.values();
+	sortedByY = mapY.values();
+}
+QList<QPoint> Calibrator::getStartOfPossibleFrames(const QImage& fullScreen, int minVal, int maxVal){
+	const int WIDTH = fullScreen.width();
+	const int HEIGHT = fullScreen.height();
+	const uint MIN_ACCEPTABLE_VAL = 17;
+	const uint MAX_ACCEPTABLE_VAL = 29;
+	QList<QPoint> topLeftCorners;
+	for (size_t x = 1; x < WIDTH - 2; x++) {
+		for (size_t y = 1; y < HEIGHT - 2; y++) {
 			bool isPixelOfFrame = ImgEditor::isItPixelFromFrame(fullScreen.pixel(x, y), MIN_ACCEPTABLE_VAL, MAX_ACCEPTABLE_VAL, true);
 			if (!isPixelOfFrame) continue;
+
+			isPixelOfFrame = ImgEditor::isItPixelFromFrame(fullScreen.pixel(x - 1, y - 1), MIN_ACCEPTABLE_VAL, MAX_ACCEPTABLE_VAL, false);
+			if (isPixelOfFrame) continue;
 
 			isPixelOfFrame = ImgEditor::isItPixelFromFrame(fullScreen.pixel(x + 1, y + 1), MIN_ACCEPTABLE_VAL, MAX_ACCEPTABLE_VAL, false);
 			if (isPixelOfFrame) continue;
@@ -327,13 +359,17 @@ bool Calibrator::findWindowsOnScreen(const QImage& fullScreen, QList<QRect>& imp
 			isPixelOfFrame = ImgEditor::isItPixelFromFrame(fullScreen.pixel(x, y + 2), MIN_ACCEPTABLE_VAL, MAX_ACCEPTABLE_VAL, true);
 			if (!isPixelOfFrame) continue;
 
-			startOfFrames.push_back(QPoint(x, y));
+			topLeftCorners.push_back(QPoint(x, y));
 		}
 	}
-
-	//looking for rectangles from start points of frames
+	return topLeftCorners;
+}
+QList<QRect> Calibrator::getAreasInsideFrames(const QImage& fullScreen, const QList<QPoint>& startOfFrames, const int MIN_DIM) {
+	const int WIDTH = fullScreen.width();
+	const int HEIGHT = fullScreen.height();
+	const uint MIN_ACCEPTABLE_VAL = 17;
+	const uint MAX_ACCEPTABLE_VAL = 29;
 	QList<QRect> frameToRet;
-	const int MIN_WIDTH = 10, MIN_HEIGHT = 10;
 	for each (QPoint startPoint in startOfFrames) {
 		int currentWidth = 0;
 		for (size_t x = startPoint.x(); x < WIDTH; x++) {
@@ -344,7 +380,7 @@ bool Calibrator::findWindowsOnScreen(const QImage& fullScreen, QList<QRect>& imp
 			else
 				break;
 		}
-		if (currentWidth < MIN_WIDTH)
+		if (currentWidth < MIN_DIM)
 			continue;
 
 		int currentHeight = 0;
@@ -356,39 +392,59 @@ bool Calibrator::findWindowsOnScreen(const QImage& fullScreen, QList<QRect>& imp
 			else
 				break;
 		}
-		if (currentHeight < MIN_HEIGHT)
+		if (currentHeight < MIN_DIM)
 			continue;
 
 		int x = startPoint.x() + 1;
 		int y = startPoint.y() + 1;
-		int w = currentWidth - 1;
-		int h = currentHeight - 1;
+		int w = currentWidth - 2;
+		int h = currentHeight - 2;
 		frameToRet.push_back(QRect(x, y, w, h));
 	}
+	return frameToRet;
+}
+QList<QRect> Calibrator::filterAreasCoveredByFrameFromBottomRight(const QImage& fullScreen, const QList<QRect>& areas) {
+	const int WIDTH = fullScreen.width();
+	const int HEIGHT = fullScreen.height();
+	const uint MIN_ACCEPTABLE_VAL = 100;
+	const uint MAX_ACCEPTABLE_VAL = 130;
+	QList<QRect> toRet;
+	for each (QRect area in areas) {
+		if (area.bottom() + 1 >= fullScreen.height())
+			throw std::exception("a");
+		if (area.right() + 1 >= fullScreen.width())
+			throw std::exception("b");
 
-	importantRectangles = frameToRet;
-	return frameToRet.size() >= 4;
-}
-void Calibrator::sortByXY(QList<QPoint>& points, QList<QPoint>& sortedByX, QList<QPoint>& sortedByY) {
-	QMultiMap<int, QPoint> mapX;
-	QMultiMap<int, QPoint> mapY;
-	for each (QPoint point in points) {
-		mapX.insert(point.x(), point);
-		mapY.insert(point.y(), point);
+		//botom of area
+		bool skip = false;
+		for (size_t x = 0; x < area.width(); x++) {
+			uint color = fullScreen.pixel(area.left() + x, area.bottom() + 1);
+			bool framPix = ImgEditor::isItPixelFromFrame(color, MIN_ACCEPTABLE_VAL, MAX_ACCEPTABLE_VAL, true);
+			if (!framPix) {
+				skip = true;
+				break;
+			}
+		}
+		if (skip)
+			continue;
+
+		//right 
+		for (size_t y = 0; y < area.height(); y++) {
+			uint color = fullScreen.pixel(area.right() + 1, area.top() + y);
+			bool framPix = ImgEditor::isItPixelFromFrame(color, MIN_ACCEPTABLE_VAL, MAX_ACCEPTABLE_VAL, true);
+			if (!framPix) {
+				skip = true;
+				break;
+			}
+		}
+		if (skip)
+			continue;
+
+		toRet.push_back(area);
 	}
-	sortedByX = mapX.values();
-	sortedByY = mapY.values();
+	return toRet;
 }
-void Calibrator::sortByXY(QList<QRect>& inputRects, QList<QRect>& sortedByX, QList<QRect>& sortedByY) {
-	QMultiMap<int, QRect> mapX;
-	QMultiMap<int, QRect> mapY;
-	for each (QRect rect in inputRects) {
-		mapX.insert(rect.x(), rect);
-		mapY.insert(rect.y(), rect);
-	}
-	sortedByX = mapX.values();
-	sortedByY = mapY.values();
-}
+
 
 /*
 bool Calibrator::getRectsFromProfile(QList<QRect>& importRectsFromProf) {
