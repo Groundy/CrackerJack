@@ -17,11 +17,9 @@ MainMenu::MainMenu(Profile* selectedProf, QWidget* parent)
 }
 MainMenu::~MainMenu(){
 	delete activityThread;
-
 	delete screenSaverThread;
 	delete screenAnalyzer;
 	delete healthManaStateAnalyzer;
-
 	delete ui;
 }
 
@@ -56,26 +54,13 @@ void MainMenu::signalSlotConnector(){
 	slotRec = this;
 	sig = SIGNAL(sendValueToMainThread(double, double, double));
 	slot = SLOT(changedValueOfCharHealthOrMana(double, double, double));
-	bool connectionAccepted_2 = connect(sigSender, sig, slotRec, slot, Qt::UniqueConnection);
-
-	sigSender = this->screenAnalyzer;
-	slotRec = this->healthManaStateAnalyzer;
-	sig = SIGNAL(sendAllowenceToAnalyze(bool));
-	slot = SLOT(setThreadEnabilityToRun(bool));
-	bool connectionAccepted_3 = connect(sigSender, sig, slotRec, slot, Qt::UniqueConnection);
-
-	sigSender = this->healthManaStateAnalyzer;
-	slotRec = this;
-	sig = SIGNAL(sendInfoAboutPotAmountsToGUI(QStringList));
-	slot = SLOT(getAndDisplayPotionAmountInfo(QStringList));
-	bool connectionAccepted_4 = connect(sigSender, sig, slotRec, slot, Qt::UniqueConnection);
-
+	bool connectionAccepted_1 = connect(sigSender, sig, slotRec, slot, Qt::UniqueConnection);
 	
 	sigSender = &this->var->logger;
 	slotRec = this;
 	sig = SIGNAL(sendMsgToUserConsol(QStringList));
 	slot = SLOT(printToUserConsol(QStringList));
-	bool connectionAccepted_5 = connect(sigSender, sig, slotRec, slot, Qt::UniqueConnection);
+	bool connectionAccepted_2 = connect(sigSender, sig, slotRec, slot, Qt::UniqueConnection);
 	
 }
 

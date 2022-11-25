@@ -112,6 +112,7 @@ public:
 	//funcs
 	bool isPotion() const { return type == Type::POTION; };
 	bool isSpell() const { return type == Type::SPELL; };
+	bool isType(RestorationMethode::Type typeToCheck) const { return type == typeToCheck; }
 
 private:
 	int threshold;

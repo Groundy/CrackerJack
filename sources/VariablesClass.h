@@ -60,14 +60,32 @@ public:
 			(!getCombinedArea().isEmpty() || !getManaArea().isEmpty());
 		return manaHealthFramesOk;
 	}
+	qint64 now() { return QDateTime::currentMSecsSinceEpoch(); };
 
-	//getters setters
+
+	//unasigned gettersSetters
 	void setNewImg(QImage& newImage) {
 		fullImgMutex.lock();
 		this->fullImage = std::move(newImage);
 		newFullImgAwaits = true;
 		fullImgMutex.unlock();
 	}
+	void getCopyOfCurrentFullImg(QImage& img) {
+		fullImgMutex.lock();
+		img = fullImage.copy();
+		fullImgMutex.unlock();
+	}
+
+	//game process
+	uint getPid() { return pid; }
+	void setPid(uint newPid) { pid = newPid; }
+	QString getNameOfGameWindow() { return nameOfGameWindow; }
+	void setNameOfGameWindow(QString newNameOfGameWindow) { nameOfGameWindow = newNameOfGameWindow; }
+	HWND getHandlerToGameThread() { return handlerToGameThread; }
+	void setHandlerToGameThread(HWND newHandlerToGameThread) { handlerToGameThread = newHandlerToGameThread; }
+
+
+	//health mana manashield
 	void setCurrentPercentage(double health, double mana, double manaShield) {
 		this->currentHealthPercentage = health;
 		this->currentManaPercentage = mana;
@@ -78,20 +96,10 @@ public:
 		this->currentManaRaw = mana;
 		this->currentMSRaw = manaShield;
 	}
-	double getCurrentHealthPercentage() {return currentHealthPercentage; }
-	double getCurrentManaPercentage() { return currentManaPercentage; }
-	double getCurrentMSPercentage() { return currentMsPercentage; }
-	void getCopyOfCurrentFullImg(QImage& img) {
-		fullImgMutex.lock();
-		img = fullImage.copy();
-		fullImgMutex.unlock();
-	}
-	uint getPid() { return pid; }
-	void setPid(uint newPid) { pid = newPid; }
-	QString getNameOfGameWindow() { return nameOfGameWindow; }
-	void setNameOfGameWindow(QString newNameOfGameWindow) { nameOfGameWindow = newNameOfGameWindow; }
-	HWND getHandlerToGameThread() { return handlerToGameThread; }
-	void setHandlerToGameThread(HWND newHandlerToGameThread) { handlerToGameThread = newHandlerToGameThread; }
+	double getCurrentHealthPercentage() const {return currentHealthPercentage; }
+	double getCurrentManaPercentage() const { return currentManaPercentage; }
+	double getCurrentMSPercentage() const { return currentMsPercentage; }
+	int getCurrentRawManaVal() const { return currentManaRaw; }
 
 	//options
 	void setSettingRestoringState(bool enable) { this->keepRestoringManaAngHealth = enable; };
@@ -167,6 +175,7 @@ public:
 			lastTimeSpellUsagesMap[spellName] = now();
 		else 
 			lastTimeSpellUsagesMap.insert(spellName, now());
+		lastTimeUsagesMutex.unlock();
 	}
 
 	Logger logger;
@@ -189,5 +198,5 @@ private:
 	std::mutex lastTimeUsagesMutex;
 	QMap<QString, qint64> lastTimeSpellUsagesMap;
 
-	qint64 now() { return QDateTime::currentMSecsSinceEpoch(); };
+
 };
