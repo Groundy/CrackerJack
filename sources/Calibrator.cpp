@@ -19,6 +19,39 @@ bool Calibrator::calibrateManaAndHealthBar(const QImage& fullscreen){
 	
 	return true;
 }
+void Calibrator::test() {
+	auto var = std::shared_ptr<VariablesClass>();
+	int totalTime = 0;
+	try {
+		QStringList namesOfScreenShots;
+		QDir screenShotFolder("C:\\Moje\\pliki\\repos\\CrackerJackClient\\TMP");
+		QStringList listOfFIlesNames = screenShotFolder.entryList(QDir::Files);
+
+		for each (QString fileName in listOfFIlesNames) {
+			QString pathToFile = screenShotFolder.absoluteFilePath(fileName);
+			QImage fullScreen;
+			bool loaded = fullScreen.load(pathToFile);
+			if (!loaded)
+				throw std::exception("cant load img!");
+
+			auto calibrator = Calibrator(var);
+			auto start = QDateTime::currentMSecsSinceEpoch();
+			bool categroized = calibrator.calibrateManaAndHealthBar(fullScreen);
+			auto time = QDateTime::currentMSecsSinceEpoch() - start;
+			if (categroized)
+				qDebug() << "analyzed in : " + QString::number(time);
+			else {
+				QString msg = QString("cant sort windows in %1").arg(fileName);
+				throw std::exception(msg.toStdString().c_str());
+			}
+			totalTime += time;
+		}
+		qDebug() << "avg time : " + QString::number(totalTime / listOfFIlesNames.size());
+	}
+	catch (const std::exception& e) {
+		qDebug() << e.what();
+	}
+}
 
 //private
 Calibrator::SlashesIndexes Calibrator::getIndexesOfImgsWithSlashes(const QImage& fullScreen, const QList<QRect>& importantFrames) {

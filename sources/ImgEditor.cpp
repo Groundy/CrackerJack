@@ -381,6 +381,13 @@ QList<QPoint> ImgEditor::findStartPositionInImg_mulitpeImgs(QList<QImage*> imgsT
 	}
 	return startPointsListToRet;
 }
+void ImgEditor::saveMultipleImgs(const QImage& fullImg, QList<QRect> frames, QString pathToFolder, QString fileNameWithoutExtension) {
+	for (int i = 0; i < frames.size(); i++) {
+		QImage img = fullImg.copy(frames[i]);
+		QString fullPath = QString("%1\\%2_%3.png").arg(pathToFolder, QString::number(i), fileNameWithoutExtension);
+		img.save(fullPath);
+	}
+}
 QList<QPoint> ImgEditor::findStartPositionInImg(const QImage& imgToFind, const QImage& imgToSearchWithin) {
 	//fun return list of start positions of imgToFind, position is lef down corner
 	const int WIDTH_SMALL_PIC = imgToFind.width();
