@@ -46,7 +46,6 @@ private:
 	std::shared_ptr<GameConnecter> gameConnector;
 	ActiveGameThread::GameActivityStates gameActivitystate;
 
-	void setProblemsWindow(QStringList problemsToShow);
 	void threadStarter();
 	void signalSlotConnector();
 };

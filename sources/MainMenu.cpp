@@ -12,9 +12,8 @@ MainMenu::MainMenu(Profile* selectedProf, QWidget* parent)
 	ui->profileNameLabel->setText(prof->getName());
 	threadStarter();
 	signalSlotConnector();
-	//this->activityThread->exit();//???
-
 }
+
 MainMenu::~MainMenu(){
 	delete activityThread;
 	delete screenSaverThread;
@@ -25,12 +24,6 @@ MainMenu::~MainMenu(){
 
 
 //funcs
-void MainMenu::setProblemsWindow(QStringList problemsToShow){
-	ui->textBrowser->clear();
-	for each (QString str in problemsToShow){
-		ui->textBrowser->insertPlainText(str + "\n");
-	}
-}
 void MainMenu::threadStarter(){
 	activityThread = new ActiveGameThread(this, var);
 	activityThread->start();

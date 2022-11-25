@@ -299,6 +299,8 @@ bool ManaHealthStateAnalyzer::restMethodeCanBeUsed(const RestorationMethode& res
 		break;
 	}
 }
+
+
 /*
 void ManaHealthStateAnalyzer::setupRestorationMethodes(QStringList listOfRestorationMethode_Health, QStringList listOfRestorationMethode_Mana){
 	
