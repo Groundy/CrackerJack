@@ -44,7 +44,7 @@ void MainMenu::threadStarter(){
 	screenAnalyzer = new ScreenAnalyzer(this, var, prof);
 	screenAnalyzer->start();
 
-	healthManaStateAnalyzer = new ManaHealthStateAnalyzer(this, prof , var);
+	healthManaStateAnalyzer = new ManaHealthStateAnalyzer(this, prof , var, gameConnector);
 	healthManaStateAnalyzer->start();
 
 }

@@ -12,7 +12,7 @@ class ManaHealthStateAnalyzer : public QThread
 {
 	Q_OBJECT
 public:
-	ManaHealthStateAnalyzer(QObject *parent, Profile* profile, std::shared_ptr<VariablesClass> var);
+	ManaHealthStateAnalyzer(QObject* parent, Profile* profile, std::shared_ptr<VariablesClass> var, std::shared_ptr<GameConnecter> gameConnector);
 	~ManaHealthStateAnalyzer();
 
 	void run();
@@ -88,6 +88,7 @@ private:
 
 
 	std::shared_ptr<VariablesClass> var;
+	std::shared_ptr<GameConnecter> gameConnector;
 	QMap<int, RestorationMethode> healthMap, manaMap;	
 	const int SLEEP_TIME = 50;
 

@@ -2,8 +2,8 @@
 #include <QChar>
 #include <ImgEditor.h>
 
-ManaHealthStateAnalyzer::ManaHealthStateAnalyzer(QObject *parent, Profile* profile, std::shared_ptr<VariablesClass> var)
-	: QThread(parent), var(var){
+ManaHealthStateAnalyzer::ManaHealthStateAnalyzer(QObject *parent, Profile* profile, std::shared_ptr<VariablesClass> var, std::shared_ptr<GameConnecter> gameConnector)
+	: QThread(parent), var(var), gameConnector(gameConnector){
 	PopulateHealthManaMaps(profile);
 	var->setSettingRestoringState(true);
 }
