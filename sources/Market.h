@@ -3,7 +3,6 @@
 #include <QDialog>
 #include "JsonParser.h"
 #include "Item.h"
-#include "SetNameWidnow.h"
 #include "qfiledialog.h"
 #include "MarketProcess.h"
 #include "Calibrator.h"

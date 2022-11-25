@@ -5,7 +5,6 @@
 #include "Point3D.h"
 #include "Route.h"
 #include <qfiledialog.h>
-#include "SetNameWidnow.h"
 #include "RGBstruct.h"
 #include "Spell.h"
 
