@@ -61,10 +61,7 @@ public:
 		JsonParser().saveJsonFile(outputFolderPath, "imgsCodes.json", docToSave);
 	}
 	static void mergedMaps(QString inputPath, QString outputPath) {
-		QDir directory(inputPath);
-		QStringList litOfFIles = directory.entryList(QStringList() << "*.png", QDir::Files);
 		const int MIN_X_MAP_INDEX = 124, MAX_X_MAP_INDEX = 134, MIN_Y_MAP_INDEX = 121, MAX_Y_MAP_INDEX = 129;
-
 		const int WHOLE_IMG_WIDTH = 256 * (MAX_X_MAP_INDEX - MIN_X_MAP_INDEX); 
 		const int WHOLE_IMG_HEIGHT = 256 * (MAX_Y_MAP_INDEX - MIN_Y_MAP_INDEX);
 		QStringList types = QStringList() << "Color" << "WaypointCost";
@@ -80,10 +77,12 @@ public:
 						if(mapPiece.isNull())
 							continue;
 
+						const int xOffset = (xIndex - MIN_X_MAP_INDEX) * 256;
+						const int yOffset = (yIndex - MIN_Y_MAP_INDEX) * 256;
 						for (size_t x = 0; x < 256; x++){
 							for (size_t y = 0; y < 256; y++) {
-								const int xPositionInBigImg = x + ((xIndex - MIN_X_MAP_INDEX) * 256);
-								const int yPositionInBigImg = y + ((yIndex - MIN_Y_MAP_INDEX) * 256);
+								const int xPositionInBigImg = x + xOffset;
+								const int yPositionInBigImg = y + yOffset;
 								QPoint pt = QPoint(xPositionInBigImg, yPositionInBigImg);
 								uint rgb = mapPiece.pixel(x, y);
 								wholeImg->setPixel(pt, rgb);
