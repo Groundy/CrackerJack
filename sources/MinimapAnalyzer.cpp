@@ -26,30 +26,6 @@ QString MinimapAnalyzer::setPathToFolderMap(){
 	dir.cd("maps");
 	return dir.absolutePath();
 }
-uint MinimapAnalyzer::getFloorNumber(){
-	uint toRet = 0;
-
-	QRect rectWithSliderOnly = QRect(109, 0, minimapWithSlider.width() - 109, minimapWithSlider.height());
-	QImage imgWithSliderOnly = minimapWithSlider.copy(rectWithSliderOnly);
-	QList<QPoint> sliderPosition = ImgEditor::findStartPositionInImg(SLIDER_IMG, imgWithSliderOnly);
-	if (sliderPosition.size() != 1) {
-		//Logger::logPotenialBug("Slider of floor not found or found multiple times", "getFloorNumber", "MinimapAnalyzer");
-		return 0;
-	}
-
-	int yPosOfSlider = sliderPosition.first().y();
-	const int LOWEST_POSITION = 44;
-	const int ONE_FLOOR_DIFFRENCE = 4;
-	toRet = (yPosOfSlider - LOWEST_POSITION) / 4;
-
-
-	bool resultIsNotPossible = toRet < 0 || toRet > 15;
-	if (resultIsNotPossible) {
-		//Logger::logPotenialBug("Result is not possible", "getFloorNumber", "MinimapAnalyzer");
-		return 0;
-	}
-	return toRet;
-}
 QList<uint> MinimapAnalyzer::test_getAllPossibleMapColors(){
 	QList<uint> toRet;
 	toRet.push_back(RGBstruct(0, 0, 0).toUint());

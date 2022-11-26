@@ -41,6 +41,7 @@ private:
 	const int SLEEP_TIME_BETWEEN_LOOPS = 20, SLEEP_TIME_NO_ACTIVE = 1000;
 	const int MIN_LAYER = -8, MAX_LAYER = 7;
 	const QImage LAYER_SLIDER_IMG = setSliderImg();
+	const int MIN_X_MAP_INDEX = 124, MAX_X_MAP_INDEX = 133, MIN_Y_MAP_INDEX = 121, MAX_Y_MAP_INDEX = 128;
 
 	QImage setSliderImg(){
 		QString path = "C:\\Moje\\pliki\\repos\\CrackerJackClient\\ResourcesUsing\\mapLayer.png";
