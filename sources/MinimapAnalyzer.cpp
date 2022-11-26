@@ -26,10 +26,6 @@ QString MinimapAnalyzer::setPathToFolderMap(){
 	dir.cd("maps");
 	return dir.absolutePath();
 }
-QImage MinimapAnalyzer::setSliderImg(){
-	const QString SLIDER_IMG_CODE = "4_5_#155#155#155_#101#101#101_#101#101#101_#101#101#101_#37#38#38_#101#101#101_#101#101#101_#101#101#101_#101#101#101_#101#101#101_#101#101#101_#101#101#101_#101#101#101_#101#101#101_#101#101#101_#120#120#120_#120#120#120_#120#120#120_#120#120#120_#120#120#120_";
-	return ImgEditor::getImageFromAdvancedCode(SLIDER_IMG_CODE);
-}
 uint MinimapAnalyzer::getFloorNumber(){
 	uint toRet = 0;
 

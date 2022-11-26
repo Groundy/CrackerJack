@@ -19,10 +19,6 @@ public:
 		QRect combinedFrame;
 		int howTheyShouldBeRotated = 0;
 	};
-	struct OtherFrames {
-		QRect gameFrame;
-		QRect miniMapFrame;
-	};
 	struct MutexImg {
 	public :
 		void getImgCopy(QImage& returnImg) {
@@ -30,7 +26,7 @@ public:
 			returnImg = img.copy();
 			mutex.unlock();
 		}
-		void setImg(QImage& newImg) {
+		void setImg(const QImage& newImg) {
 			mutex.lock();
 			img = std::move(newImg);
 			mutex.unlock();
@@ -46,8 +42,8 @@ public:
 	};
 	enum STATES { HASTE, BATTLE, PROTECTOR_ZONE, POISONED, PARALYZED, UPGRADED };
 
-	QMap<QString, QRect> potionName_rectPosOnScreen_map = getMapWithRects();
-	static QMap<QString, QRect> getMapWithRects();
+	//QMap<QString, QRect> potionName_rectPosOnScreen_map = getMapWithRects();
+	//static QMap<QString, QRect> getMapWithRects();
 	VariablesClass();
 	~VariablesClass();
 
@@ -64,16 +60,12 @@ public:
 
 
 	//unasigned gettersSetters
-	void setNewImg(QImage& newImage) {
-		fullImgMutex.lock();
-		this->fullImage = std::move(newImage);
+	void setNewImg(const QImage& newImage) {
+		fullImage.setImg(newImage);
 		newFullImgAwaits = true;
-		fullImgMutex.unlock();
 	}
 	void getCopyOfCurrentFullImg(QImage& img) {
-		fullImgMutex.lock();
-		img = fullImage.copy();
-		fullImgMutex.unlock();
+		fullImage.getImgCopy(img);
 	}
 
 	//game process
@@ -120,12 +112,6 @@ public:
 	QRect getManaArea() { return healthManaFrames.manaFrame; }
 	QRect getMSArea() { return healthManaFrames.manaShieldFrame; }
 	QRect getCombinedArea() { return healthManaFrames.combinedFrame; }
-
-	//otherFrames
-	void setMiniMapArea(QRect toSet) { otherFrames.miniMapFrame = toSet; }
-	QRect getMiniMapArea() { return otherFrames.miniMapFrame; }
-	void setMainArea(QRect toSet) { otherFrames.gameFrame = toSet; }
-	QRect getMainArea() { return otherFrames.gameFrame; }
 
 	//health, mana, combined, shield IMG piececs
 	void setImageHealth(QImage& img) { healthImg.setImg(img);}
@@ -178,25 +164,88 @@ public:
 		lastTimeUsagesMutex.unlock();
 	}
 
+	//minimap
+	void setSettingKeepAnalyzeMiniMap(bool enable) { this->keepAnalyzingMiniMap = enable; };
+	bool getSettingKeepAnalyzeMiniMap() const { return keepAnalyzingMiniMap; }
+	void getImgMiniMap(QImage& imgToRet) { 
+		this->miniMap.getImgCopy(imgToRet); 
+		this->miniMap.clear();
+	}
+	void setImgMiniMap(const QImage& miniMapImg) { this->miniMap.setImg(miniMapImg); }
+	QRect getFrameMiniMap() {
+		miniMapFrameMutex.lock();
+		QRect miniMapFrame = this->miniMapFrame;
+		miniMapFrameMutex.unlock();
+		return miniMapFrame;
+	}
+	void setFrameMiniMap(const QRect& miniMapFrame) { 
+		miniMapFrameMutex.lock();
+		this->miniMapFrame = miniMapFrame;
+		miniMapFrameMutex.unlock();
+	}
+	void getImgMiniMapLayer(QImage& imgToRet) { 
+		this->minMapLayer.getImgCopy(imgToRet); 
+		this->minMapLayer.clear();
+	}
+	void setImgMiniMapLayer(const QImage& minMapLayerImg) { this->minMapLayer.setImg(minMapLayerImg); }
+
+	//gameFrame mainGameWindow
+	void setSettingKeepAnalyzeMainGameWindow(bool enable) { this->keepAnalyzingMainGameWindow = enable; };
+	bool getSettingKeepAnalyzeMainGameWindow() const { return keepAnalyzingMainGameWindow; }
+	void getImgMainGameWindow(QImage& imgToRet) { this->gameWindow.getImgCopy(imgToRet); }
+	void setImgMainGameWindow(const QImage& mainGameWindow) { this->gameWindow.setImg(mainGameWindow); }
+	QRect getFrameMainGameWindow() {
+		gameWindowFrameMutex.lock();
+		QRect mainGameFrame = this->gameWindowFrame;
+		gameWindowFrameMutex.unlock();
+		return mainGameFrame;
+	}
+	void setFrameMainGameWindow(const QRect& gameWindowFrame) {
+		gameWindowFrameMutex.lock();
+		this->gameWindowFrame = gameWindowFrame;
+		gameWindowFrameMutex.unlock();
+	}
+
+
 	Logger logger;
 private:
-	std::mutex fullImgMutex;
-	QImage fullImage;
-	std::atomic<bool> newFullImgAwaits;
-	std::atomic<double> currentHealthPercentage = 0.0, currentManaPercentage = 0.0, currentMsPercentage = 0.0;
-	std::atomic<int> currentHealthRaw = 0, currentManaRaw = 0, currentMSRaw = 0;
-	std::atomic<bool> keepRestoringManaAngHealth;
-	std::atomic<bool> keepTakingScreenShots;
-	std::atomic<bool> keepLoadingScreenShots;
+	//game
 	std::atomic<uint> pid;
 	std::atomic<HWND> handlerToGameThread;
 	QString nameOfGameWindow;	
+
+	//health mana
+	std::atomic<double> currentHealthPercentage = 0.0, currentManaPercentage = 0.0, currentMsPercentage = 0.0;
+	std::atomic<int> currentHealthRaw = 0, currentManaRaw = 0, currentMSRaw = 0;
 	HealthManaFrames healthManaFrames;
-	OtherFrames otherFrames;
 	MutexImg healthImg, manaImg, combinedImg, msImg;
+
+	//settings
+	std::atomic<bool> newFullImgAwaits;
+	std::atomic<bool> keepRestoringManaAngHealth;
+	std::atomic<bool> keepTakingScreenShots;
+	std::atomic<bool> keepLoadingScreenShots;
+	std::atomic<bool> keepAnalyzingMiniMap = true;
+	std::atomic<bool> keepAnalyzingMainGameWindow;
+
+	//timers
 	std::atomic<qint64> timeLastItemUsage, timeLastSpellAttack, timeLastSpellHealing, timeLastSpellSupport;
 	std::mutex lastTimeUsagesMutex;
 	QMap<QString, qint64> lastTimeSpellUsagesMap;
 
+	//MiniMap
+	MutexImg miniMap;
+	MutexImg minMapLayer;
+	QRect miniMapFrame;
+	std::mutex miniMapFrameMutex;
+
+	//GameFrameMap
+	MutexImg gameWindow;
+	QRect gameWindowFrame;
+	std::mutex gameWindowFrameMutex;
+
+	//other
+	MutexImg fullImage;		
+	//QRect gameFrame;
 
 };

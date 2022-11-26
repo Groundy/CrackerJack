@@ -14,7 +14,7 @@ class Calibrator {
 public:
 	Calibrator(std::shared_ptr<VariablesClass> var);
 	~Calibrator();
-	bool calibrateManaAndHealthBar(const QImage& fullImage);
+	bool calibrate(const QImage& fullImage);
 	static void test();
 
 private:

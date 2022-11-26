@@ -13,6 +13,7 @@ ScreenAnalyzer::~ScreenAnalyzer(){
 void ScreenAnalyzer::run() {
 	mainLoop();
 }
+
 bool ScreenAnalyzer::loadScreen(QImage& img){
 	QString nameOfImgToCapture = getNameOfLastTakenScreenShot();
 	if (nameOfImgToCapture.isEmpty())
@@ -70,15 +71,27 @@ void ScreenAnalyzer::mainLoop(){
 		if (!openCorrectly)
 			continue;
 		if (!var->framesAreValid()) {
-			Calibrator(var).calibrateManaAndHealthBar(img);
+			Calibrator(var).calibrate(img);
 		}
 
 		deleteScreenShotFolder();
-		cutImportantImgsFromWholeScreenAndSendThemToVarClass(img);
+		cutHealthManaImgs(img);
+
+		if (var->getSettingKeepAnalyzeMiniMap()) {
+			QRect frame = var->getFrameMiniMap();
+			var->setImgMiniMap(img.copy(frame));
+
+			const QPoint DIFF_DIST_SINCE_TOPLEFT_MINIMAP = QPoint(137,41);
+			const QPoint TOP_LEFT_START_OF_MINIMAP_LAYER_FRAME = frame.topLeft() + DIFF_DIST_SINCE_TOPLEFT_MINIMAP;
+			const QSize SIZE_MINIMAP_LAYER_FRAME = QSize(24, 71);
+			QRect miniMapLayerFrame(TOP_LEFT_START_OF_MINIMAP_LAYER_FRAME, SIZE_MINIMAP_LAYER_FRAME);
+			var->setImgMiniMapLayer(img.copy(miniMapLayerFrame));
+		}
+
 		var->setNewImg(img);			
 	}
 }
-int ScreenAnalyzer::cutImportantImgsFromWholeScreenAndSendThemToVarClass(const QImage& fullscreen){
+int ScreenAnalyzer::cutHealthManaImgs(const QImage& fullscreen){
 	bool healthFrameFound = !var->getHealthArea().isEmpty();
 	bool manaFrameFound = !var->getManaArea().isEmpty();
 	bool manaShieldFound = !var->getMSArea().isEmpty();

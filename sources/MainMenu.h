@@ -42,6 +42,7 @@ private:
 	ScreenSaver* screenSaverThread;
 	ScreenAnalyzer* screenAnalyzer;
 	ManaHealthStateAnalyzer* healthManaStateAnalyzer;
+	MinimapAnalyzer* miniMapAnalyzer;
 	std::shared_ptr<VariablesClass> var;
 	std::shared_ptr<GameConnecter> gameConnector;
 	ActiveGameThread::GameActivityStates gameActivitystate;

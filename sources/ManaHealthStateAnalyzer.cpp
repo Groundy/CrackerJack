@@ -4,10 +4,6 @@ ManaHealthStateAnalyzer::ManaHealthStateAnalyzer(QObject *parent, Profile* profi
 	: QThread(parent), var(var), gameConnector(gameConnector){
 	populateHealthManaMaps(profile);
 	var->setSettingRestoringState(true);
-
-	QMap<QString, int> a,b;
-	populareMapsWithBottomBarsLetters(a,b);
-	int g = 3;
 }
 ManaHealthStateAnalyzer::~ManaHealthStateAnalyzer(){
 	this->terminate();

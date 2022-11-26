@@ -34,5 +34,5 @@ private:
 	QString getNameOfLastTakenScreenShot();
 	bool loadScreen(QImage& img);
 	void mainLoop();
-	int cutImportantImgsFromWholeScreenAndSendThemToVarClass(const QImage& fullscreen);
+	int cutHealthManaImgs(const QImage& fullscreen);
 };

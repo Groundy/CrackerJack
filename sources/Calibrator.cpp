@@ -7,7 +7,7 @@ Calibrator::~Calibrator()
 }
 
 //public
-bool Calibrator::calibrateManaAndHealthBar(const QImage& fullscreen){
+bool Calibrator::calibrate(const QImage& fullscreen){
 	QList<QRect> importantRectangles;
 	bool windowsFound = findWindowsOnScreen(fullscreen, importantRectangles);
 	if (!windowsFound)
@@ -36,7 +36,7 @@ void Calibrator::test() {
 
 			auto calibrator = Calibrator(var);
 			auto start = QDateTime::currentMSecsSinceEpoch();
-			bool categroized = calibrator.calibrateManaAndHealthBar(fullScreen);
+			bool categroized = calibrator.calibrate(fullScreen);
 			auto time = QDateTime::currentMSecsSinceEpoch() - start;
 			if (categroized)
 				qDebug() << "analyzed in : " + QString::number(time);
@@ -271,7 +271,7 @@ bool Calibrator::categorizeWindows(const QImage& fullscreen, QList<QRect>& impor
 				indexOfBiggestWindow = i;
 			}
 		}
-		var->setMainArea(importantRectangles[indexOfBiggestWindow]);
+		var->setFrameMainGameWindow(importantRectangles[indexOfBiggestWindow]);
 		importantRectangles.removeAt(indexOfBiggestWindow);
 	}
 
@@ -310,14 +310,13 @@ bool Calibrator::categorizeWindows(const QImage& fullscreen, QList<QRect>& impor
 
 	//miniMap Frame
 	{
-		/*
+
 		QMap<int, QRect> startX_Rect_map;
 		for each (QRect var in importantRectangles)
 			startX_Rect_map.insert(var.x(), var);
 		QRect miniMapRect = startX_Rect_map.last();
-		var->setMiniMapArea(miniMapRect);
+		var->setFrameMiniMap(miniMapRect);
 		importantRectangles.removeOne(miniMapRect);
-		*/
 	}
 
 	return true;

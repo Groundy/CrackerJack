@@ -161,6 +161,9 @@
     <QtMoc Include="sources\ImgEditor.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <QtMoc Include="sources\MinimapAnalyzer.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="sources\SelectProfileWindow.ui">
@@ -208,9 +211,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="sources\Profile.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="sources\MinimapAnalyzer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="sources\JsonParser.h">

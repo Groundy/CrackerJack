@@ -3,13 +3,72 @@
 #include <qdir.h>
 #include <qimage.h>
 #include <qstring.h>
+#include <qthread.h>
 #include <qpoint.h>
+#include <qrandom.h>
+#include <qdatetime.h>
+
 #include "Utilities.h"	
 #include "Calibrator.h"
-#include "qrandom.h"
 #include "VariablesClass.h"
-#include "qdatetime.h"
 #include "Utilities.h"
+
+class MinimapAnalyzer : public QThread {
+	Q_OBJECT
+public:
+	MinimapAnalyzer(QObject* parent, std::shared_ptr<VariablesClass> var) : QThread(parent), var(var) {
+	}
+	~MinimapAnalyzer() {};
+	void run(){
+		while (true){
+			msleep(SLEEP_TIME_BETWEEN_LOOPS);
+			if (!var->getSettingKeepAnalyzeMiniMap()) {
+				msleep(SLEEP_TIME_BETWEEN_LOOPS);
+				continue;
+			}
+			QImage miniMap, miniMapLayer;
+			var->getImgMiniMap(miniMap);
+			var->getImgMiniMapLayer(miniMapLayer);
+			if (miniMap.isNull() || miniMapLayer.isNull())
+				continue;
+
+			int currentLayer = getCurrentLayer(miniMapLayer);
+		}
+	}
+
+private:
+	std::shared_ptr<VariablesClass> var;
+	const int SLEEP_TIME_BETWEEN_LOOPS = 20, SLEEP_TIME_NO_ACTIVE = 1000;
+	const int MIN_LAYER = -8, MAX_LAYER = 7;
+	const QImage LAYER_SLIDER_IMG = setSliderImg();
+
+	QImage setSliderImg(){
+		QString path = "C:\\Moje\\pliki\\repos\\CrackerJackClient\\ResourcesUsing\\mapLayer.png";
+		QImage img;
+		img.load(path);
+		int a = 3;
+		return img;
+	}
+	int getCurrentLayer(const QImage& layerImg) {
+		QList<QPoint> startPostions = ImgEditor::findStartPositionInImg(LAYER_SLIDER_IMG, layerImg);
+		if (startPostions.size() != 1)
+			return -100;
+
+		const int HIGHEST_LAYER_Y_POS = 2;
+		const int HEIGHT_DIFF_FOR_ONE_LAYER = 4;
+		int yPosition = startPostions[0].y() - HIGHEST_LAYER_Y_POS;
+		int layerDiffToHighestLayer = yPosition / HEIGHT_DIFF_FOR_ONE_LAYER;
+		int layer = MAX_LAYER - layerDiffToHighestLayer;
+
+		if(layer >= MIN_LAYER && layer <= MAX_LAYER)
+			return layer;
+		else
+			return -100;
+	}
+};
+
+
+
 /*
 class ShearchArea {
 	public:
@@ -106,18 +165,22 @@ class ShearchArea {
 };
 */
 
-class MinimapAnalyzer{
+
+
+
+
+
+
+
+
 /*
 	public:
 	MinimapAnalyzer();
-	MinimapAnalyzer(VariablesClass* varClass);
-	~MinimapAnalyzer();
+
 	void test();
 private:
 	QString getNameOfMapFileToLoad(int floor, bool regularMapType = true);
 	QString setPathToFolderMap();
-	QImage setSliderImg();
-	uint getFloorNumber();
 
 	QList<uint> test_getAllPossibleMapColors();
 	QList<QRect> test_fillListWithRectsPosOfMiniMapParts();
@@ -132,13 +195,10 @@ private:
 
 	QString pathToMapFolder;
 	QImage minimapWithSlider;
-	
-	VariablesClass* test_varClass;
 
 	const QList<QPoint> forbiddenPixPositions = test_fillForbiddenPixPositions();
 	const QList<QRect> test_miniMapParts = test_fillListWithRectsPosOfMiniMapParts();
 	const QString PATH_TO_FOLDER_WITH_MAPS = setPathToFolderMap();
-	const QImage SLIDER_IMG = setSliderImg();
 	const QList<uint> test_allPosibleColorsOnTheMap = test_getAllPossibleMapColors();
 	const int WIDTH_TO_WHOLE_PASSED_IMG = 160;
 	const int WIDTH_OF_MAP_ONLY_AREA = 106;
@@ -149,5 +209,3 @@ private:
 	const uint RED_COLOR_ON_MAP = qRgb(255, 51, 0);
 	
 */
-
-};

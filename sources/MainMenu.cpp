@@ -38,6 +38,8 @@ void MainMenu::threadStarter(){
 	healthManaStateAnalyzer = new ManaHealthStateAnalyzer(this, prof , var, gameConnector);
 	healthManaStateAnalyzer->start();
 
+	miniMapAnalyzer = new MinimapAnalyzer(this, var);
+	miniMapAnalyzer->start();
 }
 void MainMenu::signalSlotConnector(){
 	QObject *sigSender, *slotRec;

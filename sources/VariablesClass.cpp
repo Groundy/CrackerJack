@@ -6,6 +6,7 @@ VariablesClass::VariablesClass(){
 VariablesClass::~VariablesClass(){
 
 }
+/*
 QMap<QString, QRect> VariablesClass::getMapWithRects(){
 	QMap<QString, QRect> toRet;
 	toRet.insert("Ultimate Spirit Potion", QRect());
@@ -20,4 +21,4 @@ QMap<QString, QRect> VariablesClass::getMapWithRects(){
 	toRet.insert("Great Mana Potion", QRect());
 	toRet.insert("Great Spirit Potion", QRect());
 	return toRet;
-}
+}*/
