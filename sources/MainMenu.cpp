@@ -56,6 +56,12 @@ void MainMenu::signalSlotConnector(){
 	sig = SIGNAL(sendMsgToUserConsol(QStringList));
 	slot = SLOT(printToUserConsol(QStringList));
 	bool connectionAccepted_2 = connect(sigSender, sig, slotRec, slot, Qt::UniqueConnection);
+
+	sigSender = this->miniMapAnalyzer;
+	slotRec = this;
+	sig = SIGNAL(sendPostitionsToGUI(QString, QString, QString));
+	slot = SLOT(updatePlayerPosition(QString, QString, QString));
+	bool connectionAccepted_3 = connect(sigSender, sig, slotRec, slot, Qt::UniqueConnection);
 	
 }
 
@@ -126,4 +132,8 @@ void MainMenu::changedValueOfCharHealthOrMana(double healthPercentage, double ma
 }
 void MainMenu::printToUserConsol(QStringList msgs){
 	ui->textBrowser->append(msgs[0]);
-};
+}
+void MainMenu::updatePlayerPosition(QString x, QString y, QString f){
+	QString str = QString("%1, %2, %3").arg(x, y, f);
+	ui->positonLabel->setText(str);
+}

@@ -36,6 +36,9 @@ public:
 		}
 	}
 
+signals:
+	void sendPostitionsToGUI(QString, QString, QString);
+
 private:
 	std::shared_ptr<VariablesClass> var;
 	const int SLEEP_TIME_BETWEEN_LOOPS = 20, SLEEP_TIME_NO_ACTIVE = 1000;

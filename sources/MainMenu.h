@@ -35,6 +35,7 @@ public slots:
 	void onGameStateChanged(int state);
 	void changedValueOfCharHealthOrMana(double healthPercentage, double manaPercentage, double manaShieldPercentage);
 	void printToUserConsol(QStringList msgs);
+	void updatePlayerPosition(QString x, QString y, QString f);
 private:
 	Ui::MainMenu *ui;
 	Profile* prof;
