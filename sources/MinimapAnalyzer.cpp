@@ -1,31 +1,5 @@
 #include "MinimapAnalyzer.h"
 /*
-
-MinimapAnalyzer::MinimapAnalyzer(){
-}
-MinimapAnalyzer::MinimapAnalyzer(VariablesClass* var) {
-	test_varClass = var;
-	test();
-}
-MinimapAnalyzer::~MinimapAnalyzer(){
-}
-
-
-QString MinimapAnalyzer::getNameOfMapFileToLoad(int floor, bool regularMapType){
-	QString type = regularMapType ? "map" : "path";
-	QString number = QString::number(floor);
-	if (number.size() == 1)
-		number.push_front(QString::number(0));
-
-	QString toRet = "floor-" + number + "-" + type + ".png";
-	return toRet;
-}
-QString MinimapAnalyzer::setPathToFolderMap(){
-	//todo przerobic w final version
-	QDir dir = QDir::current();
-	dir.cd("maps");
-	return dir.absolutePath();
-}
 QList<uint> MinimapAnalyzer::test_getAllPossibleMapColors(){
 	QList<uint> toRet;
 	toRet.push_back(RGBstruct(0, 0, 0).toUint());
