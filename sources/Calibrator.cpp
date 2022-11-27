@@ -261,18 +261,17 @@ bool Calibrator::categorizeWindows(const QImage& fullscreen, QList<QRect>& impor
 
 	//game Frame
 	{
-		int indexOfBiggestWindow = 0;
+		QRect biggestRect;
 		int biggestSurface = 0;
 		for (size_t i = 0; i < importantRectangles.size(); i++){
-			QRect rect = importantRectangles[i];
-			int surf = rect.width() * rect.height();
+			int surf = importantRectangles[i].width() * importantRectangles[i].height();
 			if (surf > biggestSurface) {
 				biggestSurface = surf;
-				indexOfBiggestWindow = i;
+				biggestRect = importantRectangles[i];
 			}
 		}
-		var->setFrameMainGameWindow(importantRectangles[indexOfBiggestWindow]);
-		importantRectangles.removeAt(indexOfBiggestWindow);
+		var->setFrameMainGameWindow(biggestRect);
+		importantRectangles.removeOne(biggestRect);
 	}
 
 	//indexOfHealth, indexOfMana, indexOfManaShield, howTheyShouldBeRotated, indexOfCombinedBox;
@@ -310,13 +309,10 @@ bool Calibrator::categorizeWindows(const QImage& fullscreen, QList<QRect>& impor
 
 	//miniMap Frame
 	{
-
-		QMap<int, QRect> startX_Rect_map;
-		for each (QRect var in importantRectangles)
-			startX_Rect_map.insert(var.x(), var);
-		QRect miniMapRect = startX_Rect_map.last();
-		var->setFrameMiniMap(miniMapRect);
-		importantRectangles.removeOne(miniMapRect);
+		QList<QRect> sortedX, sortedY;
+		sortByXY(importantRectangles, sortedX, sortedY);
+		var->setFrameMiniMap(sortedX.last());
+		importantRectangles.removeOne(sortedX.last());
 	}
 
 	return true;
