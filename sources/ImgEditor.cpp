@@ -381,50 +381,68 @@ void ImgEditor::saveMultipleImgs(const QImage& fullImg, QList<QRect> frames, QSt
 		img.save(fullPath);
 	}
 }
-QList<QPoint> ImgEditor::findStartPositionInImg(const QImage& imgToFind, const QImage& imgToSearchWithin) {
-	//fun return list of start positions of imgToFind, position is lef down corner
-	const int WIDTH_SMALL_PIC = imgToFind.width();
-	const int HEIGHT_SMALL_PIC = imgToFind.height();
-	const int WIDTH_BIG_PIC = imgToSearchWithin.width();
-	const int HEIGHT_BIG_PIC = imgToSearchWithin.height();
-
-	bool errEmpty = WIDTH_SMALL_PIC <= 0 || HEIGHT_SMALL_PIC <= 0 || WIDTH_BIG_PIC <= 0 || HEIGHT_BIG_PIC <= 0;
-	bool errWidth = WIDTH_SMALL_PIC >= WIDTH_BIG_PIC;
-	bool errHeight = HEIGHT_SMALL_PIC >= HEIGHT_BIG_PIC;
-	bool errFormat = imgToFind.format() != imgToSearchWithin.format();
-	bool anyErr = errWidth || errHeight || errFormat || errEmpty;
-	if (anyErr) {
-		//Logger::logPotenialBug("Wrong input of two img", "Calibrator", "findStartPositionInImg");
-		return QList<QPoint>();
+void ImgEditor::saveMultipleImgs(const QList<QImage>& imgs, QString pathToFolder, QString fileNameWithoutExtension) {
+	for (int i = 0; i < imgs.size(); i++) {
+		QString fullPath = QString("%1\\%2_%3.png").arg(pathToFolder, QString::number(i), fileNameWithoutExtension);
+		imgs[i].save(fullPath);
 	}
+}
+QList<QPoint> ImgEditor::findStartPositionInImg(const QImage& imgToFind, const QImage& imgToSearchWithin, QRect frameInBigWindow) {
+	try{
+		const int WIDTH_SMALL_PIC = imgToFind.width();
+		const int HEIGHT_SMALL_PIC = imgToFind.height();
+		const int WIDTH_BIG_PIC = imgToSearchWithin.width();
+		const int HEIGHT_BIG_PIC = imgToSearchWithin.height();
 
-	const int MAX_X_INDEX_TO_CHECK = WIDTH_BIG_PIC - WIDTH_SMALL_PIC;
-	const int MAX_Y_INDEX_TO_CHECK = HEIGHT_BIG_PIC - HEIGHT_SMALL_PIC;
+		if (imgToFind.isNull() || imgToSearchWithin.isNull())
+			throw std::exception("Cant find postion, one of imgs is null");
+		if(WIDTH_SMALL_PIC > WIDTH_BIG_PIC)
+			throw std::exception("Cant find postion, Wrong imgs size");
+		if (HEIGHT_SMALL_PIC > HEIGHT_BIG_PIC)
+			throw std::exception("Cant find postion, Wrong imgs size");
+		if(imgToFind.format() != imgToSearchWithin.format())
+			throw std::exception("Cant find postion, wrong formats");
+		if(frameInBigWindow.right() > WIDTH_BIG_PIC)
+			throw std::exception("Cant find postion, Wrong frame size");
+		if (frameInBigWindow.bottom() > HEIGHT_BIG_PIC)
+			throw std::exception("Cant find postion, Wrong frame size");
 
-	QList<QPoint> startPointsListToRet;
-	for (int x = 0; x <= MAX_X_INDEX_TO_CHECK; x++) {
-		for (int y = 0; y <= MAX_Y_INDEX_TO_CHECK; y++) {
-			uint pixSmallImg = imgToFind.pixel(0, 0);
-			uint pixBigImg = imgToSearchWithin.pixel(x, y);
-			bool firstPixelMatched = pixSmallImg == pixBigImg;
-			if (firstPixelMatched) {
+
+		const int maxIndexToCheckX = frameInBigWindow.isEmpty() ? WIDTH_BIG_PIC - WIDTH_SMALL_PIC : frameInBigWindow.right();
+		const int maxIndexToCheckY = frameInBigWindow.isEmpty() ? HEIGHT_BIG_PIC - HEIGHT_SMALL_PIC : frameInBigWindow.bottom();
+		const int minIndexToCheckX = frameInBigWindow.isEmpty() ? 0 : frameInBigWindow.left();
+		const int minIndexToCheckY = frameInBigWindow.isEmpty() ? 0 : frameInBigWindow.top();
+
+		QList<QPoint> startPointsListToRet;
+		for (int x = minIndexToCheckX; x <= maxIndexToCheckX; x++) {
+			for (int y = minIndexToCheckY; y <= maxIndexToCheckY; y++) {
+				uint pixSmallImg = imgToFind.pixel(0, 0);
+				uint pixBigImg = imgToSearchWithin.pixel(x, y);
+				if (pixSmallImg != pixBigImg)
+					continue;
+
 				bool foundPosition = true;
-				for (int x_TMP = 1; x_TMP < WIDTH_SMALL_PIC; x_TMP++) {
-					for (int y_TMP = 1; y_TMP < HEIGHT_SMALL_PIC; y_TMP++) {
-						pixSmallImg = imgToFind.pixel(x_TMP, y_TMP);
-						pixBigImg = imgToSearchWithin.pixel(x + x_TMP, y + y_TMP);
-						bool pixNotMatched = pixSmallImg != pixBigImg;
-						if (pixNotMatched) {
-							x_TMP = WIDTH_SMALL_PIC;
-							y_TMP = HEIGHT_SMALL_PIC;
-							foundPosition = false;
-						}
+				for (int offsetX = 1; offsetX < WIDTH_SMALL_PIC; offsetX++) {
+					for (int offsetY = 1; offsetY < HEIGHT_SMALL_PIC; offsetY++) {
+						pixSmallImg = imgToFind.pixel(offsetX, offsetY);
+						pixBigImg = imgToSearchWithin.pixel(x + offsetX, y + offsetY);
+						if (pixBigImg == pixSmallImg)
+							continue;
+						//break both loops
+						offsetX = WIDTH_SMALL_PIC;
+						offsetY = HEIGHT_SMALL_PIC;
+						foundPosition = false;
 					}
 				}
 				if (foundPosition)
 					startPointsListToRet.push_back(QPoint(x, y));
+			
 			}
 		}
+		return startPointsListToRet;
 	}
-	return startPointsListToRet;
+	catch (const std::exception& e){
+		Logger::staticLog(e.what());
+		return QList<QPoint>();
+	}
 }

@@ -22,6 +22,7 @@ public:
 	static QImage getColorImageFromCode(const QString& codeOfImg);
 	static void cutImgWithLettersToSingleLettersImgList(QImage& img, QList<QImage>& list);
 	static QList<QPoint> findStartPositionInImg_mulitpeImgs(QList<QImage*> imgsToFind, QImage& imgToShareWithin);
-	static QList<QPoint> findStartPositionInImg(const QImage& imgToFind, const QImage& imgToShareWithin);
+	static QList<QPoint> findStartPositionInImg(const QImage& imgToFind, const QImage& imgToShareWithin, QRect frameInBigWindow = QRect());
 	static void saveMultipleImgs(const QImage& fullImg, QList<QRect> frames, QString pathToFolder, QString fileNameWithoutExtension);
+	static void saveMultipleImgs(const QList<QImage>& fullImg, QString pathToFolder, QString fileNameWithoutExtension);
 };
