@@ -95,6 +95,69 @@ public:
 				delete wholeImg;
 			}
 		}
-		int a = 4;
+	}
+	static void getAllColorsUsedInWalkableMaps(QString inputPath, QString outputPath) {
+		QDir directory(inputPath);
+		QStringList litOfFIles = directory.entryList(QStringList() << "*_Color*.png", QDir::Files);
+		QVector<RGBstruct> colorSet;
+		for each (QString fileName in litOfFIles){
+			QString pathToFile = inputPath + "\\" + fileName;
+			QImage img = QImage(pathToFile);
+			for (size_t x = 0; x < img.width(); x++){
+				for (size_t y = 0; y < img.height(); y++){
+					RGBstruct rgb(img.pixel(x, y));
+					if (!colorSet.contains(rgb))
+						colorSet.push_back(rgb);
+				}
+			}
+		}
+		QJsonArray arr;
+		for each (RGBstruct var in colorSet){
+			arr.push_back(var.toJson());
+		}
+		QJsonObject objToSave;
+		objToSave.insert("allPossibleColors", arr);
+		QJsonDocument toSave = QJsonDocument(objToSave);
+		JsonParser::saveJsonFile(outputPath, "allPossibleMapColors", toSave);
+	}
+	static void convertMapsToStrings(QString inputPath, QString outputPath) {
+		QMap<RGBstruct, QChar> colorCharMap;
+		colorCharMap.insert(RGBstruct(153, 153, 153), '0');
+		colorCharMap.insert(RGBstruct(0,0,0), '1');
+		colorCharMap.insert(RGBstruct(0,51,255), '2');
+		colorCharMap.insert(RGBstruct(102,102,102), '3');
+		colorCharMap.insert(RGBstruct(0,240,0), '4');
+		colorCharMap.insert(RGBstruct(0,255,255), '5');
+		colorCharMap.insert(RGBstruct(153,153,153), '6');
+		colorCharMap.insert(RGBstruct(255,255,255), '7');
+		colorCharMap.insert(RGBstruct(255,255,204), '8');
+		colorCharMap.insert(RGBstruct(0,102,0), '9');
+		colorCharMap.insert(RGBstruct(102,255,153), 'A');
+		colorCharMap.insert(RGBstruct(153,102,51), 'B');
+		colorCharMap.insert(RGBstruct(51,102,153), 'C');
+		colorCharMap.insert(RGBstruct(153,204,255), 'D');
+		colorCharMap.insert(RGBstruct(0,102,255), 'E');
+		colorCharMap.insert(RGBstruct(0,51,153), 'F');
+
+		QDir directory(inputPath);
+		QStringList litOfFIles = directory.entryList(QStringList() << "*_Color*.png", QDir::Files);
+		for each (QString fileName in litOfFIles) {
+			QString pathToFile = inputPath + "\\" + fileName;
+			QString floorName = fileName.split("_").first();
+			QImage img = QImage(pathToFile);
+			QJsonArray mapAsChars;
+			for (size_t y = 0; y < img.height(); y++) {
+				QString lineOfMapStr = QString();
+				for (size_t x = 0; x < img.width(); x++) {
+					RGBstruct pixVal = RGBstruct(img.pixel(x, y));
+					QChar tmpChar = colorCharMap.value(pixVal, 'x');
+					lineOfMapStr.append(tmpChar);
+				}
+				mapAsChars.append(lineOfMapStr);
+			}
+			QJsonDocument docToSave = QJsonDocument(mapAsChars);
+			JsonParser::saveJsonFile(outputPath, floorName + ".json", docToSave);
+		}
+
 	}
 };
