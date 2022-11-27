@@ -42,10 +42,10 @@ void GameConnecter::useRestorationMethode(const RestorationMethode& methode) {
 		var->setTimeLastItemUsage();
 
 	Key key = methode.getKey();
-	//sendKeyStrokeToProcess(key);
+	sendKeyStrokeToProcess(key);
 
 	QString msg = QString("Used %1").arg(methode.getName());
-	var->log(msg, true, true, true);
+	var->log(msg, false, true, true);
 }
 void GameConnecter::sendCharToGame(const QChar charToSend, const HWND& gameThreadHandler) {
 	if (charToSend.isLetter()) {

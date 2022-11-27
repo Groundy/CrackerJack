@@ -61,18 +61,23 @@ public:
 		JsonParser().saveJsonFile(outputFolderPath, "imgsCodes.json", docToSave);
 	}
 	static void mergedMaps(QString inputPath, QString outputPath) {
+		/*
+			minimaps are name like
+			named 
+		*/
+
 		const int MIN_X_MAP_INDEX = 124, MAX_X_MAP_INDEX = 134, MIN_Y_MAP_INDEX = 121, MAX_Y_MAP_INDEX = 129;
 		const int WHOLE_IMG_WIDTH = 256 * (MAX_X_MAP_INDEX - MIN_X_MAP_INDEX); 
 		const int WHOLE_IMG_HEIGHT = 256 * (MAX_Y_MAP_INDEX - MIN_Y_MAP_INDEX);
 		QStringList types = QStringList() << "Color" << "WaypointCost";
 		for each (QString type in types){
-			for (size_t floor = 0; floor <= 15; floor++){
+			for (size_t floorImgName = 0; floorImgName <= 15; floorImgName++){
 				QImage* wholeImg = new QImage(WHOLE_IMG_WIDTH, WHOLE_IMG_HEIGHT, QImage::Format::Format_ARGB32);
 				for (size_t xIndex = MIN_X_MAP_INDEX; xIndex <= MAX_X_MAP_INDEX; xIndex++){
 					for (size_t yIndex = MIN_Y_MAP_INDEX; yIndex <= MAX_Y_MAP_INDEX; yIndex++) {
 						QString xValStr = QString::number(xIndex * 256);
 						QString yValStr = QString::number(yIndex * 256);
-						QString mapPieceFileName = QString("%1\\Minimap_%2_%3_%4_%5.png").arg(inputPath, type, xValStr, yValStr, QString::number(floor));
+						QString mapPieceFileName = QString("%1\\Minimap_%2_%3_%4_%5.png").arg(inputPath, type, xValStr, yValStr, QString::number(floorImgName));
 						QImage mapPiece = QImage(mapPieceFileName);
 						if(mapPiece.isNull())
 							continue;
@@ -90,7 +95,8 @@ public:
 						}
 					}
 				}
-				QString outPutFileName = QString("%1\\%2_%3.png").arg(outputPath, QString::number(floor), type);
+				int realFloor = -floorImgName + 7;
+				QString outPutFileName = QString("%1\\%2_%3.png").arg(outputPath, QString::number(realFloor), type);
 				wholeImg->save(outPutFileName);
 				delete wholeImg;
 			}

@@ -215,8 +215,8 @@ private:
 	QString nameOfGameWindow;	
 
 	//health mana
-	std::atomic<double> currentHealthPercentage = 0.0, currentManaPercentage = 0.0, currentMsPercentage = 0.0;
-	std::atomic<int> currentHealthRaw = 0, currentManaRaw = 0, currentMSRaw = 0;
+	std::atomic<double> currentHealthPercentage = 100.0, currentManaPercentage = 100.0, currentMsPercentage = 100.0;
+	std::atomic<int> currentHealthRaw = 100, currentManaRaw = 100, currentMSRaw = 100;
 	HealthManaFrames healthManaFrames;
 	MutexImg healthImg, manaImg, combinedImg, msImg;
 

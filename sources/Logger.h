@@ -29,7 +29,7 @@ public:
 	}
 
 private:
-	std::atomic<long long> time;
+	std::atomic<long long> time = QDateTime::currentDateTime().toMSecsSinceEpoch();
 	QString getTimeStamp() {
 		QDateTime time = QDateTime::currentDateTime();
 		return "[" + time.toString("hh:mm:ss:zzz") + "] ";
