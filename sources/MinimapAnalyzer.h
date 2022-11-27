@@ -22,10 +22,7 @@ class ImgShearcher : public QThread {
 		QList<QPoint>& foundStartPostitons;
 		QRect frameToLookFor;
 		void run() {
-			qint64 start = QDateTime::currentMSecsSinceEpoch();
 			foundStartPostitons = ImgEditor::findStartPositionInImg(imgSmall, imgBig, frameToLookFor);
-			qint64 time = QDateTime::currentMSecsSinceEpoch() - start;
-			qDebug() << time;
 		}
 };
 class MinimapAnalyzer : public QThread {
@@ -146,30 +143,31 @@ private:
 		do{	
 			keepWaiting = false;
 			msleep(50);
-			for each (ImgShearcher * var in threads) {
-				if (var->isRunning()) {
+			for (size_t i = 0; i < threads.size(); i++){
+				if (threads[i]->isRunning()) 
 					keepWaiting = true;
-					break;
+				else {
+					bool foundPoint = pointsFromThreads[i].size() == 1;
+					if (foundPoint) {
+						keepWaiting = false;
+						break;
+					}
 				}
 			}
 		} while (keepWaiting);
+
+		for (size_t i = 0; i < threads.size(); i++) {
+			threads[i]->terminate();
+			delete threads[i];
+		}
+
 		
 		for (size_t i = 0; i < pointsFromThreads.size(); i++){
 			auto currentList = &pointsFromThreads[i];
 			if (currentList->size() != 1)
 				continue;
-			QSize vectorToPlayerPos;
-			switch (i)
-			{
-			case 0: vectorToPlayerPos = QSize(-53, -54); break;//topLeft
-			case 1: vectorToPlayerPos = QSize(0, -54); break;//top
-			case 2: vectorToPlayerPos = QSize(-55, -54); break;//topRight
-			case 3: vectorToPlayerPos = QSize(-53, 0); break;//left
-			case 4: vectorToPlayerPos = QSize(-4, 0); break;//right
-			case 5: vectorToPlayerPos = QSize(-55, -2); break;//downLeft
-			case 6: vectorToPlayerPos = QSize(0, -4); break;//down
-			case 7: vectorToPlayerPos = QSize(-2, -2); break;//downRight
-			}
+
+			QSize vectorToPlayerPos = getVectorToPlayerFromImgPieceIndex(i);
 			QPoint playerPos(vectorToPlayerPos.width() + currentList[0].first().x(), vectorToPlayerPos.height() + currentList[0].first().y());
 			return playerPos;
 		}
@@ -241,6 +239,21 @@ private:
 		const int SIZE = 220 / 2;
 		QRect frameToLookWithin = QRect(previousPosition.x() - SIZE, previousPosition.y() - SIZE, 2 * SIZE, 2 * SIZE);
 		return frameToLookWithin;
+	}
+	QSize getVectorToPlayerFromImgPieceIndex(int index) {
+		QSize vectorToPlayerPos;
+		switch (index)
+		{
+		case 0: vectorToPlayerPos = QSize(53, 54); break;//topLeft
+		case 1: vectorToPlayerPos = QSize(0, 54); break;//top
+		case 2: vectorToPlayerPos = QSize(-55, 54); break;//topRight
+		case 3: vectorToPlayerPos = QSize(+53, 0); break;//left
+		case 4: vectorToPlayerPos = QSize(-4, 0); break;//right
+		case 5: vectorToPlayerPos = QSize(+53, -2); break;//downLeft
+		case 6: vectorToPlayerPos = QSize(0, -4); break;//down
+		case 7: vectorToPlayerPos = QSize(-2, -2); break;//downRight
+		}
+		return vectorToPlayerPos;
 	}
 };
 
