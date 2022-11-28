@@ -35,32 +35,6 @@
    <string>MainMenu</string>
   </property>
   <layout class="QGridLayout" name="gridLayout_3">
-   <item row="5" column="1" colspan="2">
-    <spacer name="verticalSpacer">
-     <property name="orientation">
-      <enum>Qt::Vertical</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>20</width>
-       <height>40</height>
-      </size>
-     </property>
-    </spacer>
-   </item>
-   <item row="6" column="1" colspan="2">
-    <spacer name="verticalSpacer_2">
-     <property name="orientation">
-      <enum>Qt::Vertical</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>20</width>
-       <height>40</height>
-      </size>
-     </property>
-    </spacer>
-   </item>
    <item row="2" column="1">
     <widget class="QGroupBox" name="currentValuesGroup">
      <property name="sizePolicy">
@@ -165,95 +139,6 @@
      </layout>
     </widget>
    </item>
-   <item row="0" column="0" rowspan="8">
-    <widget class="QTextBrowser" name="textBrowser">
-     <property name="html">
-      <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="2">
-    <widget class="QGroupBox" name="settingButtonGroup">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="title">
-      <string>opcje</string>
-     </property>
-     <layout class="QVBoxLayout" name="verticalLayout_3">
-      <item>
-       <widget class="QCheckBox" name="takeScreenshotCheckBox">
-        <property name="text">
-         <string>rób rzuty ekranu</string>
-        </property>
-        <property name="checked">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QCheckBox" name="restoreHealthMana">
-        <property name="text">
-         <string>regeneruj życie i mane</string>
-        </property>
-        <property name="checked">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <spacer name="verticalSpacer_3">
-        <property name="orientation">
-         <enum>Qt::Vertical</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>20</width>
-          <height>40</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-     </layout>
-    </widget>
-   </item>
-   <item row="3" column="1">
-    <widget class="QGroupBox" name="resourceGroup">
-     <property name="title">
-      <string>zasoby</string>
-     </property>
-     <layout class="QVBoxLayout" name="verticalLayout_2">
-      <item>
-       <widget class="QLabel" name="resourceLabel_1">
-        <property name="text">
-         <string>Resource: </string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QLabel" name="resourceLabel_2">
-        <property name="text">
-         <string>Resource: </string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QLabel" name="resourceLabel_3">
-        <property name="text">
-         <string>Resource: </string>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </widget>
-   </item>
    <item row="1" column="1" colspan="2">
     <widget class="QGroupBox" name="profileGroup">
      <property name="sizePolicy">
@@ -337,8 +222,130 @@ p, li { white-space: pre-wrap; }
      </layout>
     </widget>
    </item>
+   <item row="6" column="1" colspan="2">
+    <spacer name="verticalSpacer_2">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>40</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item row="2" column="2">
+    <widget class="QGroupBox" name="settingButtonGroup">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="title">
+      <string>opcje</string>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout_3">
+      <item>
+       <widget class="QCheckBox" name="takeScreenshotCheckBox">
+        <property name="text">
+         <string>rób rzuty ekranu</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QCheckBox" name="restoreHealthMana">
+        <property name="text">
+         <string>regeneruj życie i mane</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QCheckBox" name="analyzeMiniMapBox">
+        <property name="text">
+         <string>Analizuj pozycje postaci</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="verticalSpacer_3">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>20</width>
+          <height>40</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="3" column="1">
+    <widget class="QGroupBox" name="resourceGroup">
+     <property name="title">
+      <string>zasoby</string>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout_2">
+      <item>
+       <widget class="QLabel" name="resourceLabel_1">
+        <property name="text">
+         <string>Resource: </string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="resourceLabel_2">
+        <property name="text">
+         <string>Resource: </string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="resourceLabel_3">
+        <property name="text">
+         <string>Resource: </string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="0" column="0" rowspan="9">
+    <widget class="QTextBrowser" name="textBrowser">
+     <property name="html">
+      <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="1" colspan="2">
+    <spacer name="verticalSpacer">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>40</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
    <item row="4" column="1">
-    <widget class="QGroupBox" name="groupBox">
+    <widget class="QGroupBox" name="playerPosGroup">
      <property name="title">
       <string>pozycja</string>
      </property>
@@ -346,11 +353,18 @@ p, li { white-space: pre-wrap; }
       <item>
        <widget class="QLabel" name="positonLabel">
         <property name="text">
-         <string>TextLabel</string>
+         <string>?, ?, ?</string>
         </property>
        </widget>
       </item>
      </layout>
+    </widget>
+   </item>
+   <item row="7" column="1">
+    <widget class="QPushButton" name="testButton">
+     <property name="text">
+      <string>test</string>
+     </property>
     </widget>
    </item>
   </layout>
@@ -406,10 +420,44 @@ p, li { white-space: pre-wrap; }
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>analyzeMiniMapBox</sender>
+   <signal>stateChanged(int)</signal>
+   <receiver>MainMenu</receiver>
+   <slot>analyzeMiniMapCheckBoxChanged()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>512</x>
+     <y>148</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>299</x>
+     <y>299</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>testButton</sender>
+   <signal>clicked()</signal>
+   <receiver>MainMenu</receiver>
+   <slot>testButtonClicked()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>339</x>
+     <y>579</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>299</x>
+     <y>299</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>changeProfileButtonAction()</slot>
   <slot>autoHealAndManaRegCheckBoxChanged()</slot>
   <slot>takeScreenShotCheckBoxChanged()</slot>
+  <slot>analyzeMiniMapCheckBoxChanged()</slot>
+  <slot>testButtonClicked()</slot>
  </slots>
 </ui>

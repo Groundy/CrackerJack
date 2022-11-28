@@ -10,6 +10,10 @@ MainMenu::MainMenu(Profile* prof, QWidget* parent)
 	var = std::shared_ptr<VariablesClass>(new VariablesClass());
 	gameConnector = std::shared_ptr<GameConnecter>(new GameConnecter(this, var));
 	ui->profileNameLabel->setText(prof->getName());
+	
+	ui->playerPosGroup->setVisible(false);
+	ui->resourceGroup->setVisible(false);
+
 	threadStarter();
 	signalSlotConnector();
 }
@@ -77,8 +81,18 @@ void MainMenu::takeScreenShotCheckBoxChanged() {
 void MainMenu::updateResourcesAmounts(){
 }
 void MainMenu::autoHealAndManaRegCheckBoxChanged() {
-	bool stateOfSwitch = ui->restoreHealthMana->isChecked();
-	var->setSettingRestoringState(stateOfSwitch);
+	bool enable = ui->restoreHealthMana->isChecked();
+	var->setSettingRestoringState(enable);
+	if (enable) {
+		ui->healthInfoLabel->clear();
+		ui->manaInfoLabel->clear();
+		ui->manaShieldLabel->clear();
+	}
+	else {
+		ui->healthInfoLabel->setText("?");
+		ui->manaInfoLabel->setText("?");
+		ui->manaShieldLabel->setText("?");
+	}
 }
 void MainMenu::onGameStateChanged(int state){	
 	QString toWrite = tr("Game status: ");
@@ -110,22 +124,30 @@ void MainMenu::onGameStateChanged(int state){
 	bool shouldBeActive = state == Type::ACTIVE;	
 }
 void MainMenu::changedValueOfCharHealthOrMana(double healthPercentage, double manaPercentage, double manaShieldPercentage){
-	const QString NO_DATA_INFO = tr("No data to display");
-	bool thereIsHealthData = healthPercentage >= 0 && healthPercentage <= 100 && healthPercentage != NULL;
-	bool thereIsManaData = manaPercentage >= 0 && manaPercentage <= 100 && manaPercentage != NULL;
-	bool thereIsManaShieldData = manaShieldPercentage >= 0 && manaShieldPercentage <= 100 && manaShieldPercentage != NULL;
-	QString tmpHealth = QString::number(healthPercentage, 'g', 3) + "%";
-	QString tmpMana = QString::number(manaPercentage, 'g', 3) + "%";
-	QString tmpManaShield = QString::number(manaShieldPercentage, 'g', 3) + "%";
-	QString lifeStr = thereIsHealthData ? tmpHealth : NO_DATA_INFO;
-	QString manaStr = thereIsManaData ? tmpMana : NO_DATA_INFO;
-	QString mShield = thereIsManaShieldData ? tmpManaShield : NO_DATA_INFO;
-	lifeStr.push_front("Health: ");
-	manaStr.push_front("Mana: ");
-	mShield.push_front("Mana shield: ");
-	ui->healthInfoLabel->setText(lifeStr);
-	ui->manaInfoLabel->setText(manaStr);
-	ui->manaShieldLabel->setText(mShield);
+	if (healthPercentage != NULL) {
+		QString healthStr = QString::number(healthPercentage, 'g', 3);
+		QString msgToSet = QString::fromWCharArray(L"\u017Bycie: %1%").arg(healthStr);
+		ui->healthInfoLabel->setText(msgToSet);
+	}
+	else
+		ui->healthInfoLabel->setText(QString::fromWCharArray(L"\u017Bycie: ?"));
+
+	if (manaPercentage != NULL) {
+		QString manaStr = QString::number(manaPercentage, 'g', 3);
+		QString msgToSet = QString("Mana: %1%").arg(manaStr);
+		ui->manaInfoLabel->setText(msgToSet);
+	}
+	else
+		ui->manaInfoLabel->setText("Mana: ?");
+
+	if (manaShieldPercentage != NULL) {
+		QString manaShieldStr = QString::number(manaShieldPercentage, 'g', 3);
+		QString msgToSet = QString("Tarcza: %1%").arg(manaShieldStr);
+		ui->manaShieldLabel->setText(msgToSet);
+	}
+	else
+		ui->manaShieldLabel->setText("Tarcza: ?");
+
 	ui->healthInfoLabel->repaint();
 	ui->manaInfoLabel->repaint();
 	ui->manaShieldLabel->repaint();
@@ -137,3 +159,12 @@ void MainMenu::updatePlayerPosition(QString x, QString y, QString f){
 	QString str = QString("%1, %2, %3").arg(x, y, f);
 	ui->positonLabel->setText(str);
 }
+void MainMenu::analyzeMiniMapCheckBoxChanged() {
+	bool enable = ui->analyzeMiniMapBox->isChecked();
+	var->setSettingKeepAnalyzeMiniMap(enable);
+	ui->playerPosGroup->setVisible(enable);
+	updatePlayerPosition("?", "?", "?");
+}
+void MainMenu::testButtonClicked() {
+	RouteCreator(this).exec();
+};

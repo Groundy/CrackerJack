@@ -28,6 +28,8 @@ public slots:
 	void changeProfileButtonAction();
 	void updateResourcesAmounts();
 	void takeScreenShotCheckBoxChanged();
+	void analyzeMiniMapCheckBoxChanged();
+	void testButtonClicked();
 
 	//from threads
 	void autoHealAndManaRegCheckBoxChanged();
