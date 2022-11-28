@@ -1,9 +1,9 @@
-#include "MainMenu.h"
+﻿#include "MainMenu.h"
 #include "ui_MainMenu.h"
 
 //const
-MainMenu::MainMenu(Profile* selectedProf, QWidget* parent)
-	: QDialog(parent), prof(selectedProf){
+MainMenu::MainMenu(Profile* prof, QWidget* parent)
+	: QDialog(parent), prof(prof){
 	ui = new Ui::MainMenu();
 	ui->setupUi(this);
 

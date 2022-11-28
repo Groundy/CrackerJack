@@ -32,7 +32,7 @@ Profile* getProfile() {
 	}
 	else {
 		Profile* prof = new Profile();
-		SelectProfileWindow win(NULL, prof);
+		SelectProfileWindow win(prof);
 		if (!(win.exec() == QDialog::Accepted))
 			exit(0);
 		return prof;

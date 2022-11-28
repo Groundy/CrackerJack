@@ -3,7 +3,7 @@
 
 
 //const
-SelectProfileWindow::SelectProfileWindow(QWidget *parent, Profile* profileToBeChoosen) :
+SelectProfileWindow::SelectProfileWindow(Profile* profileToBeChoosen, QWidget *parent) :
 	QDialog(parent), profileToBeChoosen(profileToBeChoosen){
 	ui = new Ui::SelectProfileWindow();
 	ui->setupUi(this);
