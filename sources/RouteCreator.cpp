@@ -1,10 +1,11 @@
 #include "RouteCreator.h"
 #include "ui_RouteCreator.h"
-/*
+
 RouteCreator::RouteCreator(QDialog* parent)
 	: QDialog(parent){
 	ui = new Ui::RouteCreator();
 	ui->setupUi(this);
+	/*
 	loadMap(currentChoosenPoint.getFloor());
 	repaintMap();
 	refreshPositionLabel();
@@ -15,11 +16,9 @@ RouteCreator::RouteCreator(QDialog* parent)
 	TRANSLATE_gui();
 
 	dirWithRoutes = Utilities::getDirWithCrackerJackTmpFolder(Utilities::FOLDERS_OF_TMP_FOLDER::Routes);
+	*/
 }
-
-RouteCreator::~RouteCreator(){
-	delete ui;
-}
+/*
 
 void RouteCreator::imgMoved_left(){
 	moveMap(DIRECTIONS::LEFT, 1);

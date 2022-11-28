@@ -31,7 +31,7 @@ Point3D::Point3D(QString str) {
 		return;
 	}
 };
-QString Point3D::toString() {
+QString Point3D::toString() const {
 	QString xStr = QString::number(x);
 	QString yStr = QString::number(y);
 	QString fStr = QString::number(floor);

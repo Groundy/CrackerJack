@@ -11,12 +11,20 @@
 namespace Ui { class RouteCreator; };
 
 
-class RouteCreator : public QDialog{
-	
+class RouteCreator : public QDialog {
 	Q_OBJECT
-/*
 public:
 	RouteCreator(QDialog* parent = Q_NULLPTR);
+	~RouteCreator() {
+		delete ui;
+	}
+private:
+	Ui::RouteCreator* ui;
+};
+
+/*
+public:
+
 	~RouteCreator();
 public slots:
 	void imgMoved_left();
@@ -50,7 +58,6 @@ public slots:
 private:
 	enum class DIRECTIONS { UP, DOWN, LEFT, RIGHT };
 
-	Ui::RouteCreator *ui;
 	QImage currentMap;
 	QImage currentMapOfWalkability;
 	Route route;
@@ -70,5 +77,6 @@ private:
 	Route::FIELDS_TYPE getFieldTypeComboBox();
 	void TRANSLATE_addNamesOfFieldTypesToList();
 	void TRANSLATE_gui();
-*/
+
 };
+*/
