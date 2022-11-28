@@ -1,5 +1,5 @@
 #include "Offer.h"
-
+/*
 Offer::Offer(QString itemNameToSet, int minPrice, int maxPrice, int amount, bool placeOffer, Type type) {
 	this->itemName = itemNameToSet;
 	this->amount = amount;
@@ -31,9 +31,6 @@ QJsonObject Offer::toJsonObj(){
 	return obj;
 }
 
-Offer::~Offer()
-{
-}
 QString Offer::toString() {
 	QString minPriceStr = QString::number(minPrice);
 	QString maxPriceStr = QString::number(maxPrice);
@@ -50,3 +47,5 @@ QString Offer::toString() {
 	toRet.append(",  type: " + typeStr);
 	return toRet;
 }
+
+*/

@@ -2,8 +2,16 @@
 #include <QObject>
 #include <qjsonobject.h>
 
-class Offer{
+class Offer : QObject{
+	Q_OBJECT
 public:
+	Offer() {};
+	~Offer() {};
+};
+	/*
+public:
+
+
 	enum class Type { SELL, BUY };
 	Offer(QString itemName, int minPrice, int maxPrice, int amount, bool placeOffer, Type type);
 	Offer(QJsonObject obj);
@@ -24,4 +32,4 @@ public:
 		return toRet;
 	};
 	~Offer();
-};
+	*/
