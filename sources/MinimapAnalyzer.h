@@ -9,6 +9,7 @@
 #include <qdatetime.h>
 #include <qsize.h>
 
+#include "PathResource.h"
 #include "Utilities.h"	
 #include "Calibrator.h"
 #include "VariablesClass.h"
@@ -46,15 +47,17 @@ public:
 				continue;
 
 			int currentLayer = getCurrentLayer(miniMapLayer);
-			if(!floorsMaps.contains(currentLayer))
-				floorsMaps.insert(currentLayer, new QImage(getMapFilePath(currentLayer, MapType::REGULAR)));
+			if (!floorsMaps.contains(currentLayer)) {
+				QString path = PathResource::getPathToMergedColorMap(currentLayer);
+				floorsMaps.insert(currentLayer, new QImage(path));
+			}
 			auto currentPosition = findPlayerPosition(miniMap, floorsMaps[currentLayer]);
 			previousPosition = currentPosition;
 
 			if(!currentPosition.isNull())
 				sendPostitionsToGUI(QString::number(currentPosition.x()), QString::number(currentPosition.y()), QString::number(currentLayer));
 			else
-				sendPostitionsToGUI("--", "--", QString::number(currentLayer));
+				sendPostitionsToGUI("?", "?", QString::number(currentLayer));
 		}
 	}	
 
@@ -73,7 +76,7 @@ private:
 	QPoint previousPosition;
 
 	QImage setSliderImg(){
-		QString path = "C:\\Moje\\pliki\\repos\\CrackerJackClient\\ResourcesUsing\\mapLayer.png";
+		QString path = PathResource::getPathToMiniMapSliderImg();
 		QImage img;
 		img.load(path);
 		int a = 3;
@@ -94,11 +97,6 @@ private:
 			return layer;
 		else
 			return -100;
-	}
-	QString getMapFilePath(int floor, MapType mapType) {
-		const QString typeStr = mapType == MapType::REGULAR ? "Color" : "WaypointCost";
-		const QString PATH_TO_FOLDER = "C:\\Moje\\pliki\\repos\\CrackerJackClient\\ResourcesUsing\\maps";
-		return QString("%1\\%2_%3.png").arg(PATH_TO_FOLDER, QString::number(floor), typeStr);
 	}
 	QVector<QRect> getMiniMapPartsPostions() {
 		//5 is player mark

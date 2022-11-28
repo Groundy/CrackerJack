@@ -15,7 +15,7 @@ public:
 	Calibrator(std::shared_ptr<VariablesClass> var);
 	~Calibrator();
 	bool calibrate(const QImage& fullImage);
-	static void test();
+	static void test(QString pathToFilesWithScreens);
 
 private:
 	enum BarsPostion { LEFT, RIGHT, DOWN, TOP };

@@ -240,6 +240,9 @@
     <ClInclude Include="sources\Tools.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="sources\PathResource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <QtTranslation Include="crackerjackclient_pl.ts">

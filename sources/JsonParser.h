@@ -7,6 +7,7 @@
 #include <qfile.h>
 #include <qfileinfo.h>
 
+#include "PathResource.h"
 #include "Utilities.h"
 #include "Profile.h"
 #include "Item.h"
@@ -31,10 +32,10 @@ public:
 	bool readSpellsJson(QList<Spell>& spells, Spell::SpellType* type, Profession* profession);
 	bool readPotions(QList<Potion>& potions, Profession* prof, Potion::TypeOfPotion* filterType);
 	void saveProfile(Profile* prof);
-	Profile loadProfiles(QString profileName);
+	Profile loadProfile(QString profileName);
 	void deleteProfileFile(QString profileName) {
 		QString profileFileName = profileName + ".json";
-		QDir(pathToProfileFolder).remove(profileFileName);
+		QDir(PathResource::getPathToProfileFolder()).remove(profileFileName);
 	};
 	QStringList getNamesOfHealingPotsAndSpellsForProf(Profession profession) {
 		QList<Spell> spells;
@@ -64,10 +65,4 @@ public:
 
 		return namesOfAvaibleManaRestoreMethodes;
 	}
-private:
-	QString spellsPath = "C:\\Moje\\pliki\\repos\\CrackerJackClient\\ResourcesUsing\\spells.json";//todo
-	QString itemPath = "C:\\Moje\\pliki\\repos\\CrackerJackClient\\ResourcesUsing\\items.json"; //todo
-	QString potionsPath = "C:\\Moje\\pliki\\repos\\CrackerJackClient\\ResourcesUsing\\potions.json"; //todo
-	QString keyPath = "C:\\Moje\\pliki\\repos\\CrackerJackClient\\ResourcesUsing\\keys.json";//todo
-	QString pathToProfileFolder = "C:\\Moje\\pliki\\repos\\CrackerJackClient\\Profiles\\";
 };

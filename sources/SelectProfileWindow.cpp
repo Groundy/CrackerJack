@@ -32,7 +32,7 @@ void SelectProfileWindow::addNewProfileButtonAction(){
 }
 void SelectProfileWindow::editProfileButtonAction(){
 	QString profName = getSelectedProfName();
-	Profile profToEdit = JsonParser().loadProfiles(profName);
+	Profile profToEdit = JsonParser().loadProfile(profName);
 	auto newProfDialog = std::make_unique<NewProfileConfiguartor>(&profToEdit, this);
 	newProfDialog->fillFormsFromDataFromProf(profToEdit);
 	bool accepted = newProfDialog->exec() == QDialog::Accepted;
@@ -58,7 +58,7 @@ void SelectProfileWindow::selectListAction(){
 }
 void SelectProfileWindow::profSelected(){
 	QString profName = getSelectedProfName();
-	*profileToBeChoosen = JsonParser().loadProfiles(profName);
+	*profileToBeChoosen = JsonParser().loadProfile(profName);
 	this->accept();
 }
 

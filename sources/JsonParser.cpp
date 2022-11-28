@@ -29,7 +29,7 @@ bool JsonParser::openJsonFile(QJsonObject& jsonDoc, QString pathToFile){
 bool JsonParser::readSpellsJson(QList<Spell>& spells, Spell::SpellType* type, Profession* profession){
 	try{
 		QJsonObject obj;
-		bool openCorrectly = openJsonFile(obj, spellsPath);
+		bool openCorrectly = openJsonFile(obj, PathResource::getPathToSpellJsonFile());
 		if (!openCorrectly)
 			throw std::exception("Can't read json file with spells");
 
@@ -71,7 +71,7 @@ bool JsonParser::readPotions(QList<Potion>& potions, Profession* prof, Potion::T
 	try{
 		potions.clear();
 		QJsonObject obj;
-		bool openCorrectly = openJsonFile(obj, potionsPath);
+		bool openCorrectly = openJsonFile(obj, PathResource::getPathToPotionsJsonFile());
 		if (!openCorrectly)
 			throw std::exception("Can't open items json file!");
 
@@ -106,7 +106,7 @@ bool JsonParser::readPotions(QList<Potion>& potions, Profession* prof, Potion::T
 bool JsonParser::readItemJson(QList<Item>& items){
 	items.clear();
 	QJsonObject obj;
-	bool res = openJsonFile(obj, itemPath);
+	bool res = openJsonFile(obj, PathResource::getPathToItemJsonFile());
 	if (!res) {
 		//Logger::logPotenialBug("Problem with Json reading", "JsonParser", "readSpellsJson");
 		return false;
@@ -242,7 +242,7 @@ bool JsonParser::saveJsonFile(QString pathToFolder, QString fileNameWithExtensio
 
 QMap<QString, int> JsonParser::readAvaibleKeys(){
 	QJsonObject obj;
-	bool openCorrectly = openJsonFile(obj, keyPath);
+	bool openCorrectly = openJsonFile(obj, PathResource::getPathToKeysJsonFile());
 	QMap<QString, int> keys;
 	for each (auto var in obj.value("keys").toArray()){	
 		QString keyName = var.toObject().keys().first();
@@ -254,7 +254,7 @@ QMap<QString, int> JsonParser::readAvaibleKeys(){
 }
 
 QStringList JsonParser::readNamesOfAllSavedProfiles(){
-	QDir profilesDir(pathToProfileFolder);
+	QDir profilesDir(PathResource::getPathToProfileFolder());
 	QStringList fillters = QStringList() << "*.json";
 	return profilesDir.entryList(fillters, QDir::Files);
 }
@@ -262,11 +262,11 @@ QStringList JsonParser::readNamesOfAllSavedProfiles(){
 void JsonParser::saveProfile(Profile* prof){
 	const QString fileName = prof->getName() + ".json";
 	QJsonDocument docToSave(prof->toJson());
-	saveJsonFile(pathToProfileFolder, fileName, docToSave);
+	saveJsonFile(PathResource::getPathToProfileFolder(), fileName, docToSave);
 }
 
-Profile JsonParser::loadProfiles(QString profileName){
-	const QString filePath = pathToProfileFolder + "\\" + profileName + ".json";
+Profile JsonParser::loadProfile(QString profileName){
+	const QString filePath = PathResource::getPathToProfileFile(profileName);
 	QJsonObject profJsonObj;
 	openJsonFile(profJsonObj, filePath);
 	return Profile(profJsonObj);

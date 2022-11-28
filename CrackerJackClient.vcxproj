@@ -271,6 +271,7 @@ xcopy /y /d ".\dependencies\64-bit\libcrypto-1_1-x64.dll" "$(OutDir)"
     <QtMoc Include="sources\Market.h" />
     <QtMoc Include="sources\MinimapAnalyzer.h" />
     <QtMoc Include="sources\RouteCreator.h" />
+    <ClInclude Include="sources\PathResource.h" />
     <ClInclude Include="sources\Potion.h" />
     <ClInclude Include="sources\RestorationMethode.h" />
     <ClInclude Include="sources\Route.h" />

@@ -19,12 +19,12 @@ bool Calibrator::calibrate(const QImage& fullscreen){
 	
 	return true;
 }
-void Calibrator::test() {
+void Calibrator::test(QString pathToFilesWithScreens) {
 	auto var = std::shared_ptr<VariablesClass>();
 	int totalTime = 0;
 	try {
 		QStringList namesOfScreenShots;
-		QDir screenShotFolder("C:\\Moje\\pliki\\repos\\CrackerJackClient\\TMP");
+		QDir screenShotFolder(pathToFilesWithScreens);
 		QStringList listOfFIlesNames = screenShotFolder.entryList(QDir::Files);
 
 		for each (QString fileName in listOfFIlesNames) {
