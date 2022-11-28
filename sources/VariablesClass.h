@@ -23,12 +23,13 @@ public:
 	public :
 		void getImgCopy(QImage& returnImg) {
 			mutex.lock();
-			returnImg = img.copy();
+			if (!img.isNull());
+				returnImg = img.copy();
 			mutex.unlock();
 		}
 		void setImg(const QImage& newImg) {
 			mutex.lock();
-			img = std::move(newImg);
+			img = newImg.copy();
 			mutex.unlock();
 		}
 		void clear() {
@@ -222,10 +223,10 @@ private:
 
 	//settings
 	std::atomic<bool> newFullImgAwaits;
-	std::atomic<bool> keepRestoringManaAngHealth;
-	std::atomic<bool> keepTakingScreenShots;
-	std::atomic<bool> keepLoadingScreenShots;
-	std::atomic<bool> keepAnalyzingMiniMap = true;
+	std::atomic<bool> keepRestoringManaAngHealth = true;
+	std::atomic<bool> keepTakingScreenShots = true;
+	std::atomic<bool> keepLoadingScreenShots  = true;
+	std::atomic<bool> keepAnalyzingMiniMap = false;
 	std::atomic<bool> keepAnalyzingMainGameWindow;
 
 	//timers
