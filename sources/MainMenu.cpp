@@ -19,10 +19,17 @@ MainMenu::MainMenu(Profile* prof, QWidget* parent)
 }
 
 MainMenu::~MainMenu(){
-	delete activityThread;
-	delete screenSaverThread;
-	delete screenAnalyzer;
-	delete healthManaStateAnalyzer;
+	QList<QThread*> threads;
+	threads.push_back(activityThread);
+	threads.push_back(screenSaverThread);
+	threads.push_back(screenAnalyzer);
+	threads.push_back(healthManaStateAnalyzer);
+	threads.push_back(miniMapAnalyzer);
+	for each (QThread* thread in threads){
+		thread->terminate();
+		delete thread;
+	}
+
 	delete ui;
 }
 
