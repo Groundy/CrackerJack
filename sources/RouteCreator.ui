@@ -736,11 +736,11 @@
    <sender>upFloor</sender>
    <signal>clicked()</signal>
    <receiver>RouteCreator</receiver>
-   <slot>floorUp()</slot>
+   <slot>floorChanged()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>383</x>
-     <y>402</y>
+     <x>358</x>
+     <y>395</y>
     </hint>
     <hint type="destinationlabel">
      <x>482</x>
@@ -752,11 +752,11 @@
    <sender>lowerFloor</sender>
    <signal>clicked()</signal>
    <receiver>RouteCreator</receiver>
-   <slot>floorDown()</slot>
+   <slot>floorChanged()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>189</x>
-     <y>402</y>
+     <x>168</x>
+     <y>395</y>
     </hint>
     <hint type="destinationlabel">
      <x>482</x>
@@ -768,11 +768,11 @@
    <sender>moveMapUp_3</sender>
    <signal>clicked()</signal>
    <receiver>RouteCreator</receiver>
-   <slot>imgMoved_top_very_fast()</slot>
+   <slot>mapMoved()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>383</x>
-     <y>28</y>
+     <x>358</x>
+     <y>34</y>
     </hint>
     <hint type="destinationlabel">
      <x>493</x>
@@ -784,11 +784,11 @@
    <sender>moveMapLeft_1</sender>
    <signal>clicked()</signal>
    <receiver>RouteCreator</receiver>
-   <slot>imgMoved_left()</slot>
+   <slot>mapMoved()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>85</x>
-     <y>117</y>
+     <x>71</x>
+     <y>169</y>
     </hint>
     <hint type="destinationlabel">
      <x>27</x>
@@ -800,11 +800,11 @@
    <sender>moveMapLeft_2</sender>
    <signal>clicked()</signal>
    <receiver>RouteCreator</receiver>
-   <slot>imgMoved_left_fast()</slot>
+   <slot>mapMoved()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>77</x>
-     <y>198</y>
+     <x>71</x>
+     <y>199</y>
     </hint>
     <hint type="destinationlabel">
      <x>49</x>
@@ -816,11 +816,11 @@
    <sender>moveMapDown_2</sender>
    <signal>clicked()</signal>
    <receiver>RouteCreator</receiver>
-   <slot>imgMoved_down_fast()</slot>
+   <slot>mapMoved()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>286</x>
-     <y>364</y>
+     <x>263</x>
+     <y>357</y>
     </hint>
     <hint type="destinationlabel">
      <x>345</x>
@@ -832,11 +832,11 @@
    <sender>moveMapUp_2</sender>
    <signal>clicked()</signal>
    <receiver>RouteCreator</receiver>
-   <slot>imgMoved_top_fast()</slot>
+   <slot>mapMoved()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>286</x>
-     <y>28</y>
+     <x>263</x>
+     <y>34</y>
     </hint>
     <hint type="destinationlabel">
      <x>263</x>
@@ -848,11 +848,11 @@
    <sender>moveMapRight_1</sender>
    <signal>clicked()</signal>
    <receiver>RouteCreator</receiver>
-   <slot>imgMoved_right()</slot>
+   <slot>mapMoved()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>483</x>
-     <y>114</y>
+     <x>436</x>
+     <y>163</y>
     </hint>
     <hint type="destinationlabel">
      <x>437</x>
@@ -864,11 +864,11 @@
    <sender>moveMapRight_2</sender>
    <signal>clicked()</signal>
    <receiver>RouteCreator</receiver>
-   <slot>imgMoved_right_fast()</slot>
+   <slot>mapMoved()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>483</x>
-     <y>198</y>
+     <x>436</x>
+     <y>199</y>
     </hint>
     <hint type="destinationlabel">
      <x>657</x>
@@ -880,11 +880,11 @@
    <sender>moveMapRight_3</sender>
    <signal>clicked()</signal>
    <receiver>RouteCreator</receiver>
-   <slot>imgMoved_right_very_fast()</slot>
+   <slot>mapMoved()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>483</x>
-     <y>282</y>
+     <x>436</x>
+     <y>235</y>
     </hint>
     <hint type="destinationlabel">
      <x>797</x>
@@ -896,11 +896,11 @@
    <sender>moveMapDown_1</sender>
    <signal>clicked()</signal>
    <receiver>RouteCreator</receiver>
-   <slot>imgMoved_down()</slot>
+   <slot>mapMoved()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>189</x>
-     <y>364</y>
+     <x>168</x>
+     <y>357</y>
     </hint>
     <hint type="destinationlabel">
      <x>115</x>
@@ -912,11 +912,11 @@
    <sender>moveMapDown_3</sender>
    <signal>clicked()</signal>
    <receiver>RouteCreator</receiver>
-   <slot>imgMoved_down_very_fast()</slot>
+   <slot>mapMoved()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>383</x>
-     <y>364</y>
+     <x>358</x>
+     <y>357</y>
     </hint>
     <hint type="destinationlabel">
      <x>516</x>
@@ -928,11 +928,11 @@
    <sender>moveMapUp_1</sender>
    <signal>clicked()</signal>
    <receiver>RouteCreator</receiver>
-   <slot>imgMoved_top()</slot>
+   <slot>mapMoved()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>189</x>
-     <y>28</y>
+     <x>168</x>
+     <y>34</y>
     </hint>
     <hint type="destinationlabel">
      <x>104</x>
@@ -944,11 +944,11 @@
    <sender>moveMapLeft_3</sender>
    <signal>clicked()</signal>
    <receiver>RouteCreator</receiver>
-   <slot>imgMoved_left_very_fast()</slot>
+   <slot>mapMoved()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>73</x>
-     <y>279</y>
+     <x>71</x>
+     <y>229</y>
     </hint>
     <hint type="destinationlabel">
      <x>247</x>
@@ -963,8 +963,8 @@
    <slot>addPoint()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>615</x>
-     <y>402</y>
+     <x>566</x>
+     <y>395</y>
     </hint>
     <hint type="destinationlabel">
      <x>371</x>
@@ -979,8 +979,8 @@
    <slot>zoomChanged()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>286</x>
-     <y>402</y>
+     <x>263</x>
+     <y>395</y>
     </hint>
     <hint type="destinationlabel">
      <x>398</x>
@@ -995,8 +995,8 @@
    <slot>deletePoint()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>687</x>
-     <y>402</y>
+     <x>637</x>
+     <y>395</y>
     </hint>
     <hint type="destinationlabel">
      <x>398</x>
@@ -1027,8 +1027,8 @@
    <slot>moveListItemDown()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>724</x>
-     <y>387</y>
+     <x>708</x>
+     <y>395</y>
     </hint>
     <hint type="destinationlabel">
      <x>384</x>
@@ -1043,8 +1043,8 @@
    <slot>moveListItemUp()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>523</x>
-     <y>387</y>
+     <x>505</x>
+     <y>395</y>
     </hint>
     <hint type="destinationlabel">
      <x>384</x>
@@ -1059,8 +1059,8 @@
    <slot>cancelButtonPressed()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>604</x>
-     <y>446</y>
+     <x>247</x>
+     <y>448</y>
     </hint>
     <hint type="destinationlabel">
      <x>362</x>
@@ -1075,8 +1075,8 @@
    <slot>finishButtonPressed()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>126</x>
-     <y>446</y>
+     <x>85</x>
+     <y>448</y>
     </hint>
     <hint type="destinationlabel">
      <x>362</x>
@@ -1091,8 +1091,8 @@
    <slot>loadRouteButtonPressed()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>365</x>
-     <y>446</y>
+     <x>166</x>
+     <y>448</y>
     </hint>
     <hint type="destinationlabel">
      <x>362</x>
@@ -1135,20 +1135,6 @@
  </connections>
  <slots>
   <signal>signal1()</signal>
-  <slot>floorDown()</slot>
-  <slot>floorUp()</slot>
-  <slot>imgMoved_left()</slot>
-  <slot>imgMoved_left_fast()</slot>
-  <slot>imgMoved_left_very_fast()</slot>
-  <slot>imgMoved_right()</slot>
-  <slot>imgMoved_right_fast()</slot>
-  <slot>imgMoved_right_very_fast()</slot>
-  <slot>imgMoved_top()</slot>
-  <slot>imgMoved_top_fast()</slot>
-  <slot>imgMoved_top_very_fast()</slot>
-  <slot>imgMoved_down()</slot>
-  <slot>imgMoved_down_fast()</slot>
-  <slot>imgMoved_down_very_fast()</slot>
   <slot>addPoint()</slot>
   <slot>zoomChanged()</slot>
   <slot>deletePoint()</slot>
@@ -1160,5 +1146,7 @@
   <slot>loadRouteButtonPressed()</slot>
   <slot>helpButtonPressed()</slot>
   <slot>checkRouteButtonPressed()</slot>
+  <slot>mapMoved()</slot>
+  <slot>floorChanged()</slot>
  </slots>
 </ui>
