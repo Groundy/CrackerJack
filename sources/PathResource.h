@@ -31,5 +31,8 @@ public:
 	static QString getPathToMiniMapSliderImg() {
 		return "C:\\Moje\\pliki\\repos\\CrackerJackClient\\ResourcesUsing\\mapLayer.png";
 	}
+	static QString getPathToFileWithBottomsBarDigitsCodes() {
+		return "C:\\Moje\\pliki\\repos\\CrackerJackClient\\ResourcesUsing\\bottomBarsDigits.json";
+	}
 };
 

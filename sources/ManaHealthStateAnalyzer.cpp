@@ -301,7 +301,7 @@ bool ManaHealthStateAnalyzer::restMethodeCanBeUsed(const RestorationMethode& res
 }
 bool ManaHealthStateAnalyzer::populareMapsWithBottomBarsLetters(QMap<QString, int>& lightMap, QMap<QString, int>& darkMap) {
 	try {
-		QString path = "C:\\Moje\\pliki\\repos\\CrackerJackClient\\ResourcesUsing\\bottomBarsDigits.json";//tmp
+		QString path = PathResource::getPathToFileWithBottomsBarDigitsCodes();
 		QJsonObject obj;
 		bool readCorrectly = JsonParser().openJsonFile(obj, path);
 		if (!readCorrectly)
