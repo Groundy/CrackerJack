@@ -3,6 +3,16 @@
 Point3D::Point3D() : x(625), y(1265), floor(0)/*thias temple*/{}
 Point3D::~Point3D(){}
 Point3D::Point3D(int x, int y, int floor) : x(x), y(y), floor(floor) {};
+Point3D::Point3D(QJsonObject obj) {
+	try {
+		floor = obj.value("f").toInt();
+		y = obj.value("y").toInt();
+		x = obj.value("x").toInt();
+	}
+	catch (const std::exception& e) {
+		Logger::staticLog(e.what());
+	}
+};
 
 Point3D::Point3D(QString str) {
 	QStringList parts = str.split(",", Qt::SplitBehaviorFlags::SkipEmptyParts);
@@ -41,3 +51,14 @@ QString Point3D::toString() const {
 bool Point3D::operator==(Point3D pt){
 	return (x == pt.x) && (y == pt.y) && (floor == pt.floor);
 }
+
+bool Point3D::isValid() const {
+	return x >= 0 && x <= 2560 && y >= 0 && y < 2560 && floor >= -8 && floor <= 7;
+};
+QJsonObject Point3D::toJson() const {
+	QJsonObject obj;
+	obj.insert("x", x);
+	obj.insert("y", y);
+	obj.insert("f", floor);
+	return obj;
+};

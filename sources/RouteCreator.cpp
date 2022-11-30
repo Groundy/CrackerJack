@@ -6,13 +6,9 @@ RouteCreator::RouteCreator(QDialog* parent)
 	ui = new Ui::RouteCreator();
 	ui->setupUi(this);
 	repaintMap();
-
-	/*
-	ui->movePointUpButton->setEnabled(false);
-	ui->movePointDownButton->setEnabled(false);
-	ui->deletePointButton->setEnabled(false);
-	TRANSLATE_addNamesOfFieldTypesToList();
-	*/
+	fillNamesOfFieldTypesToList();
+	ui->fieldTypesBox->insertItems(0, listOfRoutePointsType);
+	ui->fieldTypesBox->repaint();
 }
 RouteCreator::~RouteCreator() {
 	for each (QImage * map in floorMaps.values()) {
@@ -20,110 +16,8 @@ RouteCreator::~RouteCreator() {
 	}
 	delete ui;
 }
-void RouteCreator::repaintMap() {
-	int floor = currentPosition.getFloor();
-	if (!loadMap(floor))
-		return;
-
-	const int currFrameSize = ORG_SIZE_OF_FRAME / zoom;
-	QRect frameToDisplay = QRect(
-		currentPosition.getX() - (currFrameSize / 2),
-		currentPosition.getY() - (currFrameSize / 2),
-		currFrameSize,
-		currFrameSize);
-	QPixmap pixMapToShow = getScaledPixMapToPaint(frameToDisplay);
-	ui->imgLabel->setPixmap(pixMapToShow);
-	refreshPositionLabel();
-}
-bool RouteCreator::loadMap(int floor) {
-	try {
-		if (floor < -8 || floor > 7)
-			throw std::exception("Wrong input for loading map function!");
-
-		bool mapAlreadyLoaded = floorMaps.contains(floor);
-		if (!mapAlreadyLoaded) {
-			QString pathToMap = PathResource::getPathToMergedColorMap(floor);
-			QImage* mapImg = new QImage(pathToMap);
-			if (mapImg->isNull())
-				throw std::exception("Map in Route creator could not be read!");
-			floorMaps.insert(floor, mapImg);
-		}
-		return true;
-	}
-	catch (const std::exception& e) {
-		Logger::staticLog(e.what());
-		return false;
-	}
-}
-QPixmap RouteCreator::getScaledPixMapToPaint(QRect frameWithinMap){
-	double ratio = 1.0 * ui->imgLabel->width() / frameWithinMap.width();
-	QImage imgToScale = floorMaps.value(currentPosition.getFloor())->copy(frameWithinMap);
-	QPoint middlePt(imgToScale.width() / 2, imgToScale.height() / 2);
-	imgToScale.setPixel(middlePt, POSITION_MARK_COLOR);
-	QImage displayImg(ui->imgLabel->size(), QImage::Format::Format_ARGB32);
-	for (int x = 0; x < displayImg.width(); x++){
-		int xPixFromSmallImg = x / ratio;
-		for (int y = 0; y < displayImg.height(); y++){
-			int yPixFromSmallImg = y / ratio;
-			uint smallImgPix = imgToScale.pixel(xPixFromSmallImg, yPixFromSmallImg);
-			displayImg.setPixel(x, y, smallImgPix);
-		}
-	}
-	return QPixmap::fromImage(displayImg);
-}
-void RouteCreator::refreshPositionLabel() {
-	/*
-	bool isWalkable = currentPixIsWalkable();
-	QString textBase = tr("   Walkable field: ");
-	QString toAppendYes = tr("Yes");
-	QString toAppendNo = tr("No");
-	QString pointWakabilityStr = isWalkable ? (textBase + toAppendYes) : (textBase + toAppendNo);
-	*/
-
-	QString textToDisplay = currentPosition.toString();
-	ui->positionCordinateLabel->setText(textToDisplay);
-	ui->positionCordinateLabel->repaint();
-}
-void RouteCreator::changePlayerPos(int x, int y) {
-	const auto mapSize = floorMaps.value(currentPosition.getFloor());
-	if (y > 0) {
-		const int maxY = mapSize->height() - 1;
-		int tmpCordinateY = currentPosition.getY() + y;
-		bool ptOutOfRange = tmpCordinateY > maxY;
-		int toSet = ptOutOfRange ? maxY : tmpCordinateY;
-		currentPosition.setY(toSet);
-	}
-	if (y < 0) {
-		int tmpCordinateY = currentPosition.getY() + y;
-		bool ptOutOfRange = tmpCordinateY < 0;
-		int toSet = ptOutOfRange ? 0 : tmpCordinateY;
-		currentPosition.setY(toSet);
-	}
-	if (x > 0) {
-		const int maxX = mapSize->width() - 1;
-		int tmpCordinateX = currentPosition.getX() + x;
-		bool ptOutOfRange = tmpCordinateX > maxX;
-		int toSet = ptOutOfRange ? maxX : tmpCordinateX;
-		currentPosition.setX(toSet);
-	}
-	if (x < 0) {
-		int tmpCordinateX = currentPosition.getX() + x;
-		bool ptOutOfRange = tmpCordinateX < 0;
-		int toSet = ptOutOfRange ? 0 : tmpCordinateX;
-		currentPosition.setX(toSet);
-	}
-};
 
 //slots
-void RouteCreator::zoomChanged() {
-	zoom = (2 * zoom == 8) ? 1 : (2 * zoom);
-	QString textOnButton = QString("Zoom %1x").arg(QString::number(zoom));
-	ui->zoomButton->setText(textOnButton);
-	repaintMap();
-}
-void RouteCreator::cancelButtonPressed(){
-	this->reject();
-}
 void RouteCreator::mapMoved() {
 	if (sender() == ui->moveMapDown_1)
 		changePlayerPos(0, 1);
@@ -167,46 +61,28 @@ void RouteCreator::floorChanged(){
 	}
 	repaintMap();
 }
-
-
-/*
-
-void RouteCreator::addPoint(){
-	QListWidget *list = ui->pointsList;
-	Route::FIELDS_TYPE typeOfPoint = getFieldTypeComboBox();
-	route.addPoint(currentChoosenPoint, typeOfPoint);
+void RouteCreator::zoomChanged() {
+	zoom = (2 * zoom == 8) ? 1 : (2 * zoom);
+	QString textOnButton = QString("Zoom %1x").arg(QString::number(zoom));
+	ui->zoomButton->setText(textOnButton);
+	repaintMap();
+}
+void RouteCreator::cancelButtonPressed(){
+	this->reject();
+}
+void RouteCreator::addPoint() {
+	auto list = ui->pointsList;
+	PointOnRoute::FieldType typeOfPoint = getFieldOfCurrentPt();
+	route.addPoint(PointOnRoute(currentPosition, typeOfPoint));
 	selectedItemOnListChanged();
 	repaintList();
+
+	int newSize = list->count();
+	if(newSize == 1)
+
 	ui->fieldTypesBox->setCurrentIndex(0);
 	ui->fieldTypesBox->repaint();
 }
-
-void RouteCreator::moveListItemUp(){
-	QListWidget* list = ui->pointsList;
-	int currentRow = list->currentRow();
-	if (currentRow == -1 || currentRow == 0)
-		return;
-	bool allRight = route.movePointUp(currentRow);
-	if (allRight) {
-		selectedItemOnListChanged();
-		repaintList();
-		list->setCurrentRow(currentRow - 1);
-	}
-}
-
-void RouteCreator::moveListItemDown(){
-	QListWidget* list = ui->pointsList;
-	int currentRow = list->currentRow();
-	if (currentRow == -1 || currentRow == route.size() - 1)
-		return;
-	bool allRight = route.movePointDown(currentRow);
-	if (allRight) {
-		selectedItemOnListChanged();
-		repaintList();
-		list->setCurrentRow(currentRow + 1);
-	}
-}
-
 void RouteCreator::deletePoint(){
 	auto list = ui->pointsList;
 	int rowToDelete = list->currentRow();
@@ -216,11 +92,185 @@ void RouteCreator::deletePoint(){
 	selectedItemOnListChanged();
 	repaintList();
 
-	bool delRowWasntLast = rowToDelete < route.size();
-	int rowToSet = delRowWasntLast ? rowToDelete : route.size() - 1;
+	bool deleltedRowWasntLast = rowToDelete < route.size();
+	int rowToSet = deleltedRowWasntLast ? rowToDelete : route.size() - 1;
 	list->setCurrentRow(rowToDelete);
 }
+void RouteCreator::movePointOnList() {
+	auto list = ui->pointsList;
+	int currentRow = list->currentRow();
+	if (sender() == ui->movePointUpButton) {
+		if (currentRow == -1 || currentRow == 0)
+			return;
+		bool pointMoved = route.movePointUp(currentRow);
+		if (pointMoved) {
+			selectedItemOnListChanged();
+			repaintList();
+			list->setCurrentRow(currentRow - 1);
+		}
+	}
+	else if (sender() == ui->movePointDownButton) {
+		if (currentRow == -1 || currentRow == route.size() - 1)
+			return;
+		bool pointMoved = route.movePointDown(currentRow);
+		if (pointMoved) {
+			selectedItemOnListChanged();
+			repaintList();
+			list->setCurrentRow(currentRow + 1);
+		}
+	}
+}
+void RouteCreator::finishButtonPressed() {
+	bool routeOk = checkRouteButtonPressed();
+	if (!routeOk)
+		return;
 
+	QString name = ui->nameEditField->text();
+	route.setName(name);
+	if (name.size() < 3 || name.size() > 50) {
+		QString msg = "Route name must be between 3 and 50 characters length";
+		Utilities::showMessageBox_INFO(msg);
+		return;
+	}
+
+	QString path = PathResource::getPathToRouteFolder();
+	QJsonDocument jDoc(route.toJson());
+	JsonParser().saveJsonFile(path, name + ".json", jDoc);
+	Utilities::showMessageBox_INFO("Saved!");
+}
+bool RouteCreator::loadMap(int floor) {
+	try {
+		if (floor < -8 || floor > 7)
+			throw std::exception("Wrong input for loading map function!");
+
+		bool mapAlreadyLoaded = floorMaps.contains(floor);
+		if (!mapAlreadyLoaded) {
+			QString pathToMap = PathResource::getPathToMergedColorMap(floor);
+			QImage* mapImg = new QImage(pathToMap);
+			if (mapImg->isNull())
+				throw std::exception("Map in Route creator could not be read!");
+			floorMaps.insert(floor, mapImg);
+		}
+		return true;
+	}
+	catch (const std::exception& e) {
+		Logger::staticLog(e.what());
+		return false;
+	}
+}
+void RouteCreator::loadRouteButtonPressed(){
+	QFileDialog fileDialog;
+	fileDialog.setNameFilter("*.json");
+	fileDialog.setDirectory(PathResource::getPathToRouteFolder());
+	int retCode = fileDialog.exec();
+	bool accepted = retCode == QDialog::Accepted;
+	if (!accepted)
+		return;
+	QStringList fileList = fileDialog.selectedFiles();
+	if (fileList.size() == 0)
+		return;
+	QString pathToFile = fileList.first();
+
+	route.loadFromJsonFile(pathToFile);
+	ui->nameEditField->setText(route.getName());
+	repaintList();
+	selectedItemOnListChanged();
+}
+
+//funcs
+void RouteCreator::fillNamesOfFieldTypesToList() {
+	auto strList = &listOfRoutePointsType;
+	strList->push_back("Regular Field");
+	strList->push_back("Stairs-up");
+	strList->push_back("Stairs-down");
+	strList->push_back("Rope field");
+	strList->push_back("Hole, open");
+	strList->push_back("Hole, close");
+	strList->push_back("Ladder up");
+	strList->push_back("Ladder down");
+	strList->push_back("Teleport");
+	strList->push_back("Log out point");
+};
+void RouteCreator::changePlayerPos(int x, int y) {
+	const auto mapSize = floorMaps.value(currentPosition.getFloor());
+	if (y > 0) {
+		const int maxY = mapSize->height() - 1;
+		int tmpCordinateY = currentPosition.getY() + y;
+		bool ptOutOfRange = tmpCordinateY > maxY;
+		int toSet = ptOutOfRange ? maxY : tmpCordinateY;
+		currentPosition.setY(toSet);
+	}
+	if (y < 0) {
+		int tmpCordinateY = currentPosition.getY() + y;
+		bool ptOutOfRange = tmpCordinateY < 0;
+		int toSet = ptOutOfRange ? 0 : tmpCordinateY;
+		currentPosition.setY(toSet);
+	}
+	if (x > 0) {
+		const int maxX = mapSize->width() - 1;
+		int tmpCordinateX = currentPosition.getX() + x;
+		bool ptOutOfRange = tmpCordinateX > maxX;
+		int toSet = ptOutOfRange ? maxX : tmpCordinateX;
+		currentPosition.setX(toSet);
+	}
+	if (x < 0) {
+		int tmpCordinateX = currentPosition.getX() + x;
+		bool ptOutOfRange = tmpCordinateX < 0;
+		int toSet = ptOutOfRange ? 0 : tmpCordinateX;
+		currentPosition.setX(toSet);
+	}
+};
+void RouteCreator::repaintMap() {
+	int floor = currentPosition.getFloor();
+	if (!loadMap(floor))
+		return;
+
+	const int currFrameSize = ORG_SIZE_OF_FRAME / zoom;
+	QRect frameToDisplay = QRect(
+		currentPosition.getX() - (currFrameSize / 2),
+		currentPosition.getY() - (currFrameSize / 2),
+		currFrameSize,
+		currFrameSize);
+	QPixmap pixMapToShow = getScaledPixMapToPaint(frameToDisplay);
+	ui->imgLabel->setPixmap(pixMapToShow);
+	refreshPositionLabel();
+}
+QPixmap RouteCreator::getScaledPixMapToPaint(QRect frameWithinMap){
+	double ratio = 1.0 * ui->imgLabel->width() / frameWithinMap.width();
+	QImage imgToScale = floorMaps.value(currentPosition.getFloor())->copy(frameWithinMap);
+	QPoint middlePt(imgToScale.width() / 2, imgToScale.height() / 2);
+	imgToScale.setPixel(middlePt, POSITION_MARK_COLOR);
+	QImage displayImg(ui->imgLabel->size(), QImage::Format::Format_ARGB32);
+	for (int x = 0; x < displayImg.width(); x++){
+		int xPixFromSmallImg = x / ratio;
+		for (int y = 0; y < displayImg.height(); y++){
+			int yPixFromSmallImg = y / ratio;
+			uint smallImgPix = imgToScale.pixel(xPixFromSmallImg, yPixFromSmallImg);
+			displayImg.setPixel(x, y, smallImgPix);
+		}
+	}
+	return QPixmap::fromImage(displayImg);
+}
+void RouteCreator::refreshPositionLabel() {
+	/*
+	bool isWalkable = currentPixIsWalkable();
+	QString textBase = tr("   Walkable field: ");
+	QString toAppendYes = tr("Yes");
+	QString toAppendNo = tr("No");
+	QString pointWakabilityStr = isWalkable ? (textBase + toAppendYes) : (textBase + toAppendNo);
+	*/
+
+	QString textToDisplay = currentPosition.toString();
+	ui->positionCordinateLabel->setText(textToDisplay);
+	ui->positionCordinateLabel->repaint();
+}
+PointOnRoute::FieldType RouteCreator::getFieldOfCurrentPt() {
+	QString textFromBox = ui->fieldTypesBox->currentText();
+	int index = this->listOfRoutePointsType.indexOf(textFromBox);
+	if (index == -1)
+		return PointOnRoute::FieldType(0);
+	return PointOnRoute::FieldType(index);
+}
 void RouteCreator::repaintList(){
 	QListWidget* list = ui->pointsList;
 	list->clear();
@@ -230,36 +280,8 @@ void RouteCreator::repaintList(){
 	}
 	list->repaint();
 }
-
-void RouteCreator::TRANSLATE_addNamesOfFieldTypesToList(){
-	QComboBox* box = ui->fieldTypesBox;
-	QString text;
-
-	text = tr("[01] Regular Field");
-	box->addItem(text);
-	text = tr("[02] Stairs-up");
-	box->addItem(text);
-	text = tr("[03] Stairs-down");
-	box->addItem(text);
-	text = tr("[04] Rope field");
-	box->addItem(text);
-	text = tr("[05] Hole, open");
-	box->addItem(text);
-	text = tr("[06] Hole, close");
-	box->addItem(text);
-	text = tr("[07] Ladder up");
-	box->addItem(text);
-	text = tr("[08] Ladder down");
-	box->addItem(text);
-	text = tr("[09] Teleport");
-	box->addItem(text);
-	text = tr("[10] Log out point");
-	box->addItem(text);
-	box->repaint();
-}
-
 void RouteCreator::selectedItemOnListChanged(){
-	QListWidget* list = ui->pointsList;
+	auto list = ui->pointsList;
 	int size = route.size();
 	int curr = list->currentRow();
 	bool somethingIsSelected = curr != -1;
@@ -276,56 +298,17 @@ void RouteCreator::selectedItemOnListChanged(){
 	bool desiredState = thereAreElementsOnList && somethingIsSelected;
 	ui->deletePointButton->setEnabled(desiredState);
 }
-
-
-
-void RouteCreator::finishButtonPressed(){
-	bool routeOk = checkRouteButtonPressed();
-	if (!routeOk)
-		return;
-
-	QString textToDisplay = tr("Set name for new route.");
-	QString title = "CrackerJack";
-	QString fileName;
-	SetNameWidnow nameWindow(this, title, textToDisplay, &fileName);
-	int retCode = nameWindow.exec();
-	if (retCode == QDialog::Accepted) {
-		fileName.push_back(".json");
-		route.writeToJsonFile(dirWithRoutes.path(), fileName);
-	}
-}
-
-void RouteCreator::loadRouteButtonPressed(){
-	QFileDialog fileDialog;
-	fileDialog.setNameFilter("*.json");
-	fileDialog.setDirectory(dirWithRoutes);
-	int retCode = fileDialog.exec();
-	bool accepted = retCode == QDialog::Accepted;
-	if (!accepted)
-		return;
-	QStringList fileList = fileDialog.selectedFiles();
-	if (fileList.size() == 0)
-		return;
-	QString pathToFile = fileList.first();
-
-	route.loadFromJsonFile(pathToFile);
-	repaintList();
-	selectedItemOnListChanged();
-}
-
-void RouteCreator::helpButtonPressed()
-{
-}
-
-bool RouteCreator::checkRouteButtonPressed(){
-	QString textToDisplayToUser;
-	bool routeCorrect = route.checkRouteCorectness(textToDisplayToUser);
+bool RouteCreator::checkRouteButtonPressed() {
+	QString errorText;
+	bool routeCorrect = route.checkRouteCorectness(errorText);
 	if (routeCorrect)
-		textToDisplayToUser = tr("Route is correct.");
-	Utilities::showMessageBox_INFO(textToDisplayToUser);
+		return true;
+
+	Utilities::showMessageBox_INFO(errorText);
 	return routeCorrect;
 }
 
+/*
 bool RouteCreator::currentPixIsWalkable(){
 	uint pixCol = currentMapOfWalkability.pixel(currentChoosenPoint.getXY());
 	RGBstruct rgb(pixCol);
@@ -337,54 +320,6 @@ bool RouteCreator::currentPixIsWalkable(){
 	}
 	return isWalkable;
 }
-
-void RouteCreator::moveMap(DIRECTIONS direction, int step){
-	const int maxX = currentMap.width() - 1;
-	const int maxY = currentMap.height() - 1;
-
-	switch (direction)	{
-	case DIRECTIONS::UP: {
-		int tmpCordinateY = currentChoosenPoint.getY() - step;
-		bool ptOutOfRange = tmpCordinateY  < 0;
-		int toSet = ptOutOfRange ? 0 : tmpCordinateY;
-		currentChoosenPoint.setY(toSet);
-		break;
-	}
-	case DIRECTIONS::DOWN: {
-		int tmpCordinateY = currentChoosenPoint.getY() + step;
-		bool ptOutOfRange = tmpCordinateY  > maxY;
-		int toSet = ptOutOfRange ? maxY : tmpCordinateY;
-		currentChoosenPoint.setY(toSet);
-		break;
-	}
-	case DIRECTIONS::RIGHT: {
-		int tmpCordinateX = currentChoosenPoint.getX() + step;
-		bool ptOutOfRange = tmpCordinateX  > maxX;
-		int toSet = ptOutOfRange ? maxX : tmpCordinateX;
-		currentChoosenPoint.setX(toSet);
-		break;
-	}
-	case DIRECTIONS::LEFT: {
-		int tmpCordinateX = currentChoosenPoint.getX() - step;
-		bool ptOutOfRange = tmpCordinateX < 0;
-		int toSet = ptOutOfRange ? 0 : tmpCordinateX;
-		currentChoosenPoint.setX(toSet);
-		break;
-	}
-	default:
-		break;
-	}
-
-	refreshPositionLabel();
-	repaintMap();
-}
-
-Route::FIELDS_TYPE RouteCreator::getFieldTypeComboBox() {
-	QString textFromBox = ui->fieldTypesBox->currentText();
-	QString indexOfFieldType = textFromBox.mid(1, 2);
-	int index = indexOfFieldType.toInt();
-	index--;
-
-	return (Route::FIELDS_TYPE)index;
-}
 */
+
+

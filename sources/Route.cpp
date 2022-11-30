@@ -2,11 +2,9 @@
 
 Route::Route(){
 }
-
 Route::~Route()
 {
 }
-
 QStringList Route::toStringList(){
 	if(route.isEmpty())
 		return QStringList();
@@ -20,12 +18,10 @@ QStringList Route::toStringList(){
 	}
 	return ToRet;
 }
-
 void Route::addPoint(PointOnRoute pointOnRoute){
 	PointOnRoute toAdd(pointOnRoute);
 	route.push_back(toAdd);
 }
-
 bool Route::removePoint(int index){
 	bool indexInRange  = index < route.size();
 	if (!indexInRange)
@@ -33,7 +29,6 @@ bool Route::removePoint(int index){
 	route.removeAt(index);
 	return true;
 }
-
 bool Route::movePointUp(int index){
 	bool itFirst = index == 0;
 	if (itFirst)
@@ -41,7 +36,6 @@ bool Route::movePointUp(int index){
 	route.swap(index, index - 1);
 	return true;
 }
-
 bool Route::movePointDown(int index){
 	bool isLast = index == route.size() - 1;
 	if (isLast)
@@ -50,7 +44,6 @@ bool Route::movePointDown(int index){
 	route.swap(index, index + 1);
 	return true;
 }
-
 bool Route::loadFromJsonFile(QString pathToFile){
 	try{
 		QJsonObject obj;
@@ -62,7 +55,7 @@ bool Route::loadFromJsonFile(QString pathToFile){
 
 		QJsonArray pointsArray = obj["points"].toArray();
 		if (pointsArray.isEmpty()) {
-			QString text = QString("Plik %1 ma niewłaściwą strukturę").arg(pathToFile);
+			QString text = QString("Plik %1 ma niewlasciwa strukture").arg(pathToFile);//no polish chars
 			throw std::exception(text.toStdString().c_str());
 		}
 
@@ -72,10 +65,11 @@ bool Route::loadFromJsonFile(QString pathToFile){
 			tmpRoute.append(toAdd);
 		}
 		if(tmpRoute.size() < 2) {
-			QString text = QString("Plik %1 ma niewystarczającą liczbę punktów").arg(pathToFile);
+			QString text = QString("Plik %1 ma niewystarczajaca liczbe punktow").arg(pathToFile);//no polish chars
 			throw std::exception(text.toStdString().c_str());
 		}
 		route = tmpRoute;
+		routeName = obj.value("routeName").toString();
 		return true;
 	}
 	catch (const std::exception& e){
@@ -83,30 +77,24 @@ bool Route::loadFromJsonFile(QString pathToFile){
 		return false;
 	}
 }
-
 int Route::size(){
 	return route.size();
 }
-
 void Route::clear(){
 	route.clear();
 }
-
-bool Route::writeToJsonFile(QString pathToDir, QString fileNameWithExtension){
+QJsonObject Route::toJson() const {
 	QJsonArray arr;
-	for each (PointOnRoute pt in route){
+	for each (PointOnRoute pt in route) {
 		arr.append(pt.toJson());
 	}
-
 	QJsonObject mainObj;
+	mainObj.insert("routeName", routeName);
 	mainObj.insert("points", QJsonValue(arr));
-	QJsonDocument doc(mainObj);
-	JsonParser jsonParser;
-	bool ok = jsonParser.saveJsonFile(pathToDir,fileNameWithExtension,doc);
-	return ok;
-}
-
+	return mainObj;
+};
 bool Route::checkRouteCorectness(QString& errorTextToDisplay){
+	typedef PointOnRoute::FieldType FieldType;
 	try{
 		if (route.size() < 2)
 			throw std::exception("Route is too short.");
@@ -115,26 +103,9 @@ bool Route::checkRouteCorectness(QString& errorTextToDisplay){
 		if (!samePoint) 
 			throw std::exception("Route should start and end in the same point.");
 
-		QVector<FieldType> typesGoingDown = { 
-			FieldType::EXIT_POINT,
-			FieldType::LADDER_DOWN,
-			FieldType::SHOVEL_HOLE_ALWAYS_OPEN,
-			FieldType::SHOVEL_HOLE_NEED_SHOVEL,
-			FieldType::STAIRS_DOWN,
-			FieldType::TELEPORT
-		};
-		QVector<FieldType> typesGoingSame = {
-			FieldType::EXIT_POINT,
-			FieldType::REGULAR,
-			FieldType::TELEPORT
-		};
-		QVector<FieldType> typesGoingUp = {
-			FieldType::EXIT_POINT,
-			FieldType::LADDER_UP,
-			FieldType::ROPE_FIELD,
-			FieldType::STAIRS_UP,
-			FieldType::TELEPORT
-		};
+		QVector<FieldType> typesGoingDown = PointOnRoute::getGoingDownTypes();
+		QVector<FieldType> typesGoingSame = PointOnRoute::getStayingSameLevelTypes();
+		QVector<FieldType> typesGoingUp = PointOnRoute::getGoingUpTypes();
 
 		enum class FLOOR_CHANGE { UP, SAME, DOWN };
 		FLOOR_CHANGE flChange;
@@ -177,19 +148,4 @@ bool Route::checkRouteCorectness(QString& errorTextToDisplay){
 		errorTextToDisplay = e.what();
 		return false;
 	}
-}
-
-QMap<Route::FieldType, QString> Route::getPointTypeNameMap() {
-	QMap<Route::FieldType, QString> toRet;
-	toRet.insert(Route::FieldType::REGULAR, "Regular field");
-	toRet.insert(Route::FieldType::STAIRS_UP, "Stairs-up");
-	toRet.insert(Route::FieldType::STAIRS_DOWN, "Stairs-down");
-	toRet.insert(Route::FieldType::ROPE_FIELD, "Rope field");
-	toRet.insert(Route::FieldType::SHOVEL_HOLE_ALWAYS_OPEN, "Hole, open");
-	toRet.insert(Route::FieldType::SHOVEL_HOLE_NEED_SHOVEL, "Hole, close");
-	toRet.insert(Route::FieldType::LADDER_UP, "Ladder up");
-	toRet.insert(Route::FieldType::LADDER_DOWN, "Ladder down");
-	toRet.insert(Route::FieldType::TELEPORT, "Teleport");
-	toRet.insert(Route::FieldType::EXIT_POINT, "Log out point");
-	return toRet;
 }

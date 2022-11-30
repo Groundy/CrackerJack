@@ -5,11 +5,13 @@
 
 #include "JsonClass.h"
 #include "Logger.h"
+class Point3D : JsonClass
 {
 public:
 	Point3D();	
 	Point3D(int x, int y, int f); 
 	Point3D(QString str);
+	Point3D(QJsonObject obj);
 	~Point3D();
 	QString toString() const;
 	bool operator==(Point3D pt);
@@ -20,9 +22,8 @@ public:
 	int setX(int x) { return this->x = x; }
 	int setY(int y) { return this->y = y; }
 	QPoint getXY() { return QPoint(x, y);}
-	bool isValid() const {
-		return x >= 0 && x <= 2560 && y >= 0 && y < 2560 && floor >= -8 && floor <= 7;
-	}
+	bool isValid() const;
+	QJsonObject toJson() const;
 private:
 	int x, y, floor;
 };

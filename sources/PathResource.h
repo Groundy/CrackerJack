@@ -34,5 +34,12 @@ public:
 	static QString getPathToFileWithBottomsBarDigitsCodes() {
 		return "C:\\Moje\\pliki\\repos\\CrackerJackClient\\ResourcesUsing\\bottomBarsDigits.json";
 	}
+	static QString getPathToRouteFolder() {
+		return "C:\\Moje\\pliki\\repos\\CrackerJackClient\\Routes\\";
+	}
+	static QString getPathToRouteFile(const QString routeNameWithoutExtension) {
+		return QString("%1%2.json").arg(getPathToRouteFolder(), routeNameWithoutExtension);
+	}
+
 };
 
