@@ -8,6 +8,7 @@
 #include "Point3D.h"
 #include "Route.h"
 #include "RGBstruct.h"
+#include "RoutePoint.h"
 //#include "Spell.h"
 namespace Ui { class RouteCreator; };
 
@@ -43,7 +44,7 @@ private:
 	void changePlayerPos(int x, int y);
 	void refreshPositionLabel();
 	void fillNamesOfFieldTypesToList();
-	PointOnRoute::FieldType getFieldOfCurrentPt();
+	RoutePoint::FieldType getFieldOfCurrentPt();
 	void repaintList();
 	void selectedItemOnListChanged();
 	bool checkRouteButtonPressed();

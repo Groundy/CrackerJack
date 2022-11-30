@@ -5,6 +5,7 @@ Route::Route(){
 Route::~Route()
 {
 }
+
 QStringList Route::toStringList(){
 	if(route.isEmpty())
 		return QStringList();
@@ -12,14 +13,14 @@ QStringList Route::toStringList(){
 	QStringList ToRet;
 	for (int i = 0; i < route.size(); i++) {
 		QString index = QString::number(i);
-		QString pt = route[i].position.toString();
-		QString type = pointTypeNameMap.value(route[i].fieldType);
+		QString pt = route[i].getPosition().toString();
+		QString type = pointTypeNameMap.value(route[i].getFieldType());
 		ToRet << QString("[%1]  %2,  %3").arg(index, pt, type);
 	}
 	return ToRet;
 }
-void Route::addPoint(PointOnRoute pointOnRoute){
-	PointOnRoute toAdd(pointOnRoute);
+void Route::addPoint(RoutePoint routePointToAdd){
+	RoutePoint toAdd(routePointToAdd);
 	route.push_back(toAdd);
 }
 bool Route::removePoint(int index){
@@ -59,9 +60,9 @@ bool Route::loadFromJsonFile(QString pathToFile){
 			throw std::exception(text.toStdString().c_str());
 		}
 
-		QList<PointOnRoute> tmpRoute;
+		QList<RoutePoint> tmpRoute;
 		for each (QJsonValue val in pointsArray){
-			PointOnRoute toAdd(val.toObject());
+			RoutePoint toAdd(val.toObject());
 			tmpRoute.append(toAdd);
 		}
 		if(tmpRoute.size() < 2) {
@@ -85,7 +86,7 @@ void Route::clear(){
 }
 QJsonObject Route::toJson() const {
 	QJsonArray arr;
-	for each (PointOnRoute pt in route) {
+	for each (RoutePoint pt in route) {
 		arr.append(pt.toJson());
 	}
 	QJsonObject mainObj;
@@ -94,7 +95,7 @@ QJsonObject Route::toJson() const {
 	return mainObj;
 };
 bool Route::checkRouteCorectness(QString& errorTextToDisplay){
-	typedef PointOnRoute::FieldType FieldType;
+	typedef RoutePoint::FieldType FieldType;
 	try{
 		if (route.size() < 2)
 			throw std::exception("Route is too short.");
@@ -103,17 +104,17 @@ bool Route::checkRouteCorectness(QString& errorTextToDisplay){
 		if (!samePoint) 
 			throw std::exception("Route should start and end in the same point.");
 
-		QVector<FieldType> typesGoingDown = PointOnRoute::getGoingDownTypes();
-		QVector<FieldType> typesGoingSame = PointOnRoute::getStayingSameLevelTypes();
-		QVector<FieldType> typesGoingUp = PointOnRoute::getGoingUpTypes();
+		QVector<FieldType> typesGoingDown = RoutePoint::getGoingDownTypes();
+		QVector<FieldType> typesGoingSame = RoutePoint::getStayingSameLevelTypes();
+		QVector<FieldType> typesGoingUp = RoutePoint::getGoingUpTypes();
 
 		enum class FLOOR_CHANGE { UP, SAME, DOWN };
 		FLOOR_CHANGE flChange;
 
 		for (int i = 0; i < route.size() - 1; i++){
-			Point3D current = route[i].position;
-			Point3D next = route[i + 1].position;
-			FieldType currentType = route[i].fieldType;
+			Point3D current = route[i].getPosition();
+			Point3D next = route[i + 1].getPosition();
+			FieldType currentType = route[i].getFieldType();
 
 			bool canGoToNextPoint;
 			const int currentF = current.getFloor();

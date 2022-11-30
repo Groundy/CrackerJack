@@ -117,6 +117,9 @@
     <ClCompile Include="sources\GameConnecter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="sources\RoutePoint.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="sources\SelectProfileWindow.h">
@@ -241,6 +244,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="sources\PathResource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\RoutePoint.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

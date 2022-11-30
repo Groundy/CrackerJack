@@ -72,8 +72,8 @@ void RouteCreator::cancelButtonPressed(){
 }
 void RouteCreator::addPoint() {
 	auto list = ui->pointsList;
-	PointOnRoute::FieldType typeOfPoint = getFieldOfCurrentPt();
-	route.addPoint(PointOnRoute(currentPosition, typeOfPoint));
+	RoutePoint::FieldType typeOfPoint = getFieldOfCurrentPt();
+	route.addPoint(RoutePoint(currentPosition, typeOfPoint));
 	selectedItemOnListChanged();
 	repaintList();
 
@@ -262,12 +262,12 @@ void RouteCreator::refreshPositionLabel() {
 	ui->positionCordinateLabel->setText(textToDisplay);
 	ui->positionCordinateLabel->repaint();
 }
-PointOnRoute::FieldType RouteCreator::getFieldOfCurrentPt() {
+RoutePoint::FieldType RouteCreator::getFieldOfCurrentPt() {
 	QString textFromBox = ui->fieldTypesBox->currentText();
 	int index = this->listOfRoutePointsType.indexOf(textFromBox);
 	if (index == -1)
-		return PointOnRoute::FieldType(0);
-	return PointOnRoute::FieldType(index);
+		return RoutePoint::FieldType(0);
+	return RoutePoint::FieldType(index);
 }
 void RouteCreator::repaintList(){
 	QListWidget* list = ui->pointsList;

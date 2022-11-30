@@ -245,6 +245,7 @@ xcopy /y /d ".\dependencies\64-bit\libcrypto-1_1-x64.dll" "$(OutDir)"
     <ClCompile Include="sources\RGBstruct.cpp" />
     <ClCompile Include="sources\Route.cpp" />
     <ClCompile Include="sources\RouteCreator.cpp" />
+    <ClCompile Include="sources\RoutePoint.cpp" />
     <ClCompile Include="sources\ScreenAnalyzer.cpp" />
     <ClCompile Include="sources\ScreenSaver.cpp" />
     <ClCompile Include="sources\SelectProfileWindow.cpp" />
@@ -276,6 +277,7 @@ xcopy /y /d ".\dependencies\64-bit\libcrypto-1_1-x64.dll" "$(OutDir)"
     <ClInclude Include="sources\RestorationMethode.h" />
     <ClInclude Include="sources\Route.h" />
     <ClInclude Include="sources\Point3D.h" />
+    <ClInclude Include="sources\RoutePoint.h" />
     <ClInclude Include="sources\Spell.h" />
     <ClInclude Include="sources\Tools.h" />
     <ClInclude Include="version.h" />

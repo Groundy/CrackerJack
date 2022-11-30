@@ -138,4 +138,9 @@ HWND ActiveGameThread::getHandlerToGameWindow(unsigned int PID, QString WindowNa
         return HWND();
     }
 }
+void ActiveGameThread::connectSingalToGUI(QObject* parent) {
+    const char* signal = SIGNAL(GameStateChanged(int));
+    const char* slot = SLOT(onGameStateChanged(int));
+    bool good = connect(this, signal, parent, slot);
+}
 

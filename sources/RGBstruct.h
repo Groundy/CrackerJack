@@ -8,49 +8,21 @@ public:
 	RGBstruct(uint rgb);
 	RGBstruct(uint r, uint g, uint b);
 	~RGBstruct();
-	bool operator == (const RGBstruct& rgb) const {
-		return (r == rgb.r) && (b == rgb.b) && (g == rgb.g);
-	}
-	bool operator < (const RGBstruct & rgb) const {
-		return (r + g + b) < (rgb.r + rgb.b + rgb.g);
-	}
+	bool operator == (const RGBstruct& rgb) const;
+	bool operator < (const RGBstruct& rgb) const;
 	uint toUint() const;
-
-	bool isGrey() const {
-		return r == g && g == b;
-	}
-	bool isYellow() const  {
-		return r == 255 && g == 255 && b == 0;
-	}
-	bool isBlack() const {
-		return r == 0 && g == 0 && b == 0;
-	}
-	bool isMapRed() const { return r == 255 && g == 51 && b == 0; }
-
-	bool allColsEqualOrAboveThreshold(uint threshold)  const {
-		return r >= threshold && g >= threshold && b >= threshold;
-	}
-	uint getMinColVal() const {
-		return min(min(r, g), b);
-	}
-	uint getMaxColVal() {
-		return max(max(r, g), b);
-	}
-	bool oneColEqualOrAboveThreshold(uint threshold) const {
-		return r >= threshold || g >= threshold || b >= threshold;
-	}
+	bool isGrey() const;
+	bool isYellow() const;
+	bool isBlack() const;
+	bool isMapRed() const;
+	bool allColsEqualOrAboveThreshold(uint threshold) const;
+	uint getMinColVal() const;
+	uint getMaxColVal() const;
+	bool oneColEqualOrAboveThreshold(uint threshold) const;
 	QString toString() const;
 	bool isPixelInRangeOfGrey(uint minValue, uint maxValue);
-	QJsonObject toJson() const {
-		QJsonObject obj;
-		obj.insert("r", (int)r);
-		obj.insert("g", (int)g);
-		obj.insert("b", (int)b);
-		return obj;
-	};
-	bool isValid() const {
-		return r >= 0 && g >= 0 && b >= 0 && r <= 255 && g <= 55 && b <= 255;
-	};
+	QJsonObject toJson() const;
+	bool isValid() const;
 private:
 	uint r, g, b;
 };

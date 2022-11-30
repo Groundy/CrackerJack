@@ -104,14 +104,12 @@ QJsonObject Profile::toJson() const{
 	mainObj.insert("rightBars", barsRight);
 	return mainObj;
 }
-
 void Profile::clearProfile(){
 	healthRestorations.clear();
 	manaRestorations.clear();
 	profession = Profession();
 	profileName.clear();
 }
-
 QStringList Profile::getHealthRestorationNames(){
 	QStringList toRet;
 	for each (auto var in healthRestorations)
@@ -123,4 +121,9 @@ QStringList Profile::getManaRestorationNames(){
 	for each (auto var in manaRestorations)
 		toRet.push_back(var.getName());
 	return toRet;
+}
+bool Profile::isValid() const {
+	return
+		!profileName.isEmpty() &&
+		screenShotKey.isValid();
 }

@@ -34,11 +34,7 @@ private:
 	QString getGameWindowTitile();
 	int checkGameState();
 	QMap<QString, unsigned int> getListOfRunningProcess();
-	void connectSingalToGUI(QObject* parent) {
-		const char* signal = SIGNAL(GameStateChanged(int));
-		const char* slot = SLOT(onGameStateChanged(int));
-		bool good = connect(this, signal, parent, slot);
-	}
+	void connectSingalToGUI(QObject* parent);
 	int windowIsAccessible(unsigned int PID, QString windowTitle);
 	HWND getHandlerToGameWindow(unsigned int PID, QString WindowName);
 };
