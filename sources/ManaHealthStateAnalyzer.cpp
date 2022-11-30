@@ -303,7 +303,7 @@ bool ManaHealthStateAnalyzer::populareMapsWithBottomBarsLetters(QMap<QString, in
 	try {
 		QString path = PathResource::getPathToFileWithBottomsBarDigitsCodes();
 		QJsonObject obj;
-		bool readCorrectly = JsonParser().openJsonFile(obj, path);
+		bool readCorrectly = JsonParser::openJsonFile(obj, path);
 		if (!readCorrectly)
 			throw std::exception("Error, can't find bottomBarsDigits.json file");
 

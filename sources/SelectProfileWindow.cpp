@@ -25,19 +25,19 @@ void SelectProfileWindow::addNewProfileButtonAction(){
 	NewProfileConfiguartor newProfWind(&profile, this);
 	int result = newProfWind.exec();
 	if (result == QDialog::Accepted) {
-		JsonParser().saveProfile(&profile);
+		JsonParser::saveProfile(&profile);
 		Sleep(20);
 		refreshProfilesOnList();
 	}
 }
 void SelectProfileWindow::editProfileButtonAction(){
 	QString profName = getSelectedProfName();
-	Profile profToEdit = JsonParser().loadProfile(profName);
+	Profile profToEdit = JsonParser::loadProfile(profName);
 	auto newProfDialog = std::make_unique<NewProfileConfiguartor>(&profToEdit, this);
 	newProfDialog->fillFormsFromDataFromProf(profToEdit);
 	bool accepted = newProfDialog->exec() == QDialog::Accepted;
 	if (accepted) {
-		JsonParser().saveProfile(&profToEdit);	
+		JsonParser::saveProfile(&profToEdit);	
 		refreshProfilesOnList();
 	}
 }
@@ -46,7 +46,7 @@ void SelectProfileWindow::deleteProfileButtonAction(){
 	QString msgText = QObject::tr("Do you really want to delete profile ") + profileNameToDelete + " ?";
 	bool accepted = Utilities::showMessageBox_NO_YES(msgText);
 	if (accepted) {
-		JsonParser().deleteProfileFile(profileNameToDelete);
+		JsonParser::deleteProfileFile(profileNameToDelete);
 		refreshProfilesOnList();
 		ui->listOfProfs->setItemSelected(NULL, true);
 	}
@@ -58,7 +58,7 @@ void SelectProfileWindow::selectListAction(){
 }
 void SelectProfileWindow::profSelected(){
 	QString profName = getSelectedProfName();
-	*profileToBeChoosen = JsonParser().loadProfile(profName);
+	*profileToBeChoosen = JsonParser::loadProfile(profName);
 	this->accept();
 }
 
@@ -67,7 +67,7 @@ void SelectProfileWindow::refreshProfilesOnList(){
 	try{
 		const int EXTENSION_SIZE = QString(".json").size();
 		ui->listOfProfs->clear();
-		QStringList list = JsonParser().readNamesOfAllSavedProfiles();
+		QStringList list = JsonParser::readNamesOfAllSavedProfiles();
 		for each (QString fileName in list) {
 			bool tooShortName = fileName.size() < (EXTENSION_SIZE + 1);
 			if (tooShortName)

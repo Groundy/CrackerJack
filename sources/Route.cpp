@@ -47,7 +47,7 @@ bool Route::movePointDown(int index){
 bool Route::loadFromJsonFile(QString pathToFile){
 	try{
 		QJsonObject obj;
-		bool fileFound = JsonParser().openJsonFile(obj, pathToFile);
+		bool fileFound = JsonParser::openJsonFile(obj, pathToFile);
 		if (!fileFound) {
 			QString text = QString("Plik %1 nie istnieje").arg(pathToFile);
 			throw std::exception(text.toStdString().c_str());

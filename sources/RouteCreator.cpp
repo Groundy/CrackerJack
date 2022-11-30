@@ -133,7 +133,7 @@ void RouteCreator::finishButtonPressed() {
 		return;
 	}
 
-	JsonParser().saveJsonFile(PathResource::getPathToRouteFolder(), name, route.toJson());
+	JsonParser::saveJsonFile(PathResource::getPathToRouteFolder(), name, route.toJson());
 	Utilities::showMessageBox_INFO("Saved!");
 }
 bool RouteCreator::loadMap(int floor) {

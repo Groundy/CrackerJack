@@ -16,52 +16,20 @@
 #include "Potion.h"
 class JsonParser{
 public:
-	JsonParser();
-	~JsonParser();
-
-	bool openJsonFile(QJsonObject& jsonDoc, QString pathToFile);
-	bool readItemJson(QList<Item>& items);
-	//bool getHealthRestoreMethodes(QStringList incantationsAndSpellsList, QList<Rest>& spellsAndPotionsObjects);
-	bool getManaRestoreMethodes(QStringList potionNameList, QList<Potion>& potionToReturn);
-	bool getItemsFromCategory(QList<Item> &readItems, Item::TYPE_OF_ITEM type);
-	QMap<QString, int> readAvaibleKeys();
-	QStringList readNamesOfAllSavedProfiles();
-	bool readSpellsJson(QList<Spell>& spells, Spell::SpellType* type, Profession* profession);
-	bool readPotions(QList<Potion>& potions, Profession* prof, Potion::TypeOfPotion* filterType);
-	void saveProfile(Profile* prof);
-	Profile loadProfile(QString profileName);
-	void deleteProfileFile(QString profileName) {
-		QString profileFileName = profileName + ".json";
-		QDir(PathResource::getPathToProfileFolder()).remove(profileFileName);
-	};
-	QStringList getNamesOfHealingPotsAndSpellsForProf(Profession profession) {
-		QList<Spell> spells;
-		auto typeOfSpell = Spell::SpellType::Healing;
-		readSpellsJson(spells, &typeOfSpell, &profession);
-
-		QList<Potion> potions;
-		auto typeFilters = Potion::TypeOfPotion::HEALTH;
-		readPotions(potions, &profession, &typeFilters);
-
-		QStringList avaiableHealthRestoreMethodesNames;
-		for each (auto spell in spells)
-			avaiableHealthRestoreMethodesNames.push_back(spell.getIncantation());
-		for each (auto var in potions)
-			avaiableHealthRestoreMethodesNames.push_back(var.getName());
-
-		return avaiableHealthRestoreMethodesNames;
-	}
-	QStringList getNamesOManaPotsForProf(Profession profession) {
-		QList<Potion> potions;
-		auto typeFilter = Potion::TypeOfPotion::MANA;
-		readPotions(potions, &profession, &typeFilter);
-
-		QStringList namesOfAvaibleManaRestoreMethodes;
-		for each (auto var in potions)
-			namesOfAvaibleManaRestoreMethodes.push_back(var.getName());
-
-		return namesOfAvaibleManaRestoreMethodes;
-	}
-
+	static bool openJsonFile(QJsonObject& jsonDoc, QString pathToFile);
+	static bool readItemJson(QList<Item>& items);
+	static bool getManaRestoreMethodes(QStringList potionNameList, QList<Potion>& potionToReturn);
+	static bool getItemsFromCategory(QList<Item> &readItems, Item::TYPE_OF_ITEM type);
+	static QMap<QString, int> readAvaibleKeys();
+	static QStringList readNamesOfAllSavedProfiles();
+	static bool readSpellsJson(QList<Spell>& spells, Spell::SpellType* type, Profession* profession);
+	static bool readPotions(QList<Potion>& potions, Profession* prof, Potion::TypeOfPotion* filterType);
+	static void saveProfile(Profile* prof);
+	static Profile loadProfile(QString profileName);
+	static void deleteProfileFile(QString profileName);
+	static QStringList getNamesOManaPotsForProf(Profession profession);
+	static QStringList getNamesOfHealingPotsAndSpellsForProf(Profession profession);
 	static bool saveJsonFile(QString pathToFolder, QString fileNameWithoutExtension, QJsonObject jsonObj);
+private:
+	JsonParser() {};
 };

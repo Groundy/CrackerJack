@@ -75,8 +75,8 @@ private:
 		QList<Potion> potions;
 		Profession profession = getSelectedProf();
 		auto spellType = Spell::SpellType::Healing;
-		JsonParser().readSpellsJson(spells, &spellType, &profession);
-		JsonParser().readPotions(potions, &profession, NULL);
+		JsonParser::readSpellsJson(spells, &spellType, &profession);
+		JsonParser::readPotions(potions, &profession, NULL);
 		
 		for (size_t i = 0; i < restorationMethodes.size(); i++){
 			QString name = restorationMethodes[i].getName();

@@ -37,7 +37,7 @@ public:
 		}
 		QJsonObject toSave;
 		toSave.insert("codes", arr);
-		JsonParser().saveJsonFile(outputFolderPath, "imgsCodes.json", toSave);
+		JsonParser::saveJsonFile(outputFolderPath, "imgsCodes.json", toSave);
 	}
 	static void saveJsonFileWithCodesOfImgsInFolderBinary(QString inputFolderPath, QString outputFolderPath) {
 		// patern width_height_digits
@@ -60,14 +60,9 @@ public:
 		}
 		QJsonObject toSave;
 		toSave.insert("codes", arr);
-		JsonParser().saveJsonFile(outputFolderPath, "imgsCodes.json", toSave);
+		JsonParser::saveJsonFile(outputFolderPath, "imgsCodes.json", toSave);
 	}
 	static void mergedMaps(QString inputPath, QString outputPath) {
-		/*
-			minimaps are name like
-			named 
-		*/
-
 		const int MIN_X_MAP_INDEX = 124, MAX_X_MAP_INDEX = 134, MIN_Y_MAP_INDEX = 121, MAX_Y_MAP_INDEX = 129;
 		const int WHOLE_IMG_WIDTH = 256 * (MAX_X_MAP_INDEX - MIN_X_MAP_INDEX); 
 		const int WHOLE_IMG_HEIGHT = 256 * (MAX_Y_MAP_INDEX - MIN_Y_MAP_INDEX);

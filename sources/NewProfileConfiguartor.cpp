@@ -164,7 +164,7 @@ void NewProfileConfiguartor::finishButtonAction(){
 	bool accepted = Utilities::showMessageBox_NO_YES(text);
 	if (accepted) {
 		saveDataToProfile();
-		JsonParser().saveProfile(profToEdit);
+		JsonParser::saveProfile(profToEdit);
 		this->accept();
 	}
 }
@@ -267,9 +267,9 @@ void NewProfileConfiguartor::fillSlidersGroup(GuiPointers guiPointers, QVector<R
 void NewProfileConfiguartor::fillRestoriationMethodes(Profession profession, GuiPointers& guiPointers){
 	QStringList methodesNames = {};
 	if (&guiPointers == &healthPtrs)
-		methodesNames = JsonParser().getNamesOfHealingPotsAndSpellsForProf(profession);
+		methodesNames = JsonParser::getNamesOfHealingPotsAndSpellsForProf(profession);
 	else if (&guiPointers == &manaPtrs)
-		methodesNames = JsonParser().getNamesOManaPotsForProf(profession);
+		methodesNames = JsonParser::getNamesOManaPotsForProf(profession);
 	else
 		return;
 
