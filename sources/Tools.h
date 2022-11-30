@@ -35,8 +35,9 @@ public:
 			QString toDisplay = fileName + "----->" + strWithCode;
 			qDebug() << toDisplay;
 		}
-		QJsonDocument docToSave(arr);
-		JsonParser().saveJsonFile(outputFolderPath, "imgsCodes.json", docToSave);
+		QJsonObject toSave;
+		toSave.insert("codes", arr);
+		JsonParser().saveJsonFile(outputFolderPath, "imgsCodes.json", toSave);
 	}
 	static void saveJsonFileWithCodesOfImgsInFolderBinary(QString inputFolderPath, QString outputFolderPath) {
 		// patern width_height_digits
@@ -57,8 +58,9 @@ public:
 			QString toDisplay = fileName + "----->" + imgPixelsValues;
 			qDebug() << toDisplay;
 		}
-		QJsonDocument docToSave(arr);
-		JsonParser().saveJsonFile(outputFolderPath, "imgsCodes.json", docToSave);
+		QJsonObject toSave;
+		toSave.insert("codes", arr);
+		JsonParser().saveJsonFile(outputFolderPath, "imgsCodes.json", toSave);
 	}
 	static void mergedMaps(QString inputPath, QString outputPath) {
 		/*
@@ -123,8 +125,7 @@ public:
 		}
 		QJsonObject objToSave;
 		objToSave.insert("allPossibleColors", arr);
-		QJsonDocument toSave = QJsonDocument(objToSave);
-		JsonParser::saveJsonFile(outputPath, "allPossibleMapColors", toSave);
+		JsonParser::saveJsonFile(outputPath, "allPossibleMapColors", objToSave);
 	}
 	static void convertMapsToStrings(QString inputPath, QString outputPath) {
 		QMap<RGBstruct, QChar> colorCharMap;
@@ -161,8 +162,9 @@ public:
 				}
 				mapAsChars.append(lineOfMapStr);
 			}
-			QJsonDocument docToSave = QJsonDocument(mapAsChars);
-			JsonParser::saveJsonFile(outputPath, floorName + ".json", docToSave);
+			QJsonObject toSave;
+			toSave.insert("chars", mapAsChars);
+			JsonParser::saveJsonFile(outputPath, floorName, toSave);
 		}
 
 	}

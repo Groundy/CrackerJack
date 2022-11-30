@@ -24,10 +24,7 @@ public:
 	//bool getHealthRestoreMethodes(QStringList incantationsAndSpellsList, QList<Rest>& spellsAndPotionsObjects);
 	bool getManaRestoreMethodes(QStringList potionNameList, QList<Potion>& potionToReturn);
 	bool getItemsFromCategory(QList<Item> &readItems, Item::TYPE_OF_ITEM type);
-	static bool saveJsonFile(QString pathToFolder, QString fileNameWithExtension, QJsonDocument& docToSave);
 	QMap<QString, int> readAvaibleKeys();
-
-
 	QStringList readNamesOfAllSavedProfiles();
 	bool readSpellsJson(QList<Spell>& spells, Spell::SpellType* type, Profession* profession);
 	bool readPotions(QList<Potion>& potions, Profession* prof, Potion::TypeOfPotion* filterType);
@@ -65,4 +62,6 @@ public:
 
 		return namesOfAvaibleManaRestoreMethodes;
 	}
+
+	static bool saveJsonFile(QString pathToFolder, QString fileNameWithoutExtension, QJsonObject jsonObj);
 };

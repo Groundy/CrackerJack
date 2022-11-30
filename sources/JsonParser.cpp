@@ -215,29 +215,33 @@ bool JsonParser::getItemsFromCategory(QList<Item>& itemsToRet, Item::TYPE_OF_ITE
 	return true;
 }
 
-bool JsonParser::saveJsonFile(QString pathToFolder, QString fileNameWithExtension, QJsonDocument& docToSave){
-	QFileInfo folderInfo = QFileInfo(pathToFolder);
-	bool isDir = folderInfo.isDir();
-	if (!isDir){
-		//Logger::logPotenialBug("Error, path is not folder", "JsonParser", "saveJsonFile");
-		return false;
-	}
-	bool isWritable = folderInfo.isWritable();
-	if (!isWritable) {
-		//Logger::logPotenialBug("Error, path is not writable folder", "JsonParser", "saveJsonFile");
-		return false;
-	}
-	QString pathToFile = pathToFolder + "\\" + fileNameWithExtension;
-	QFile file(pathToFile);
-	bool ok = file.open(QIODevice::OpenModeFlag::WriteOnly);
-	if (!ok) {
-		//Logger::logPotenialBug("Another Error", "JsonParser", "saveJsonFile");
-		return false;
-	}
-	file.write(docToSave.toJson());
-	file.close();
+bool JsonParser::saveJsonFile(QString pathToFolder, QString fileNameWithOutExtension, QJsonObject jsonObj){
+	try{
+		QFileInfo folderInfo = QFileInfo(pathToFolder);
+		bool isDir = folderInfo.isDir();
+		if (!isDir)
+			throw("Error in saving json file, given pathToFolder is not really path to folder!");
+		bool isWritable = folderInfo.isWritable();
+		if (!isWritable) 
+			throw("Error in saving json file, given folder is not writtable!");
 
-	return true;
+		QString filePath;
+		if(pathToFolder.right(1) == "\\")
+			filePath = QString("%1%2.json").arg(pathToFolder, fileNameWithOutExtension);
+		else
+			filePath = QString("%1\\%2.json").arg(pathToFolder, fileNameWithOutExtension);
+		QFile file(filePath);
+		bool ok = file.open(QIODevice::OpenModeFlag::WriteOnly);
+		if (!ok)
+			throw("Error in saving json file!");
+		file.write(QJsonDocument(jsonObj).toJson());
+		file.close();
+		return true;
+	}
+	catch (const std::exception& e){
+		Logger::staticLog(e.what());
+		return false;
+	}
 }
 
 QMap<QString, int> JsonParser::readAvaibleKeys(){
@@ -260,9 +264,7 @@ QStringList JsonParser::readNamesOfAllSavedProfiles(){
 }
 
 void JsonParser::saveProfile(Profile* prof){
-	const QString fileName = prof->getName() + ".json";
-	QJsonDocument docToSave(prof->toJson());
-	saveJsonFile(PathResource::getPathToProfileFolder(), fileName, docToSave);
+	saveJsonFile(PathResource::getPathToProfileFolder(), prof->getName(), prof->toJson());
 }
 
 Profile JsonParser::loadProfile(QString profileName){

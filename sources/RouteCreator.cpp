@@ -133,9 +133,7 @@ void RouteCreator::finishButtonPressed() {
 		return;
 	}
 
-	QString path = PathResource::getPathToRouteFolder();
-	QJsonDocument jDoc(route.toJson());
-	JsonParser().saveJsonFile(path, name + ".json", jDoc);
+	JsonParser().saveJsonFile(PathResource::getPathToRouteFolder(), name, route.toJson());
 	Utilities::showMessageBox_INFO("Saved!");
 }
 bool RouteCreator::loadMap(int floor) {
