@@ -15,17 +15,17 @@ public:
 	void run() {
 		while (true){
 			msleep(SLEEP_TIME);
-			if (!var->getSettingKeepHuntingAutomaticly() || !var->getSettingKeepAnalyzeMiniMap()) {
+			if (!var->getSettings().getKeepHuntingAutomaticly() || !var->getSettings().getKeepAnalyzeMiniMap()) {
 				msleep(SLEEP_TIME * 30);
 				continue;
 			}
 
-			var->getPlayerPos(true);//clearPos
+			var->getPosition().clear();
 			int triesLeft = 50;
 			Point3D currentPosTmp;
 			do{
 				msleep(SLEEP_TIME);
-				currentPosTmp = var->getPlayerPos(false);
+				currentPosTmp = var->getPosition().getPlayerPos();
 				triesLeft--;
 			} while (!currentPosTmp.isValid() && triesLeft > 0);
 			if(!currentPosTmp.isValid())
@@ -48,7 +48,8 @@ public:
 				moveToNextNode();
 		}
 	}
-
+signals:
+	void updateHeadingPointInGUI(int);
 private:
 	std::shared_ptr<VariablesClass> var;
 	std::shared_ptr<GameConnecter> gameConnector;
@@ -91,9 +92,10 @@ private:
 	void moveToNextNode() {
 		QPoint nextNodePosOnWholeMap = route.getPoint(lastPosition + 1).getPosition().getXY();
 		QPoint fromPlayerToTargetOnWholeMap = getDistFromOnePtToAnother(currentPos.getXY(), nextNodePosOnWholeMap);
-		QPoint miniMapFrameStartOnWholeScreen = var->getFrameMiniMap().topLeft();
+		QPoint miniMapFrameStartOnWholeScreen = var->getMiniMap().getFrameMiniMap().topLeft();
 		QPoint playerPosOnWholeScreen = addTwoPoints(miniMapFrameStartOnWholeScreen, QPoint(53,54)); 
 		QPoint whereToClick = addTwoPoints(playerPosOnWholeScreen, fromPlayerToTargetOnWholeMap);
+		emit updateHeadingPointInGUI(lastPosition + 1);
 		gameConnector->clickLeft(whereToClick);
 	}
 };

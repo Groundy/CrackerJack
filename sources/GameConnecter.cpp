@@ -8,26 +8,26 @@ GameConnecter::~GameConnecter()
 
 void GameConnecter::clickLeft(QPoint pt) {
 	LPARAM lParam = (pt.y() << 16) + pt.x();
-	HWND gameThreadHandler = var->getHandlerToGameThread();
+	HWND gameThreadHandler = var->getGameProcess().getHandlerToGameThread();
 	PostMessage(gameThreadHandler, WM_LBUTTONDOWN, 5, lParam);
 	PostMessage(gameThreadHandler, WM_LBUTTONUP, 4, lParam);
 }
 void GameConnecter::clickRight(QPoint pt) {
-	HWND gameThreadHandler = var->getHandlerToGameThread();
+	HWND gameThreadHandler = var->getGameProcess().getHandlerToGameThread();
 	LPARAM lParam = (pt.y() << 16) + pt.x();
 	PostMessage(gameThreadHandler, WM_RBUTTONDOWN, 5, lParam);
 	PostMessage(gameThreadHandler, WM_RBUTTONUP, 4, lParam);
 }
 bool GameConnecter::sendKeyStrokeToProcess(Key key) {
 	const int weirdConst = 0x1470001;
-	HWND gameThreadHandler = var->getHandlerToGameThread();
+	HWND gameThreadHandler = var->getGameProcess().getHandlerToGameThread();
 	PostMessage(gameThreadHandler, WM_KEYDOWN, key.getKeyVal(), weirdConst);
 	PostMessage(gameThreadHandler, WM_KEYUP, key.getKeyVal(), weirdConst);
 	return true;
 	
 }
 void GameConnecter::sendStringToGame(QString str) {
-	HWND gameThreadHandler = var->getHandlerToGameThread();
+	HWND gameThreadHandler = var->getGameProcess().getHandlerToGameThread();
 	for each (QChar charToSend in str) {
 		sendCharToGame(charToSend, gameThreadHandler);
 		Sleep(2);
@@ -35,11 +35,11 @@ void GameConnecter::sendStringToGame(QString str) {
 }
 void GameConnecter::useRestorationMethode(const RestorationMethode& methode) {
 	if (methode.isSpell()) {
-		var->setTimeLastSpellUsageHealing();
-		var->setTimeLastSpellUsed(methode.getName());
+		var->getTimers().setTimeLastSpellUsageHealing();
+		var->getTimers().setTimeLastSpellUsed(methode.getName());
 	}
 	else if (methode.isPotion())
-		var->setTimeLastItemUsage();
+		var->getTimers().setTimeLastItemUsage();
 
 	Key key = methode.getKey();
 	sendKeyStrokeToProcess(key);

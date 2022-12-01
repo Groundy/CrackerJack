@@ -18,6 +18,5 @@ private:
 	std::shared_ptr<GameConnecter> gameConnecter;	
 	Profile* profile;
 
-	void threadLoop();
 	void sendScreenRequestToGame();
 };

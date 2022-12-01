@@ -88,17 +88,17 @@ int ActiveGameThread::checkGameState(){
         if (gameWinState == ACTIVE) {     
             HWND handlerToGameThread = getHandlerToGameWindow(PID, windowTitle);
             if (handlerToGameThread != previousGameHandler)
-                var->setHandlerToGameThread(handlerToGameThread);
-            if (var->getNameOfGameWindow() != windowTitle)
-                var->setNameOfGameWindow(windowTitle);
-            if (var->getPid() != PID)
-                var->setPid(PID);
+                var->getGameProcess().setHandlerToGameThread(handlerToGameThread);
+            if (var->getGameProcess().getNameOfGameWindow() != windowTitle)
+                var->getGameProcess().setNameOfGameWindow(windowTitle);
+            if (var->getGameProcess().getPid() != PID)
+                var->getGameProcess().setPid(PID);
         }
         return gameWinState;
     }
     catch (const std::exception& e){
-        var->setNameOfGameWindow("");
-        var->setPid(0);
+        var->getGameProcess().setNameOfGameWindow("");
+        var->getGameProcess().setPid(0);
         return NO_WINDOW;
     }
 }

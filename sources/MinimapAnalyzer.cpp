@@ -9,13 +9,13 @@ void MinimapAnalyzer::run() {
 	QMap<int, QImage*> floorsMaps;
 	while (true) {
 		msleep(SLEEP_TIME_BETWEEN_LOOPS);
-		if (!var->getSettingKeepAnalyzeMiniMap()) {
+		if (!var->getSettings().getKeepAnalyzeMiniMap()) {
 			msleep(SLEEP_TIME_BETWEEN_LOOPS);
 			continue;
 		}
 		QImage miniMap, miniMapLayer;
-		var->getImgMiniMap(miniMap);
-		var->getImgMiniMapLayer(miniMapLayer);
+		var->getMiniMap().getImgMiniMap(miniMap);
+		var->getMiniMap().getImgMiniMapLayer(miniMapLayer);
 		if (miniMap.isNull() || miniMapLayer.isNull())
 			continue;
 
@@ -34,9 +34,9 @@ void MinimapAnalyzer::run() {
 
 		Point3D toSet(currentPosition.x(), currentPosition.y(), currentLayer);
 		if (toSet.isValid())
-			var->setPlayerPos(toSet);
+			var->getPosition().setPlayerPos(toSet);
 		else
-			var->setPlayerPos(Point3D(-1, -1, -1));
+			var->getPosition().clear();
 	}
 }
 QImage MinimapAnalyzer::setSliderImg() {

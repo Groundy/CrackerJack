@@ -3,7 +3,7 @@
 ManaHealthStateAnalyzer::ManaHealthStateAnalyzer(QObject *parent, Profile* profile, std::shared_ptr<VariablesClass> var, std::shared_ptr<GameConnecter> gameConnector)
 	: QThread(parent), var(var), gameConnector(gameConnector){
 	populateHealthManaMaps(profile);
-	var->setSettingRestoringState(true);
+	var->getSettings().setRestoringState(true);
 }
 ManaHealthStateAnalyzer::~ManaHealthStateAnalyzer(){
 	this->terminate();
@@ -132,10 +132,10 @@ ManaHealthStateAnalyzer::ValuesInts ManaHealthStateAnalyzer::toIntsValues(FoundF
 };
 ManaHealthStateAnalyzer::FoundFlags ManaHealthStateAnalyzer::getFoundFlags() {
 	FoundFlags flags;
-	flags.health = !var->getHealthArea().isEmpty();
-	flags.mana = !var->getManaArea().isEmpty();
-	flags.combined = !var->getCombinedArea().isEmpty();
-	flags.shield = !var->getMSArea().isEmpty();
+	flags.health = !var->getVitalitty().getHealthArea().isEmpty();
+	flags.mana = !var->getVitalitty().getManaArea().isEmpty();
+	flags.combined = !var->getVitalitty().getCombinedArea().isEmpty();
+	flags.shield = !var->getVitalitty().getMSArea().isEmpty();
 	return flags;
 }
 bool ManaHealthStateAnalyzer::getValuesFromStringRegularCase(QString in, int& current, int& max) {
@@ -234,7 +234,7 @@ QVector<RestorationMethode> ManaHealthStateAnalyzer::findRestorationToUse(double
 	}
 }
 ManaHealthStateAnalyzer::ValuesDoubles ManaHealthStateAnalyzer::getCurrentPercentage() {
-	if (!var->getSettingRestoringState())
+	if (!var->getSettings().getRestoringState())
 		return ValuesDoubles();
 	ImageValues imgs = getImages();
 	if (!imgs.isValid())
@@ -261,35 +261,35 @@ void ManaHealthStateAnalyzer::sendDataToGui(ValuesDoubles currentValues) {
 	emit sendValueToMainThread(currentValues.health, currentValues.mana, currentValues.manaShield);
 }
 void ManaHealthStateAnalyzer::writeDataToVariableClass(ValuesDoubles values) {
-	var->setCurrentPercentage(values.health, values.mana, values.manaShield);
+	var->getVitalitty().setCurrentPercentage(values.health, values.mana, values.manaShield);
 }
 void ManaHealthStateAnalyzer::writeDataToVariableClass(ValuesInts values) {
-	var->setCurrentRawValues(values.health, values.mana, values.shield);
+	var->getVitalitty().setCurrentRawValues(values.health, values.mana, values.shield);
 }
 ManaHealthStateAnalyzer::ImageValues ManaHealthStateAnalyzer::getImages() {
 	ImageValues toRet;
 	bool clearImgs = true;
-	var->getImageHealth(toRet.health, clearImgs);
-	var->getImageMana(toRet.mana, clearImgs);
-	var->getImageMS(toRet.manaShield, clearImgs);
-	var->getImageCombined(toRet.combined, clearImgs);
+	var->getVitalitty().getImageHealth(toRet.health, clearImgs);
+	var->getVitalitty().getImageMana(toRet.mana, clearImgs);
+	var->getVitalitty().getImageMS(toRet.manaShield, clearImgs);
+	var->getVitalitty().getImageCombined(toRet.combined, clearImgs);
 	return toRet;
 }
 bool ManaHealthStateAnalyzer::restMethodeCanBeUsed(const RestorationMethode& restMethode) {
-	const qint64 now = var->now();
+	const qint64 now = QDateTime::currentMSecsSinceEpoch();
 	switch (restMethode.getType())
 	{
 	case RestorationMethode::Type::POTION:
-		if (now < var->getTimeLastItemUsage() + (1000 * restMethode.getCd()))
+		if (now < var->getTimers().getTimeLastItemUsage() + (1000 * restMethode.getCd()))
 			return false;
 		//later should be added checking if char has proper pot!
 		return true;
 	case RestorationMethode::Type::SPELL:
-		if (var->getCurrentRawManaVal() < restMethode.getMana())
+		if (var->getVitalitty().getCurrentRawManaVal() < restMethode.getMana())
 			return false;
-		if (now < var->getTimeLastSpellUsageHealing() + (1000 * restMethode.getCdGroup()))
+		if (now < var->getTimers().getTimeLastSpellUsageHealing() + (1000 * restMethode.getCdGroup()))
 			return false;
-		if (now < var->getTimeLastSpellUsed(restMethode.getName()) + (1000 * restMethode.getCd()))
+		if (now < var->getTimers().getTimeLastSpellUsed(restMethode.getName()) + (1000 * restMethode.getCd()))
 			return false;
 
 		return true;

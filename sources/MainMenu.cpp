@@ -56,25 +56,35 @@ void MainMenu::threadStarter(){
 void MainMenu::signalSlotConnector(){
 	QObject *sigSender, *slotRec;
 	const char *sig, *slot;
-	
+	bool allSlotsConnected = true;
+
 	sigSender = healthManaStateAnalyzer;
 	slotRec = this;
 	sig = SIGNAL(sendValueToMainThread(double, double, double));
 	slot = SLOT(changedValueOfCharHealthOrMana(double, double, double));
-	bool connectionAccepted_1 = connect(sigSender, sig, slotRec, slot, Qt::UniqueConnection);
+	bool connectionAccepted = connect(sigSender, sig, slotRec, slot, Qt::UniqueConnection);
+	allSlotsConnected = allSlotsConnected && connectionAccepted;
 	
 	sigSender = &this->var->logger;
 	slotRec = this;
 	sig = SIGNAL(sendMsgToUserConsol(QStringList));
 	slot = SLOT(printToUserConsol(QStringList));
-	bool connectionAccepted_2 = connect(sigSender, sig, slotRec, slot, Qt::UniqueConnection);
+	connectionAccepted = connect(sigSender, sig, slotRec, slot, Qt::UniqueConnection);
+	allSlotsConnected = allSlotsConnected && connectionAccepted;
 
 	sigSender = this->miniMapAnalyzer;
 	slotRec = this;
 	sig = SIGNAL(sendPostitionsToGUI(QString, QString, QString));
 	slot = SLOT(updatePlayerPosition(QString, QString, QString));
-	bool connectionAccepted_3 = connect(sigSender, sig, slotRec, slot, Qt::UniqueConnection);
-	
+	connectionAccepted = connect(sigSender, sig, slotRec, slot, Qt::UniqueConnection);
+	allSlotsConnected = allSlotsConnected && connectionAccepted;
+
+	sigSender = this->screenAnalyzer;
+	slotRec = this;
+	sig = SIGNAL(updateEnemiesAmountInGUI(int));
+	slot = SLOT(updateEnemiesAmount(int));
+	connectionAccepted = connect(sigSender, sig, slotRec, slot, Qt::UniqueConnection);
+	allSlotsConnected = allSlotsConnected && connectionAccepted;
 }
 
 
@@ -84,13 +94,13 @@ void MainMenu::changeProfileButtonAction(){
 }
 void MainMenu::takeScreenShotCheckBoxChanged() {
 	bool toSet = ui->takeScreenshotCheckBox->isChecked();
-	var->setSettingTakingScreensState(toSet);
+	var->getSettings().setTakingScreensState(toSet);
 }
 void MainMenu::updateResourcesAmounts(){
 }
 void MainMenu::autoHealAndManaRegCheckBoxChanged() {
 	bool enable = ui->restoreHealthMana->isChecked();
-	var->setSettingRestoringState(enable);
+	var->getSettings().setRestoringState(enable);
 	if (enable) {
 		ui->healthInfoLabel->clear();
 		ui->manaInfoLabel->clear();
@@ -169,9 +179,17 @@ void MainMenu::updatePlayerPosition(QString x, QString y, QString f){
 }
 void MainMenu::analyzeMiniMapCheckBoxChanged() {
 	bool enable = ui->analyzeMiniMapBox->isChecked();
-	var->setSettingKeepAnalyzeMiniMap(enable);
+	var->getSettings().setKeepAnalyzeMiniMap(enable);
 	ui->playerPosGroup->setVisible(enable);
 	updatePlayerPosition("?", "?", "?");
+}
+void MainMenu::updateEnemiesAmount(int enemies) {
+	QString toSet = enemies >= 0 ? QString::number(enemies) : "?";
+	ui->enemiesBattleLabel->setText(toSet);
+}
+void MainMenu::updateHeadingPoint(int headingPoint) {
+	QString toSet = headingPoint >= 0 ? QString::number(headingPoint) : "?";
+	ui->headinglabel->setText(toSet);
 }
 void MainMenu::testButtonClicked() {
 	//RouteCreator(this).exec();
@@ -188,6 +206,9 @@ void MainMenu::testButtonClicked() {
 		huntAutoThread->start();
 		ui->playerPosGroup->setVisible(true);
 		ui->analyzeMiniMapBox->setChecked(true);
+		const char* sig = SIGNAL(updateHeadingPointInGUI(int));
+		const char *slot = SLOT(updateHeadingPoint(int));
+		bool connectionAccepted = connect(huntAutoThread, sig, this, slot, Qt::UniqueConnection);
 	}
 
 };

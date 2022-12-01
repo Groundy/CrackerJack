@@ -38,6 +38,8 @@ public slots:
 	void changedValueOfCharHealthOrMana(double healthPercentage, double manaPercentage, double manaShieldPercentage);
 	void printToUserConsol(QStringList msgs);
 	void updatePlayerPosition(QString x, QString y, QString f);
+	void updateEnemiesAmount(int enemies);
+	void updateHeadingPoint(int headingPoint);
 private:
 	Ui::MainMenu *ui;
 	Profile* prof;

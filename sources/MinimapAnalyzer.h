@@ -9,6 +9,7 @@
 #include <qdatetime.h>
 #include <qsize.h>
 
+#include "ImgEditor.h"
 #include "PathResource.h"
 #include "Utilities.h"	
 #include "Calibrator.h"

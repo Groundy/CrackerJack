@@ -2,7 +2,7 @@
 
 ScreenSaver::ScreenSaver(QObject* parent, std::shared_ptr<VariablesClass> var, std::shared_ptr<GameConnecter> gameConnecter, Profile* profile)
 	: QThread(parent), var(var), gameConnecter(gameConnecter), profile(profile){
-	var->setSettingTakingScreensState(true);
+	var->getSettings().setTakingScreensState(true);
 }
 
 ScreenSaver::~ScreenSaver(){
@@ -11,10 +11,10 @@ ScreenSaver::~ScreenSaver(){
 
 void ScreenSaver::sendScreenRequestToGame(){
 	try{
-		uint pid = var->getPid();
+		uint pid = var->getGameProcess().getPid();
 		if (pid == 0)
 			throw std::exception("Can't send screenshot key to game, there is no known pid!");
-		QString winTitle = var->getNameOfGameWindow();
+		QString winTitle = var->getGameProcess().getNameOfGameWindow();
 		if (winTitle.isEmpty())
 			throw std::exception("Can't send screenshot key to game, there is no known title of window!");
 		Key key = profile->getScreenShotKey();
@@ -25,16 +25,12 @@ void ScreenSaver::sendScreenRequestToGame(){
 	}
 }
 
-void ScreenSaver::threadLoop(){
+void ScreenSaver::run(){
+	setPriority(QThread::Priority::HighestPriority);
 	while (true){
 		msleep(SLEEP_TIME);
-		if (!var->getSettingTakingScreensState())
+		if (!var->getSettings().getTakingScreensState())
 			continue;
 		sendScreenRequestToGame();
 	}
-}
-
-void ScreenSaver::run(){
-	setPriority(QThread::Priority::HighestPriority);
-	threadLoop();
 }

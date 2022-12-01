@@ -164,9 +164,6 @@
     <QtMoc Include="sources\VariablesClass.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="sources\ImgEditor.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
     <QtMoc Include="sources\MinimapAnalyzer.h">
       <Filter>Header Files</Filter>
     </QtMoc>
@@ -253,6 +250,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="sources\RoutePoint.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\ImgEditor.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

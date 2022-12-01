@@ -7,7 +7,7 @@ Calibrator::~Calibrator()
 }
 
 //public
-bool Calibrator::calibrate(const QImage& fullscreen){
+bool Calibrator::calibrateBasicAreas(const QImage& fullscreen){
 	QList<QRect> importantRectangles;
 	bool windowsFound = findWindowsOnScreen(fullscreen, importantRectangles);
 	if (!windowsFound)
@@ -18,6 +18,27 @@ bool Calibrator::calibrate(const QImage& fullscreen){
 		return false;
 	
 	return true;
+}
+bool Calibrator::calibrateBattleArea(const QImage& fullscreen) {
+	auto rectangles = getOutsideFramesOfOpenEntitiesOnSideBars(fullscreen);
+	if (rectangles.size() == 0)
+		return false;
+
+	QImage battleListMark(PathResource::getPathToBattleList());
+	if (battleListMark.isNull())
+		return false;
+
+	for each (QRect rect in rectangles){
+		auto battleMarksPos = ImgEditor::findStartPositionInImg(battleListMark, fullscreen, rect);
+		if (battleMarksPos.size() != 1)
+			continue;
+
+		var->getBattleList().setFrame(rect);
+		return true;
+	}
+
+	var->getBattleList().setFrame(QRect());
+	return false;
 }
 void Calibrator::test(QString pathToFilesWithScreens) {
 	auto var = std::shared_ptr<VariablesClass>();
@@ -36,7 +57,7 @@ void Calibrator::test(QString pathToFilesWithScreens) {
 
 			auto calibrator = Calibrator(var);
 			auto start = QDateTime::currentMSecsSinceEpoch();
-			bool categroized = calibrator.calibrate(fullScreen);
+			bool categroized = calibrator.calibrateBasicAreas(fullScreen);
 			auto time = QDateTime::currentMSecsSinceEpoch() - start;
 			if (categroized)
 				qDebug() << "analyzed in : " + QString::number(time);
@@ -270,7 +291,7 @@ bool Calibrator::categorizeWindows(const QImage& fullscreen, QList<QRect>& impor
 				biggestRect = importantRectangles[i];
 			}
 		}
-		var->setFrameMainGameWindow(biggestRect);
+		var->getMainWindow().setFrameMainGameWindow(biggestRect);
 		importantRectangles.removeOne(biggestRect);
 	}
 
@@ -281,25 +302,25 @@ bool Calibrator::categorizeWindows(const QImage& fullscreen, QList<QRect>& impor
 		if (!indexes.isValid(size))
 			return false;
 
-		var->setRotation(indexes.rotation);
+		var->getVitalitty().setRotation(indexes.rotation);
 		QVector<QRect> rectsToDelete;
 		if (indexes.healthFound(size)) {
-			var->setHealthArea(importantRectangles[indexes.health]);
+			var->getVitalitty().setHealthArea(importantRectangles[indexes.health]);
 			rectsToDelete.push_back(importantRectangles[indexes.health]);
 		}
 
 		if (indexes.manaFound(size)) {
-			var->setManaArea(importantRectangles[indexes.mana]);
+			var->getVitalitty().setManaArea(importantRectangles[indexes.mana]);
 			rectsToDelete.push_back(importantRectangles[indexes.mana]);
 		}
 
 		if (indexes.shieldFound(size)) {
-			var-> setMSArea(importantRectangles[indexes.shield]);
+			var->getVitalitty().setMSArea(importantRectangles[indexes.shield]);
 			rectsToDelete.push_back(importantRectangles[indexes.shield]);
 		}
 
 		if (indexes.combinedFound(size)) {
-			var->setCombinedArea(importantRectangles[indexes.combined]);
+			var->getVitalitty().setCombinedArea(importantRectangles[indexes.combined]);
 			rectsToDelete.push_back(importantRectangles[indexes.combined]);
 		}
 
@@ -311,7 +332,7 @@ bool Calibrator::categorizeWindows(const QImage& fullscreen, QList<QRect>& impor
 	{
 		QList<QRect> sortedX, sortedY;
 		sortByXY(importantRectangles, sortedX, sortedY);
-		var->setFrameMiniMap(sortedX.last());
+		var->getMiniMap().setFrameMiniMap(sortedX.last());
 		importantRectangles.removeOne(sortedX.last());
 	}
 
@@ -472,7 +493,29 @@ QList<QRect> Calibrator::filterAreasCoveredByFrameFromBottomRight(const QImage& 
 	}
 	return toRet;
 }
+QList<QRect> Calibrator::getOutsideFramesOfOpenEntitiesOnSideBars(const QImage& wholeScreen) {
+	const QImage startOfSideBarEntity(PathResource::getPathToSideBarEntityStart());
+	if (startOfSideBarEntity.isNull())
+		return {};
 
+	QList<QRect> outerFramesOfSideBarsEntity = {};
+	QList<QPoint> startPoints = ImgEditor::findStartPositionInImg(startOfSideBarEntity, wholeScreen);
+	const QImage endOfSideBarEntity(PathResource::getPathToSideBarEntityEnd());
+	for each (QPoint currPt in startPoints){
+		QRect rectToSheachWithIn(currPt, QSize(wholeScreen.width() - currPt.x(), wholeScreen.height() - currPt.y()));
+		auto endsOfFrame = ImgEditor::findStartPositionInImg(endOfSideBarEntity, wholeScreen, rectToSheachWithIn);
+		if (endsOfFrame.size() == 0)
+			continue;
+		QList<QPoint> sortedByX, sortedByY;
+		sortByXY(endsOfFrame, sortedByX, sortedByY);
+
+		QPoint pt = sortedByY[0];
+		QSize size(pt.x() + endOfSideBarEntity.width() - currPt.x(), pt.y() + endOfSideBarEntity.height() - currPt.y());
+		QRect toAdd(currPt, size);
+		outerFramesOfSideBarsEntity.push_back(toAdd);
+	}
+	return outerFramesOfSideBarsEntity;
+}
 
 /*
 bool Calibrator::getRectsFromProfile(QList<QRect>& importRectsFromProf) {

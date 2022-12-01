@@ -5,16 +5,19 @@
 #include <qimage.h>
 #include <qmap.h>
 #include <memory>
+#include <qpoint.h>
 
+#include "Logger.h"
 #include "ImgEditor.h"
 #include "VariablesClass.h"
-#include "Utilities.h"
+#include "PathResource.h"
 #include "Profile.h"
 class Calibrator {
 public:
 	Calibrator(std::shared_ptr<VariablesClass> var);
 	~Calibrator();
-	bool calibrate(const QImage& fullImage);
+	bool calibrateBasicAreas(const QImage& fullImage);
+	bool calibrateBattleArea(const QImage& fullImage);
 	static void test(QString pathToFilesWithScreens);
 
 private:
@@ -61,7 +64,9 @@ private:
 	QList<QPoint> getStartOfPossibleFrames(const QImage& fullScreen, int minVal, int maxVal);
 	QList<QRect> getAreasInsideFrames(const QImage& fullScreen, const QList<QPoint>& startOfFrames, const int MIN_DIM);
 	QList<QRect> filterAreasCoveredByFrameFromBottomRight(const QImage& fullScreen, const QList<QRect>& areas);
+	QList<QRect> getOutsideFramesOfOpenEntitiesOnSideBars(const QImage& wholeScreen);
 };
+
 	/*
 	void TEST_setPositionHealthImhs(QString pathToFolderWithDiffrentPositionsStylesScreen, QString pathToOutPutFolder);
 	bool getRectsFromProfile(QList<QRect>& importRectsFromProf);	

@@ -29,7 +29,16 @@ public:
 		return getPathToProfileFolder() + profileName + ".json";
 	}
 	static QString getPathToMiniMapSliderImg() {
-		return "C:\\Moje\\pliki\\repos\\CrackerJackClient\\ResourcesUsing\\mapLayer.png";
+		return getPathToImgsFolder() + "mapLayer.png";
+	}
+	static QString getPathToSideBarEntityStart() {
+		return getPathToImgsFolder() + "sideBarEntityStart.png";
+	}
+	static QString getPathToSideBarEntityEnd() {
+		return getPathToImgsFolder() + "sideBarEntityEnd.png";
+	}
+	static QString getPathToBattleList() {
+		return getPathToImgsFolder() + "BattleList.png";
 	}
 	static QString getPathToFileWithBottomsBarDigitsCodes() {
 		return "C:\\Moje\\pliki\\repos\\CrackerJackClient\\ResourcesUsing\\bottomBarsDigits.json";
@@ -40,6 +49,9 @@ public:
 	static QString getPathToRouteFile(const QString routeNameWithoutExtension) {
 		return QString("%1%2.json").arg(getPathToRouteFolder(), routeNameWithoutExtension);
 	}
-
+private:
+	static QString getPathToImgsFolder() {
+		return "C:\\Moje\\pliki\\repos\\CrackerJackClient\\ResourcesUsing\\imgs\\";
+	}
 };
 

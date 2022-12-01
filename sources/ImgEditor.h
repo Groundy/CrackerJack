@@ -1,15 +1,10 @@
 #pragma once
-
-#include <QObject>
 #include <qimage.h>
-#include "Utilities.h"
-class ImgEditor  : public QObject
-{
-	Q_OBJECT
 
+#include "Logger.h"
+#include "Utilities.h"
+class ImgEditor{
 public:
-	ImgEditor(QObject *parent);
-	~ImgEditor();
 	static void imgToBlackAndWhiteAllColors(QImage& img, int threshold);	
 	static void imgToBlackAndWhiteOneColor(QImage& img, int threshold);
 	static void cutBlackBordersOfImg(QImage& img);
@@ -25,4 +20,7 @@ public:
 	static QList<QPoint> findStartPositionInImg(const QImage& imgToFind, const QImage& imgToShareWithin, QRect frameInBigWindow = QRect());
 	static void saveMultipleImgs(const QImage& fullImg, QList<QRect> frames, QString pathToFolder, QString fileNameWithoutExtension);
 	static void saveMultipleImgs(const QList<QImage>& fullImg, QString pathToFolder, QString fileNameWithoutExtension);
+private:
+	ImgEditor();
+	~ImgEditor();
 };

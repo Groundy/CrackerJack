@@ -22,7 +22,8 @@ public:
 	ScreenAnalyzer( QObject *parent, std::shared_ptr<VariablesClass> var, Profile* prof);
 	~ScreenAnalyzer();
 	void run();
-
+signals:
+	void updateEnemiesAmountInGUI(int);
 private:
 	const int SLEEP_TIME = 50;
 	std::shared_ptr<VariablesClass> var;
@@ -33,6 +34,7 @@ private:
 	QDir setUpScreenFolder();
 	QString getNameOfLastTakenScreenShot();
 	bool loadScreen(QImage& img);
-	void mainLoop();
 	int cutHealthManaImgs(const QImage& fullscreen);
+	int getAmountOfEnemiesOnBattleList();
+	void cutBattleList(const QImage& fullscreen);
 };

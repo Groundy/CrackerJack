@@ -1,13 +1,9 @@
 #include "ImgEditor.h"
 
-ImgEditor::ImgEditor(QObject *parent)
-	: QObject(parent)
-{}
-
-ImgEditor::~ImgEditor()
-{}
-
-
+ImgEditor::ImgEditor(){
+}
+ImgEditor::~ImgEditor(){
+}
 
 QImage ImgEditor::fromCharToImg(QChar CharToImg){
 	auto mapWithCodes = Utilities::getQmapWithCodes();
