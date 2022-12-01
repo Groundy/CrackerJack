@@ -169,7 +169,11 @@ void RouteCreator::loadRouteButtonPressed(){
 		return;
 	QString pathToFile = fileList.first();
 
-	route.loadFromJsonFile(pathToFile);
+	QJsonObject obj;
+	if (JsonParser::openJsonFile(obj, pathToFile))
+		return;//todo
+
+	route = Route(obj);
 	ui->nameEditField->setText(route.getName());
 	repaintList();
 	selectedItemOnListChanged();

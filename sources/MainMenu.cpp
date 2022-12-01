@@ -25,6 +25,7 @@ MainMenu::~MainMenu(){
 	threads.push_back(screenAnalyzer);
 	threads.push_back(healthManaStateAnalyzer);
 	threads.push_back(miniMapAnalyzer);
+	threads.push_back(huntAutoThread);
 	for each (QThread* thread in threads){
 		thread->terminate();
 		delete thread;
@@ -173,5 +174,20 @@ void MainMenu::analyzeMiniMapCheckBoxChanged() {
 	updatePlayerPosition("?", "?", "?");
 }
 void MainMenu::testButtonClicked() {
-	RouteCreator(this).exec();
+	//RouteCreator(this).exec();
+	if (huntAuto) {
+		huntAutoThread->terminate();
+		delete huntAutoThread;
+		ui->playerPosGroup->setVisible(false);
+		ui->analyzeMiniMapBox->setChecked(false);
+	}
+	else{
+		Route route;
+		JsonParser::readRoute(route, "Lethe");
+		huntAutoThread = new AutoHunting(this, var, gameConnector, route);
+		huntAutoThread->start();
+		ui->playerPosGroup->setVisible(true);
+		ui->analyzeMiniMapBox->setChecked(true);
+	}
+
 };

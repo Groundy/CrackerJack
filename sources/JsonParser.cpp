@@ -241,3 +241,17 @@ QStringList JsonParser::getNamesOfHealingPotsAndSpellsForProf(Profession profess
 
 	return avaiableHealthRestoreMethodesNames;
 }
+
+bool JsonParser::readRoute(Route& route, QString routeName) {
+	QString path = PathResource::getPathToRouteFile(routeName);
+	QJsonObject obj;
+	if (!openJsonFile(obj, path))
+		return false;
+
+	Route routeTmp(obj);
+	if (!routeTmp.isValid())
+		return false;
+
+	route = routeTmp;
+	return true;
+}

@@ -31,6 +31,12 @@ void MinimapAnalyzer::run() {
 			sendPostitionsToGUI(QString::number(currentPosition.x()), QString::number(currentPosition.y()), QString::number(currentLayer));
 		else
 			sendPostitionsToGUI("?", "?", QString::number(currentLayer));
+
+		Point3D toSet(currentPosition.x(), currentPosition.y(), currentLayer);
+		if (toSet.isValid())
+			var->setPlayerPos(toSet);
+		else
+			var->setPlayerPos(Point3D(-1, -1, -1));
 	}
 }
 QImage MinimapAnalyzer::setSliderImg() {

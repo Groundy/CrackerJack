@@ -9,7 +9,7 @@
 #include "Route.h"
 #include "RGBstruct.h"
 #include "RoutePoint.h"
-//#include "Spell.h"
+#include "JsonParser.h"
 namespace Ui { class RouteCreator; };
 
 class RouteCreator : public QDialog {

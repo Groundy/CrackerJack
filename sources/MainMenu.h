@@ -15,6 +15,7 @@
 #include "SelectProfileWindow.h"
 #include "RouteCreator.h"
 #include "MinimapAnalyzer.h"
+#include "AutoHunting.h"
 namespace Ui { class MainMenu; };
 
 class MainMenu : public QDialog
@@ -45,9 +46,11 @@ private:
 	ScreenAnalyzer* screenAnalyzer;
 	ManaHealthStateAnalyzer* healthManaStateAnalyzer;
 	MinimapAnalyzer* miniMapAnalyzer;
+	AutoHunting* huntAutoThread;
 	std::shared_ptr<VariablesClass> var;
 	std::shared_ptr<GameConnecter> gameConnector;
 	ActiveGameThread::GameActivityStates gameActivitystate;
+	bool huntAuto = false;
 
 	void threadStarter();
 	void signalSlotConnector();

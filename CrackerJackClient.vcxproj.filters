@@ -120,6 +120,9 @@
     <ClCompile Include="sources\RoutePoint.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="sources\AutoHunting.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="sources\SelectProfileWindow.h">
@@ -168,6 +171,9 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="sources\Offer.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="sources\AutoHunting.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>

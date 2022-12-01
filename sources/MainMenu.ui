@@ -269,8 +269,14 @@
       </item>
       <item>
        <widget class="QCheckBox" name="analyzeMiniMapBox">
+        <property name="enabled">
+         <bool>true</bool>
+        </property>
         <property name="text">
          <string>Analizuj pozycje postaci</string>
+        </property>
+        <property name="checked">
+         <bool>false</bool>
         </property>
        </widget>
       </item>
@@ -363,7 +369,7 @@ p, li { white-space: pre-wrap; }
    <item row="7" column="1">
     <widget class="QPushButton" name="testButton">
      <property name="text">
-      <string>test</string>
+      <string>start auto hunt</string>
      </property>
     </widget>
    </item>

@@ -2,6 +2,30 @@
 
 Route::Route(){
 }
+Route::Route(QJsonObject obj) {
+	try{
+		QJsonArray pointsArray = obj["points"].toArray();
+		if (pointsArray.isEmpty()) {
+			QString text = QString("Brak pola points w pliku Route");
+			throw std::exception(text.toStdString().c_str());
+		}
+
+		QList<RoutePoint> tmpRoute;
+		for each (QJsonValue val in pointsArray){
+			RoutePoint toAdd(val.toObject());
+			tmpRoute.append(toAdd);
+		}
+		if(tmpRoute.size() < 2) {
+			QString text = QString("Za malo punktow w pliku Route");
+			throw std::exception(text.toStdString().c_str());
+		}
+		route = tmpRoute;
+		routeName = obj.value("routeName").toString();
+	}
+	catch (const std::exception& e){
+		Logger::staticLog(e.what());
+	}
+}
 Route::~Route()
 {
 }
@@ -44,39 +68,6 @@ bool Route::movePointDown(int index){
 
 	route.swap(index, index + 1);
 	return true;
-}
-bool Route::loadFromJsonFile(QString pathToFile){
-	try{
-		QJsonObject obj;
-		bool fileFound = JsonParser::openJsonFile(obj, pathToFile);
-		if (!fileFound) {
-			QString text = QString("Plik %1 nie istnieje").arg(pathToFile);
-			throw std::exception(text.toStdString().c_str());
-		}
-
-		QJsonArray pointsArray = obj["points"].toArray();
-		if (pointsArray.isEmpty()) {
-			QString text = QString("Plik %1 ma niewlasciwa strukture").arg(pathToFile);//no polish chars
-			throw std::exception(text.toStdString().c_str());
-		}
-
-		QList<RoutePoint> tmpRoute;
-		for each (QJsonValue val in pointsArray){
-			RoutePoint toAdd(val.toObject());
-			tmpRoute.append(toAdd);
-		}
-		if(tmpRoute.size() < 2) {
-			QString text = QString("Plik %1 ma niewystarczajaca liczbe punktow").arg(pathToFile);//no polish chars
-			throw std::exception(text.toStdString().c_str());
-		}
-		route = tmpRoute;
-		routeName = obj.value("routeName").toString();
-		return true;
-	}
-	catch (const std::exception& e){
-		Logger::staticLog(e.what());
-		return false;
-	}
 }
 int Route::size(){
 	return route.size();
@@ -149,4 +140,19 @@ bool Route::checkRouteCorectness(QString& errorTextToDisplay){
 		errorTextToDisplay = e.what();
 		return false;
 	}
+}
+RoutePoint Route::getPoint(int index) {
+	if (index < route.size())
+		return route[index];
+	else
+		return RoutePoint();
+}
+bool Route::isValid() const {
+	return (route.size() > 2) && (route.first().getPosition() == route.last().getPosition());
+}
+int Route::getIndexOfPoint(Point3D toCheck) {
+	for (int i = 0; i < route.size(); i++)
+		if (route[i].getPosition() == toCheck)
+			return i;
+	return -1;
 }

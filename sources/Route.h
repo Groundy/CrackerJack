@@ -1,15 +1,15 @@
 #pragma once
 #include <qdir.h>
 #include <qmap.h>
-
+#include <qjsonarray.h>
 #include "Point3D.h"
-#include "JsonParser.h"
-#include "Spell.h"
+#include "Utilities.h"
+#include "PathResource.h"
 #include "RoutePoint.h"
-
-class Route {
+class Route : JsonClass {
 public:
 	Route();
+	Route(QJsonObject obj);
 	~Route();
 
 	QStringList toStringList();
@@ -17,13 +17,15 @@ public:
 	bool removePoint(int index);
 	bool movePointUp(int index);
 	bool movePointDown(int index);
-	bool loadFromJsonFile(QString pathToFile);
 	int size();
 	void clear();
-	QJsonObject toJson() const;
 	bool checkRouteCorectness(QString& errorTextToDisplay);
 	void setName(QString name) { routeName = name; };
 	QString getName() const { return routeName; };
+	RoutePoint getPoint(int index);
+	QJsonObject toJson() const;
+	bool isValid() const;
+	int getIndexOfPoint(Point3D toCheck);
 private:
 	QList<RoutePoint> route;
 	QString routeName;

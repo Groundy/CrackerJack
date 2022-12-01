@@ -8,6 +8,9 @@ RoutePoint::RoutePoint(QJsonObject jsonObj) {
 	this->position = position;
 	this->fieldType = fieldTypeToSet;
 }
+RoutePoint::RoutePoint() {
+	position = Point3D(-1, -1, -100);
+}
 QMap<RoutePoint::FieldType, QString>  RoutePoint::getPointTypeNameMap() {
 	QMap<FieldType, QString> toRet;
 	toRet.insert(FieldType::REGULAR, "Regular field");

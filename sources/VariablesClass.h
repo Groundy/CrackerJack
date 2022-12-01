@@ -8,6 +8,7 @@
 
 #include "Logger.h"
 #include "RestorationMethode.h"
+#include "Point3D.h"
 class VariablesClass : QObject{
 	Q_OBJECT
 public:	
@@ -68,6 +69,19 @@ public:
 	void getCopyOfCurrentFullImg(QImage& img) {
 		fullImage.getImgCopy(img);
 	}
+	void setPlayerPos(const Point3D toSet) {
+		positionMutex.lock();
+		currentPlayerPos = toSet;
+		positionMutex.unlock();
+	}
+	Point3D getPlayerPos(bool clear) {
+		positionMutex.lock();
+		Point3D toRet = currentPlayerPos;
+		if (clear)
+			currentPlayerPos = Point3D(-1, -1, -1);
+		positionMutex.unlock();
+		return toRet;
+	}
 
 	//game process
 	uint getPid() { return pid; }
@@ -101,6 +115,8 @@ public:
 	bool getSettingTakingScreensState() const { return keepTakingScreenShots; }
 	bool getSettingRestoringState() const { return keepRestoringManaAngHealth; }
 	bool getSettingLoadingState() const { return keepLoadingScreenShots; }
+	void setSettingKeepHuntingAutomaticly(bool enable) { this->keepHuntingAutomaticly = enable; };
+	bool getSettingKeepHuntingAutomaticly() const { return keepHuntingAutomaticly; }
 
 	//health, mana, combined, shield frames
 	void setRotation(int rotation) { healthManaFrames.howTheyShouldBeRotated = rotation; }
@@ -207,7 +223,6 @@ public:
 		gameWindowFrameMutex.unlock();
 	}
 
-
 	Logger logger;
 private:
 	//game
@@ -226,8 +241,9 @@ private:
 	std::atomic<bool> keepRestoringManaAngHealth = true;
 	std::atomic<bool> keepTakingScreenShots = true;
 	std::atomic<bool> keepLoadingScreenShots  = true;
-	std::atomic<bool> keepAnalyzingMiniMap = false;
+	std::atomic<bool> keepAnalyzingMiniMap = true;
 	std::atomic<bool> keepAnalyzingMainGameWindow;
+	std::atomic<bool> keepHuntingAutomaticly = true;
 
 	//timers
 	std::atomic<qint64> timeLastItemUsage, timeLastSpellAttack, timeLastSpellHealing, timeLastSpellSupport;
@@ -246,7 +262,8 @@ private:
 	std::mutex gameWindowFrameMutex;
 
 	//other
-	MutexImg fullImage;		
-	//QRect gameFrame;
+	MutexImg fullImage;
+	std::mutex positionMutex;
+	Point3D currentPlayerPos;
 
 };

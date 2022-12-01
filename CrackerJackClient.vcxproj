@@ -224,6 +224,7 @@ xcopy /y /d ".\dependencies\64-bit\libcrypto-1_1-x64.dll" "$(OutDir)"
     <ResourceCompile Include="CrackerJackClient.rc" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="sources\AutoHunting.cpp" />
     <ClCompile Include="sources\GameConnecter.cpp" />
     <ClCompile Include="sources\ImgEditor.cpp" />
     <ClCompile Include="sources\Item.cpp" />
@@ -264,6 +265,7 @@ xcopy /y /d ".\dependencies\64-bit\libcrypto-1_1-x64.dll" "$(OutDir)"
     <QtMoc Include="sources\GameConnecter.h" />
     <QtMoc Include="sources\ImgEditor.h" />
     <ClInclude Include="Profession.h" />
+    <QtMoc Include="sources\AutoHunting.h" />
     <ClInclude Include="sources\Item.h" />
     <QtMoc Include="sources\MarketProcess.h" />
     <QtMoc Include="sources\MarketProcessGui.h" />

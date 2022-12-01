@@ -14,6 +14,7 @@
 #include "Profession.h"
 #include "Spell.h"
 #include "Potion.h"
+#include "Route.h"
 class JsonParser{
 public:
 	static bool openJsonFile(QJsonObject& jsonDoc, QString pathToFile);
@@ -30,6 +31,7 @@ public:
 	static QStringList getNamesOManaPotsForProf(Profession profession);
 	static QStringList getNamesOfHealingPotsAndSpellsForProf(Profession profession);
 	static bool saveJsonFile(QString pathToFolder, QString fileNameWithoutExtension, QJsonObject jsonObj);
+	static bool readRoute(Route& route, QString routeName);
 private:
 	JsonParser() {};
 };

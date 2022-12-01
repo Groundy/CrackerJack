@@ -7,6 +7,7 @@
 class RoutePoint : JsonClass {
 public:
 	enum FieldType { REGULAR, STAIRS_UP, STAIRS_DOWN, ROPE_FIELD, SHOVEL_HOLE_ALWAYS_OPEN, SHOVEL_HOLE_NEED_SHOVEL, LADDER_UP, LADDER_DOWN, TELEPORT, EXIT_POINT };
+	RoutePoint();
 	RoutePoint(Point3D position, FieldType fieldType);
 	RoutePoint(QJsonObject jsonObj);
 
