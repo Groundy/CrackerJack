@@ -7,6 +7,7 @@ ScreenAnalyzer::ScreenAnalyzer(QObject *parent, std::shared_ptr<VariablesClass> 
 }
 
 ScreenAnalyzer::~ScreenAnalyzer(){
+	deleteScreenShotFolder();
 	this->terminate();
 }
 
@@ -29,32 +30,10 @@ void ScreenAnalyzer::run() {
 				continue;
 			}
 		}
-		if (var->getSettings().getKeepHuntingAutomaticly()) {
-			if (var->getBattleList().getFrame().isEmpty()) {
-				bool foundBattleArea = Calibrator(var).calibrateBattleArea(img);
-				if (!foundBattleArea) {
-					QString msg = "Nie mozna otworzy battle listy";
-					var->log(msg, true, true, false);
-				}
-			}
-			cutBattleList(img);
-			int enemies = getAmountOfEnemiesOnBattleList();
-			emit updateEnemiesAmountInGUI(enemies);
-		}
-
+		analyzeBattleList(img);
 		deleteScreenShotFolder();
 		cutHealthManaImgs(img);
-
-		if (var->getSettings().getKeepAnalyzeMiniMap()) {
-			QRect frame = var->getMiniMap().getFrameMiniMap();
-			var->getMiniMap().setImgMiniMap(img.copy(frame));
-
-			const QPoint DIFF_DIST_SINCE_TOPLEFT_MINIMAP = QPoint(137, 41);
-			const QPoint TOP_LEFT_START_OF_MINIMAP_LAYER_FRAME = frame.topLeft() + DIFF_DIST_SINCE_TOPLEFT_MINIMAP;
-			const QSize SIZE_MINIMAP_LAYER_FRAME = QSize(24, 71);
-			QRect miniMapLayerFrame(TOP_LEFT_START_OF_MINIMAP_LAYER_FRAME, SIZE_MINIMAP_LAYER_FRAME);
-			var->getMiniMap().setImgMiniMapLayer(img.copy(miniMapLayerFrame));
-		}
+		analyzeMiniMap(img);
 		var->setNewImg(img);
 	}
 }
@@ -141,38 +120,6 @@ int ScreenAnalyzer::cutHealthManaImgs(const QImage& fullscreen){
 		var->getVitalitty().setImageCombined(combinedValueImg);
 	}
 	return true;
-}
-int ScreenAnalyzer::getAmountOfEnemiesOnBattleList() {
-	if (var->getSettings().getKeepAnalyzeMainGameWindow())
-		return -1;
-	if (var->getBattleList().getFrame().isEmpty())
-		return -1;
-
-	bool checkCorrectness = qrand() % 10 == 0;
-	if (checkCorrectness) {
-		QImage battleMark = QImage(PathResource::getPathToBattleList());
-		QImage battleList;
-		var->getBattleList().getImg(battleList);
-		bool properImg = ImgEditor::findStartPositionInImg(battleMark, battleList).size() == 1;
-		if (!properImg) {
-			var->getBattleList().setFrame(QRect());
-			return -1;
-		}
-	}
-	QImage battleListLImg;
-	var->getBattleList().getImg(battleListLImg);
-	if (battleListLImg.isNull())
-		return false;
-	QRect inneBattleListArea = QRect(4,15,156, battleListLImg.height());
-	QImage innerBattleList = battleListLImg.copy(inneBattleListArea);
-	const int middleX = inneBattleListArea.width() / 2;
-	int blackDots = 0;
-	const uint BLACK = qRgb(0, 0, 0);
-	for (int y = 0; y < innerBattleList.height(); y++){
-		if (innerBattleList.pixel(middleX, y) == BLACK)
-			blackDots++;
-	}
-	return blackDots/2;
 }
 void ScreenAnalyzer::cutBattleList(const QImage& fullscreen){
 	if (var->getSettings().getKeepAnalyzeMainGameWindow())

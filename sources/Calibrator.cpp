@@ -508,10 +508,10 @@ QList<QRect> Calibrator::getOutsideFramesOfOpenEntitiesOnSideBars(const QImage& 
 			continue;
 		QList<QPoint> sortedByX, sortedByY;
 		sortByXY(endsOfFrame, sortedByX, sortedByY);
-
 		QPoint pt = sortedByY[0];
 		QSize size(pt.x() + endOfSideBarEntity.width() - currPt.x(), pt.y() + endOfSideBarEntity.height() - currPt.y());
 		QRect toAdd(currPt, size);
+		//wholeScreen.copy(toAdd).save(QString("C:\\Users\\szczy\\Desktop\\inne\\%1.png").arg(QString::number(QDateTime::currentMSecsSinceEpoch())));
 		outerFramesOfSideBarsEntity.push_back(toAdd);
 	}
 	return outerFramesOfSideBarsEntity;

@@ -11,23 +11,19 @@ ManaHealthStateAnalyzer::~ManaHealthStateAnalyzer(){
 void ManaHealthStateAnalyzer::run(){
 	while (true) {
 		msleep(SLEEP_TIME);
-
 		ValuesDoubles percentages = getCurrentPercentage();
 		if (!percentages.isValid())
 			continue;
-
 		sendDataToGui(percentages);
-
 		auto healthMetodes = findRestorationToUse(percentages.health, healthMap);
 		for each (auto methode in healthMetodes) {
 			gameConnector->useRestorationMethode(methode);
-			msleep(10);
+			var->getVitalitty().clearHealth();
 		}
-
 		auto manahMetodes = findRestorationToUse(percentages.mana, manaMap);
 		for each (auto methode in manahMetodes) {
 			gameConnector->useRestorationMethode(methode);
-			msleep(10);		
+			var->getVitalitty().clearMana();
 		}
 	}
 }
@@ -280,7 +276,7 @@ bool ManaHealthStateAnalyzer::restMethodeCanBeUsed(const RestorationMethode& res
 	switch (restMethode.getType())
 	{
 	case RestorationMethode::Type::POTION:
-		if (now < var->getTimers().getTimeLastItemUsage() + (1000 * restMethode.getCd()))
+		if (now < var->getTimers().getTimeLastItemUsage() + (1000 * restMethode.getCdGroup()))
 			return false;
 		//later should be added checking if char has proper pot!
 		return true;

@@ -35,7 +35,7 @@ public:
 		type = Type::SPELL;
 	};
 	void fillDataDetails(const Potion& potion) {
-		cd = 0;
+		cd = 1;
 		cdGroup = 1;
 		manaNeeded = 1;
 		type = Type::POTION;

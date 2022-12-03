@@ -14,10 +14,9 @@
 #include <QRgb>
 #include <QtCore/qsettings.h>
 
-#include "Calibrator.h"
+//#include "Calibrator.h"
 #include "RGBstruct.h"
-#include "VariablesClass.h"
-#include "GameConnecter.h"
+//#include "VariablesClass.h"
 #include "Key.h"
 
 

@@ -9,6 +9,8 @@
 #include "Logger.h"
 #include "RestorationMethode.h"
 #include "Point3D.h"
+#include "ImgEditor.h"
+#include "PathResource.h"
 struct MutexImg {
 	public :
 		void getImgCopy(QImage& returnImg) {
@@ -70,12 +72,71 @@ public:
 	void getImg(QImage& returnBattleListImg) {
 		battleListImg.getImgCopy(returnBattleListImg);
 	}
-	void setEnemisAmount(int toSet) { enemiesOnBattleList = toSet; }
-	int getEnemisAmout() { return enemiesOnBattleList; }
+	int getEnemisAmout() {
+		if (qrand() % 10 == 0)
+			checkIfBattleListIsOk();
+		QImage inneBattleList = getInnerBattleList();
+		const int middleX = inneBattleList.width() / 2;
+		int blackDots = 0;
+		const uint BLACK = qRgb(0, 0, 0);
+		for (int y = 0; y < inneBattleList.height(); y++) {
+			if (inneBattleList.pixel(middleX, y) == BLACK)
+				blackDots++;
+		}
+		return blackDots / 2;
+	}
+	bool firstEnemieIsInRedFrame() {
+		QImage innerBattleListLImg;
+		getImg(innerBattleListLImg);
+		QRect inneBattleListArea = QRect(4, 15, 155, innerBattleListLImg.height());
+		innerBattleListLImg = innerBattleListLImg.copy(inneBattleListArea);
+		const uint RED = qRgb(255, 0, 0);
+		const uint LIGHT_RED = qRgb(255, 128, 128);
+		int redPixels = 0, notRedPixel = 0;
+		for (int y = 0; y < 20; y += 19) {
+			for (int x = 0; x < 20; x++){//top//down
+				uint pix = innerBattleListLImg.pixel(x, y);
+				if (pix == RED || pix == LIGHT_RED)
+					redPixels++;
+				else
+					notRedPixel++;
+			}
+		}
+		for (int x = 0; x < 20; x += 19) {//left//right
+			for (int y = 1; y < 19; y++) {
+				uint pix = innerBattleListLImg.pixel(x, y);
+				if (pix == RED || pix == LIGHT_RED)
+					redPixels++;
+				else
+					notRedPixel++;
+			}
+		}
+		double redPercentage = (redPixels * 100.0) / (redPixels + notRedPixel);
+		return redPercentage >= 75;
+	}
+	bool checkIfBattleListIsOk() {
+		QImage battleMark = QImage(PathResource::getPathToBattleList());
+		QImage battleList;
+		getImg(battleList);
+		bool properImg = ImgEditor::findStartPositionInImg(battleMark, battleList).size() == 1;
+		if (!properImg) {
+			setFrame(QRect());
+			return false;
+		}
+		else
+			return true;
+	}
 private:
 	MutexRect battleListArea;
 	MutexImg battleListImg;
 	std::atomic<int> enemiesOnBattleList = 0;
+	QImage getInnerBattleList() {
+		QRect innerBattleListRect(4, 15, 155, battleListArea.getRect().width());
+		QImage fullBattleListImg;
+		battleListImg.getImgCopy(fullBattleListImg);
+		return fullBattleListImg.copy(innerBattleListRect);
+	}
+
 };
 class Settings{
 public:
@@ -202,6 +263,14 @@ public:
 			return true;
 		return false;
 	}
+	void clearHealth() {
+		currentHealthPercentage = 100.0;
+		currentHealthRaw = 50000;
+	}
+	void clearMana() {
+		currentManaPercentage = 100.0;
+		currentManaRaw = 100000;
+	}
 private:
 	std::atomic<double> currentHealthPercentage = 100.0, currentManaPercentage = 100.0, currentMsPercentage = 100.0;
 	std::atomic<int> currentHealthRaw = 100, currentManaRaw = 100, currentMSRaw = 100;
@@ -241,12 +310,27 @@ public:
 	void getImgMainGameWindow(QImage& imgToRet) { this->gameWindow.getImgCopy(imgToRet); }
 	void setImgMainGameWindow(const QImage& mainGameWindow) { this->gameWindow.setImg(mainGameWindow); }
 	QRect getFrameMainGameWindow() {
-		gameWindowFrame.getRect();
+		return gameWindowFrame.getRect();
 	}
 	void setFrameMainGameWindow(const QRect& newGameWindowFrame) {
 		gameWindowFrame.setRect(newGameWindowFrame);
 	}
+	QVector<QPoint> getPointsOfFieldsAroundPlayer() {
+		QRect frame = getFrameMainGameWindow();
+		const int TITLE_WIDTH = frame.width() / TITLES_X;
+		const int TITLE_HEIGHT = frame.height() / TITLES_Y;
+		QPoint middleOfTitleZeroZero = frame.topLeft() + QPoint(TITLE_WIDTH/2, TITLE_HEIGHT/2);
+		QPoint miidleOfPlayerTitle = middleOfTitleZeroZero + QPoint(7 * TITLE_WIDTH, 5 * TITLE_HEIGHT);
+		QVector<QPoint> toRet = {};
+		for (int x = -1; x <= 1; x++){
+			for (int y = -1; y <= 1; y++) {
+				toRet.push_back(miidleOfPlayerTitle + QPoint(x * TITLE_WIDTH, y * TITLE_HEIGHT));
+			}
+		}
+		return toRet;
+	}
 private:
+	const int TITLES_X = 15, TITLES_Y = 11;
 	MutexImg gameWindow;
 	MutexRect gameWindowFrame;
 };
@@ -265,7 +349,7 @@ private:
 	std::atomic<uint> pid;
 	std::atomic<HWND> handlerToGameThread;
 	QString nameOfGameWindow;
-};
+}; 
 class Position
 {
 public:

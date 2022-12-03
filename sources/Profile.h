@@ -48,7 +48,7 @@ public:
 	QVector<RestorationMethode> getRestMethodesMana() const { return manaRestorations; };
 	Key getScreenShotKey() const { return screenShotKey; }
 	int getControls() const { return controls; }
-	int getAutoLoot() const { return autoLoot; }
+	AutoLoot getAutoLoot() const { return autoLoot; }
 	int getBarsLeft() const { return barsLeft; }
 	int getBarsRight() const { return barsRight; }
 private:	

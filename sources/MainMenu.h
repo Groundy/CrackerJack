@@ -29,8 +29,8 @@ public slots:
 	void changeProfileButtonAction();
 	void updateResourcesAmounts();
 	void takeScreenShotCheckBoxChanged();
-	void analyzeMiniMapCheckBoxChanged();
 	void testButtonClicked();
+	void autoHuntButtonClicked();
 
 	//from threads
 	void autoHealAndManaRegCheckBoxChanged();
@@ -39,7 +39,7 @@ public slots:
 	void printToUserConsol(QStringList msgs);
 	void updatePlayerPosition(QString x, QString y, QString f);
 	void updateEnemiesAmount(int enemies);
-	void updateHeadingPoint(int headingPoint);
+	void updateHeadingPoint(QString toDisplay);
 private:
 	Ui::MainMenu *ui;
 	Profile* prof;
@@ -48,12 +48,12 @@ private:
 	ScreenAnalyzer* screenAnalyzer;
 	ManaHealthStateAnalyzer* healthManaStateAnalyzer;
 	MinimapAnalyzer* miniMapAnalyzer;
-	AutoHunting* huntAutoThread;
+	AutoHunting* huntAutoThread = nullptr;
 	std::shared_ptr<VariablesClass> var;
 	std::shared_ptr<GameConnecter> gameConnector;
 	ActiveGameThread::GameActivityStates gameActivitystate;
-	bool huntAuto = false;
 
 	void threadStarter();
+	void startAutoHunting();
 	void signalSlotConnector();
 };

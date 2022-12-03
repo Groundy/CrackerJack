@@ -268,19 +268,6 @@
        </widget>
       </item>
       <item>
-       <widget class="QCheckBox" name="analyzeMiniMapBox">
-        <property name="enabled">
-         <bool>true</bool>
-        </property>
-        <property name="text">
-         <string>Analizuj pozycje postaci</string>
-        </property>
-        <property name="checked">
-         <bool>false</bool>
-        </property>
-       </widget>
-      </item>
-      <item>
        <spacer name="verticalSpacer_3">
         <property name="orientation">
          <enum>Qt::Vertical</enum>
@@ -389,19 +376,6 @@ p, li { white-space: pre-wrap; }
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout_3">
         <item>
-         <widget class="QLabel" name="constHeadingLabel">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="text">
-           <string>Zmierzam do: </string>
-          </property>
-         </widget>
-        </item>
-        <item>
          <widget class="QLabel" name="headinglabel">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
@@ -450,9 +424,16 @@ p, li { white-space: pre-wrap; }
     </widget>
    </item>
    <item row="7" column="1">
-    <widget class="QPushButton" name="testButton">
+    <widget class="QPushButton" name="autoHuntingButton">
      <property name="text">
       <string>start auto hunt</string>
+     </property>
+    </widget>
+   </item>
+   <item row="7" column="2">
+    <widget class="QPushButton" name="testButton">
+     <property name="text">
+      <string>testButton</string>
      </property>
     </widget>
    </item>
@@ -510,14 +491,14 @@ p, li { white-space: pre-wrap; }
    </hints>
   </connection>
   <connection>
-   <sender>analyzeMiniMapBox</sender>
-   <signal>stateChanged(int)</signal>
+   <sender>autoHuntingButton</sender>
+   <signal>clicked()</signal>
    <receiver>MainMenu</receiver>
-   <slot>analyzeMiniMapCheckBoxChanged()</slot>
+   <slot>autoHuntButtonClicked()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>512</x>
-     <y>148</y>
+     <x>339</x>
+     <y>579</y>
     </hint>
     <hint type="destinationlabel">
      <x>299</x>
@@ -532,7 +513,7 @@ p, li { white-space: pre-wrap; }
    <slot>testButtonClicked()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>339</x>
+     <x>515</x>
      <y>579</y>
     </hint>
     <hint type="destinationlabel">
@@ -548,5 +529,6 @@ p, li { white-space: pre-wrap; }
   <slot>takeScreenShotCheckBoxChanged()</slot>
   <slot>analyzeMiniMapCheckBoxChanged()</slot>
   <slot>testButtonClicked()</slot>
+  <slot>autoHuntButtonClicked()</slot>
  </slots>
 </ui>

@@ -8,7 +8,7 @@ MainMenu::MainMenu(Profile* prof, QWidget* parent)
 	ui->setupUi(this);
 
 	var = std::shared_ptr<VariablesClass>(new VariablesClass());
-	gameConnector = std::shared_ptr<GameConnecter>(new GameConnecter(this, var));
+	gameConnector = std::shared_ptr<GameConnecter>(new GameConnecter(this, var, prof));
 	ui->profileNameLabel->setText(prof->getName());
 	
 	ui->playerPosGroup->setVisible(false);
@@ -39,7 +39,6 @@ MainMenu::~MainMenu(){
 void MainMenu::threadStarter(){
 	activityThread = new ActiveGameThread(this, var);
 	activityThread->start();
-
 
 	screenSaverThread = new ScreenSaver(this, var, gameConnector, prof);
 	screenSaverThread->start();
@@ -78,15 +77,22 @@ void MainMenu::signalSlotConnector(){
 	slot = SLOT(updatePlayerPosition(QString, QString, QString));
 	connectionAccepted = connect(sigSender, sig, slotRec, slot, Qt::UniqueConnection);
 	allSlotsConnected = allSlotsConnected && connectionAccepted;
+}
+void MainMenu::startAutoHunting() {
+	Route route;
+	JsonParser::readRoute(route, "Lethe");
+	huntAutoThread = new AutoHunting(this, var, gameConnector, route);
+	huntAutoThread->start();
+	ui->playerPosGroup->setVisible(true);
 
-	sigSender = this->screenAnalyzer;
-	slotRec = this;
+
+	const char* sig = SIGNAL(updateHeadingPointInGUI(QString));
+	const char* slot = SLOT(updateHeadingPoint(QString));
+	bool connectionAccepted = connect(huntAutoThread, sig, this, slot, Qt::UniqueConnection);
 	sig = SIGNAL(updateEnemiesAmountInGUI(int));
 	slot = SLOT(updateEnemiesAmount(int));
-	connectionAccepted = connect(sigSender, sig, slotRec, slot, Qt::UniqueConnection);
-	allSlotsConnected = allSlotsConnected && connectionAccepted;
+	connectionAccepted = connect(huntAutoThread, sig, this, slot, Qt::UniqueConnection);
 }
-
 
 //slots
 void MainMenu::changeProfileButtonAction(){
@@ -177,38 +183,23 @@ void MainMenu::updatePlayerPosition(QString x, QString y, QString f){
 	QString str = QString("%1, %2, %3").arg(x, y, f);
 	ui->positonLabel->setText(str);
 }
-void MainMenu::analyzeMiniMapCheckBoxChanged() {
-	bool enable = ui->analyzeMiniMapBox->isChecked();
-	var->getSettings().setKeepAnalyzeMiniMap(enable);
-	ui->playerPosGroup->setVisible(enable);
-	updatePlayerPosition("?", "?", "?");
-}
 void MainMenu::updateEnemiesAmount(int enemies) {
 	QString toSet = enemies >= 0 ? QString::number(enemies) : "?";
 	ui->enemiesBattleLabel->setText(toSet);
 }
-void MainMenu::updateHeadingPoint(int headingPoint) {
-	QString toSet = headingPoint >= 0 ? QString::number(headingPoint) : "?";
-	ui->headinglabel->setText(toSet);
+void MainMenu::updateHeadingPoint(QString toDisplay) {
+	ui->headinglabel->setText(toDisplay);
 }
 void MainMenu::testButtonClicked() {
-	//RouteCreator(this).exec();
-	if (huntAuto) {
-		huntAutoThread->terminate();
-		delete huntAutoThread;
-		ui->playerPosGroup->setVisible(false);
-		ui->analyzeMiniMapBox->setChecked(false);
+	RouteCreator(this).exec();
+}
+void MainMenu::autoHuntButtonClicked(){
+	bool threadAlreadyCreated = huntAutoThread != nullptr;
+	if(!threadAlreadyCreated)
+		startAutoHunting();
+	else {
+		bool enable = !var->getSettings().getKeepHuntingAutomaticly();
+		var->getSettings().setKeepHuntingAutomaticly(enable);
+		ui->playerPosGroup->setVisible(enable);
 	}
-	else{
-		Route route;
-		JsonParser::readRoute(route, "Lethe");
-		huntAutoThread = new AutoHunting(this, var, gameConnector, route);
-		huntAutoThread->start();
-		ui->playerPosGroup->setVisible(true);
-		ui->analyzeMiniMapBox->setChecked(true);
-		const char* sig = SIGNAL(updateHeadingPointInGUI(int));
-		const char *slot = SLOT(updateHeadingPoint(int));
-		bool connectionAccepted = connect(huntAutoThread, sig, this, slot, Qt::UniqueConnection);
-	}
-
-};
+}
