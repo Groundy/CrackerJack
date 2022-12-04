@@ -16,6 +16,7 @@
 #include "RouteCreator.h"
 #include "MinimapAnalyzer.h"
 #include "AutoHunting.h"
+#include "AttackMethode.h"
 namespace Ui { class MainMenu; };
 
 class MainMenu : public QDialog

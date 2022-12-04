@@ -1,22 +1,9 @@
 #pragma once
 #include <qstring.h>
+#include <qsound.h>
 #include <qmessagebox.h>
-#include <qprocess.h>
-#include <Windows.h>
-#include <psapi.h>
-#include <qrgb.h>
-#include <qdatetime.h>
-#include <iostream>
-#include <qlist.h>
-#include <qdir.h>
-#include <qdebug.h>
-#include <tlhelp32.h>
-#include <QRgb>
-#include <QtCore/qsettings.h>
 
-//#include "Calibrator.h"
 #include "RGBstruct.h"
-//#include "VariablesClass.h"
 #include "Key.h"
 
 
@@ -27,6 +14,12 @@ public:
 	static void showMessageBox_INFO(QString text);
 	static bool showMessageBox_NO_YES(QString text);
 	static int showMessageBox(QString title, QString text, QFlags<QMessageBox::StandardButton> buttons);
+	static void ring() {
+		QSound* bell = new QSound("C:\\Moje\\pliki\\repos\\CrackerJackClient\\ResourcesUsing\\sound.wav");
+		bell->setLoops(2);
+		bell->play();
+		delete bell;
+	}
 	/*
 	enum class FOLDERS_OF_TMP_FOLDER {Logs, Profiles, TradeReports, Main, Routes, MarketLists};
 	enum class FieldsOfIniFile {

@@ -3,9 +3,9 @@
 #include <qtranslator.h>
 #include "Market.h"
 #include <qicon.h>
+
 #include "Tools.h"
 void test(){
-
 }
 QIcon getIcon(){
 	QDir dir = QDir::current();

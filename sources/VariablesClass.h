@@ -414,7 +414,6 @@ public:
 		fullImage.getImgCopy(img);
 	}
 
-
 	Timers& getTimers() {
 		return timers;
 	}
@@ -440,7 +439,9 @@ public:
 		return position;
 	}
 	Logger logger;
+	bool playingOnSmallMonitor = true;
 private:
+
 	GameProcess gameProcess;
 	MainWindow mainWindow;
 	BattleList battleList;

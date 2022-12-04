@@ -17,7 +17,7 @@ public:
 	~Logger() {};
 	void log(QString msg, bool sendToDebug = true, bool sendToUserConsol = false, bool addTimeSTamp = true) {
 		if (addTimeSTamp)
-			msg.push_front("  " + getMSecTillLastCommunicate());
+			msg.push_front(getTimeStamp());
 
 		if (sendToDebug)
 			qDebug() << msg;
@@ -32,7 +32,7 @@ private:
 	std::atomic<long long> time = QDateTime::currentDateTime().toMSecsSinceEpoch();
 	QString getTimeStamp() {
 		QDateTime time = QDateTime::currentDateTime();
-		return "[" + time.toString("hh:mm:ss:zzz") + "] ";
+		return time.toString("mm:ss:z") + " ";
 	};
 	
 	QString getMSecTillLastCommunicate() {

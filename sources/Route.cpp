@@ -151,8 +151,19 @@ bool Route::isValid() const {
 	return (route.size() > 2) && (route.first().getPosition() == route.last().getPosition());
 }
 int Route::getIndexOfPoint(Point3D toCheck) {
-	for (int i = 0; i < route.size(); i++)
-		if (route[i].getPosition() == toCheck)
-			return i;
+	int currentX = toCheck.getX();
+	int currentY = toCheck.getY();
+	for (int i = 0; i < route.size(); i++){
+		int x = route[i].getPosition().getX();
+		bool properX = currentX >= x - 1 && currentX <= x+1;
+		if (!properX)
+			continue;
+
+		int y = route[i].getPosition().getY();
+		bool properY = currentY >= y - 1 && currentY <= y + 1;
+		if (!properY)
+			continue;
+		return i;
+	}
 	return -1;
 }

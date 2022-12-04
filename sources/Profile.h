@@ -58,6 +58,6 @@ private:
 	QString profileName;
 	AutoLoot autoLoot;
 	Controls controls;
-	Key screenShotKey;
+	Key screenShotKey, shovelKey, ropeKey;
 	int barsLeft, barsRight;
 };

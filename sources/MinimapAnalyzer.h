@@ -8,6 +8,7 @@
 #include <qrandom.h>
 #include <qdatetime.h>
 #include <qsize.h>
+#include "qsound.h"
 
 #include "ImgEditor.h"
 #include "PathResource.h"

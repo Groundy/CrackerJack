@@ -19,6 +19,7 @@ public:
 	void useRestorationMethode(const RestorationMethode& methode);
 	void autoLootAroundPlayer();
 private:
+    std::mutex senderMutex;
 	Profile::AutoLoot autoLootSetting;
 	std::shared_ptr<VariablesClass> var;
 	void sendCharToGame(const QChar charToSend, const HWND& gameThreadHandler);
