@@ -255,10 +255,16 @@
     <ClInclude Include="sources\ImgEditor.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="sources\AttackMethode.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <QtTranslation Include="crackerjackclient_pl.ts">
       <Filter>Translation Files</Filter>
     </QtTranslation>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="todo.txt" />
   </ItemGroup>
 </Project>
