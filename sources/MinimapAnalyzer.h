@@ -16,18 +16,6 @@
 #include "Calibrator.h"
 #include "VariablesClass.h"
 #include "Utilities.h"	
-class ImgShearcher : public QThread {
-	Q_OBJECT
-public:
-	ImgShearcher(QObject* parent, const QImage& imgSmall, const QImage& imgBig, QPoint& foundStartPostiton, QRect frameToLookFor)
-		: QThread(parent), imgSmall(imgSmall), imgBig(imgBig), foundStartPostiton(foundStartPostiton), frameToLookFor(frameToLookFor) {};
-	const QImage& imgSmall, & imgBig;
-	QPoint& foundStartPostiton;
-	QRect frameToLookFor;
-	void run() {
-		foundStartPostiton = ImgEditor::findExactStartPositionInImg(imgSmall, imgBig, frameToLookFor);
-	}
-};
 class MinimapAnalyzer : public QThread {
 	Q_OBJECT
 public:
@@ -56,5 +44,21 @@ private:
 	QPoint findPlayerPosition(const QImage& miniMap, const QImage* wholeMap);
 	QList<QPoint> findStartPosOfImgMap(const QImage& imgToFind, const QImage& imgToSearchWithin, QRect frameInBigWindow);
 	QRect getFrameToLookByPreviousPos();
-	QSize getVectorToPlayerFromImgPieceIndex(int index);
+	QPoint getVectorToPlayerFromImgPieceIndex(int index);
 };
+
+
+/*
+class ImgShearcher : public QThread {
+	Q_OBJECT
+public:
+	ImgShearcher(QObject* parent, const QImage& imgSmall, const QImage& imgBig, QPoint& foundStartPostiton, QRect frameToLookFor)
+		: QThread(parent), imgSmall(imgSmall), imgBig(imgBig), foundStartPostiton(foundStartPostiton), frameToLookFor(frameToLookFor) {};
+	const QImage& imgSmall, & imgBig;
+	QPoint& foundStartPostiton;
+	QRect frameToLookFor;
+	void run() {
+		foundStartPostiton = ImgEditor::findExactStartPositionInImg(imgSmall, imgBig, frameToLookFor);
+	}
+};
+*/
