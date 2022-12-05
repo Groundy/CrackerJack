@@ -88,9 +88,9 @@ QList<QImage> MinimapAnalyzer::splitMiniMap(const QImage& wholeMiniMap) {
 QPoint MinimapAnalyzer::findPlayerPosition(const QImage& miniMap, const QImage* wholeMap) {
 	try{
 		const QList<QImage> miniMapParts = splitMiniMap(miniMap);
-		QList<QList<QPoint>> pointsFromThreads;
+		QList<QPoint> pointsFromThreads;
 		for (size_t i = 0; i < miniMapParts.size(); i++)
-			pointsFromThreads.push_back(QList<QPoint>());
+			pointsFromThreads.push_back(QPoint());
 
 		QList<ImgShearcher*> threads;
 		QRect frame = getFrameToLookByPreviousPos();
@@ -108,7 +108,7 @@ QPoint MinimapAnalyzer::findPlayerPosition(const QImage& miniMap, const QImage* 
 				if (threads[i]->isRunning())
 					keepWaiting = true;
 				else {
-					bool foundPoint = pointsFromThreads[i].size() == 1;
+					bool foundPoint = pointsFromThreads[i] != QPoint();
 					if (foundPoint) {
 						keepWaiting = false;
 						break;
@@ -125,11 +125,11 @@ QPoint MinimapAnalyzer::findPlayerPosition(const QImage& miniMap, const QImage* 
 
 		for (size_t i = 0; i < pointsFromThreads.size(); i++) {
 			auto currentList = &pointsFromThreads[i];
-			if (currentList->size() != 1)
+			if (pointsFromThreads[i].isNull())
 				continue;
 
 			QSize vectorToPlayerPos = getVectorToPlayerFromImgPieceIndex(i);
-			QPoint playerPos(vectorToPlayerPos.width() + currentList[0].first().x(), vectorToPlayerPos.height() + currentList[0].first().y());
+			QPoint playerPos(vectorToPlayerPos.width() + currentList[0].x(), vectorToPlayerPos.height() + currentList[0].y());
 			return playerPos;
 		}
 		return QPoint();

@@ -19,13 +19,13 @@
 class ImgShearcher : public QThread {
 	Q_OBJECT
 public:
-	ImgShearcher(QObject* parent, const QImage& imgSmall, const QImage& imgBig, QList<QPoint>& foundStartPostitons, QRect frameToLookFor)
-		: QThread(parent), imgSmall(imgSmall), imgBig(imgBig), foundStartPostitons(foundStartPostitons), frameToLookFor(frameToLookFor) {};
+	ImgShearcher(QObject* parent, const QImage& imgSmall, const QImage& imgBig, QPoint& foundStartPostiton, QRect frameToLookFor)
+		: QThread(parent), imgSmall(imgSmall), imgBig(imgBig), foundStartPostiton(foundStartPostiton), frameToLookFor(frameToLookFor) {};
 	const QImage& imgSmall, & imgBig;
-	QList<QPoint>& foundStartPostitons;
+	QPoint& foundStartPostiton;
 	QRect frameToLookFor;
 	void run() {
-		foundStartPostitons = ImgEditor::findStartPositionInImg(imgSmall, imgBig, frameToLookFor);
+		foundStartPostiton = ImgEditor::findExactStartPositionInImg(imgSmall, imgBig, frameToLookFor);
 	}
 };
 class MinimapAnalyzer : public QThread {

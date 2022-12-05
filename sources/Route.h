@@ -25,7 +25,7 @@ public:
 	RoutePoint getPoint(int index);
 	QJsonObject toJson() const;
 	bool isValid() const;
-	int getIndexOfPoint(Point3D toCheck);
+	bool checkIfPositionIsOnListOnIndex(Point3D toCheck, int indexToCheck);
 private:
 	QList<RoutePoint> route;
 	QString routeName;

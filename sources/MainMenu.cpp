@@ -17,7 +17,6 @@ MainMenu::MainMenu(Profile* prof, QWidget* parent)
 	threadStarter();
 	signalSlotConnector();
 }
-
 MainMenu::~MainMenu(){
 	QList<QThread*> threads;
 	threads.push_back(activityThread);
@@ -80,11 +79,11 @@ void MainMenu::signalSlotConnector(){
 }
 void MainMenu::startAutoHunting() {
 	Route route;
-	JsonParser::readRoute(route, "Lethe2");
+	JsonParser::readRoute(route, "Lethe");
 	QVector<AttackMethode> attackMethodes = {
 		AttackMethode(2, 2, 6, "chuj", Key("F3"))
 	};
-	huntAutoThread = new AutoHunting(this, var, gameConnector, route, attackMethodes);
+	huntAutoThread = new AutoHunting(this, var, gameConnector, route, attackMethodes, prof);
 	huntAutoThread->start();
 	ui->playerPosGroup->setVisible(true);
 

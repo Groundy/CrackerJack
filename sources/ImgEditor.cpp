@@ -442,3 +442,66 @@ QList<QPoint> ImgEditor::findStartPositionInImg(const QImage& imgToFind, const Q
 		return QList<QPoint>();
 	}
 }
+QPoint ImgEditor::findExactStartPositionInImg(const QImage& imgToFind, const QImage& imgToSearchWithin, QRect frameInBigWindow) {
+	try {
+		const int WIDTH_SMALL_PIC = imgToFind.width();
+		const int HEIGHT_SMALL_PIC = imgToFind.height();
+		const int WIDTH_BIG_PIC = imgToSearchWithin.width();
+		const int HEIGHT_BIG_PIC = imgToSearchWithin.height();
+
+		if (imgToFind.isNull() || imgToSearchWithin.isNull())
+			throw std::exception("Cant find postion, one of imgs is null");
+		if (WIDTH_SMALL_PIC > WIDTH_BIG_PIC)
+			throw std::exception("Cant find postion, Wrong imgs size");
+		if (HEIGHT_SMALL_PIC > HEIGHT_BIG_PIC)
+			throw std::exception("Cant find postion, Wrong imgs size");
+		if (imgToFind.format() != imgToSearchWithin.format())
+			throw std::exception("Cant find postion, wrong formats");
+		if (frameInBigWindow.right() > WIDTH_BIG_PIC)
+			throw std::exception("Cant find postion, Wrong frame size");
+		if (frameInBigWindow.bottom() > HEIGHT_BIG_PIC)
+			throw std::exception("Cant find postion, Wrong frame size");
+
+
+		const int maxIndexToCheckX = frameInBigWindow.isEmpty() ? WIDTH_BIG_PIC - WIDTH_SMALL_PIC : frameInBigWindow.right();
+		const int maxIndexToCheckY = frameInBigWindow.isEmpty() ? HEIGHT_BIG_PIC - HEIGHT_SMALL_PIC : frameInBigWindow.bottom();
+		const int minIndexToCheckX = frameInBigWindow.isEmpty() ? 0 : frameInBigWindow.left();
+		const int minIndexToCheckY = frameInBigWindow.isEmpty() ? 0 : frameInBigWindow.top();
+
+		QList<QPoint> startPoints;
+		for (int x = minIndexToCheckX; x <= maxIndexToCheckX; x++) {
+			for (int y = minIndexToCheckY; y <= maxIndexToCheckY; y++) {
+				if (startPoints.size() > 1)
+					throw std::exception("more than one point found in findExactStartPoint fun!");
+
+				uint pixSmallImg = imgToFind.pixel(0, 0);
+				uint pixBigImg = imgToSearchWithin.pixel(x, y);
+				if (pixSmallImg != pixBigImg)
+					continue;
+
+				bool foundPosition = true;
+				for (int offsetX = 1; offsetX < WIDTH_SMALL_PIC; offsetX++) {
+					for (int offsetY = 1; offsetY < HEIGHT_SMALL_PIC; offsetY++) {
+						pixSmallImg = imgToFind.pixel(offsetX, offsetY);
+						pixBigImg = imgToSearchWithin.pixel(x + offsetX, y + offsetY);
+						if (pixBigImg == pixSmallImg)
+							continue;
+						//break both loops
+						offsetX = WIDTH_SMALL_PIC;
+						offsetY = HEIGHT_SMALL_PIC;
+						foundPosition = false;
+					}
+				}
+				if (foundPosition)
+					startPoints.push_back(QPoint(x, y));
+			}
+		}
+		if (startPoints.size() != 1)
+			throw std::exception("not exactly one position found in findExactStartPoint fun!");
+		return startPoints[0];
+	}
+	catch (const std::exception& e) {
+		Logger::staticLog(e.what());
+		return QPoint();
+	}
+}

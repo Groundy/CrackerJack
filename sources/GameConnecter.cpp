@@ -130,6 +130,7 @@ void GameConnecter::autoLootAroundPlayer() {
 		break;
 	case Profile::SHIFT_RIGHT:
 		clickRightWithShift(potinsToClick, SLEEP_TIME_BETWEEN_LOOT_CLICK);
+		this->releaseShift();
 		break;
 	case Profile::LEFT_MOUSE_BUTTON:
 		for each (auto pt in potinsToClick) {
