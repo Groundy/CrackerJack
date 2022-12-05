@@ -3,6 +3,7 @@
 #include <qlistwidget.h>
 #include <qstring.h>
 #include <iostream>
+#include <qvector.h>
 
 #include "ui_NewProfileConfiguartor.h"
 #include "Utilities.h"

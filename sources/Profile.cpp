@@ -66,6 +66,24 @@ Profile::Profile(QJsonObject obj) {
 		if (value.isUndefined() || !value.isDouble())
 			throw std::exception(field.toStdString().c_str());
 		this->barsRight = value.toInt();
+
+		field = "shovelKey";
+		value = obj["shovelKey"];
+		if (value.isUndefined() || !value.isObject())
+			throw std::exception(field.toStdString().c_str());
+		this->shovelKey = Key(value.toObject());
+
+		field = "autoAttackKey";
+		value = obj["autoAttackKey"];
+		if (value.isUndefined() || !value.isObject())
+			throw std::exception(field.toStdString().c_str());
+		this->autoAttackKey = Key(value.toObject());
+
+		field = "ropeKey";
+		value = obj["ropeKey"];
+		if (value.isUndefined() || !value.isObject())
+			throw std::exception(field.toStdString().c_str());
+		this->ropeKey = Key(value.toObject());
 	}
 	catch (const std::exception& e){
 		QString msg = QString("Error in reading profile from json file, problem with field %1").arg(e.what());
@@ -102,6 +120,10 @@ QJsonObject Profile::toJson() const{
 	mainObj.insert("controls", controls);
 	mainObj.insert("leftBars", barsLeft);
 	mainObj.insert("rightBars", barsRight);
+
+	mainObj.insert("shovelKey", shovelKey.toJson());
+	mainObj.insert("ropeKey", ropeKey.toJson());
+	mainObj.insert("autoAttackKey", autoAttackKey.toJson());
 	return mainObj;
 }
 void Profile::clearProfile(){

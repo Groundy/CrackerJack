@@ -40,6 +40,9 @@ public:
 	void setBars(int left, int right) { barsLeft = left; barsRight = right; }
 	void setControls(int enumCode) { controls = Controls(enumCode); }
 	void setAutoLoot(int enumCode) { autoLoot = AutoLoot(enumCode); }
+	void setRopeKey(Key key) { this->ropeKey = key; }
+	void setAutoAttackKey(Key key) { this->autoAttackKey = key; }
+	void setShovelKey(Key key) { this->shovelKey = key; }
 
 	//getters 
 	QString getName() const { return profileName; }
@@ -51,6 +54,9 @@ public:
 	AutoLoot getAutoLoot() const { return autoLoot; }
 	int getBarsLeft() const { return barsLeft; }
 	int getBarsRight() const { return barsRight; }
+	Key getRopeKey() const { return ropeKey; }
+	Key getAutoAttackKey() const { return autoAttackKey; }
+	Key getShovelKey() const { return shovelKey; }
 private:	
 	QVector<RestorationMethode> manaRestorations;
 	QVector<RestorationMethode> healthRestorations;
@@ -58,6 +64,6 @@ private:
 	QString profileName;
 	AutoLoot autoLoot;
 	Controls controls;
-	Key screenShotKey, shovelKey, ropeKey;
+	Key screenShotKey, shovelKey, ropeKey, autoAttackKey;
 	int barsLeft, barsRight;
 };

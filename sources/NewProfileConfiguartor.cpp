@@ -6,8 +6,19 @@ NewProfileConfiguartor::NewProfileConfiguartor(Profile* prof, QWidget* parent) :
 	ui = new Ui::NewProfileConfiguartor();
 	ui->setupUi(this);
 	fillGuiPtrs();
-	ui->screenShotBox->insertItems(0, Key::getListOfAllPossibleKeys());
-	ui->screenShotBox->setCurrentIndex(-1);
+
+
+	auto allPossibleKeyNames = Key::getListOfAllPossibleKeys();
+	QVector<QComboBox*> comboBoxesToFill = {
+		ui->autoAttackBox,
+		ui->shovelBox,
+		ui->ropeBox,
+		ui->screenShotBox
+	};
+	for each (auto box in comboBoxesToFill){
+		box->insertItems(0, allPossibleKeyNames);
+		box->setCurrentIndex(-1);
+	}
 }
 NewProfileConfiguartor::~NewProfileConfiguartor() {
 	delete ui;
@@ -365,9 +376,8 @@ void NewProfileConfiguartor::fillFormsFromDataFromProf(Profile& prof){
 	int professionIndex = profComboBox->findText(professionName);
 	profComboBox->setCurrentIndex(professionIndex);
 
-	auto screenBox = ui->screenShotBox;
-	int screenShotKeyIndex = screenBox->findText(prof.getScreenShotKey().getKeyName());
-	screenBox->setCurrentIndex(screenShotKeyIndex);
+	int screenShotKeyIndex = ui->screenShotBox->findText(prof.getScreenShotKey().getKeyName());
+	ui->screenShotBox->setCurrentIndex(screenShotKeyIndex);
 
 	fillSlidersGroup(healthPtrs, prof.getRestMethodesHealth());
 	fillSlidersGroup(manaPtrs, prof.getRestMethodesMana());
@@ -376,6 +386,15 @@ void NewProfileConfiguartor::fillFormsFromDataFromProf(Profile& prof){
 	ui->autoLootBox->setCurrentIndex(prof.getAutoLoot());
 	ui->leftBarsCounter->setValue(prof.getBarsLeft());
 	ui->rightBarsCounter->setValue(prof.getBarsRight());
+
+	int autoAttackKeyIndex = ui->autoAttackBox->findText(prof.getAutoAttackKey().getKeyName());
+	ui->autoAttackBox->setCurrentIndex(autoAttackKeyIndex);
+
+	int ropeKeyIndex = ui->ropeBox->findText(prof.getRopeKey().getKeyName());
+	ui->ropeBox->setCurrentIndex(ropeKeyIndex);
+
+	int shovelKeyIndex = ui->shovelBox->findText(prof.getShovelKey().getKeyName());
+	ui->shovelBox->setCurrentIndex(shovelKeyIndex);
 }
 QVector<RestorationMethode> NewProfileConfiguartor::getRestorationMethodesFromGUI(GuiPointers guiPotiners){
 	QVector<RestorationMethode> toRet = {};
@@ -398,6 +417,9 @@ void NewProfileConfiguartor::saveDataToProfile(){
 	profToEdit->setBars(ui->leftBarsCounter->value(), ui->rightBarsCounter->value());
 	profToEdit->setControls(ui->controlsBox->currentIndex());
 	profToEdit->setAutoLoot(ui->autoLootBox->currentIndex());
+	profToEdit->setShovelKey(Key(ui->shovelBox->currentText()));
+	profToEdit->setAutoAttackKey(Key(ui->autoAttackBox->currentText()));
+	profToEdit->setRopeKey(Key(ui->ropeBox->currentText()));
 }
 void NewProfileConfiguartor::fillRestorationMethodesDetails(QVector<RestorationMethode>& restorationMethodes) {
 	if (restorationMethodes.size() == 0)

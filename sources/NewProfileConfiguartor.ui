@@ -53,18 +53,6 @@
      </item>
     </layout>
    </item>
-   <item row="2" column="1">
-    <widget class="QGroupBox" name="screenShotGroup">
-     <property name="title">
-      <string>Przycisk rzutu ekranu</string>
-     </property>
-     <layout class="QGridLayout" name="gridLayout_2">
-      <item row="0" column="0">
-       <widget class="QComboBox" name="screenShotBox"/>
-      </item>
-     </layout>
-    </widget>
-   </item>
    <item row="1" column="3" rowspan="2">
     <widget class="QGroupBox" name="controlGroup">
      <property name="title">
@@ -1434,13 +1422,30 @@
      </layout>
     </widget>
    </item>
-   <item row="2" column="2">
-    <widget class="QGroupBox" name="groupBox">
+   <item row="2" column="1" colspan="2">
+    <widget class="QGroupBox" name="keysGroup">
      <property name="title">
-      <string>narzędzia do auto hunting</string>
+      <string>Przyciski</string>
      </property>
-     <layout class="QGridLayout" name="gridLayout_3">
-      <item row="0" column="0" colspan="2">
+     <layout class="QGridLayout" name="gridLayout_2">
+      <item row="1" column="0">
+       <widget class="QLabel" name="screenShotLabel">
+        <property name="text">
+         <string>screenshot</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QComboBox" name="autoAttackBox">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="2">
        <widget class="QLabel" name="shovelLabel">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
@@ -1453,8 +1458,8 @@
         </property>
        </widget>
       </item>
-      <item row="0" column="2">
-       <widget class="QComboBox" name="shovelBox">
+      <item row="1" column="1">
+       <widget class="QComboBox" name="screenShotBox">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
           <horstretch>0</horstretch>
@@ -1463,7 +1468,14 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="0">
+      <item row="0" column="0">
+       <widget class="QLabel" name="autoAttackLabel">
+        <property name="text">
+         <string>atak</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="2">
        <widget class="QLabel" name="ropeLabel">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
@@ -1476,7 +1488,17 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="2">
+      <item row="0" column="3">
+       <widget class="QComboBox" name="shovelBox">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="3">
        <widget class="QComboBox" name="ropeBox">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
