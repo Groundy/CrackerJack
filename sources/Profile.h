@@ -10,10 +10,51 @@
 #include <qlist.h>
 
 #include "Key.h"
+#include "AttackMethode.h"
 #include "Profession.h"
 #include "RestorationMethode.h"
 #include "Utilities.h"
 #include "JsonClass.h"
+
+class AutoHuntData : JsonClass {
+public:
+	AutoHuntData() {};
+	~AutoHuntData() {};
+	bool isValid() const { return true; }
+	QJsonObject toJson() const {
+		QJsonObject obj;
+		obj.insert("minEnemiesToStop", minEnemiesToStop);
+		obj.insert("minEnemiesToContinue", minEnemiesToContinue);
+		QJsonArray attackMethodesArr;
+		for each (auto methode in attackMethodes){
+			attackMethodesArr.append(methode.toJson());
+		}
+		obj.insert("attackMethodes", attackMethodesArr);
+		return obj;
+	} 
+	AutoHuntData(QJsonObject obj){
+		minEnemiesToContinue = obj["minEnemiesToContinue"].toInt();
+		minEnemiesToStop = obj["minEnemiesToStop"].toInt();
+		QJsonArray attackMethodesArr = obj["attackMethodes"].toArray();
+		for each (auto methode in attackMethodesArr) 
+			this->attackMethodes.append(AttackMethode(methode.toObject()));
+	}
+	int getMinMonToContinue() const { return minEnemiesToContinue; }
+	int getMinMonToStop() const { return minEnemiesToStop; }
+	QVector<AttackMethode> getAttacks() const { return attackMethodes; }
+	void setMinMonToContinue(int toSet) { this->minEnemiesToContinue = toSet; }
+	void setMinMonToStop(int toSet) { this->minEnemiesToStop = toSet; }
+	void setAttacks(QVector<AttackMethode> toSet) { this->attackMethodes = toSet; }
+	AutoHuntData& operator = (const AutoHuntData& data) {
+		this->setMinMonToContinue(data.getMinMonToContinue());
+		this->setMinMonToStop(data.getMinMonToStop());
+		this->setAttacks(data.getAttacks());
+		return *this;
+	}
+private:
+	int minEnemiesToStop = 0, minEnemiesToContinue = 0;
+	QVector<AttackMethode> attackMethodes = {};
+};
 
 class Profile : JsonClass{
 public:
@@ -43,6 +84,7 @@ public:
 	void setRopeKey(Key key) { this->ropeKey = key; }
 	void setAutoAttackKey(Key key) { this->autoAttackKey = key; }
 	void setShovelKey(Key key) { this->shovelKey = key; }
+	void setAutoHuntData(AutoHuntData autoHuntData) { this->autoHuntData = autoHuntData; }
 
 	//getters 
 	QString getName() const { return profileName; }
@@ -57,6 +99,7 @@ public:
 	Key getRopeKey() const { return ropeKey; }
 	Key getAutoAttackKey() const { return autoAttackKey; }
 	Key getShovelKey() const { return shovelKey; }
+	AutoHuntData getAutoHuntData() const { return autoHuntData; }
 private:	
 	QVector<RestorationMethode> manaRestorations;
 	QVector<RestorationMethode> healthRestorations;
@@ -66,4 +109,5 @@ private:
 	Controls controls;
 	Key screenShotKey, shovelKey, ropeKey, autoAttackKey;
 	int barsLeft, barsRight;
+	AutoHuntData autoHuntData = AutoHuntData();
 };

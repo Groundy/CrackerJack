@@ -58,6 +58,17 @@ bool JsonParser::readSpellsJson(QList<Spell>& spells, Spell::SpellType* type, Pr
 
 	}
 }
+QStringList JsonParser::readRunesNames(){
+	QString path = PathResource::getPathToRunesFile();
+	QJsonObject obj;
+	openJsonFile(obj, path);
+	QJsonArray arr = obj.value("runes").toArray();
+	QStringList toRet; 
+	for each (auto arrObj in arr){
+		toRet.append(arrObj.toObject().value("name").toString());
+	}
+	return toRet;
+}
 bool JsonParser::readPotions(QList<Potion>& potions, Profession* prof, Potion::TypeOfPotion* filterType){
 	try{
 		potions.clear();

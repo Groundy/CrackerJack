@@ -80,10 +80,7 @@ void MainMenu::signalSlotConnector(){
 void MainMenu::startAutoHunting() {
 	Route route;
 	JsonParser::readRoute(route, "Lethe");
-	QVector<AttackMethode> attackMethodes = {
-		AttackMethode(2, 2, 6, "chuj", Key("F3"))
-	};
-	huntAutoThread = new AutoHunting(this, var, gameConnector, route, attackMethodes, prof);
+	huntAutoThread = new AutoHunting(this, var, gameConnector, route, prof);
 	huntAutoThread->start();
 	ui->playerPosGroup->setVisible(true);
 

@@ -24,6 +24,7 @@ public:
 	static QMap<QString, int> readAvaibleKeys();
 	static QStringList readNamesOfAllSavedProfiles();
 	static bool readSpellsJson(QList<Spell>& spells, Spell::SpellType* type, Profession* profession);
+	static QStringList readRunesNames();
 	static bool readPotions(QList<Potion>& potions, Profession* prof, Potion::TypeOfPotion* filterType);
 	static void saveProfile(Profile* prof);
 	static Profile loadProfile(QString profileName);

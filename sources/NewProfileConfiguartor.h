@@ -5,6 +5,7 @@
 #include <iostream>
 #include <qvector.h>
 
+#include "AutoHuntConfigurator.h"
 #include "ui_NewProfileConfiguartor.h"
 #include "Utilities.h"
 #include "Profile.h"
@@ -33,6 +34,7 @@ public slots:
 	void manaSlidersChanged();
 	void controlsOrAutoLootListAction();
 	void professionChanged();
+	void openAuoHuntSettings();
 
 	void fillFormsFromDataFromProf(Profile& profToEdit);
 private:

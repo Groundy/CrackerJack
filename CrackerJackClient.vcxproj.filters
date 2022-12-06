@@ -123,6 +123,9 @@
     <ClCompile Include="sources\AutoHunting.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="sources\AutoHuntConfigurator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="sources\SelectProfileWindow.h">
@@ -173,6 +176,9 @@
     <QtMoc Include="sources\AutoHunting.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <QtMoc Include="sources\AutoHuntConfigurator.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="sources\SelectProfileWindow.ui">
@@ -191,6 +197,9 @@
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="sources\MarketProcessGui.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="sources\AutoHuntConfigurator.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>

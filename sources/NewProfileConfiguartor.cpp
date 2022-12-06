@@ -216,7 +216,9 @@ void NewProfileConfiguartor::professionChanged(){
 		manaPtrs.methodeNames[i]->setCurrentIndex(-1);
 	}
 }
-
+void NewProfileConfiguartor::openAuoHuntSettings() {
+	AutoHuntConfigurator(this, profToEdit).exec();
+}
 //funcs
 Profession NewProfileConfiguartor::getSelectedProf(){
 	QString profName = ui->professionCombBox->currentText();

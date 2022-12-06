@@ -49,6 +49,9 @@ public:
 	static QString getPathToRouteFile(const QString routeNameWithoutExtension) {
 		return QString("%1%2.json").arg(getPathToRouteFolder(), routeNameWithoutExtension);
 	}
+	static QString getPathToRunesFile() {
+		return "C:\\Moje\\pliki\\repos\\CrackerJackClient\\ResourcesUsing\\runes.json";
+	}
 private:
 	static QString getPathToImgsFolder() {
 		return "C:\\Moje\\pliki\\repos\\CrackerJackClient\\ResourcesUsing\\imgs\\";

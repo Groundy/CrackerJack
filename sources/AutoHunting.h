@@ -12,7 +12,7 @@ class AutoHunting  : public QThread
 {
 	Q_OBJECT
 public:
-	AutoHunting(QObject *parent, std::shared_ptr<VariablesClass> var, std::shared_ptr<GameConnecter> gameConnector, Route route, QVector<AttackMethode> attackMethodes, Profile* profile);
+	AutoHunting(QObject *parent, std::shared_ptr<VariablesClass> var, std::shared_ptr<GameConnecter> gameConnector, Route route, Profile* profile);
 	~AutoHunting();
 	void run() {
 		while (true){
@@ -50,7 +50,8 @@ private:
 	bool atLastLoopPlayerWasFighting = false;
 	QVector<AttackMethode> attackMethodes = {};
 	int lastAnalyzeEnemiesNumber = 0;
-	const int MIN_ENEMIES_TO_STOP = 2;
+	int minEnemiesToStop = 2;
+	int minEnemiesToContinue = 0;
 
 	qint64 lastTimeMovedToNextNode = now();
 	qint64 lastTimePressedAttack = now();
@@ -124,7 +125,7 @@ private:
 		qint64 nowTime = now();
 		attacksMethodesTimers.insert(methode.getName(), nowTime);
 		lastTimeSpecialAttackUsed = nowTime;
-		var->log("Used " + methode.getName(), true, true, true);
+		//var->log("Used " + methode.getName(), true, true, true);
 		msleep(50);
 		gameConnector->sendKeyStrokeToProcess(methode.getKey());
 	}
@@ -152,7 +153,7 @@ private:
 	bool playerIsFighting() {
 		int enemiesOnScreen = var->getBattleList().getEnemisAmout();
 		emit updateEnemiesAmountInGUI(enemiesOnScreen);
-		bool isFighting = enemiesOnScreen >= MIN_ENEMIES_TO_STOP;
+		bool isFighting = enemiesOnScreen >= minEnemiesToStop;
 		if (isFighting) {
 			if (!atLastLoopPlayerWasFighting) {//stop and fight
 				gameConnector->sendKeyStrokeToProcess(VK_ESCAPE,1);

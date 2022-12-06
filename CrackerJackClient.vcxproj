@@ -224,6 +224,7 @@ xcopy /y /d ".\dependencies\64-bit\libcrypto-1_1-x64.dll" "$(OutDir)"
     <ResourceCompile Include="CrackerJackClient.rc" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="sources\AutoHuntConfigurator.cpp" />
     <ClCompile Include="sources\AutoHunting.cpp" />
     <ClCompile Include="sources\GameConnecter.cpp" />
     <ClCompile Include="sources\ImgEditor.cpp" />
@@ -254,6 +255,7 @@ xcopy /y /d ".\dependencies\64-bit\libcrypto-1_1-x64.dll" "$(OutDir)"
     <ClCompile Include="sources\VariablesClass.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <QtUic Include="sources\AutoHuntConfigurator.ui" />
     <QtUic Include="sources\MainMenu.ui" />
     <QtUic Include="sources\Market.ui" />
     <QtUic Include="sources\MarketProcessGui.ui" />
@@ -264,6 +266,7 @@ xcopy /y /d ".\dependencies\64-bit\libcrypto-1_1-x64.dll" "$(OutDir)"
   <ItemGroup>
     <QtMoc Include="sources\GameConnecter.h" />
     <ClInclude Include="sources\AttackMethode.h" />
+    <QtMoc Include="sources\AutoHuntConfigurator.h" />
     <ClInclude Include="sources\ImgEditor.h" />
     <ClInclude Include="Profession.h" />
     <QtMoc Include="sources\AutoHunting.h" />
