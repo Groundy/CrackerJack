@@ -6,7 +6,9 @@ AutoHunting::AutoHunting(QObject *parent, std::shared_ptr<VariablesClass> var, s
 	attackMethodes = data.getAttacks();
 	minEnemiesToStop = data.getMinMonToStop();
 	minEnemiesToContinue = data.getMinMonToContinue();
+	miniMapAnalyzer = new MinimapAnalyzer(parent, var);
+	miniMapAnalyzer->start();
 }
 
-AutoHunting::~AutoHunting()
-{}
+AutoHunting::~AutoHunting(){
+}

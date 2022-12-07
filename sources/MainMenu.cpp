@@ -23,7 +23,6 @@ MainMenu::~MainMenu(){
 	threads.push_back(screenSaverThread);
 	threads.push_back(screenAnalyzer);
 	threads.push_back(healthManaStateAnalyzer);
-	threads.push_back(miniMapAnalyzer);
 	threads.push_back(huntAutoThread);
 	for each (QThread* thread in threads){
 		thread->terminate();
@@ -47,9 +46,6 @@ void MainMenu::threadStarter(){
 
 	healthManaStateAnalyzer = new ManaHealthStateAnalyzer(this, prof , var, gameConnector);
 	healthManaStateAnalyzer->start();
-
-	miniMapAnalyzer = new MinimapAnalyzer(this, var);
-	miniMapAnalyzer->start();
 }
 void MainMenu::signalSlotConnector(){
 	QObject *sigSender, *slotRec;
@@ -69,13 +65,6 @@ void MainMenu::signalSlotConnector(){
 	slot = SLOT(printToUserConsol(QStringList));
 	connectionAccepted = connect(sigSender, sig, slotRec, slot, Qt::UniqueConnection);
 	allSlotsConnected = allSlotsConnected && connectionAccepted;
-
-	sigSender = this->miniMapAnalyzer;
-	slotRec = this;
-	sig = SIGNAL(sendPostitionsToGUI(QString, QString, QString));
-	slot = SLOT(updatePlayerPosition(QString, QString, QString));
-	connectionAccepted = connect(sigSender, sig, slotRec, slot, Qt::UniqueConnection);
-	allSlotsConnected = allSlotsConnected && connectionAccepted;
 }
 void MainMenu::startAutoHunting() {
 	Route route;
@@ -91,6 +80,12 @@ void MainMenu::startAutoHunting() {
 	sig = SIGNAL(updateEnemiesAmountInGUI(int));
 	slot = SLOT(updateEnemiesAmount(int));
 	connectionAccepted = connect(huntAutoThread, sig, this, slot, Qt::UniqueConnection);
+
+	QObject* sigSender = huntAutoThread->getMiniMapAnalyzer();
+	QObject* slotRec = this;
+	sig = SIGNAL(sendPostitionsToGUI(QString, QString, QString));
+	slot = SLOT(updatePlayerPosition(QString, QString, QString));
+	connectionAccepted = connect(sigSender, sig, slotRec, slot, Qt::UniqueConnection);
 }
 
 //slots

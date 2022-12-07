@@ -8,6 +8,7 @@
 #include "GameConnecter.h"
 #include "Profile.h"
 #include "AttackMethode.h"
+#include "MinimapAnalyzer.h"
 class AutoHunting  : public QThread
 {
 	Q_OBJECT
@@ -35,6 +36,9 @@ public:
 			moveToNextNode();
 		}
 	}
+	QObject* getMiniMapAnalyzer() {
+		return miniMapAnalyzer;
+	};
 signals:
 	void updateHeadingPointInGUI(QString);
 	void updateEnemiesAmountInGUI(int);
@@ -52,7 +56,7 @@ private:
 	int lastAnalyzeEnemiesNumber = 0;
 	int minEnemiesToStop = 2;
 	int minEnemiesToContinue = 0;
-
+	MinimapAnalyzer* miniMapAnalyzer;
 	qint64 lastTimeMovedToNextNode = now();
 	qint64 lastTimePressedAttack = now();
 	QMap <QString, qint64> attacksMethodesTimers;

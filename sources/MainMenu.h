@@ -14,7 +14,7 @@
 #include "Calibrator.h"
 #include "SelectProfileWindow.h"
 #include "RouteCreator.h"
-#include "MinimapAnalyzer.h"
+
 #include "AutoHunting.h"
 #include "AttackMethode.h"
 namespace Ui { class MainMenu; };
@@ -48,7 +48,7 @@ private:
 	ScreenSaver* screenSaverThread;
 	ScreenAnalyzer* screenAnalyzer;
 	ManaHealthStateAnalyzer* healthManaStateAnalyzer;
-	MinimapAnalyzer* miniMapAnalyzer;
+
 	AutoHunting* huntAutoThread = nullptr;
 	std::shared_ptr<VariablesClass> var;
 	std::shared_ptr<GameConnecter> gameConnector;
