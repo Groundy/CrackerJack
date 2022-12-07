@@ -13,11 +13,12 @@
 #include "PathResource.h"
 struct MutexImg {
 	public :
-		void getImgCopy(QImage& returnImg) {
+		QImage getImgCopy() {
 			mutex.lock();
 			if (!img.isNull());
-				returnImg = img.copy();
+				QImage returnImg = img.copy();
 			mutex.unlock();
+			return returnImg;
 		}
 		void setImg(const QImage& newImg) {
 			mutex.lock();
@@ -70,7 +71,7 @@ public:
 		return battleListArea.getRect();
 	};
 	void getImg(QImage& returnBattleListImg) {
-		battleListImg.getImgCopy(returnBattleListImg);
+		returnBattleListImg = battleListImg.getImgCopy();
 	}
 	int getEnemisAmout() {
 		if (qrand() % 10 == 0)
@@ -132,8 +133,7 @@ private:
 	std::atomic<int> enemiesOnBattleList = 0;
 	QImage getInnerBattleList() {
 		QRect innerBattleListRect(4, 15, 155, battleListArea.getRect().width());
-		QImage fullBattleListImg;
-		battleListImg.getImgCopy(fullBattleListImg);
+		QImage fullBattleListImg = battleListImg.getImgCopy();
 		return fullBattleListImg.copy(innerBattleListRect);
 	}
 
@@ -237,22 +237,22 @@ public:
 	void setImageMS(QImage& img) { msImg.setImg(img); }
 	void setImageCombined(QImage& img) { combinedImg.setImg(img); }
 	void getImageHealth(QImage& img, bool clear = false) {
-		healthImg.getImgCopy(img);
+		img = healthImg.getImgCopy();
 		if (clear)
 			healthImg.clear();
 	}
 	void getImageMana(QImage& img, bool clear = false) {
-		manaImg.getImgCopy(img);
+		img = manaImg.getImgCopy();
 		if (clear)
 			manaImg.clear();
 	}
 	void getImageMS(QImage& img, bool clear = false) {
-		msImg.getImgCopy(img);
+		img = msImg.getImgCopy();
 		if (clear)
 			msImg.clear();
 	}
 	void getImageCombined(QImage& img, bool clear = false) {
-		combinedImg.getImgCopy(img);
+		img = combinedImg.getImgCopy();
 		if (clear)
 			combinedImg.clear();
 	}
@@ -283,7 +283,7 @@ public:
 	MiniMap() {};
 	~MiniMap() {};
 	void getImgMiniMap(QImage& imgToRet) {
-		this->miniMap.getImgCopy(imgToRet);
+		imgToRet = this->miniMap.getImgCopy();
 		this->miniMap.clear();
 	}
 	void setImgMiniMap(const QImage& miniMapImg) { this->miniMap.setImg(miniMapImg); }
@@ -294,7 +294,7 @@ public:
 		miniMapFrame.setRect(newRect);
 	}
 	void getImgMiniMapLayer(QImage& imgToRet) {
-		this->minMapLayer.getImgCopy(imgToRet);
+		imgToRet = this->minMapLayer.getImgCopy();
 		this->minMapLayer.clear();
 	}
 	void setImgMiniMapLayer(const QImage& minMapLayerImg) { this->minMapLayer.setImg(minMapLayerImg); }
@@ -307,7 +307,7 @@ class MainWindow{
 public:
 	MainWindow() {};
 	~MainWindow() {};
-	void getImgMainGameWindow(QImage& imgToRet) { this->gameWindow.getImgCopy(imgToRet); }
+	void getImgMainGameWindow(QImage& imgToRet) { imgToRet = this->gameWindow.getImgCopy(); }
 	void setImgMainGameWindow(const QImage& mainGameWindow) { this->gameWindow.setImg(mainGameWindow); }
 	QRect getFrameMainGameWindow() {
 		return gameWindowFrame.getRect();
@@ -411,7 +411,7 @@ public:
 		fullImage.setImg(newImage);
 	}
 	void getCopyOfCurrentFullImg(QImage& img) {
-		fullImage.getImgCopy(img);
+		img = fullImage.getImgCopy();
 	}
 
 	Timers& getTimers() {

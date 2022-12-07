@@ -106,7 +106,7 @@ private:
 		QPoint whereToClick = addTwoPoints(playerPosOnWholeScreen, fromPlayerToTargetOnWholeMap);
 		QString msgToDisplayToUser = QString("Zmierzam do : %1").arg(QString::number(lastAchivedPoint + 1));
 		QString msgToConsole = QString("%1, x=%2, y=%3 ").arg(msgToDisplayToUser, QString::number(fromPlayerToTargetOnWholeMap.x()), QString::number(fromPlayerToTargetOnWholeMap.y()));
-		var->log(msgToConsole, true, true, true);
+		var->log(msgToConsole, false, true, true);
 		emit updateHeadingPointInGUI(msgToDisplayToUser);
 		gameConnector->clickLeft(whereToClick);
 	}
