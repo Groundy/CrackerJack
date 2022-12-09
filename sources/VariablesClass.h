@@ -15,8 +15,9 @@ struct MutexImg {
 	public :
 		QImage getImgCopy() {
 			mutex.lock();
-			if (!img.isNull());
-				QImage returnImg = img.copy();
+			QImage returnImg = QImage();
+			if (!img.isNull())
+				returnImg = img.copy();
 			mutex.unlock();
 			return returnImg;
 		}
@@ -70,13 +71,16 @@ public:
 	QRect getFrame() {
 		return battleListArea.getRect();
 	};
-	void getImg(QImage& returnBattleListImg) {
-		returnBattleListImg = battleListImg.getImgCopy();
+	QImage getImg() {
+		//ImgEditor::saveImgWitinLoop(battleListImg.getImgCopy());
+		return battleListImg.getImgCopy();
 	}
 	int getEnemisAmout() {
 		if (qrand() % 10 == 0)
 			checkIfBattleListIsOk();
 		QImage inneBattleList = getInnerBattleList();
+		if (inneBattleList.isNull())
+			return -1;
 		const int middleX = inneBattleList.width() / 2;
 		int blackDots = 0;
 		const uint BLACK = qRgb(0, 0, 0);
@@ -87,20 +91,19 @@ public:
 		return blackDots / 2;
 	}
 	bool firstEnemieIsInRedFrame() {
-		QImage innerBattleListLImg;
-		getImg(innerBattleListLImg);
-		QRect inneBattleListArea = QRect(4, 15, 155, innerBattleListLImg.height());
-		innerBattleListLImg = innerBattleListLImg.copy(inneBattleListArea);
-		const uint RED = qRgb(255, 0, 0);
-		const uint LIGHT_RED = qRgb(255, 128, 128);
-		int redPixels = 0, notRedPixel = 0;
+		QImage outterBattleListLImg = getImg();
+		if (outterBattleListLImg.isNull())
+			return true;
+		QRect inneBattleListArea = getInnerRect(outterBattleListLImg.rect());
+		QImage innerBattleListLImg = outterBattleListLImg.copy(inneBattleListArea);
+		constexpr uint RED = qRgb(255, 0, 0);
+		constexpr uint LIGHT_RED = qRgb(255, 128, 128);
+		int redPixels = 0;
 		for (int y = 0; y < 20; y += 19) {
 			for (int x = 0; x < 20; x++){//top//down
 				uint pix = innerBattleListLImg.pixel(x, y);
 				if (pix == RED || pix == LIGHT_RED)
 					redPixels++;
-				else
-					notRedPixel++;
 			}
 		}
 		for (int x = 0; x < 20; x += 19) {//left//right
@@ -108,35 +111,62 @@ public:
 				uint pix = innerBattleListLImg.pixel(x, y);
 				if (pix == RED || pix == LIGHT_RED)
 					redPixels++;
-				else
-					notRedPixel++;
 			}
 		}
-		double redPercentage = (redPixels * 100.0) / (redPixels + notRedPixel);
+		const int ALL_PIX_TO_CHECK = 76;
+		double redPercentage = (redPixels * 100.0) / ALL_PIX_TO_CHECK;
 		return redPercentage >= 75;
 	}
 	bool checkIfBattleListIsOk() {
 		QImage battleMark = QImage(PathResource::getPathToBattleList());
-		QImage battleList;
-		getImg(battleList);
+		QImage battleList = getImg();
 		bool properImg = ImgEditor::findStartPositionInImg(battleMark, battleList).size() == 1;
-		if (!properImg) {
+		if (!properImg)
 			setFrame(QRect());
-			return false;
+		return properImg;
+	}
+	QStringList getUniqueMonstersNames() {
+		QImage innerList = getInnerBattleList();
+		if (innerList.isNull())
+			return QStringList() << "Blad czytania battle listy.";
+		QVector<QRect> nameRect = getFramesOfMonstersNames();
+		QStringList toRet = {};
+		for (int i = 0; i < nameRect.size(); i++){
+			QImage singleMonsterNameImg = innerList.copy(nameRect[i]);
+			QString monsterName = ImgEditor::imgWithStrToStr(singleMonsterNameImg, 180);
+			if (monsterName.isEmpty())
+				break;
+			else
+				toRet.append(monsterName);
 		}
-		else
-			return true;
+		toRet.removeDuplicates();
+		return toRet;
 	}
 private:
 	MutexRect battleListArea;
 	MutexImg battleListImg;
 	std::atomic<int> enemiesOnBattleList = 0;
 	QImage getInnerBattleList() {
-		QRect innerBattleListRect(4, 15, 155, battleListArea.getRect().width());
+		QRect innerBattleListRect = getInnerRect(battleListArea.getRect());
 		QImage fullBattleListImg = battleListImg.getImgCopy();
 		return fullBattleListImg.copy(innerBattleListRect);
 	}
-
+	const QPoint INNER_FRAME_FIST_NAME_START = QPoint(21,0);
+	const int NAME_HEIGHT = 14;
+	const int HIGH_DIFF_BETWEEN_NAMES = 8;
+	QRect getInnerRect(QRect outerRect) {
+		return QRect(4, 15, 155, outerRect.height());
+	}
+	QVector<QRect> getFramesOfMonstersNames() {
+		QVector<QRect> toRet = {};
+		auto innerRect = getInnerRect(battleListArea.getRect());
+		int howManyNamesFitToListSize = ((innerRect.height() - NAME_HEIGHT) / (NAME_HEIGHT + HIGH_DIFF_BETWEEN_NAMES) + 1);//one name + pairs of (name+space between names)
+		for (int i = 0; i < howManyNamesFitToListSize; i++){
+			QPoint startPoint = INNER_FRAME_FIST_NAME_START + QPoint(0, i * (NAME_HEIGHT + HIGH_DIFF_BETWEEN_NAMES));
+			toRet.append(QRect(startPoint.x(), startPoint.y(), innerRect.width(), NAME_HEIGHT));
+		}
+		return toRet;
+	};
 };
 class Settings{
 public:
@@ -439,7 +469,7 @@ public:
 		return position;
 	}
 	Logger logger;
-	bool playingOnSmallMonitor = true;
+	bool playingOnSmallMonitor = false;
 private:
 
 	GameProcess gameProcess;

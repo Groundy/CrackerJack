@@ -22,6 +22,7 @@ public:
 				msleep(SLEEP_TIME * 30);
 				continue;
 			}
+			qDebug() << var->getBattleList().getUniqueMonstersNames();
 			if (playerIsFighting())
 				continue;
 			if (!updatePlayerCurrentPos())

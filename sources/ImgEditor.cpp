@@ -233,8 +233,8 @@ void ImgEditor::cutImgWithLettersToSingleLettersImgList(QImage& img, QList<QImag
 		letterImages.push_back(letter);
     }
  }
-QString ImgEditor::imgWithStrToStr(QImage& img) {
-	imgToBlackAndWhiteAllColors(img, 240);
+QString ImgEditor::imgWithStrToStr(QImage& img, int threshold) {
+	imgToBlackAndWhiteAllColors(img, threshold);
 	cutBlackBordersOfImg(img);
     QList<QImage> lettersImgs;
 	cutImgWithLettersToSingleLettersImgList(img, lettersImgs);

@@ -44,8 +44,9 @@ bool ScreenAnalyzer::loadScreen(QImage& img){
 	if (nameOfImgToCapture.isEmpty())
 		return false;
 	QString pathToImg = screenShotFolder.absoluteFilePath(nameOfImgToCapture);
-	bool openCorrectly = img.load(pathToImg);
-	return openCorrectly;
+	if (!img.load(pathToImg))
+		return false;
+	return !img.isNull();
 }
 QString ScreenAnalyzer::getNameOfLastTakenScreenShot(){
 	QStringList filtr = QStringList() << "*_*_*_Hotkey.png";
@@ -128,5 +129,6 @@ void ScreenAnalyzer::cutBattleList(const QImage& fullscreen){
 	if (var->getBattleList().getFrame().isEmpty())
 		return;
 
-	var->getBattleList().setImg(fullscreen.copy(var->getBattleList().getFrame()));
+	QRect frame = var->getBattleList().getFrame();
+	var->getBattleList().setImg(fullscreen.copy(frame));
 }
