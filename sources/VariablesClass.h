@@ -136,8 +136,7 @@ public:
 			QString monsterName = ImgEditor::imgWithStrToStr(singleMonsterNameImg, 180);
 			if (monsterName.isEmpty())
 				break;
-			else
-				toRet.append(monsterName);
+			toRet.append(monsterName);
 		}
 		toRet.removeDuplicates();
 		return toRet;

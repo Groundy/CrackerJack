@@ -2,7 +2,7 @@
 #include <qstring.h>
 #include <qsound.h>
 #include <qmessagebox.h>
-
+#include <qfiledialog.h>
 #include "RGBstruct.h"
 #include "Key.h"
 
@@ -14,11 +14,24 @@ public:
 	static void showMessageBox_INFO(QString text);
 	static bool showMessageBox_NO_YES(QString text);
 	static int showMessageBox(QString title, QString text, QFlags<QMessageBox::StandardButton> buttons);
-	static void ring() {
-		QSound* bell = new QSound("C:\\Moje\\pliki\\repos\\CrackerJackClient\\ResourcesUsing\\sound.wav");
+	static QString getFileByDialog(QString filter, QString startDirect) {
+		QFileDialog fileDialog;
+		fileDialog.setNameFilter(filter);
+		fileDialog.setDirectory(startDirect);
+		int retCode = fileDialog.exec();
+		bool accepted = retCode == QDialog::Accepted;
+		if (!accepted)
+			return QString();
+		QStringList fileList = fileDialog.selectedFiles();
+		if (fileList.size() == 0)
+			return QString();
+		QString pathToFile = fileList.first();
+		return pathToFile;			
+	}
+	static void ring(QObject* parent) {
+		QSound* bell = new QSound("C:\\Moje\\pliki\\repos\\CrackerJackClient\\ResourcesUsing\\sound.wav", parent);
 		bell->setLoops(2);
 		bell->play();
-		delete bell;
 	}
 	/*
 	enum class FOLDERS_OF_TMP_FOLDER {Logs, Profiles, TradeReports, Main, Routes, MarketLists};

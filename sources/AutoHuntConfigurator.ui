@@ -440,10 +440,44 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>selectRouteButton</sender>
+   <signal>clicked()</signal>
+   <receiver>AutoHuntConfiguratorClass</receiver>
+   <slot>selectRoute()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>80</x>
+     <y>64</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>230</x>
+     <y>208</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>editRouteButton</sender>
+   <signal>clicked()</signal>
+   <receiver>AutoHuntConfiguratorClass</receiver>
+   <slot>editRoute()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>208</x>
+     <y>64</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>230</x>
+     <y>208</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>saveButtonClicked()</slot>
   <slot>cancelButtonClicked()</slot>
   <slot>checkBoxChanged()</slot>
+  <slot>selectRoute()</slot>
+  <slot>editRoute()</slot>
  </slots>
 </ui>

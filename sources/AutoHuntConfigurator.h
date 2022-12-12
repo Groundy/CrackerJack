@@ -1,5 +1,6 @@
 #pragma once
 #include <QDialog>
+#include "RouteCreator.h"
 #include "ui_AutoHuntConfigurator.h"
 #include "Profile.h"
 #include "JsonParser.h"
@@ -15,6 +16,26 @@ public:
 	AutoHuntConfigurator(QWidget *parent = nullptr, Profile* prof = nullptr);
 	~AutoHuntConfigurator();
 public slots:
+	void selectRoute() {
+		QString pathToFile = Utilities::getFileByDialog("*.json", PathResource::getPathToRouteFolder());
+		QJsonObject obj;
+		if (!JsonParser::openJsonFile(obj, pathToFile))
+			return;//todo
+
+		QString name = Route(obj).getName();
+		ui->routeLabel->setText(name);
+		lastSelectedRoute = name;
+	};
+	void editRoute() {
+		if (lastSelectedRoute.isEmpty())
+			return;
+
+
+		Route route;
+		JsonParser::readRoute(route, lastSelectedRoute);
+		RouteCreator routeCreator(this, &route);
+		routeCreator.exec();
+	};
 	void saveButtonClicked() {
 		getDataFromGUI();
 		prof->setAutoHuntData(autoHuntData);
@@ -168,4 +189,5 @@ private:
 		autoHuntData.setAttacks(attacks);
 	}
 	AutoHuntData autoHuntData = AutoHuntData();
+	QString lastSelectedRoute = QString();
 };

@@ -1,7 +1,7 @@
 #pragma once
 #include <QThread>
 #include <qrect.h>
-
+#include <qstringlist.h>
 #include <qqueue.h>
 #include "Route.h"
 #include "VariablesClass.h"
@@ -22,7 +22,8 @@ public:
 				msleep(SLEEP_TIME * 30);
 				continue;
 			}
-			qDebug() << var->getBattleList().getUniqueMonstersNames();
+			if (playerFoundOnBattleList())
+				continue;
 			if (playerIsFighting())
 				continue;
 			if (!updatePlayerCurrentPos())
@@ -64,6 +65,7 @@ private:
 	int minPeriodBetweenAttackingMob = 1700;
 	int minPeriodBetweenMovingToNodes = 2000;
 	qint64 lastTimeSpecialAttackUsed = now();
+	QStringList alloweNamesOnBattleList = QStringList() << "SwampTroll";
 
 	QPoint getDistFromOnePtToAnother(QPoint start, QPoint end) {
 		return QPoint(end.x() - start.x(), end.y() - start.y());
@@ -192,5 +194,15 @@ private:
 		msleep(50);
 		gameConnector->sendKeyStrokeToProcess(profile->getAutoAttackKey());
 		lastTimePressedAttack = nowTime;
+	}
+	bool playerFoundOnBattleList() {
+		for each (QString nameOfEntityOnBattleList in var->getBattleList().getUniqueMonstersNames()) {
+			bool playerFound = !alloweNamesOnBattleList.contains(nameOfEntityOnBattleList);
+			if (playerFound) {
+				Utilities::ring(this);
+				return true;
+			}
+		}
+		return false;
 	}
 };

@@ -15,7 +15,7 @@ namespace Ui { class RouteCreator; };
 class RouteCreator : public QDialog {
 	Q_OBJECT
 public:
-	RouteCreator(QDialog* parent = Q_NULLPTR);
+	RouteCreator(QDialog* parent, Route* route = nullptr);
 	~RouteCreator();
 public slots:
 	void mapMoved();
@@ -48,6 +48,7 @@ private:
 	void repaintList();
 	void selectedItemOnListChanged();
 	bool checkRouteButtonPressed();
+	void loadFromRoute(Route* route);
 };
 
 

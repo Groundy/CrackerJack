@@ -1,7 +1,7 @@
 #include "RouteCreator.h"
 #include "ui_RouteCreator.h"
 
-RouteCreator::RouteCreator(QDialog* parent)
+RouteCreator::RouteCreator(QDialog* parent, Route* route)
 	: QDialog(parent){
 	ui = new Ui::RouteCreator();
 	ui->setupUi(this);
@@ -9,6 +9,7 @@ RouteCreator::RouteCreator(QDialog* parent)
 	fillNamesOfFieldTypesToList();
 	ui->fieldTypesBox->insertItems(0, listOfRoutePointsType);
 	ui->fieldTypesBox->repaint();
+	loadFromRoute(route);
 }
 RouteCreator::~RouteCreator() {
 	for each (QImage * map in floorMaps.values()) {
@@ -157,22 +158,10 @@ bool RouteCreator::loadMap(int floor) {
 	}
 }
 void RouteCreator::loadRouteButtonPressed(){
-	QFileDialog fileDialog;
-	fileDialog.setNameFilter("*.json");
-	fileDialog.setDirectory(PathResource::getPathToRouteFolder());
-	int retCode = fileDialog.exec();
-	bool accepted = retCode == QDialog::Accepted;
-	if (!accepted)
-		return;
-	QStringList fileList = fileDialog.selectedFiles();
-	if (fileList.size() == 0)
-		return;
-	QString pathToFile = fileList.first();
-
+	QString pathToFile = Utilities::getFileByDialog("*.json", PathResource::getPathToRouteFolder());
 	QJsonObject obj;
-	if (JsonParser::openJsonFile(obj, pathToFile))
+	if (!JsonParser::openJsonFile(obj, pathToFile))
 		return;//todo
-
 	route = Route(obj);
 	ui->nameEditField->setText(route.getName());
 	repaintList();
@@ -308,6 +297,14 @@ bool RouteCreator::checkRouteButtonPressed() {
 
 	Utilities::showMessageBox_INFO(errorText);
 	return routeCorrect;
+}
+void RouteCreator::loadFromRoute(Route* route) {
+	if (route == nullptr)
+		return;
+	this->route = *route;
+	this->currentPosition = route->getPoint(0).getPosition();
+	repaintList();
+	repaintMap();
 }
 
 /*

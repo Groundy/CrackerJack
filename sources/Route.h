@@ -26,6 +26,11 @@ public:
 	QJsonObject toJson() const;
 	bool isValid() const;
 	bool checkIfPositionIsOnListOnIndex(Point3D toCheck, int indexToCheck);
+	Route& operator = (const Route& newRoute) {
+		this->route = newRoute.route;
+		this->routeName = newRoute.getName();
+		return *this;
+	}
 private:
 	QList<RoutePoint> route;
 	QString routeName;

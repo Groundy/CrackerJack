@@ -68,7 +68,7 @@ void MainMenu::signalSlotConnector(){
 }
 void MainMenu::startAutoHunting() {
 	Route route;
-	JsonParser::readRoute(route, "Lethe");
+	JsonParser::readRoute(route, "trolls");
 	huntAutoThread = new AutoHunting(this, var, gameConnector, route, prof);
 	huntAutoThread->start();
 	ui->playerPosGroup->setVisible(true);
@@ -118,28 +118,20 @@ void MainMenu::onGameStateChanged(int state){
 	switch (state)
 	{
 	case Type::ACTIVE:
-		toWrite += tr("Game active, Logged");
-		break; 
+		toWrite += tr("Game active, Logged");	break; 
 	case Type::NO_ACTIVE:
-		toWrite += tr("Game not found");
-		break;
+		toWrite += tr("Game not found");	break;
 	case Type::NO_HANDLER:
-		toWrite += tr("Game found but no access");
-		break;
+		toWrite += tr("Game found but no access");	break;
 	case Type::NO_LOGGED:
-		toWrite += tr("Game active but no char logged");
-		break;
+		toWrite += tr("Game active but no char logged");	break;
 	case Type::NO_WINDOW:
-		toWrite += tr("Game is loading");
-		break;
+		toWrite += tr("Game is loading");	break;
 	default:
-		toWrite += tr("Error");
-		break;
+		toWrite += tr("Error");	break;
 	}
 	ui->gameActiveLabel->setText(toWrite);
 	ui->gameActiveLabel->repaint();
-
-	bool shouldBeActive = state == Type::ACTIVE;	
 }
 void MainMenu::changedValueOfCharHealthOrMana(double healthPercentage, double manaPercentage, double manaShieldPercentage){
 	if (healthPercentage != NULL) {
@@ -149,6 +141,7 @@ void MainMenu::changedValueOfCharHealthOrMana(double healthPercentage, double ma
 	}
 	else
 		ui->healthInfoLabel->setText(QString::fromWCharArray(L"\u017Bycie: ?"));
+	ui->healthInfoLabel->repaint();
 
 	if (manaPercentage != NULL) {
 		QString manaStr = QString::number(manaPercentage, 'g', 3);
@@ -157,6 +150,7 @@ void MainMenu::changedValueOfCharHealthOrMana(double healthPercentage, double ma
 	}
 	else
 		ui->manaInfoLabel->setText("Mana: ?");
+	ui->manaInfoLabel->repaint();
 
 	if (manaShieldPercentage != NULL) {
 		QString manaShieldStr = QString::number(manaShieldPercentage, 'g', 3);
@@ -165,9 +159,6 @@ void MainMenu::changedValueOfCharHealthOrMana(double healthPercentage, double ma
 	}
 	else
 		ui->manaShieldLabel->setText("Tarcza: ?");
-
-	ui->healthInfoLabel->repaint();
-	ui->manaInfoLabel->repaint();
 	ui->manaShieldLabel->repaint();
 }
 void MainMenu::printToUserConsol(QStringList msgs){
