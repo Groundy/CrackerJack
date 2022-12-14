@@ -6,6 +6,7 @@
 
 #include "Tools.h"
 void test(){
+	QString test = "test str on testBranchCommit"
 }
 QIcon getIcon(){
 	QDir dir = QDir::current();
