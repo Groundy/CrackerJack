@@ -6,6 +6,7 @@
 
 #include "Tools.h"
 void test(){
+	int a = 3;
 }
 QIcon getIcon(){
 	QDir dir = QDir::current();
