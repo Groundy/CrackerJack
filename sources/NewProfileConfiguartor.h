@@ -12,7 +12,7 @@
 #include "JsonParser.h"
 #include "Key.h"
 #include "Profession.h"
-#include "RestorationMethode.h"
+#include "RestorationMethode.hpp"
 #include "Spell.h"
 
 namespace Ui { class NewProfileConfiguartor; };

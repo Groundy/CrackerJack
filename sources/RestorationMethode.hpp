@@ -2,7 +2,7 @@
 #include <qstring.h>
 
 #include "Key.h"
-#include "JsonClass.h"
+#include "JsonClass.hpp"
 #include "Spell.h"
 #include "Potion.h"
 

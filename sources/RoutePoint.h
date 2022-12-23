@@ -1,7 +1,7 @@
 #pragma once
 #include <qjsonobject.h>
 
-#include "JsonClass.h"
+#include "JsonClass.hpp"
 #include "Point3D.h"
 
 class RoutePoint : JsonClass {

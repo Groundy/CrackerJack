@@ -2,7 +2,7 @@
 #include <qvector.h>
 
 #include "Profession.h"
-#include "JsonClass.h"
+#include "JsonClass.hpp"
 class Spell
 {
 public:

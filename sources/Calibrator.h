@@ -7,7 +7,7 @@
 #include <memory>
 #include <qpoint.h>
 
-#include "Logger.h"
+#include "Logger.hpp"
 #include "ImgEditor.h"
 #include "VariablesClass.h"
 #include "PathResource.h"

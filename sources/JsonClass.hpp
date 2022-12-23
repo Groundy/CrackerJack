@@ -1,4 +1,5 @@
 #pragma once
+#include <qjsonobject.h>
 class JsonClass{
 public:
 	virtual QJsonObject toJson() const = 0;

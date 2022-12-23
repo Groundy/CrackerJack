@@ -1,7 +1,7 @@
 #pragma once
 #include <qimage.h>
 
-#include "Logger.h"
+#include "Logger.hpp"
 #include "RGBstruct.h"
 #include "Utilities.h"
 class ImgEditor{

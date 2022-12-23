@@ -1,7 +1,7 @@
 #pragma once
 #include <qobject.h>
 #include <minmax.h>
-#include "JsonClass.h"
+#include "JsonClass.hpp"
 #include "qjsonobject.h"
 class RGBstruct : JsonClass{
 public:

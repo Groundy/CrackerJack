@@ -5,7 +5,7 @@
 #include "qmap.h"
 #include <qjsonobject.h>
 
-#include "JsonClass.h"
+#include "JsonClass.hpp"
 class Key : JsonClass {
 public:
 	static QMap<QString, int> KeysAndCodesMap;

@@ -253,7 +253,7 @@ xcopy /y /d ".\dependencies\32-bit\libcrypto-1_1.dll" "$(OutDir)"
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="sources\GameConnecter.h" />
-    <ClInclude Include="sources\AttackMethode.h" />
+    <ClInclude Include="sources\AttackMethode.hpp" />
     <QtMoc Include="sources\AutoHuntConfigurator.h" />
     <QtMoc Include="sources\ClickDetector.hpp" />
     <ClInclude Include="sources\Equipment.hpp" />
@@ -261,12 +261,12 @@ xcopy /y /d ".\dependencies\32-bit\libcrypto-1_1.dll" "$(OutDir)"
     <ClInclude Include="Profession.h" />
     <QtMoc Include="sources\AutoHunting.h" />
     <ClInclude Include="sources\Item.h" />
-    <ClInclude Include="sources\JsonClass.h" />
+    <ClInclude Include="sources\JsonClass.hpp" />
     <QtMoc Include="sources\MinimapAnalyzer.h" />
     <QtMoc Include="sources\RouteCreator.h" />
     <ClInclude Include="sources\PathResource.h" />
     <ClInclude Include="sources\Potion.h" />
-    <ClInclude Include="sources\RestorationMethode.h" />
+    <ClInclude Include="sources\RestorationMethode.hpp" />
     <ClInclude Include="sources\Route.h" />
     <ClInclude Include="sources\Point3D.h" />
     <ClInclude Include="sources\RoutePoint.h" />
@@ -282,7 +282,7 @@ xcopy /y /d ".\dependencies\32-bit\libcrypto-1_1.dll" "$(OutDir)"
     <ClInclude Include="sources\RGBstruct.h" />
     <ClInclude Include="sources\JsonParser.h" />
     <ClInclude Include="sources\Calibrator.h" />
-    <QtMoc Include="sources\Logger.h" />
+    <QtMoc Include="sources\Logger.hpp" />
     <QtMoc Include="sources\NewProfileConfiguartor.h" />
     <ClInclude Include="sources\Key.h" />
     <ClInclude Include="sources\Utilities.h" />
@@ -295,7 +295,7 @@ xcopy /y /d ".\dependencies\32-bit\libcrypto-1_1.dll" "$(OutDir)"
     </QtTranslation>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="todo.txt" />
+    <Text Include=".txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

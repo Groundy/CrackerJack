@@ -16,7 +16,7 @@
 #include "RouteCreator.h"
 
 #include "AutoHunting.h"
-#include "AttackMethode.h"
+#include "AttackMethode.hpp"
 #include "ClickDetector.hpp"
 namespace Ui { class MainMenu; };
 

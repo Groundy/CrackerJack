@@ -140,7 +140,7 @@
     <QtMoc Include="sources\GameConnecter.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="sources\Logger.h">
+    <QtMoc Include="sources\Logger.hpp">
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="sources\VariablesClass.h">
@@ -213,13 +213,13 @@
     <ClInclude Include="Profession.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="sources\RestorationMethode.h">
+    <ClInclude Include="sources\RestorationMethode.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="sources\Spell.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="sources\JsonClass.h">
+    <ClInclude Include="sources\JsonClass.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="sources\Potion.h">
@@ -237,7 +237,7 @@
     <ClInclude Include="sources\ImgEditor.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="sources\AttackMethode.h">
+    <ClInclude Include="sources\AttackMethode.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="sources\Equipment.hpp">
@@ -250,6 +250,6 @@
     </QtTranslation>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="todo.txt" />
+    <Text Include=".txt" />
   </ItemGroup>
 </Project>

@@ -10,11 +10,11 @@
 #include <qlist.h>
 
 #include "Key.h"
-#include "AttackMethode.h"
+#include "AttackMethode.hpp"
 #include "Profession.h"
-#include "RestorationMethode.h"
+#include "RestorationMethode.hpp"
 #include "Utilities.h"
-#include "JsonClass.h"
+#include "JsonClass.hpp"
 
 class AutoHuntData : JsonClass {
 public:

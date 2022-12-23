@@ -6,8 +6,8 @@
 #include <atomic>
 #include <mutex>
 
-#include "Logger.h"
-#include "RestorationMethode.h"
+#include "Logger.hpp"
+#include "RestorationMethode.hpp"
 #include "Point3D.h"
 #include "ImgEditor.h"
 #include "PathResource.h"

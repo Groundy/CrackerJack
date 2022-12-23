@@ -2,7 +2,7 @@
 #include <QObject>
 #include <comdef.h> 
 #include "Profile.h"
-#include "RestorationMethode.h"
+#include "RestorationMethode.hpp"
 #include "VariablesClass.h"
 #include "Key.h"
 class GameConnecter  : public QObject

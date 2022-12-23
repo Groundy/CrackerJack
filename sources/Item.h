@@ -4,7 +4,7 @@
 
 #include "Utilities.h"
 #include "Profession.h"
-#include "RestorationMethode.h"
+#include "RestorationMethode.hpp"
 
 class Item{
 public:

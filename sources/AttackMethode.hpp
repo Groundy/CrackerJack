@@ -2,7 +2,7 @@
 #include "Spell.h"
 #include "Item.h"
 #include "Key.h"
-#include "JsonClass.h"
+#include "JsonClass.hpp"
 class AttackMethode : JsonClass
 {
 public:

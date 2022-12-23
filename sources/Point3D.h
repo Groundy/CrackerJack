@@ -3,8 +3,8 @@
 #include <qstringlist.h>
 #include <qjsonobject.h>
 
-#include "JsonClass.h"
-#include "Logger.h"
+#include "JsonClass.hpp"
+#include "Logger.hpp"
 class Point3D : JsonClass
 {
 public:

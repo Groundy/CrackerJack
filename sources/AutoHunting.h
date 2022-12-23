@@ -7,7 +7,7 @@
 #include "VariablesClass.h"
 #include "GameConnecter.h"
 #include "Profile.h"
-#include "AttackMethode.h"
+#include "AttackMethode.hpp"
 #include "MinimapAnalyzer.h"
 class AutoHunting  : public QThread
 {
