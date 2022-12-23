@@ -138,24 +138,20 @@ void RouteCreator::finishButtonPressed() {
 	Utilities::showMessageBox_INFO("Saved!");
 }
 bool RouteCreator::loadMap(int floor) {
-	try {
-		if (floor < -8 || floor > 7)
-			throw std::exception("Wrong input for loading map function!");
-
-		bool mapAlreadyLoaded = floorMaps.contains(floor);
-		if (!mapAlreadyLoaded) {
-			QString pathToMap = PathResource::getPathToMergedColorMap(floor);
-			QImage* mapImg = new QImage(pathToMap);
-			if (mapImg->isNull())
-				throw std::exception("Map in Route creator could not be read!");
-			floorMaps.insert(floor, mapImg);
-		}
-		return true;
-	}
-	catch (const std::exception& e) {
-		Logger::staticLog(e.what());
+	if (floor < -8 || floor > 7) {
+		Logger::staticLog("Wrong input for loading map function!");
 		return false;
 	}
+	bool mapAlreadyLoaded = floorMaps.contains(floor);
+	if (!mapAlreadyLoaded) {
+		QImage* mapImg = new QImage(PathResource::getPathToMap(floor));
+		if (mapImg->isNull()) {
+			Logger::staticLog("Cant read map from qrc!");
+			return false;
+		}
+		floorMaps.insert(floor, mapImg);
+	}
+	return true;
 }
 void RouteCreator::loadRouteButtonPressed(){
 	QString pathToFile = Utilities::getFileByDialog("*.json", PathResource::getPathToRouteFolder());

@@ -1,3 +1,53 @@
 <RCC>
-    <qresource prefix="/CrackerJackClient"/>
+    <qresource prefix="/"/>
+    <qresource prefix="/imgs">
+        <file alias="logo">Resources/imgs/logo.png</file>
+        <file alias="BattleList">Resources/imgs/BattleList.png</file>
+        <file alias="mapLayer">Resources/imgs/mapLayer.png</file>
+        <file alias="sideBarEntityEnd">Resources/imgs/sideBarEntityEnd.png</file>
+        <file alias="sideBarEntityStart">Resources/imgs/sideBarEntityStart.png</file>
+    </qresource>
+    <qresource prefix="/maps">
+        <file alias="0_Color">Resources/maps/0_Color.png</file>
+        <file alias="0_WaypointCost">Resources/maps/0_WaypointCost.png</file>
+        <file alias="1_Color">Resources/maps/1_Color.png</file>
+        <file alias="-1_Color">Resources/maps/-1_Color.png</file>
+        <file alias="1_WaypointCost">Resources/maps/1_WaypointCost.png</file>
+        <file alias="-1_WaypointCost">Resources/maps/-1_WaypointCost.png</file>
+        <file alias="2_Color">Resources/maps/2_Color.png</file>
+        <file alias="-2_Color">Resources/maps/-2_Color.png</file>
+        <file alias="2_WaypointCost">Resources/maps/2_WaypointCost.png</file>
+        <file alias="-2_WaypointCost">Resources/maps/-2_WaypointCost.png</file>
+        <file alias="3_Color">Resources/maps/3_Color.png</file>
+        <file alias="-3_Color">Resources/maps/-3_Color.png</file>
+        <file alias="3_WaypointCost">Resources/maps/3_WaypointCost.png</file>
+        <file alias="-3_WaypointCost">Resources/maps/-3_WaypointCost.png</file>
+        <file alias="4_Color">Resources/maps/4_Color.png</file>
+        <file alias="-4_Color">Resources/maps/-4_Color.png</file>
+        <file alias="4_WaypointCost">Resources/maps/4_WaypointCost.png</file>
+        <file alias="-4_WaypointCost">Resources/maps/-4_WaypointCost.png</file>
+        <file alias="5_Color">Resources/maps/5_Color.png</file>
+        <file alias="-5_Color">Resources/maps/-5_Color.png</file>
+        <file alias="5_WaypointCost">Resources/maps/5_WaypointCost.png</file>
+        <file alias="-5_WaypointCost">Resources/maps/-5_WaypointCost.png</file>
+        <file alias="6_Color">Resources/maps/6_Color.png</file>
+        <file alias="-6_Color">Resources/maps/-6_Color.png</file>
+        <file alias="6_WaypointCost">Resources/maps/6_WaypointCost.png</file>
+        <file alias="-6_WaypointCost">Resources/maps/-6_WaypointCost.png</file>
+        <file alias="7_Color">Resources/maps/7_Color.png</file>
+        <file alias="-7_Color">Resources/maps/-7_Color.png</file>
+        <file alias="7_WaypointCost">Resources/maps/7_WaypointCost.png</file>
+        <file alias="-7_WaypointCost">Resources/maps/-7_WaypointCost.png</file>
+        <file alias="-8_Color">Resources/maps/-8_Color.png</file>
+        <file alias="-8_WaypointCost">Resources/maps/-8_WaypointCost.png</file>
+    </qresource>
+    <qresource prefix="/jsons">
+        <file alias="spells">Resources/jsons/spells.json</file>
+        <file alias="bottomBarsDigits">Resources/jsons/bottomBarsDigits.json</file>
+        <file alias="items">Resources/jsons/items.json</file>
+        <file alias="keys">Resources/jsons/keys.json</file>
+        <file alias="letters">Resources/jsons/letters.json</file>
+        <file alias="potions">Resources/jsons/potions.json</file>
+        <file alias="runes">Resources/jsons/runes.json</file>
+    </qresource>
 </RCC>

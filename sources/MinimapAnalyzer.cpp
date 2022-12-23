@@ -21,7 +21,7 @@ void MinimapAnalyzer::run() {
 
 		int currentLayer = getCurrentLayer(miniMapLayer);
 		if (!floorsMaps.contains(currentLayer)) {
-			QString path = PathResource::getPathToMergedColorMap(currentLayer);
+			QString path = PathResource::getPathToMap(currentLayer);
 			floorsMaps.insert(currentLayer, new QImage(path));
 		}
 		auto currentPosition = findPlayerPosition(miniMap, floorsMaps[currentLayer]);
