@@ -13,7 +13,7 @@ public:
 	~ScreenSaver();
 
 private:
-	const uint SLEEP_TIME = 800;
+	const uint SLEEP_TIME = 1000;
 	std::shared_ptr<VariablesClass> var;
 	std::shared_ptr<GameConnecter> gameConnecter;	
 	Profile* profile;

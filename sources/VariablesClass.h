@@ -349,11 +349,11 @@ public:
 		const int TITLE_WIDTH = frame.width() / TITLES_X;
 		const int TITLE_HEIGHT = frame.height() / TITLES_Y;
 		QPoint middleOfTitleZeroZero = frame.topLeft() + QPoint(TITLE_WIDTH/2, TITLE_HEIGHT/2);
-		QPoint miidleOfPlayerTitle = middleOfTitleZeroZero + QPoint(7 * TITLE_WIDTH, 5 * TITLE_HEIGHT);
+		QPoint middleOfPlayerTitle = middleOfTitleZeroZero + QPoint(7 * TITLE_WIDTH, 5 * TITLE_HEIGHT + 12);//that way cursor is little too high, 12 to lower in down.
 		QVector<QPoint> toRet = {};
 		for (int x = -1; x <= 1; x++){
 			for (int y = -1; y <= 1; y++) {
-				toRet.push_back(miidleOfPlayerTitle + QPoint(x * TITLE_WIDTH, y * TITLE_HEIGHT));
+				toRet.push_back(middleOfPlayerTitle + QPoint(x * TITLE_WIDTH, y * TITLE_HEIGHT));
 			}
 		}
 		return toRet;

@@ -37,9 +37,12 @@ void GameConnecter::clickRightWithShift(QVector<QPoint> pts, int SLEEP_TIME_BETW
 		if (var->playingOnSmallMonitor)
 			pt = QPoint(pt.x() / 0.8, pt.y() / 0.8);
 		LPARAM lParam = (pt.y() << 16) + pt.x();
-		PostMessage(gameThreadHandler, WM_RBUTTONDOWN, 6, lParam);
+		SLEEP_TIME_BETWEEN_LOOT_CLICK /= 3;
 		Sleep(SLEEP_TIME_BETWEEN_LOOT_CLICK);
-		PostMessage(gameThreadHandler, WM_RBUTTONUP, 4, lParam);
+		PostMessage(gameThreadHandler, WM_RBUTTONDOWN, 0, lParam);
+		Sleep(SLEEP_TIME_BETWEEN_LOOT_CLICK);
+		PostMessage(gameThreadHandler, WM_RBUTTONUP, 0, lParam);
+		Sleep(SLEEP_TIME_BETWEEN_LOOT_CLICK);
 	}
 	releaseShift();
 	senderMutex.unlock();
@@ -85,7 +88,7 @@ void GameConnecter::useRestorationMethode(const RestorationMethode& methode) {
 	sendKeyStrokeToProcess(key);
 
 	QString msg = QString("Used %1").arg(methode.getName());
-	var->log(msg, false, true, true);
+	var->log(msg, true, true, true);
 }
 void GameConnecter::sendCharToGame(const QChar charToSend, const HWND& gameThreadHandler) {
 	senderMutex.lock();
@@ -119,8 +122,7 @@ void GameConnecter::sendCharToGame(const QChar charToSend, const HWND& gameThrea
 }
 void GameConnecter::autoLootAroundPlayer() {
 	auto potinsToClick = var->getMainWindow().getPointsOfFieldsAroundPlayer();
-	var->log("auto loot.", false, true, true);
-	const int SLEEP_TIME_BETWEEN_LOOT_CLICK = 100;
+	const int SLEEP_TIME_BETWEEN_LOOT_CLICK = 102;
 	switch (autoLootSetting){
 	case Profile::RIGHT_MOUSE_BUTTON:
 		for each (auto pt in potinsToClick){
@@ -141,5 +143,7 @@ void GameConnecter::autoLootAroundPlayer() {
 	default:
 		break;
 	}
+	var->log("auto loot.", false, true, true);
+
 }
 

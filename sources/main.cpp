@@ -3,10 +3,8 @@
 #include <qtranslator.h>
 #include "Market.h"
 #include <qicon.h>
-
 #include "Tools.h"
 void test(){
-	int a = 3;
 }
 QIcon getIcon(){
 	QDir dir = QDir::current();
