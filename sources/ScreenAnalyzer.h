@@ -14,7 +14,7 @@
 #include "RGBstruct.h"
 #include "ScreenAnalyzer.h"
 #include "VariablesClass.h"
-#include "Equipment.h"
+#include "Equipment.hpp"
 class ScreenAnalyzer : public QThread
 {
 	Q_OBJECT

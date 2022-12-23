@@ -179,7 +179,7 @@
     <QtMoc Include="sources\AutoHuntConfigurator.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="sources\ClickDetector.h">
+    <QtMoc Include="sources\ClickDetector.hpp">
       <Filter>Source Files</Filter>
     </QtMoc>
   </ItemGroup>
@@ -270,7 +270,7 @@
     <ClInclude Include="sources\AttackMethode.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="sources\Equipment.h">
+    <ClInclude Include="sources\Equipment.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -17,7 +17,7 @@
 
 #include "AutoHunting.h"
 #include "AttackMethode.h"
-#include "ClickDetector.h"
+#include "ClickDetector.hpp"
 namespace Ui { class MainMenu; };
 
 class MainMenu : public QDialog

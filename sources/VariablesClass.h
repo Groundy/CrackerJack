@@ -11,7 +11,7 @@
 #include "Point3D.h"
 #include "ImgEditor.h"
 #include "PathResource.h"
-#include "Equipment.h"
+#include "Equipment.hpp"
 class BattleList
 {
 public:
