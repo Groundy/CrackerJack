@@ -242,7 +242,6 @@ xcopy /y /d ".\dependencies\32-bit\libcrypto-1_1.dll" "$(OutDir)"
     <ClCompile Include="sources\ScreenSaver.cpp" />
     <ClCompile Include="sources\SelectProfileWindow.cpp" />
     <ClCompile Include="sources\Utilities.cpp" />
-    <ClCompile Include="sources\VariablesClass.cpp" />
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="sources\AutoHuntConfigurator.ui" />
@@ -252,12 +251,16 @@ xcopy /y /d ".\dependencies\32-bit\libcrypto-1_1.dll" "$(OutDir)"
     <QtUic Include="sources\SelectProfileWindow.ui" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="sources\BattleList.hpp" />
     <ClInclude Include="sources\GameConnecter.h" />
     <ClInclude Include="sources\AttackMethode.hpp" />
     <QtMoc Include="sources\AutoHuntConfigurator.h" />
     <QtMoc Include="sources\ClickDetector.hpp" />
     <ClInclude Include="sources\Equipment.hpp" />
+    <ClInclude Include="sources\GameProcessData.hpp" />
+    <ClInclude Include="sources\GameWindow.hpp" />
     <ClInclude Include="sources\ImgEditor.h" />
+    <ClInclude Include="sources\PlayerPosition.hpp" />
     <ClInclude Include="sources\Profession.hpp" />
     <QtMoc Include="sources\AutoHunting.h" />
     <ClInclude Include="sources\Item.h" />
@@ -270,10 +273,13 @@ xcopy /y /d ".\dependencies\32-bit\libcrypto-1_1.dll" "$(OutDir)"
     <ClInclude Include="sources\Route.h" />
     <ClInclude Include="sources\Point3D.h" />
     <ClInclude Include="sources\RoutePoint.h" />
+    <ClInclude Include="sources\Settings.hpp" />
     <ClInclude Include="sources\Spell.h" />
+    <ClInclude Include="sources\Timers.hpp" />
     <ClInclude Include="sources\Tools.hpp" />
+    <ClInclude Include="sources\Vitallity.hpp" />
     <ClInclude Include="version.h" />
-    <QtMoc Include="sources\VariablesClass.h" />
+    <ClInclude Include="sources\VariablesClass.hpp" />
     <ClInclude Include="sources\ScreenSaver.h" />
     <QtMoc Include="sources\MainMenu.h" />
     <QtMoc Include="sources\ActiveGameThread.h" />

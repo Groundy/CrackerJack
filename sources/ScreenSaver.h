@@ -3,7 +3,7 @@
 #include <memory>
 
 #include "ActiveGameThread.h"
-#include "VariablesClass.h"
+#include "VariablesClass.hpp"
 #include "GameConnecter.h"
 #include "Profile.h"
 class ScreenSaver : public QThread{

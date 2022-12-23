@@ -6,7 +6,7 @@
 #include "Profile.h"
 #include "ScreenSaver.h"
 #include "activeGameThread.h"
-#include "VariablesClass.h"
+#include "VariablesClass.hpp"
 #include "Utilities.h"
 #include "Key.h"
 #include "ManaHealthStateAnalyzer.h"

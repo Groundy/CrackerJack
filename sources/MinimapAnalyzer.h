@@ -14,7 +14,7 @@
 #include "PathResource.h"
 #include "Utilities.h"	
 #include "Calibrator.h"
-#include "VariablesClass.h"
+#include "VariablesClass.hpp"
 #include "Utilities.h"	
 class MinimapAnalyzer : public QThread {
 	Q_OBJECT

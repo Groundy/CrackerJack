@@ -121,7 +121,7 @@ void GameConnecter::sendCharToGame(const QChar charToSend, const HWND& gameThrea
 	senderMutex.unlock();
 }
 void GameConnecter::autoLootAroundPlayer() {
-	auto potinsToClick = var->getMainWindow().getPointsOfFieldsAroundPlayer();
+	auto potinsToClick = var->getGameWindow().getPointsOfFieldsAroundPlayer();
 	const int SLEEP_TIME_BETWEEN_LOOT_CLICK = 111;
 	switch (autoLootSetting){
 	case Profile::RIGHT_MOUSE_BUTTON:

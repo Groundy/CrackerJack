@@ -302,7 +302,7 @@ bool Calibrator::categorizeWindows(const QImage& fullscreen, QList<QRect>& impor
 				biggestRect = importantRectangles[i];
 			}
 		}
-		var->getMainWindow().setFrameMainGameWindow(biggestRect);
+		var->getGameWindow().setFrameMainGameWindow(biggestRect);
 		importantRectangles.removeOne(biggestRect);
 	}
 

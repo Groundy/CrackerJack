@@ -13,7 +13,7 @@
 #include "Utilities.h"
 #include "RGBstruct.h"
 #include "ScreenAnalyzer.h"
-#include "VariablesClass.h"
+#include "VariablesClass.hpp"
 #include "Equipment.hpp"
 class ScreenAnalyzer : public QThread
 {

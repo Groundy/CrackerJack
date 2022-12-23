@@ -4,7 +4,7 @@
 #include <qstringlist.h>
 #include <qqueue.h>
 #include "Route.h"
-#include "VariablesClass.h"
+#include "VariablesClass.hpp"
 #include "GameConnecter.h"
 #include "Profile.h"
 #include "AttackMethode.hpp"

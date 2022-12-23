@@ -9,7 +9,7 @@
 
 #include "Logger.hpp"
 #include "ImgEditor.h"
-#include "VariablesClass.h"
+#include "VariablesClass.hpp"
 #include "PathResource.h"
 #include "Profile.h"
 class Calibrator {

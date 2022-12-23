@@ -9,7 +9,7 @@
 #include <memory>
 
 #include "Utilities.h"
-#include "VariablesClass.h"
+#include "VariablesClass.hpp"
 class ActiveGameThread : public QThread
 {
 	Q_OBJECT

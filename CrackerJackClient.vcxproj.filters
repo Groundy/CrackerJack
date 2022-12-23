@@ -66,9 +66,6 @@
     <ClCompile Include="sources\ActiveGameThread.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="sources\VariablesClass.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="sources\ScreenAnalyzer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -138,9 +135,6 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="sources\Logger.hpp">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-    <QtMoc Include="sources\VariablesClass.h">
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="sources\MinimapAnalyzer.h">
@@ -241,6 +235,30 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="sources\Profession.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\BattleList.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\Settings.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\Vitallity.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\Timers.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\VariablesClass.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\GameWindow.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\PlayerPosition.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\GameProcessData.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

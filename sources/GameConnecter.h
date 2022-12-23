@@ -2,7 +2,7 @@
 #include <comdef.h> 
 #include "Profile.h"
 #include "RestorationMethode.hpp"
-#include "VariablesClass.h"
+#include "VariablesClass.hpp"
 #include "Key.h"
 class GameConnecter
 {
