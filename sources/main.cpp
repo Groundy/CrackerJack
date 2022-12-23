@@ -1,7 +1,6 @@
 #include <QtWidgets/QApplication>
 #include "MainMenu.h"
 #include <qtranslator.h>
-#include "Market.h"
 #include <qicon.h>
 #include "Tools.h"
 void test(){

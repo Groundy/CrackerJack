@@ -228,13 +228,9 @@ xcopy /y /d ".\dependencies\32-bit\libcrypto-1_1.dll" "$(OutDir)"
     <ClCompile Include="sources\JsonParser.cpp" />
     <ClCompile Include="sources\MainMenu.cpp" />
     <ClCompile Include="sources\ManaHealthStateAnalyzer.cpp" />
-    <ClCompile Include="sources\Market.cpp" />
-    <ClCompile Include="sources\MarketProcess.cpp" />
-    <ClCompile Include="sources\MarketProcessGui.cpp" />
     <ClCompile Include="sources\MinimapAnalyzer.cpp" />
     <ClCompile Include="sources\NewProfileConfiguartor.cpp" />
     <ClCompile Include="sources\Key.cpp" />
-    <ClCompile Include="sources\Offer.cpp" />
     <ClCompile Include="sources\Point3D.cpp" />
     <ClCompile Include="sources\main.cpp" />
     <ClCompile Include="sources\Profile.cpp" />
@@ -251,8 +247,6 @@ xcopy /y /d ".\dependencies\32-bit\libcrypto-1_1.dll" "$(OutDir)"
   <ItemGroup>
     <QtUic Include="sources\AutoHuntConfigurator.ui" />
     <QtUic Include="sources\MainMenu.ui" />
-    <QtUic Include="sources\Market.ui" />
-    <QtUic Include="sources\MarketProcessGui.ui" />
     <QtUic Include="sources\NewProfileConfiguartor.ui" />
     <QtUic Include="sources\RouteCreator.ui" />
     <QtUic Include="sources\SelectProfileWindow.ui" />
@@ -267,11 +261,7 @@ xcopy /y /d ".\dependencies\32-bit\libcrypto-1_1.dll" "$(OutDir)"
     <ClInclude Include="Profession.h" />
     <QtMoc Include="sources\AutoHunting.h" />
     <ClInclude Include="sources\Item.h" />
-    <QtMoc Include="sources\MarketProcess.h" />
-    <QtMoc Include="sources\MarketProcessGui.h" />
     <ClInclude Include="sources\JsonClass.h" />
-    <QtMoc Include="sources\Offer.h" />
-    <QtMoc Include="sources\Market.h" />
     <QtMoc Include="sources\MinimapAnalyzer.h" />
     <QtMoc Include="sources\RouteCreator.h" />
     <ClInclude Include="sources\PathResource.h" />

@@ -84,9 +84,6 @@
     <ClCompile Include="sources\Calibrator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="sources\Market.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="sources\MinimapAnalyzer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -100,15 +97,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="sources\Item.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="sources\MarketProcess.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="sources\Offer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="sources\MarketProcessGui.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="sources\ImgEditor.cpp">
@@ -143,19 +131,10 @@
     <QtMoc Include="sources\ScreenAnalyzer.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="sources\Market.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
     <QtMoc Include="sources\RouteCreator.h">
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="sources\ActiveGameThread.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-    <QtMoc Include="sources\MarketProcess.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-    <QtMoc Include="sources\MarketProcessGui.h">
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="sources\GameConnecter.h">
@@ -170,9 +149,6 @@
     <QtMoc Include="sources\MinimapAnalyzer.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="sources\Offer.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
     <QtMoc Include="sources\AutoHunting.h">
       <Filter>Header Files</Filter>
     </QtMoc>
@@ -180,7 +156,7 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="sources\ClickDetector.hpp">
-      <Filter>Source Files</Filter>
+      <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>
   <ItemGroup>
@@ -193,13 +169,7 @@
     <QtUic Include="sources\MainMenu.ui">
       <Filter>Form Files</Filter>
     </QtUic>
-    <QtUic Include="sources\Market.ui">
-      <Filter>Form Files</Filter>
-    </QtUic>
     <QtUic Include="sources\RouteCreator.ui">
-      <Filter>Form Files</Filter>
-    </QtUic>
-    <QtUic Include="sources\MarketProcessGui.ui">
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="sources\AutoHuntConfigurator.ui">
