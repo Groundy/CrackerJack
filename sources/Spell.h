@@ -1,7 +1,7 @@
 #pragma once
 #include <qvector.h>
 
-#include "Profession.h"
+#include "Profession.hpp"
 #include "JsonClass.hpp"
 class Spell
 {

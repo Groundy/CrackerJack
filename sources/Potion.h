@@ -2,7 +2,7 @@
 #include <qobject.h>
 #include <qjsonvalue.h>
 
-#include "Profession.h"
+#include "Profession.hpp"
 class Potion{
 public:
 	enum class TypeOfPotion { HEALTH, MANA };

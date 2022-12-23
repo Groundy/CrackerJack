@@ -11,7 +11,7 @@
 #include "Profile.h"
 #include "JsonParser.h"
 #include "Key.h"
-#include "Profession.h"
+#include "Profession.hpp"
 #include "RestorationMethode.hpp"
 #include "Spell.h"
 

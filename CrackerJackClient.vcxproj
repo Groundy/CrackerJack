@@ -252,13 +252,13 @@ xcopy /y /d ".\dependencies\32-bit\libcrypto-1_1.dll" "$(OutDir)"
     <QtUic Include="sources\SelectProfileWindow.ui" />
   </ItemGroup>
   <ItemGroup>
-    <QtMoc Include="sources\GameConnecter.h" />
+    <ClInclude Include="sources\GameConnecter.h" />
     <ClInclude Include="sources\AttackMethode.hpp" />
     <QtMoc Include="sources\AutoHuntConfigurator.h" />
     <QtMoc Include="sources\ClickDetector.hpp" />
     <ClInclude Include="sources\Equipment.hpp" />
     <ClInclude Include="sources\ImgEditor.h" />
-    <ClInclude Include="Profession.h" />
+    <ClInclude Include="sources\Profession.hpp" />
     <QtMoc Include="sources\AutoHunting.h" />
     <ClInclude Include="sources\Item.h" />
     <ClInclude Include="sources\JsonClass.hpp" />
@@ -271,7 +271,7 @@ xcopy /y /d ".\dependencies\32-bit\libcrypto-1_1.dll" "$(OutDir)"
     <ClInclude Include="sources\Point3D.h" />
     <ClInclude Include="sources\RoutePoint.h" />
     <ClInclude Include="sources\Spell.h" />
-    <ClInclude Include="sources\Tools.h" />
+    <ClInclude Include="sources\Tools.hpp" />
     <ClInclude Include="version.h" />
     <QtMoc Include="sources\VariablesClass.h" />
     <ClInclude Include="sources\ScreenSaver.h" />
@@ -293,9 +293,6 @@ xcopy /y /d ".\dependencies\32-bit\libcrypto-1_1.dll" "$(OutDir)"
     <QtTranslation Include="crackerjackclient_pl.ts">
       <BuildAction Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">lupdate_lrelease</BuildAction>
     </QtTranslation>
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include=".txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

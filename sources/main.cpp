@@ -2,7 +2,6 @@
 #include "MainMenu.h"
 #include <qtranslator.h>
 #include <qicon.h>
-#include "Tools.h"
 void test(){
 }
 QIcon getIcon(){
@@ -19,7 +18,7 @@ void setStyle(QApplication& a){
 }
 void setTranslation(QApplication& app) {
 	QTranslator translator;
-	bool ok1 = translator.load("Debug\\crackerjackclient_pl");
+	bool ok1 = translator.load(":/translation");
 	bool ok2 = app.installTranslator(&translator);
 }
 Profile* getProfile() {

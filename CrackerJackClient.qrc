@@ -1,5 +1,7 @@
 <RCC>
-    <qresource prefix="/"/>
+    <qresource prefix="/">
+        <file alias="translation">Resources/crackerjackclient_pl.ts</file>
+    </qresource>
     <qresource prefix="/imgs">
         <file alias="logo">Resources/imgs/logo.png</file>
         <file alias="BattleList">Resources/imgs/BattleList.png</file>

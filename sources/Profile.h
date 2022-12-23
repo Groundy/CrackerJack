@@ -11,7 +11,7 @@
 
 #include "Key.h"
 #include "AttackMethode.hpp"
-#include "Profession.h"
+#include "Profession.hpp"
 #include "RestorationMethode.hpp"
 #include "Utilities.h"
 #include "JsonClass.hpp"

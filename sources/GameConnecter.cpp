@@ -1,7 +1,7 @@
 #include "GameConnecter.h"
 
-GameConnecter::GameConnecter(QObject *parent, std::shared_ptr<VariablesClass> var, Profile* prof)
-	: QObject(parent), var(var){
+GameConnecter::GameConnecter(std::shared_ptr<VariablesClass> var, Profile* prof)
+		: var(var){
 	autoLootSetting = prof->getAutoLoot();
 }
 GameConnecter::~GameConnecter(){

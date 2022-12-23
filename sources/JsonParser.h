@@ -11,7 +11,7 @@
 #include "Utilities.h"
 #include "Profile.h"
 #include "Item.h"
-#include "Profession.h"
+#include "Profession.hpp"
 #include "Spell.h"
 #include "Potion.h"
 #include "Route.h"

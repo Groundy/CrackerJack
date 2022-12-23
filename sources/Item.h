@@ -3,7 +3,7 @@
 #include <qjsonvalue.h>
 
 #include "Utilities.h"
-#include "Profession.h"
+#include "Profession.hpp"
 #include "RestorationMethode.hpp"
 
 class Item{

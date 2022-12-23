@@ -137,9 +137,6 @@
     <QtMoc Include="sources\ActiveGameThread.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="sources\GameConnecter.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
     <QtMoc Include="sources\Logger.hpp">
       <Filter>Header Files</Filter>
     </QtMoc>
@@ -210,9 +207,6 @@
     <ClInclude Include="sources\Item.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Profession.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="sources\RestorationMethode.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -225,7 +219,7 @@
     <ClInclude Include="sources\Potion.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="sources\Tools.h">
+    <ClInclude Include="sources\Tools.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="sources\PathResource.h">
@@ -243,13 +237,16 @@
     <ClInclude Include="sources\Equipment.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="sources\GameConnecter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\Profession.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <QtTranslation Include="crackerjackclient_pl.ts">
       <Filter>Translation Files</Filter>
     </QtTranslation>
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include=".txt" />
   </ItemGroup>
 </Project>

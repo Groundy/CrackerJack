@@ -1,15 +1,13 @@
 #pragma once
-#include <QObject>
 #include <comdef.h> 
 #include "Profile.h"
 #include "RestorationMethode.hpp"
 #include "VariablesClass.h"
 #include "Key.h"
-class GameConnecter  : public QObject
+class GameConnecter
 {
-	Q_OBJECT
 public:
-	GameConnecter(QObject* parent, std::shared_ptr<VariablesClass> var, Profile* profile);
+	GameConnecter(std::shared_ptr<VariablesClass> var, Profile* profile);
 	~GameConnecter();
 	void clickLeft(QPoint pt);
 	void clickRight(QPoint pt);

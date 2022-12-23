@@ -3,7 +3,7 @@
 #include <memory>
 
 #include "Profile.h"
-#include "Profession.h"
+#include "Profession.hpp"
 #include "NewProfileConfiguartor.h"
 namespace Ui { class SelectProfileWindow; };
 
