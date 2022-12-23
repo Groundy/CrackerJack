@@ -17,6 +17,7 @@
 
 #include "AutoHunting.h"
 #include "AttackMethode.h"
+#include "ClickDetector.h"
 namespace Ui { class MainMenu; };
 
 class MainMenu : public QDialog
@@ -48,7 +49,7 @@ private:
 	ScreenSaver* screenSaverThread;
 	ScreenAnalyzer* screenAnalyzer;
 	ManaHealthStateAnalyzer* healthManaStateAnalyzer;
-
+	ClickDetector* clickDetector;
 	AutoHunting* huntAutoThread = nullptr;
 	std::shared_ptr<VariablesClass> var;
 	std::shared_ptr<GameConnecter> gameConnector;
@@ -57,4 +58,6 @@ private:
 	void threadStarter();
 	void startAutoHunting();
 	void signalSlotConnector();
+	void mousePressEvent() {
+	}
 };

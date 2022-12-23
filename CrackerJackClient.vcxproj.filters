@@ -179,6 +179,9 @@
     <QtMoc Include="sources\AutoHuntConfigurator.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <QtMoc Include="sources\ClickDetector.h">
+      <Filter>Source Files</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="sources\SelectProfileWindow.ui">

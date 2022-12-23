@@ -24,6 +24,7 @@ MainMenu::~MainMenu(){
 	threads.push_back(screenAnalyzer);
 	threads.push_back(healthManaStateAnalyzer);
 	threads.push_back(huntAutoThread);
+	threads.push_back(clickDetector);
 	for each (QThread* thread in threads){
 		thread->terminate();
 		delete thread;
@@ -46,6 +47,9 @@ void MainMenu::threadStarter(){
 
 	healthManaStateAnalyzer = new ManaHealthStateAnalyzer(this, prof , var, gameConnector);
 	healthManaStateAnalyzer->start();
+
+	clickDetector = new ClickDetector(this, gameConnector);
+	clickDetector->start();
 }
 void MainMenu::signalSlotConnector(){
 	QObject *sigSender, *slotRec;

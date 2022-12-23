@@ -267,6 +267,7 @@ xcopy /y /d ".\dependencies\64-bit\libcrypto-1_1-x64.dll" "$(OutDir)"
     <QtMoc Include="sources\GameConnecter.h" />
     <ClInclude Include="sources\AttackMethode.h" />
     <QtMoc Include="sources\AutoHuntConfigurator.h" />
+    <QtMoc Include="sources\ClickDetector.h" />
     <ClInclude Include="sources\ImgEditor.h" />
     <ClInclude Include="Profession.h" />
     <QtMoc Include="sources\AutoHunting.h" />
