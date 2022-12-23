@@ -16,32 +16,22 @@ public:
 	~ClickDetector() {};
 	void run() {
 		while (true) {
-			if (middleButtonPressed())
-				middleMouseKeyUsed();
+			if (middleButtonPressed()) {
+				gameConnetorPtr->autoLootAroundPlayer();
+				msleep(1000);
+			}
 			msleep(minMSecBetweenClicks);
 		}
 	}
 
 private:
 	std::shared_ptr<GameConnecter> gameConnetorPtr;
-	qint64 lastTimeMiddleButtonClicked = now();
 	const int minMSecBetweenClicks = 6;
 	bool keyPressed(int key) {
 		return (GetAsyncKeyState(key) & 0x8000 != 0) != 0;
 	}
 	bool middleButtonPressed() {
 		return (GetAsyncKeyState(VK_MBUTTON) & 0x8000 != 0) != 0;
-	}
-	void middleMouseKeyUsed() {
-		qint64 nowTime = now();
-		bool readyToSendSignal = nowTime - lastTimeMiddleButtonClicked >= minMSecBetweenClicks;
-		if (!readyToSendSignal)
-			return;
-		lastTimeMiddleButtonClicked = nowTime;
-		gameConnetorPtr->autoLootAroundPlayer();
-	}
-	qint64 now() {
-		return QDateTime::currentMSecsSinceEpoch();
 	}
 };
 

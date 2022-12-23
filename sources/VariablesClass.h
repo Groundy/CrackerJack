@@ -356,6 +356,7 @@ public:
 				toRet.push_back(middleOfPlayerTitle + QPoint(x * TITLE_WIDTH, y * TITLE_HEIGHT));
 			}
 		}
+		toRet.swapItemsAt(1, 4);
 		return toRet;
 	}
 private:

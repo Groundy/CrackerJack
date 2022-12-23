@@ -33,11 +33,11 @@ void GameConnecter::clickRightWithShift(QVector<QPoint> pts, int SLEEP_TIME_BETW
 
 	senderMutex.lock();
 	pressShift();
+	SLEEP_TIME_BETWEEN_LOOT_CLICK /= 3;
 	for each (auto pt in pts){
 		if (var->playingOnSmallMonitor)
 			pt = QPoint(pt.x() / 0.8, pt.y() / 0.8);
 		LPARAM lParam = (pt.y() << 16) + pt.x();
-		SLEEP_TIME_BETWEEN_LOOT_CLICK /= 3;
 		Sleep(SLEEP_TIME_BETWEEN_LOOT_CLICK);
 		PostMessage(gameThreadHandler, WM_RBUTTONDOWN, 0, lParam);
 		Sleep(SLEEP_TIME_BETWEEN_LOOT_CLICK);
@@ -122,7 +122,7 @@ void GameConnecter::sendCharToGame(const QChar charToSend, const HWND& gameThrea
 }
 void GameConnecter::autoLootAroundPlayer() {
 	auto potinsToClick = var->getMainWindow().getPointsOfFieldsAroundPlayer();
-	const int SLEEP_TIME_BETWEEN_LOOT_CLICK = 102;
+	const int SLEEP_TIME_BETWEEN_LOOT_CLICK = 111;
 	switch (autoLootSetting){
 	case Profile::RIGHT_MOUSE_BUTTON:
 		for each (auto pt in potinsToClick){
