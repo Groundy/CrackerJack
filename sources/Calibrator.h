@@ -18,6 +18,7 @@ public:
 	~Calibrator();
 	bool calibrateBasicAreas(const QImage& fullImage);
 	bool calibrateBattleArea(const QImage& fullImage);
+	bool calibrateStoreButton(const QImage& fullImage);
 	static void test(QString pathToFilesWithScreens);
 
 private:

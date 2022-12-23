@@ -5,7 +5,55 @@
 #include <qfiledialog.h>
 #include "RGBstruct.h"
 #include "Key.h"
+#include <atomic>
+#include <mutex>
 
+struct MutexImg {
+public:
+	QImage getImgCopy() {
+		mutex.lock();
+		QImage returnImg = QImage();
+		if (!img.isNull())
+			returnImg = img.copy();
+		mutex.unlock();
+		return returnImg;
+	}
+	void setImg(const QImage& newImg) {
+		mutex.lock();
+		img = newImg.copy();
+		mutex.unlock();
+	}
+	void clear() {
+		mutex.lock();
+		img = QImage();
+		mutex.unlock();
+	}
+private:
+	std::mutex mutex;
+	QImage img;
+};
+struct MutexRect {
+public:
+	QRect getRect() {
+		mutex.lock();
+		QRect toRet = rect;
+		mutex.unlock();
+		return toRet;
+	}
+	void setRect(const QRect& newRect) {
+		mutex.lock();
+		rect = newRect;
+		mutex.unlock();
+	}
+	void clear() {
+		mutex.lock();
+		rect = QRect();
+		mutex.unlock();
+	}
+private:
+	std::mutex mutex;
+	QRect rect;
+};
 
 class Utilities {
 public:

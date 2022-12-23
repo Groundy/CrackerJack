@@ -1,6 +1,6 @@
 #include "Calibrator.h"
-Calibrator::Calibrator(std::shared_ptr<VariablesClass> var) :
-	var(var){
+Calibrator::Calibrator(std::shared_ptr<VariablesClass> var)
+	: var(var){
 }
 Calibrator::~Calibrator()
 {
@@ -39,6 +39,17 @@ bool Calibrator::calibrateBattleArea(const QImage& fullscreen) {
 
 	var->getBattleList().setFrame(QRect());
 	return false;
+}
+bool Calibrator::calibrateStoreButton(const QImage& fullImage) {
+	QImage img(PathResource::getPathToStoreButton());
+	QRect rect = fullImage.rect();
+	rect.setLeft(rect.width() * 0.75);//shearch only witing last 25% of fulll screen, on right side
+	QPoint storeButtonPosition = ImgEditor::findExactStartPositionInImg(img, fullImage, rect);
+	if (storeButtonPosition.isNull())
+		return false;
+	QRect storeButtonRect(storeButtonPosition, img.size());
+	var->getEquipment().setStoreRect(storeButtonRect);
+	return true;
 }
 void Calibrator::test(QString pathToFilesWithScreens) {
 	auto var = std::shared_ptr<VariablesClass>();

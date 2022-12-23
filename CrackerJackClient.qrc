@@ -6,6 +6,7 @@
         <file alias="mapLayer">Resources/imgs/mapLayer.png</file>
         <file alias="sideBarEntityEnd">Resources/imgs/sideBarEntityEnd.png</file>
         <file alias="sideBarEntityStart">Resources/imgs/sideBarEntityStart.png</file>
+        <file alias="storeButton">Resources/imgs/storeButton.png</file>
     </qresource>
     <qresource prefix="/maps">
         <file alias="0_Color">Resources/maps/0_Color.png</file>
@@ -49,5 +50,14 @@
         <file alias="letters">Resources/jsons/letters.json</file>
         <file alias="potions">Resources/jsons/potions.json</file>
         <file alias="runes">Resources/jsons/runes.json</file>
+    </qresource>
+    <qresource prefix="/statesIcons">
+        <file alias="battleIco">Resources/imgs/states/battleIco.png</file>
+        <file alias="drunkenIco">Resources/imgs/states/drunkenIco.png</file>
+        <file alias="hastedIco">Resources/imgs/states/hastedIco.png</file>
+        <file alias="hungerIco">Resources/imgs/states/hungerIco.png</file>
+        <file alias="paralyzedIco">Resources/imgs/states/paralyzedIco.png</file>
+        <file alias="pzIco">Resources/imgs/states/pzIco.png</file>
+        <file alias="upgradedIco">Resources/imgs/states/upgradedIco.png</file>
     </qresource>
 </RCC>

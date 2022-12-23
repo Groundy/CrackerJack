@@ -11,52 +11,7 @@
 #include "Point3D.h"
 #include "ImgEditor.h"
 #include "PathResource.h"
-struct MutexImg {
-	public :
-		QImage getImgCopy() {
-			mutex.lock();
-			QImage returnImg = QImage();
-			if (!img.isNull())
-				returnImg = img.copy();
-			mutex.unlock();
-			return returnImg;
-		}
-		void setImg(const QImage& newImg) {
-			mutex.lock();
-			img = newImg.copy();
-			mutex.unlock();
-		}
-		void clear() {
-			mutex.lock();
-			img = QImage();
-			mutex.unlock();
-		}
-	private:
-		std::mutex mutex;
-		QImage img;
-	};
-struct MutexRect {
-	public:
-		QRect getRect() {
-			mutex.lock();
-			QRect toRet = rect;
-			mutex.unlock();
-			return toRet;
-		}
-		void setRect(const QRect& newRect) {
-			mutex.lock();
-			rect = newRect;
-			mutex.unlock();
-		}
-		void clear() {
-			mutex.lock();
-			rect = QRect();
-			mutex.unlock();
-		}
-	private:
-		std::mutex mutex;
-		QRect rect;
-	};
+#include "Equipment.h"
 class BattleList
 {
 public:
@@ -183,6 +138,9 @@ public:
 	bool getKeepHuntingAutomaticly() const { return keepHuntingAutomaticly; }
 	bool getKeepAnalyzeMainGameWindow() const { return keepAnalyzingMainGameWindow; }
 	bool getKeepAnalyzeMiniMap() const { return keepAnalyzingMiniMap; }
+
+	bool getKeepAnalyzeStates() const { return keepAnalyzeStates; }
+	void setKeepAnalyzeStates(bool enable) { this->keepAnalyzeStates = enable; };
 private:
 	//std::atomic<bool> newFullImgAwaits;
 	std::atomic<bool> keepRestoringManaAngHealth = true;
@@ -191,6 +149,7 @@ private:
 	std::atomic<bool> keepAnalyzingMiniMap = true;
 	std::atomic<bool> keepAnalyzingMainGameWindow;
 	std::atomic<bool> keepHuntingAutomaticly = true;
+	std::atomic<bool> keepAnalyzeStates = true;
 };
 class Timers
 {
@@ -425,12 +384,86 @@ private:
 	std::atomic<int> floor = 0;
 	QPoint xy;
 };
+/*
+class Equipment
+{
+public:
+	enum STATES { HASTE, BATTLE, PROTECTOR_ZONE, POISONED, PARALYZED, UPGRADED, HUNGER };
+	enum class EqRect { None, StateBar };
+	Equipment() {};
+	~Equipment() {};
+	void setStoreRect(const QRect& storeRectToSet) {
+		storeRect.setRect(storeRectToSet); 
+		QPoint storeRectStart = storeRectToSet.topLeft();
+	}
+	QRect getStoreRect() { return storeRect.getRect(); }
+	void setStateBarImg(const QImage& stateBarImgToSet) { statesBarImg.setImg(stateBarImgToSet); }
+	QVector<STATES> getCurrentStates(bool clearImg = true) {
+		QImage stateBar = statesBarImg.getImgCopy();
+		if(stateBar.isNull())
+			return {};
+		if (clearImg)
+			statesBarImg.clear();
+		ImgEditor::imgToBlackAndWhiteOneColor(stateBar, toBlackAndWhiteThreshold);
+		QList<QImage> imgs;
+		ImgEditor::cutImgWithLettersToSingleLettersImgList(stateBar, imgs);
+		QVector<STATES> toRet = {};
+		for each (QImage img in imgs){
+			ImgEditor::cutBlackBordersOfImg(img);
+			QString code = ImgEditor::binaryLetterImgToLetterStr(img);
+			if (!codeStateMap.contains(code))
+				continue;
+			toRet.append(codeStateMap.value(code));
+		}
+		return toRet;
+	}
 
+
+	void setRect(EqRect eqRect, const QRect rectToSet) {
+		switch (eqRect)
+		{
+		case Equipment::EqRect::StateBar: { 
+			stateBarRect.setRect(rectToSet); 
+			return; 
+		}
+		default: break;
+		}
+	}
+	void setImg(EqRect eqRect, const QImage& imgToSet) {
+		switch (eqRect)
+		{
+		case Equipment::EqRect::StateBar: statesBarImg.setImg(imgToSet); return;
+		default: break;
+		}
+	}
+private:
+	MutexImg statesBarImg;
+	MutexRect storeRect, stateBarRect;
+
+
+	const int toBlackAndWhiteThreshold = 100;
+	QMap<QString, STATES> codeStateMap = populateMap();
+
+	QMap<QString, STATES> populateMap() {
+		QMap<QString, STATES> toRect = {};
+		toRect.insert(getStateCode("battleIco"), STATES::BATTLE);
+		toRect.insert(getStateCode("hungerIco"), STATES::HUNGER);
+		return toRect;
+	}
+	QString getStateCode(QString fileName) {
+		QImage img(":/statesIcons/" + fileName);
+		ImgEditor::imgToBlackAndWhiteOneColor(img, toBlackAndWhiteThreshold);
+		ImgEditor::cutBlackBordersOfImg(img);
+		QString code = ImgEditor::binaryLetterImgToLetterStr(img);
+		return code;
+	}
+	
+};
+*/
 class VariablesClass : QObject{
 	Q_OBJECT
 public:	
 	typedef LONG64 TIME;
-	enum STATES { HASTE, BATTLE, PROTECTOR_ZONE, POISONED, PARALYZED, UPGRADED };
 	VariablesClass();
 	~VariablesClass();
 	void log(QString msg, bool sendToDebug = true, bool sendToUserConsol = true, bool addTimeSTamp = true) {
@@ -444,30 +477,15 @@ public:
 		img = fullImage.getImgCopy();
 	}
 
-	Timers& getTimers() {
-		return timers;
-	}
-	BattleList& getBattleList() {
-		return battleList;
-	};
-	Settings& getSettings() {
-		return settings;
-	};
-	Vitallity& getVitalitty() {
-		return vitalitty;
-	};
-	MiniMap& getMiniMap() {
-		return minimap;
-	}
-	MainWindow& getMainWindow() {
-		return mainWindow;
-	}
-	GameProcess& getGameProcess() {
-		return gameProcess;
-	}
-	Position& getPosition() {
-		return position;
-	}
+	Timers& getTimers() {return timers;}
+	BattleList& getBattleList() {return battleList;}
+	Settings& getSettings() {return settings;}
+	Vitallity& getVitalitty() {return vitalitty;}
+	MiniMap& getMiniMap() {return minimap;}
+	MainWindow& getMainWindow() {return mainWindow;}
+	GameProcess& getGameProcess() {return gameProcess;}
+	Position& getPosition() {return position;}
+	Equipment& getEquipment() {return eq; }
 	Logger logger;
 	bool playingOnSmallMonitor = false;
 private:
@@ -482,6 +500,7 @@ private:
 	Position position;
 	//other
 	MutexImg fullImage;
+	Equipment eq;
 };
 
 

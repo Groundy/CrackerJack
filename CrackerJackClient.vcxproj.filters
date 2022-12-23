@@ -270,6 +270,9 @@
     <ClInclude Include="sources\AttackMethode.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="sources\Equipment.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <QtTranslation Include="crackerjackclient_pl.ts">

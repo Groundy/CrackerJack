@@ -27,6 +27,7 @@ public:
 	static QString getPathToSideBarEntityStart() {return ":/imgs/sideBarEntityStart";}
 	static QString getPathToSideBarEntityEnd() {return ":/imgs/sideBarEntityEnd";}
 	static QString getPathToBattleList() {return ":/imgs/BattleList";}
+	static QString getPathToStoreButton() { return ":/imgs/storeButton"; }
 	static QString getPathToMap(int floor, bool walkable = true) {
 		QString floorStr = QString::number(floor);
 		QString type = walkable ? "Color" : "WaypointCost";

@@ -94,11 +94,8 @@ xcopy /y /d ".\dependencies\32-bit\libcrypto-1_1.dll" "$(OutDir)"
       <AdditionalIncludeDirectories>.\;.\sources;.\Resources;.\dependencies;.\dependencies\64-bit;C:\Program Files\OpenSSL-Win64\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <PostBuildEvent>
-      <Command>xcopy /y /d ".\dependencies\64-bit\libssl-1_1-x64.dll" "$(OutDir)"
-xcopy /y /d ".\dependencies\64-bit\libcrypto-1_1-x64.dll" "$(OutDir)"
-
-
-</Command>
+      <Command>
+      </Command>
     </PostBuildEvent>
     <Link>
       <AdditionalDependencies>$(Qt_LIBS_);%(AdditionalDependencies)</AdditionalDependencies>
@@ -135,11 +132,8 @@ xcopy /y /d ".\dependencies\32-bit\libcrypto-1_1.dll" "$(OutDir)"
       <AdditionalLibraryDirectories>./dependencies/64-bit;$(Qt_LIBPATH_)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy /y /d ".\dependencies\64-bit\libssl-1_1-x64.dll" "$(OutDir)"
-xcopy /y /d ".\dependencies\64-bit\libcrypto-1_1-x64.dll" "$(OutDir)"
-
-
-</Command>
+      <Command>
+      </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|Win32'" Label="QtSettings">
@@ -268,6 +262,7 @@ xcopy /y /d ".\dependencies\64-bit\libcrypto-1_1-x64.dll" "$(OutDir)"
     <ClInclude Include="sources\AttackMethode.h" />
     <QtMoc Include="sources\AutoHuntConfigurator.h" />
     <QtMoc Include="sources\ClickDetector.h" />
+    <ClInclude Include="sources\Equipment.h" />
     <ClInclude Include="sources\ImgEditor.h" />
     <ClInclude Include="Profession.h" />
     <QtMoc Include="sources\AutoHunting.h" />

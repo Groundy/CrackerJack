@@ -14,6 +14,7 @@
 #include "RGBstruct.h"
 #include "ScreenAnalyzer.h"
 #include "VariablesClass.h"
+#include "Equipment.h"
 class ScreenAnalyzer : public QThread
 {
 	Q_OBJECT
@@ -59,5 +60,14 @@ private:
 		const QSize SIZE_MINIMAP_LAYER_FRAME = QSize(24, 71);
 		QRect miniMapLayerFrame(TOP_LEFT_START_OF_MINIMAP_LAYER_FRAME, SIZE_MINIMAP_LAYER_FRAME);
 		var->getMiniMap().setImgMiniMapLayer(fullscreen.copy(miniMapLayerFrame));
+	}
+	void analyzeEquipment(const QImage& fullscreen) {
+		bool needCalibration = var->getEquipment().getStoreRect().isEmpty();
+		if (needCalibration)
+			Calibrator(var).calibrateStoreButton(fullscreen);
+		if (var->getSettings().getKeepAnalyzeStates()) {
+			QRect stateBarRect = var->getEquipment().getRect(Equipment::EqRect::StateBar);
+			var->getEquipment().setImg(Equipment::EqRect::StateBar, fullscreen.copy(stateBarRect));
+		}
 	}
 };

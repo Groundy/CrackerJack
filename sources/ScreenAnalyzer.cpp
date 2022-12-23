@@ -35,6 +35,7 @@ void ScreenAnalyzer::run() {
 		deleteScreenShotFolder();
 		cutHealthManaImgs(img);
 		analyzeMiniMap(img);
+		analyzeEquipment(img);
 		var->setNewImg(img);
 	}
 }
