@@ -52,23 +52,27 @@ void MainMenu::threadStarter(){
 	clickDetector->start();
 }
 void MainMenu::signalSlotConnector(){
-	QObject *sigSender, *slotRec;
-	const char *sig, *slot;
-	bool allSlotsConnected = true;
+	try{
+		QObject* sigSender = healthManaStateAnalyzer;
+		QObject* slotRec = this;
+		const char* sig = SIGNAL(sendValueToMainThread(double, double, double));
+		const char* slot = SLOT(changedValueOfCharHealthOrMana(double, double, double));
+		bool connected = connect(sigSender, sig, slotRec, slot, Qt::UniqueConnection);
+		if (!connected)
+			throw std::exception("to do!");
 
-	sigSender = healthManaStateAnalyzer;
-	slotRec = this;
-	sig = SIGNAL(sendValueToMainThread(double, double, double));
-	slot = SLOT(changedValueOfCharHealthOrMana(double, double, double));
-	bool connectionAccepted = connect(sigSender, sig, slotRec, slot, Qt::UniqueConnection);
-	allSlotsConnected = allSlotsConnected && connectionAccepted;
-	
-	sigSender = &this->var->logger;
-	slotRec = this;
-	sig = SIGNAL(sendMsgToUserConsol(QStringList));
-	slot = SLOT(printToUserConsol(QStringList));
-	connectionAccepted = connect(sigSender, sig, slotRec, slot, Qt::UniqueConnection);
-	allSlotsConnected = allSlotsConnected && connectionAccepted;
+		sigSender = &this->var->logger;
+		slotRec = this;
+		sig = SIGNAL(sendMsgToUserConsol(QStringList));
+		slot = SLOT(printToUserConsol(QStringList));
+		connected = connect(sigSender, sig, slotRec, slot, Qt::UniqueConnection);
+		if (!connected)
+			throw std::exception("to do!");
+	}
+	catch (const std::exception& e){
+		//todo
+		exit(0);
+	}
 }
 void MainMenu::startAutoHunting() {
 	Route route;

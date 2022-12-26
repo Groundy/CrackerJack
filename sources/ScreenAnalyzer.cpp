@@ -17,7 +17,6 @@ void ScreenAnalyzer::run() {
 		msleep(SLEEP_TIME);
 		if (!var->getSettings().getLoadingState())
 			continue;
-
 		QImage img;
 		bool openCorrectly = loadScreen(img);
 		if (!openCorrectly)
@@ -36,7 +35,6 @@ void ScreenAnalyzer::run() {
 		cutHealthManaImgs(img);
 		analyzeMiniMap(img);
 		analyzeEquipment(img);
-		var->setNewImg(img);
 	}
 }
 

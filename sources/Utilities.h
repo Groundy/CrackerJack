@@ -76,11 +76,6 @@ public:
 		QString pathToFile = fileList.first();
 		return pathToFile;			
 	}
-	static void ring(QObject* parent) {
-		QSound* bell = new QSound("C:\\Moje\\pliki\\repos\\CrackerJackClient\\ResourcesUsing\\sound.wav", parent);
-		bell->setLoops(2);
-		bell->play();
-	}
 	/*
 	enum class FOLDERS_OF_TMP_FOLDER {Logs, Profiles, TradeReports, Main, Routes, MarketLists};
 	enum class FieldsOfIniFile {
