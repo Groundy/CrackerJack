@@ -3,24 +3,18 @@
 #include "Utilities.h"
 #include "ImgEditor.h"
 #include "PathResource.h"
+#include "Logger.hpp"
 class BattleList
 {
 public:
-	BattleList() {};
+	BattleList(Logger* logger){
+		this->logger = logger;
+	};
 	~BattleList() {};
-	void setFrame(QRect battleListAreaToSet) {
-		battleListArea.setRect(battleListAreaToSet);
-	};
-	void setImg(const QImage& battleListImgToSet) {
-		battleListImg.setImg(battleListImgToSet);
-	}
-	QRect getFrame() {
-		return battleListArea.getRect();
-	};
-	QImage getImg() {
-		//ImgEditor::saveImgWitinLoop(battleListImg.getImgCopy());
-		return battleListImg.getImgCopy();
-	}
+	void setFrame(QRect battleListAreaToSet) {battleListArea.setRect(battleListAreaToSet);}
+	void setImg(const QImage& battleListImgToSet) {battleListImg.setImg(battleListImgToSet);}
+	QRect getFrame() { return battleListArea.getRect();}
+	QImage getImg() { return battleListImg.getImgCopy();}
 	int getEnemisAmout() {
 		if (qrand() % 10 == 0)
 			checkIfBattleListIsOk();
@@ -73,8 +67,10 @@ public:
 	}
 	QStringList getUniqueMonstersNames() {
 		QImage innerList = getInnerBattleList();
-		if (innerList.isNull())
-			return QStringList() << "Blad czytania battle listy.";
+		if (innerList.isNull()) {
+			logger->log("Blad czytania listy potworow.", true, true, false);
+			return QStringList();
+		}
 		QVector<QRect> nameRect = getFramesOfMonstersNames();
 		QStringList toRet = {};
 		for (int i = 0; i < nameRect.size(); i++) {
@@ -88,6 +84,7 @@ public:
 		return toRet;
 	}
 private:
+	Logger* logger;
 	MutexRect battleListArea;
 	MutexImg battleListImg;
 	std::atomic<int> enemiesOnBattleList = 0;

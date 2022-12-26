@@ -4,16 +4,10 @@
 #include <qicon.h>
 void test(){
 }
-QIcon getIcon(){
-	QDir dir = QDir::current();
-	dir.cd("Resources");
-	QString iconPath = dir.absoluteFilePath("logo.png");
-	return QIcon(iconPath);
-}
 void setStyle(QApplication& a){
 	a.setQuitOnLastWindowClosed(true);
 	a.setStyle("fusion");
-	a.setWindowIcon(getIcon());
+	a.setWindowIcon(QIcon(":imgs/logo"));
 	QApplication::setAttribute(Qt::AA_DisableWindowContextHelpButton);
 }
 void setTranslation(QApplication& app) {

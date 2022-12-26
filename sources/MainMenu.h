@@ -2,6 +2,7 @@
 #include <QDialog>
 #include <memory>
 #include <qdatetime.h>
+#include <qsound.h>
 
 #include "Profile.h"
 #include "ScreenSaver.h"
@@ -23,7 +24,6 @@ namespace Ui { class MainMenu; };
 class MainMenu : public QDialog
 {
 	Q_OBJECT
-
 public:
 	MainMenu(Profile* prof, QWidget *parent = Q_NULLPTR);
 	~MainMenu();
@@ -54,10 +54,8 @@ private:
 	std::shared_ptr<VariablesClass> var;
 	std::shared_ptr<GameConnecter> gameConnector;
 	ActiveGameThread::GameActivityStates gameActivitystate;
-
+	QSound* sound = new QSound(":/sounds/testSound", this);
 	void threadStarter();
 	void startAutoHunting();
 	void signalSlotConnector();
-	void mousePressEvent() {
-	}
 };

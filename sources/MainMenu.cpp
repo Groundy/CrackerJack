@@ -7,7 +7,7 @@ MainMenu::MainMenu(Profile* prof, QWidget* parent)
 	ui = new Ui::MainMenu();
 	ui->setupUi(this);
 
-	var = std::shared_ptr<VariablesClass>(new VariablesClass());
+	var = std::shared_ptr<VariablesClass>(new VariablesClass(sound));
 	gameConnector = std::shared_ptr<GameConnecter>(new GameConnecter(var, prof));
 	ui->profileNameLabel->setText(prof->getName());
 	
@@ -29,7 +29,7 @@ MainMenu::~MainMenu(){
 		thread->terminate();
 		delete thread;
 	}
-
+	delete sound;
 	delete ui;
 }
 

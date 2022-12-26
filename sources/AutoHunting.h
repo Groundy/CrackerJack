@@ -196,12 +196,13 @@ private:
 		lastTimePressedAttack = nowTime;
 	}
 	bool playerFoundOnBattleList() {
-		for each (QString nameOfEntityOnBattleList in var->getBattleList().getUniqueMonstersNames()) {
-			bool playerFound = !alloweNamesOnBattleList.contains(nameOfEntityOnBattleList);
-			if (playerFound) {
-				Utilities::ring(this);
-				return true;
-			}
+		QStringList enemiesNamesOnBattleList = var->getBattleList().getUniqueMonstersNames();
+		for each (QString name in enemiesNamesOnBattleList) {
+			bool nameIsAllowed = alloweNamesOnBattleList.contains(name);
+			if (nameIsAllowed)
+				continue;
+			//var->sound->play();
+			return true;
 		}
 		return false;
 	}

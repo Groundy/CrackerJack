@@ -62,4 +62,7 @@
         <file alias="pzIco">Resources/imgs/states/pzIco.png</file>
         <file alias="upgradedIco">Resources/imgs/states/upgradedIco.png</file>
     </qresource>
+    <qresource prefix="/sounds">
+        <file alias="testSound">Resources/sounds/sound.wav</file>
+    </qresource>
 </RCC>

@@ -7,7 +7,7 @@ class Equipment
 {
 public:
 	enum STATES { HASTE, BATTLE, PROTECTOR_ZONE, POISONED, PARALYZED, UPGRADED, HUNGER, DRUNKEN };
-	enum class EqRect { None, StateBar };
+	enum class EqRect { StateBar, SoulPoints, Capacity, Helmet, Armor, Legs, Boots, Ring, Amulet, Weapon, Shield, BackPack, Torch };
 	Equipment() {};
 	~Equipment() {};
 	void setStoreRect(const QRect& storeRectToSet) {
