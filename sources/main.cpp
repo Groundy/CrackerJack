@@ -3,6 +3,7 @@
 #include <qtranslator.h>
 #include <qicon.h>
 void test(){
+
 }
 void setStyle(QApplication& a){
 	a.setQuitOnLastWindowClosed(true);
@@ -16,7 +17,7 @@ void setTranslation(QApplication& app) {
 	bool ok2 = app.installTranslator(&translator);
 }
 Profile* getProfile() {
-	bool skip = false;
+	bool skip = true;
 	if (skip) {
 		Profile* prof = new Profile(JsonParser::loadProfile("mage"));
 		return prof;

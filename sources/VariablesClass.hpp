@@ -11,20 +11,13 @@
 #include "Logger.hpp"
 class VariablesClass{
 public:	
-	VariablesClass(QSound* sound) : sound(sound) {};
+	VariablesClass(QSound* sound) : sound(sound) {
+		sound->setLoops(QSound::Infinite);
+	};
 	~VariablesClass() {};
 	void log(QString msg, bool sendToDebug = true, bool sendToUserConsol = true, bool addTimeSTamp = true) {
 		logger.log(msg, sendToDebug, sendToUserConsol, addTimeSTamp);
 	}
-	/*
-	void setNewImg(const QImage& newImage) {
-		fullImage.setImg(newImage);
-	}
-	void getCopyOfCurrentFullImg(QImage& img) {
-		img = fullImage.getImgCopy();
-	}
-	*/
-
 	Timers& getTimers() {return timers;}
 	BattleList& getBattleList() {return *battleList;}
 	Settings& getSettings() {return settings;}
@@ -36,7 +29,7 @@ public:
 	Equipment& getEquipment() {return eq; }
 	Logger logger;
 	bool playingOnSmallMonitor = false;
-	//QSound* sound;
+	QSound* sound;
 private:
 	GameProcessData gameProcess;
 	GameWindow gameWindow;

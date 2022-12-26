@@ -82,6 +82,7 @@ private:
 	HealthManaFrames healthManaFrames;
 	MutexImg healthImg, manaImg, combinedImg, msImg;
 };
+
 class MiniMap
 {
 public:
@@ -102,9 +103,16 @@ public:
 		imgToRet = this->minMapLayer.getImgCopy();
 		this->minMapLayer.clear();
 	}
+	QPoint getCompasMiddlePoint() {
+		QPoint miniMapTopLeft = miniMapFrame.getRect().topLeft();
+		if (miniMapTopLeft.isNull())
+			return QPoint();
+		return miniMapTopLeft + vectorToCompassMiddle;
+	}
 	void setImgMiniMapLayer(const QImage& minMapLayerImg) { this->minMapLayer.setImg(minMapLayerImg); }
 private:
 	MutexImg miniMap;
 	MutexImg minMapLayer;
 	MutexRect miniMapFrame;
+	const QPoint vectorToCompassMiddle = QPoint(144, 22);
 };
