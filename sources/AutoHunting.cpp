@@ -20,9 +20,9 @@ void AutoHunting::run() {
 			msleep(SLEEP_TIME * 30);
 			continue;
 		}
-		if (playerFoundOnBattleList())
-			continue;
 		if (playerIsFighting())
+			continue;
+		if (playerFoundOnBattleList())
 			continue;
 		if (!updatePlayerCurrentPos())
 			continue;

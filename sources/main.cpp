@@ -17,7 +17,7 @@ void setTranslation(QApplication& app) {
 	bool ok2 = app.installTranslator(&translator);
 }
 Profile* getProfile() {
-	bool skip = true;
+	bool skip = false;
 	if (skip) {
 		Profile* prof = new Profile(JsonParser::loadProfile("mage"));
 		return prof;

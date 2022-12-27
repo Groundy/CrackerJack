@@ -57,9 +57,9 @@ private:
 		}
 	};
 	struct ValuesInts {
-		int health, maxHealth;
-		int mana, maxMana;
-		int shield, maxShield;
+		int health = 0, maxHealth = 0;
+		int mana = 0, maxMana = 0;
+		int shield = 0, maxShield = 0;
 		bool isValid() {
 			if (maxHealth <= 0)
 				return false;
@@ -94,6 +94,11 @@ private:
 	std::shared_ptr<GameConnecter> gameConnector;
 	QMap<int, RestorationMethode> healthMap, manaMap;	
 	const int SLEEP_TIME = 50;
+	//bool usedRestorationMethodeOnLastLoop = false;
+
+	//qint64 lastTimeAnalyzed = now();
+	qint64 lastTimeHasted = now();
+	qint64 lastTimeUpgraded = now();
 
 	ValuesDoubles toDoubles(ValuesInts currentValues);
 	bool populateHealthManaMaps(const Profile* profile);
@@ -109,7 +114,52 @@ private:
 	QVector<RestorationMethode> findRestorationToUse(double currentValue, const QMap<int, RestorationMethode>& methodes);
 	ValuesDoubles getCurrentPercentage();
 	bool restMethodeCanBeUsed(const RestorationMethode& restMethode);
+	int calcTimeBetweenManaPots(int currentManaPercentage) {
+		return 1200 * currentManaPercentage / 100.0;
+	}
+	void handleStates() {
+		Settings& settings = var->getSettings();
+		if (!settings.getKeepHasted())
+			return;
 
+		auto states = var->getEquipment().getCurrentStates(true);
+		if (states.isEmpty())
+			return;
+
+		handleHaste(settings.getKeepHasted(), states);
+		handleUpgrade(settings.getKeepUpraded(), states);
+
+	}
+	void handleHaste(bool keepHasting, QVector<Equipment::STATES>& states) {
+		if (!keepHasting)
+			return;
+		if (states.contains(Equipment::HASTE))
+			return;
+		qint64 currentTime = now();
+		bool canHaste = currentTime >= lastTimeHasted + 1333;
+		if (!canHaste)
+			return;
+		gameConnector->sendKeyStrokeToProcess(VK_F12);//todo
+		var->logger.log("Hasted!", false, true, true);
+		lastTimeHasted = currentTime;
+	}
+	void handleUpgrade(bool keepUpgraded, QVector<Equipment::STATES>& states) {
+		if (!keepUpgraded)
+			return;
+		if (states.contains(Equipment::UPGRADED))
+			return;
+		qint64 currentTime = now();
+		bool canUpgrade = currentTime >= lastTimeUpgraded + 20000;
+		if (!canUpgrade)
+			return;
+		gameConnector->sendKeyStrokeToProcess(VK_F11);//todo
+		var->logger.log("Upgraded!", false, true, true);
+		lastTimeUpgraded = currentTime;
+	}
+
+	qint64 now() {
+		return QDateTime::currentMSecsSinceEpoch();
+	}
 	/*
 	bool populareMapsWithBottomBarsLetters(QMap<QString, int>& lightMap, QMap<QString, int>& darkMap) {
 		try {

@@ -15,16 +15,20 @@ void ManaHealthStateAnalyzer::run(){
 		if (!percentages.isValid())
 			continue;
 		sendDataToGui(percentages);
+
 		auto healthMetodes = findRestorationToUse(percentages.health, healthMap);
 		for each (auto methode in healthMetodes) {
 			gameConnector->useRestorationMethode(methode);
-			var->getVitalitty().clearHealth();
+			//var->getVitalitty().clearHealth();
 		}
 		auto manahMetodes = findRestorationToUse(percentages.mana, manaMap);
 		for each (auto methode in manahMetodes) {
-			gameConnector->useRestorationMethode(methode);
-			var->getVitalitty().clearMana();
+			int additionalManaBreak = calcTimeBetweenManaPots(percentages.mana);
+			gameConnector->useRestorationMethode(methode, additionalManaBreak);
+			//var->getVitalitty().clearMana();
 		}
+
+		handleStates();
 	}
 }
 
@@ -118,10 +122,13 @@ ManaHealthStateAnalyzer::ValuesInts ManaHealthStateAnalyzer::toIntsValues(FoundF
 	ValuesInts valuesInts;
 	if (foundFlags.health)
 		getValuesFromStringRegularCase(valueStrs.health, valuesInts.health, valuesInts.maxHealth);
+
 	if (foundFlags.combined)
 		getValuesFromStringOfCombinedBox(valueStrs.combined, valuesInts.mana, valuesInts.maxMana, valuesInts.shield, valuesInts.maxShield);
+
 	if (foundFlags.shield)
 		getValuesFromStringRegularCase(valueStrs.manaShield, valuesInts.shield, valuesInts.maxShield);
+
 	if (foundFlags.mana)
 		getValuesFromStringRegularCase(valueStrs.mana, valuesInts.mana, valuesInts.maxMana);
 	return valuesInts;
@@ -264,7 +271,7 @@ void ManaHealthStateAnalyzer::writeDataToVariableClass(ValuesInts values) {
 }
 ManaHealthStateAnalyzer::ImageValues ManaHealthStateAnalyzer::getImages() {
 	ImageValues toRet;
-	bool clearImgs = true;
+	bool clearImgs = var->getSettings().getClearVitalityImgs();;
 	var->getVitalitty().getImageHealth(toRet.health, clearImgs);
 	var->getVitalitty().getImageMana(toRet.mana, clearImgs);
 	var->getVitalitty().getImageMS(toRet.manaShield, clearImgs);
@@ -273,21 +280,23 @@ ManaHealthStateAnalyzer::ImageValues ManaHealthStateAnalyzer::getImages() {
 }
 bool ManaHealthStateAnalyzer::restMethodeCanBeUsed(const RestorationMethode& restMethode) {
 	const qint64 now = QDateTime::currentMSecsSinceEpoch();
+	Timers& timers = var->getTimers();
 	switch (restMethode.getType())
 	{
 	case RestorationMethode::Type::POTION:
-		if (now < var->getTimers().getTimeLastItemUsage() + (1000 * restMethode.getCdGroup()))
+		if (now < timers.getTimeLastItemUsageGeneral() + (1000 * restMethode.getCdGroup()))
+			return false;
+		if (now < timers.getTimeLastItemUsage(restMethode.getName()) + (1000 * restMethode.getCd()))
 			return false;
 		//later should be added checking if char has proper pot!
 		return true;
 	case RestorationMethode::Type::SPELL:
 		if (var->getVitalitty().getCurrentRawManaVal() < restMethode.getMana())
 			return false;
-		if (now < var->getTimers().getTimeLastSpellUsageHealing() + (1000 * restMethode.getCdGroup()))
+		if (now < timers.getTimeLastSpellUsageHealing() + (1000 * restMethode.getCdGroup()))
 			return false;
-		if (now < var->getTimers().getTimeLastSpellUsed(restMethode.getName()) + (1000 * restMethode.getCd()))
+		if (now < timers.getTimeLastSpellUsed(restMethode.getName()) + (1000 * restMethode.getCd()))
 			return false;
-
 		return true;
 		break;
 	default: 

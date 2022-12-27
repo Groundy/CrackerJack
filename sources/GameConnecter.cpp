@@ -76,19 +76,20 @@ void GameConnecter::sendStringToGame(QString str) {
 		Sleep(2);
 	}
 }
-void GameConnecter::useRestorationMethode(const RestorationMethode& methode) {
+void GameConnecter::useRestorationMethode(const RestorationMethode& methode, int additionalTime) {
+	Timers& timers = var->getTimers();
 	if (methode.isSpell()) {
-		var->getTimers().setTimeLastSpellUsageHealing();
-		var->getTimers().setTimeLastSpellUsed(methode.getName());
+		timers.setTimeLastSpellUsageHealing();
+		timers.setTimeLastSpellUsed(methode.getName());
 	}
-	else if (methode.isPotion())
-		var->getTimers().setTimeLastItemUsage();
+	else if (methode.isPotion()) {
+		timers.setTimeLastItemUsageGeneral();
+		timers.setTimeLastItemUsed(methode.getName(), additionalTime);
+	}
 
 	Key key = methode.getKey();
 	sendKeyStrokeToProcess(key);
-
-	QString msg = QString("Used %1").arg(methode.getName());
-	var->log(msg, true, true, true);
+	var->log(methode.getName(), false, true, true);
 }
 void GameConnecter::sendCharToGame(const QChar charToSend, const HWND& gameThreadHandler) {
 	senderMutex.lock();
