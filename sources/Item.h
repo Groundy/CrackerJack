@@ -1,8 +1,6 @@
 #pragma once
 #include <QObject>
 #include <qjsonvalue.h>
-
-#include "Utilities.h"
 #include "Profession.hpp"
 #include "RestorationMethode.hpp"
 

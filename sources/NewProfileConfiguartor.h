@@ -7,7 +7,7 @@
 
 #include "AutoHuntConfigurator.h"
 #include "ui_NewProfileConfiguartor.h"
-#include "Utilities.h"
+#include "Utilities.hpp"
 #include "Profile.h"
 #include "JsonParser.h"
 #include "Key.h"

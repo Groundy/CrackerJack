@@ -7,8 +7,6 @@
 #include <atlstr.h>
 #include <comdef.h>
 #include <memory>
-
-#include "Utilities.h"
 #include "VariablesClass.hpp"
 class ActiveGameThread : public QThread
 {

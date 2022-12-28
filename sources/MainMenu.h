@@ -8,7 +8,6 @@
 #include "ScreenSaver.h"
 #include "activeGameThread.h"
 #include "VariablesClass.hpp"
-#include "Utilities.h"
 #include "Key.h"
 #include "ManaHealthStateAnalyzer.h"
 #include "ScreenAnalyzer.h"

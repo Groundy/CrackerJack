@@ -10,7 +10,6 @@
 
 #include "Calibrator.h"
 #include "Profile.h"
-#include "Utilities.h"
 #include "RGBstruct.h"
 #include "ScreenAnalyzer.h"
 #include "VariablesClass.hpp"

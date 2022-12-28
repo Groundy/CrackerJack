@@ -8,7 +8,7 @@
 #include <qfileinfo.h>
 
 #include "PathResource.h"
-#include "Utilities.h"
+#include "Utilities.hpp"
 #include "Profile.h"
 #include "Item.h"
 #include "Profession.hpp"

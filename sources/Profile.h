@@ -13,7 +13,7 @@
 #include "AttackMethode.hpp"
 #include "Profession.hpp"
 #include "RestorationMethode.hpp"
-#include "Utilities.h"
+#include "Utilities.hpp"
 #include "JsonClass.hpp"
 
 class AutoHuntData : JsonClass {

@@ -1,7 +1,7 @@
 #pragma once
 #include <qrect.h>
 #include <qimage.h>
-#include "Utilities.h"
+#include "Utilities.hpp"
 struct HealthManaFrames {
 	QRect healthFrame;
 	QRect manaFrame;

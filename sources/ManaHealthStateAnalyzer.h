@@ -7,7 +7,6 @@
 #include "GameConnecter.h"
 #include "ImgEditor.h"
 #include "VariablesClass.hpp"
-#include "Utilities.h"
 #include "Profile.h"
 #include "JsonParser.h"
 class ManaHealthStateAnalyzer : public QThread

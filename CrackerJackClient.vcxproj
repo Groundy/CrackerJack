@@ -241,7 +241,6 @@ xcopy /y /d ".\dependencies\32-bit\libcrypto-1_1.dll" "$(OutDir)"
     <ClCompile Include="sources\ScreenAnalyzer.cpp" />
     <ClCompile Include="sources\ScreenSaver.cpp" />
     <ClCompile Include="sources\SelectProfileWindow.cpp" />
-    <ClCompile Include="sources\Utilities.cpp" />
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="sources\AutoHuntConfigurator.ui" />
@@ -291,7 +290,7 @@ xcopy /y /d ".\dependencies\32-bit\libcrypto-1_1.dll" "$(OutDir)"
     <QtMoc Include="sources\Logger.hpp" />
     <QtMoc Include="sources\NewProfileConfiguartor.h" />
     <ClInclude Include="sources\Key.h" />
-    <ClInclude Include="sources\Utilities.h" />
+    <ClInclude Include="sources\Utilities.hpp" />
     <ClInclude Include="sources\Profile.h" />
     <QtMoc Include="sources\SelectProfileWindow.h" />
   </ItemGroup>

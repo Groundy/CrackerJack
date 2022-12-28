@@ -3,7 +3,6 @@
 #include <qmap.h>
 #include <qjsonarray.h>
 #include "Point3D.h"
-#include "Utilities.h"
 #include "PathResource.h"
 #include "RoutePoint.h"
 class Route : JsonClass {

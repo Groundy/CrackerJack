@@ -4,17 +4,13 @@ ImgEditor::ImgEditor() {}
 ImgEditor::~ImgEditor() {}
 
 QImage ImgEditor::fromCharToImg(QChar CharToImg){
-	auto mapWithCodes = Utilities::getQmapWithCodes();
-	QString keyCode = mapWithCodes.key(CharToImg);
+	QString keyCode = normalLettersMap.key(CharToImg);
 	QStringList parts;
 	parts = keyCode.split("_");
 	if (parts.size() == 3) {
 		const int WIDTH = parts[0].toInt();
 		const int HEIGHT = parts[1].toInt();
 		QString code = parts[2];
-
-		const uint BLACK = qRgb(0, 0, 0);
-		const uint WHITE = qRgb(255, 255, 255);
 		QImage imgToRet(WIDTH, HEIGHT, QImage::Format::Format_ARGB32);
 		int i = 0;
 		for (size_t x = 0; x < WIDTH; x++) {
@@ -60,8 +56,6 @@ bool ImgEditor::isItPixelFromFrame(const uint& color, const int& minValueAccepta
 void ImgEditor::imgToBlackAndWhiteOneColor(QImage& img, int threshold) {
 	const int WIDTH = img.width();
 	const int HEIGHT = img.height();
-	const uint BLACK = qRgb(0, 0, 0);
-	const uint WHITE = qRgb(255, 255, 255);
 	for (size_t x = 0; x < WIDTH; x++) {
 		for (size_t y = 0; y < HEIGHT; y++) {
 			uint pixelColor = img.pixel(x, y);
@@ -74,8 +68,6 @@ void ImgEditor::imgToBlackAndWhiteOneColor(QImage& img, int threshold) {
 void ImgEditor::imgToBlackAndWhiteAllColors(QImage& img, int threshold) {
 	const int WIDTH = img.width();
 	const int HEIGHT = img.height();
-	const uint BLACK = qRgb(0, 0, 0);
-	const uint WHITE = qRgb(255, 255, 255);
 	for (size_t x = 0; x < WIDTH; x++) {
 		for (size_t y = 0; y < HEIGHT; y++) {
 			uint pixelColor = img.pixel(x, y);
@@ -90,7 +82,6 @@ void ImgEditor::cutBlackBordersOfImg(QImage& img) {
     int linesOfBlackRows_TOP = 0, linesOfBlackRows_DOWN = 0, linesOfBlackRows_RIGHT = 0, linesOfBlackRows_LEFT = 0;
     const int WIDTH = img.width();
     const int HEIGHT = img.height();
-    const uint BLACK = qRgb(0, 0, 0);
     for (int x = 0; x < WIDTH; x++) {
 	    for (int y = 0; y < HEIGHT; y++) {
 		    bool isBlack = img.pixel(x, y) == BLACK;
@@ -134,53 +125,6 @@ void ImgEditor::cutBlackBordersOfImg(QImage& img) {
 		    }
 	    }
     }
-    //tmp to return if modifed algorithm was working wrong
-    /*
-    *     for (int x = 0; x < WIDTH; x++) {
-	    for (int y = 0; y < HEIGHT; y++) {
-		    bool isBlack = img.pixel(x, y) == BLACK;
-		    if (!isBlack) {
-			    linesOfBlackRows_LEFT = x;
-			    x = WIDTH; //endOfLoop
-			    y = WIDTH; //endOfLoop
-		    }
-	    }
-    }
-
-    for (int x = WIDTH - 1; x >= 0; x--) {
-	    for (int y = 0; y < HEIGHT; y++) {
-		    bool isBlack = img.pixel(x, y) == BLACK;
-		    if (!isBlack) {
-			    linesOfBlackRows_RIGHT = WIDTH - x - 1;
-			    x = -1;//endOfLoop
-			    y = HEIGHT;//endOfLoop
-		    }
-	    }
-    }
-
-    for (int y = 0; y < HEIGHT; y++) {
-	    for (int x = 0; x < WIDTH; x++) {
-		    bool isBlack = img.pixel(x, y) == BLACK;
-		    if (!isBlack) {
-			    linesOfBlackRows_TOP = y;
-			    x = WIDTH;//endOfLoop
-			    y = HEIGHT;//endOfLoop
-		    }
-	    }
-    }
-
-    for (int y = HEIGHT - 1; y >= 0; y--) {
-	    for (int x = 0; x < WIDTH; x++) {
-		    bool isBlack = img.pixel(x, y) == BLACK;
-		    if (!isBlack) {
-			    linesOfBlackRows_DOWN = HEIGHT - y - 1;
-			    x = WIDTH;//endOfLoop
-			    y = -1;//endOfLoop
-		    }
-	    }
-    }
-    */
-
     int anotherParametr_x = WIDTH - linesOfBlackRows_RIGHT - linesOfBlackRows_LEFT;
     int anotherParametr_y = HEIGHT - linesOfBlackRows_TOP - linesOfBlackRows_DOWN;
 
@@ -192,7 +136,6 @@ void ImgEditor::cutImgWithLettersToSingleLettersImgList(QImage& img, QList<QImag
 	QList<int> colThatAreNotBlack;
 	const int WIDTH = img.width();
     const int HEIGHT = img.height();
-    const uint BLACK = qRgb(0, 0, 0);
     for (int x = 0; x < WIDTH; x++) {
        for (int y = 0; y < HEIGHT; y++) {
 	       bool isNotEmptyLine = img.pixel(x, y) != BLACK;

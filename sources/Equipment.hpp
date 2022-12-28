@@ -1,5 +1,5 @@
 #pragma once
-#include "Utilities.h"
+#include "Utilities.hpp"
 #include <qrect.h>
 #include <qpoint.h>
 #include "ImgEditor.h"

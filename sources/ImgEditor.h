@@ -1,21 +1,20 @@
 #pragma once
 #include <qimage.h>
-
 #include "Logger.hpp"
 #include "RGBstruct.h"
-#include "Utilities.h"
 class ImgEditor{
 public:
 	ImgEditor();
 	~ImgEditor();
+
+	QString imgWithStrToStr(QImage& img, int threshold = 240);
+	QImage fromCharToImg(QChar CharToImg);
+
 	static void imgToBlackAndWhiteAllColors(QImage& img, int threshold);	
 	static void imgToBlackAndWhiteOneColor(QImage& img, int threshold);
 	static void cutBlackBordersOfImg(QImage& img);
 	static QString binaryLetterImgToLetterStr (QImage& singleLetterImg);
-
-	QString imgWithStrToStr(QImage& img, int threshold = 240);
-	static QImage fromCharToImg(QChar CharToImg);
-	static void rotateImgToRight(QImage& imgToRotate, int timesToRotateRight);
+    static void rotateImgToRight(QImage& imgToRotate, int timesToRotateRight);
 	static bool isItPixelFromFrame(const uint& color, const int& minValueAcceptable, const int& maxValueAcceptable, bool requireSameValuesOfRGB);
 	static QImage getColorImageFromCode(const QString& codeOfImg);
 	static void cutImgWithLettersToSingleLettersImgList(QImage& img, QList<QImage>& list);
@@ -29,6 +28,8 @@ public:
 	}
 
 private:
+    static const uint BLACK = qRgb(0, 0, 0);
+    static const uint WHITE = qRgb(255, 255, 255);
     QMap<QString, QString> normalLettersMap = getCodesMap();
     QMap<QString, QString> getCodesMap() {
         QMap<QString, QString> toRet = {};

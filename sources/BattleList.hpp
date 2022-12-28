@@ -1,6 +1,6 @@
 #pragma once
 #include <qrect.h>
-#include "Utilities.h"
+#include "Utilities.hpp"
 #include "ImgEditor.h"
 #include "PathResource.h"
 #include "Logger.hpp"

@@ -48,9 +48,6 @@
     <ClCompile Include="sources\Profile.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="sources\Utilities.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="sources\Key.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -168,7 +165,7 @@
     </QtUic>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="sources\Utilities.h">
+    <ClInclude Include="sources\Utilities.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="sources\Key.h">
