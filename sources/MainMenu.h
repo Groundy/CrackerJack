@@ -28,14 +28,12 @@ public:
 	MainMenu(Profile* prof, QWidget *parent = Q_NULLPTR);
 	~MainMenu();
 public slots:
+	void checkBoxChanged();
 	void changeProfileButtonAction();
-	void updateResourcesAmounts();
-	void takeScreenShotCheckBoxChanged();
 	void testButtonClicked();
 	void autoHuntButtonClicked();
 
 	//from threads
-	void autoHealAndManaRegCheckBoxChanged();
 	void onGameStateChanged(int state);
 	void changedValueOfCharHealthOrMana(double healthPercentage, double manaPercentage, double manaShieldPercentage);
 	void printToUserConsol(QStringList msgs);

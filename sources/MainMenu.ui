@@ -250,7 +250,7 @@
       <item>
        <widget class="QCheckBox" name="takeScreenshotCheckBox">
         <property name="text">
-         <string>rób rzuty ekranu</string>
+         <string>Rób rzuty ekranu</string>
         </property>
         <property name="checked">
          <bool>true</bool>
@@ -260,10 +260,24 @@
       <item>
        <widget class="QCheckBox" name="restoreHealthMana">
         <property name="text">
-         <string>regeneruj życie i mane</string>
+         <string>Regeneruj życie i mane</string>
         </property>
         <property name="checked">
          <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QCheckBox" name="keepHastedCheckBox">
+        <property name="text">
+         <string>Utrzymuj spowolnienie</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QCheckBox" name="keepUpgradedCheckBox">
+        <property name="text">
+         <string>Utzymuj wzmocnienie</string>
         </property>
        </widget>
       </item>
@@ -478,7 +492,7 @@ p, li { white-space: pre-wrap; }
    <sender>takeScreenshotCheckBox</sender>
    <signal>stateChanged(int)</signal>
    <receiver>MainMenu</receiver>
-   <slot>takeScreenShotCheckBoxChanged()</slot>
+   <slot>checkBoxChanged()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>515</x>
@@ -494,7 +508,7 @@ p, li { white-space: pre-wrap; }
    <sender>autoHuntingButton</sender>
    <signal>clicked()</signal>
    <receiver>MainMenu</receiver>
-   <slot>autoHuntButtonClicked()</slot>
+   <slot>checkBoxChanged()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>339</x>
@@ -522,13 +536,44 @@ p, li { white-space: pre-wrap; }
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>keepHastedCheckBox</sender>
+   <signal>stateChanged(int)</signal>
+   <receiver>MainMenu</receiver>
+   <slot>checkBoxChanged()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>513</x>
+     <y>148</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>299</x>
+     <y>299</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>keepUpgradedCheckBox</sender>
+   <signal>stateChanged(int)</signal>
+   <receiver>MainMenu</receiver>
+   <slot>checkBoxChanged()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>513</x>
+     <y>171</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>299</x>
+     <y>299</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>changeProfileButtonAction()</slot>
-  <slot>autoHealAndManaRegCheckBoxChanged()</slot>
-  <slot>takeScreenShotCheckBoxChanged()</slot>
   <slot>analyzeMiniMapCheckBoxChanged()</slot>
   <slot>testButtonClicked()</slot>
   <slot>autoHuntButtonClicked()</slot>
+  <slot>checkBoxChanged()</slot>
  </slots>
 </ui>

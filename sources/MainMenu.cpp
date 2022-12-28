@@ -13,6 +13,10 @@ MainMenu::MainMenu(Profile* prof, QWidget* parent)
 	
 	ui->playerPosGroup->setVisible(false);
 	ui->resourceGroup->setVisible(false);
+	
+	Settings& settings = var->getSettings();
+	ui->keepHastedCheckBox->setChecked(settings.getKeepHasted());
+	ui->keepUpgradedCheckBox->setChecked(settings.getKeepUpraded());
 
 	threadStarter();
 	signalSlotConnector();
@@ -100,26 +104,6 @@ void MainMenu::startAutoHunting() {
 void MainMenu::changeProfileButtonAction(){
 	this->accept();
 }
-void MainMenu::takeScreenShotCheckBoxChanged() {
-	bool toSet = ui->takeScreenshotCheckBox->isChecked();
-	var->getSettings().setTakingScreensState(toSet);
-}
-void MainMenu::updateResourcesAmounts(){
-}
-void MainMenu::autoHealAndManaRegCheckBoxChanged() {
-	bool enable = ui->restoreHealthMana->isChecked();
-	var->getSettings().setRestoringState(enable);
-	if (enable) {
-		ui->healthInfoLabel->clear();
-		ui->manaInfoLabel->clear();
-		ui->manaShieldLabel->clear();
-	}
-	else {
-		ui->healthInfoLabel->setText("?");
-		ui->manaInfoLabel->setText("?");
-		ui->manaShieldLabel->setText("?");
-	}
-}
 void MainMenu::onGameStateChanged(int state){	
 	QString toWrite = tr("Game status: ");
 	typedef ActiveGameThread::GameActivityStates Type;
@@ -140,6 +124,35 @@ void MainMenu::onGameStateChanged(int state){
 	}
 	ui->gameActiveLabel->setText(toWrite);
 	ui->gameActiveLabel->repaint();
+}
+void MainMenu::checkBoxChanged(){
+	QObject* senderObj = sender();
+	if (senderObj == ui->takeScreenshotCheckBox) {
+		bool toSet = ui->takeScreenshotCheckBox->isChecked();
+		var->getSettings().setTakingScreensState(toSet);
+	}
+	if (senderObj == ui->restoreHealthMana) {
+		bool enable = ui->restoreHealthMana->isChecked();
+		var->getSettings().setRestoringState(enable);
+		if (enable) {
+			ui->healthInfoLabel->clear();
+			ui->manaInfoLabel->clear();
+			ui->manaShieldLabel->clear();
+		}
+		else {
+			ui->healthInfoLabel->setText("?");
+			ui->manaInfoLabel->setText("?");
+			ui->manaShieldLabel->setText("?");
+		}
+	}
+	if (senderObj == ui->keepHastedCheckBox) {
+		bool toSet = ui->keepHastedCheckBox->isChecked();
+		var->getSettings().setKeepHasted(toSet);
+	}
+	if (senderObj == ui->keepUpgradedCheckBox) {
+		bool toSet = ui->keepUpgradedCheckBox->isChecked();
+		var->getSettings().setKeepUpraded(toSet);
+	}
 }
 void MainMenu::changedValueOfCharHealthOrMana(double healthPercentage, double manaPercentage, double manaShieldPercentage){
 	if (healthPercentage != NULL) {

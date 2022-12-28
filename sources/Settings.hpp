@@ -34,6 +34,6 @@ private:
 	std::atomic<bool> keepHuntingAutomaticly = false;
 	std::atomic<bool> keepAnalyzeStates = true;
 	std::atomic<bool> keepHasted = true;
-	std::atomic<bool> keepUpgraded = true;
+	std::atomic<bool> keepUpgraded = false;
 	std::atomic<bool> clearVitalityImgs = false;
 };
