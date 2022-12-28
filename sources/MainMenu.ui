@@ -270,14 +270,14 @@
       <item>
        <widget class="QCheckBox" name="keepHastedCheckBox">
         <property name="text">
-         <string>Utrzymuj spowolnienie</string>
+         <string>Utrzymuj przyśpieszenie</string>
         </property>
        </widget>
       </item>
       <item>
        <widget class="QCheckBox" name="keepUpgradedCheckBox">
         <property name="text">
-         <string>Utzymuj wzmocnienie</string>
+         <string>Utrzymuj wzmocnienie</string>
         </property>
        </widget>
       </item>

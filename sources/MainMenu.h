@@ -37,6 +37,7 @@ public slots:
 	void onGameStateChanged(int state);
 	void changedValueOfCharHealthOrMana(double healthPercentage, double manaPercentage, double manaShieldPercentage);
 	void printToUserConsol(QStringList msgs);
+	void printToUserConsolRed(QString msg);
 	void updatePlayerPosition(QString x, QString y, QString f);
 	void updateEnemiesAmount(int enemies);
 	void updateHeadingPoint(QString toDisplay);

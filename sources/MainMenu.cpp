@@ -30,6 +30,8 @@ MainMenu::~MainMenu(){
 	threads.push_back(huntAutoThread);
 	threads.push_back(clickDetector);
 	for each (QThread* thread in threads){
+		if (thread == nullptr)
+			continue;
 		thread->terminate();
 		delete thread;
 	}
@@ -184,6 +186,11 @@ void MainMenu::changedValueOfCharHealthOrMana(double healthPercentage, double ma
 }
 void MainMenu::printToUserConsol(QStringList msgs){
 	ui->textBrowser->append(msgs[0]);
+}
+void MainMenu::printToUserConsolRed(QString msg){
+	ui->textBrowser->setTextColor(QColor::fromRgb(255, 0, 0));
+	ui->textBrowser->append(msg);
+	ui->textBrowser->setTextColor(QColor::fromRgb(0, 0, 0));
 }
 void MainMenu::updatePlayerPosition(QString x, QString y, QString f){
 	QString str = QString("%1, %2, %3").arg(x, y, f);

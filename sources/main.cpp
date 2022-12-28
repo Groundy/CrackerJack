@@ -45,7 +45,7 @@ int main(int argc, char* argv[])
 		delete mainMenu;
 		delete profile;
 		if (endProgram)
-			break;
+			exit(0);
 	}
 	return app.exec();
 }

@@ -30,9 +30,10 @@ public:
 
 private:
 	std::atomic<long long> time = QDateTime::currentDateTime().toMSecsSinceEpoch();
+
 	QString getTimeStamp() {
 		QDateTime time = QDateTime::currentDateTime();
-		return time.toString("mm:ss:z") + " ";
+		return time.toString("mm:ss:zzz") + " ";
 	};
 	
 	QString getMSecTillLastCommunicate() {
