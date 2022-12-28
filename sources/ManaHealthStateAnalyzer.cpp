@@ -3,7 +3,7 @@
 ManaHealthStateAnalyzer::ManaHealthStateAnalyzer(QObject *parent, Profile* profile, std::shared_ptr<VariablesClass> var, std::shared_ptr<GameConnecter> gameConnector)
 	: QThread(parent), var(var), gameConnector(gameConnector){
 	populateHealthManaMaps(profile);
-	var->getSettings().setRestoringState(true);
+	imgEditor = &var->getImgEditorObj();
 }
 ManaHealthStateAnalyzer::~ManaHealthStateAnalyzer(){
 	this->terminate();
@@ -85,23 +85,23 @@ ManaHealthStateAnalyzer::ValuesStrs ManaHealthStateAnalyzer::toStrsValues(FoundF
 	try {
 		ValuesStrs strVals;
 		if (foundFlags.health)
-			strVals.health = ImgEditor::imgWithStrToStr(imgVals.health).remove("\0");
+			strVals.health = imgEditor->imgWithStrToStr(imgVals.health).remove("\0");
 		else
 			strVals.health = QString();
 
 		if (foundFlags.mana)
-			strVals.mana = ImgEditor::imgWithStrToStr(imgVals.mana).remove("\0");
+			strVals.mana = imgEditor->imgWithStrToStr(imgVals.mana).remove("\0");
 		else
 			strVals.mana = QString();
 
 
 		if (foundFlags.shield)
-			strVals.manaShield = ImgEditor::imgWithStrToStr(imgVals.manaShield).remove("\0");
+			strVals.manaShield = imgEditor->imgWithStrToStr(imgVals.manaShield).remove("\0");
 		else
 			strVals.manaShield = QString();
 
 		if (foundFlags.combined)
-			strVals.combined = ImgEditor::imgWithStrToStr(imgVals.combined).remove("\0");
+			strVals.combined = imgEditor->imgWithStrToStr(imgVals.combined).remove("\0");
 		else
 			strVals.combined = QString();
 

@@ -22,13 +22,14 @@ MainMenu::MainMenu(Profile* prof, QWidget* parent)
 	signalSlotConnector();
 }
 MainMenu::~MainMenu(){
-	QList<QThread*> threads;
-	threads.push_back(activityThread);
-	threads.push_back(screenSaverThread);
-	threads.push_back(screenAnalyzer);
-	threads.push_back(healthManaStateAnalyzer);
-	threads.push_back(huntAutoThread);
-	threads.push_back(clickDetector);
+	QList<QThread*> threads{
+		activityThread,
+		screenSaverThread,
+		screenAnalyzer,
+		healthManaStateAnalyzer,
+		huntAutoThread,
+		clickDetector
+	};
 	for each (QThread* thread in threads){
 		if (thread == nullptr)
 			continue;
@@ -67,10 +68,18 @@ void MainMenu::signalSlotConnector(){
 		if (!connected)
 			throw std::exception("to do!");
 
-		sigSender = &this->var->logger;
+		sigSender = &this->var->getLogger();
 		slotRec = this;
 		sig = SIGNAL(sendMsgToUserConsol(QStringList));
 		slot = SLOT(printToUserConsol(QStringList));
+		connected = connect(sigSender, sig, slotRec, slot, Qt::UniqueConnection);
+		if (!connected)
+			throw std::exception("to do!");
+
+		sigSender = &this->var->getLogger();
+		slotRec = this;
+		sig = SIGNAL(sendMsgToUserConsolRed(QString));
+		slot = SLOT(printToUserConsolRed(QString));
 		connected = connect(sigSender, sig, slotRec, slot, Qt::UniqueConnection);
 		if (!connected)
 			throw std::exception("to do!");

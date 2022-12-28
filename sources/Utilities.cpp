@@ -1,10 +1,11 @@
 #include "Utilities.h"
-
+/*
 QString Utilities::StrCodeToLetter(QString code){
     //todo, it's terrible solution, it has to be changed
 	QMap<QString, QString> letters = getQmapWithCodes();
 	return letters[code];
  }
+*/
 QMap<QString, QString> Utilities::getQmapWithCodes() {
     QMap<QString, QString> letters;
     letters.insert("6_8_011111101111111110000001100000011111111101111110", "0");

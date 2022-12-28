@@ -1,9 +1,7 @@
 #include "ImgEditor.h"
 
-ImgEditor::ImgEditor(){
-}
-ImgEditor::~ImgEditor(){
-}
+ImgEditor::ImgEditor() {}
+ImgEditor::~ImgEditor() {}
 
 QImage ImgEditor::fromCharToImg(QChar CharToImg){
 	auto mapWithCodes = Utilities::getQmapWithCodes();
@@ -243,7 +241,7 @@ QString ImgEditor::imgWithStrToStr(QImage& img, int threshold) {
 		QImage tmp = lettersImgs.at(i);
 	    cutBlackBordersOfImg(tmp);
 	    QString letterCode = binaryLetterImgToLetterStr(tmp);
-	    QString letter = Utilities::StrCodeToLetter(letterCode);
+	    QString letter = normalLettersMap.value(letterCode);
 		if (letter == '\0')
 			continue;
 		toRet.append(letter);

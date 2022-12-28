@@ -4,11 +4,13 @@
 #include "ImgEditor.h"
 #include "PathResource.h"
 #include "Logger.hpp"
+#include <memory.h>
 class BattleList
 {
 public:
-	BattleList(Logger* logger){
+	BattleList(Logger* logger, ImgEditor* imgEditor){
 		this->logger = logger;
+		this->imgEditor = imgEditor;
 	};
 	~BattleList() {};
 	void setFrame(QRect battleListAreaToSet) {battleListArea.setRect(battleListAreaToSet);}
@@ -75,7 +77,7 @@ public:
 		QStringList toRet = {};
 		for (int i = 0; i < nameRect.size(); i++) {
 			QImage singleMonsterNameImg = innerList.copy(nameRect[i]);
-			QString monsterName = ImgEditor::imgWithStrToStr(singleMonsterNameImg, 180);
+			QString monsterName = imgEditor->imgWithStrToStr(singleMonsterNameImg, 180);
 			if (monsterName.isEmpty())
 				break;
 			toRet.append(monsterName);
@@ -85,6 +87,7 @@ public:
 	}
 private:
 	Logger* logger;
+	ImgEditor* imgEditor;
 	MutexRect battleListArea;
 	MutexImg battleListImg;
 	std::atomic<int> enemiesOnBattleList = 0;

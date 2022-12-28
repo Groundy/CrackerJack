@@ -20,6 +20,7 @@ private:
     std::mutex senderMutex;
 	Profile::AutoLoot autoLootSetting;
 	std::shared_ptr<VariablesClass> var;
+    bool playingOnSmallMonitor = false;
 	void sendCharToGame(const QChar charToSend, const HWND& gameThreadHandler);
 	void clickRightWithShift(QVector<QPoint> pts, int SLEEP_TIME_BETWEEN_LOOT_CLICK);
     void pressShift() {

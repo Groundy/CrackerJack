@@ -27,13 +27,15 @@ public:
 	GameProcessData& getGameProcess() {return gameProcess;}
 	PlayerPosition& getPosition() {return position;}
 	Equipment& getEquipment() {return eq; }
-	Logger logger;
-	bool playingOnSmallMonitor = false;
+	Logger& getLogger() { return logger; }
+	ImgEditor& getImgEditorObj() { return imgEditor; }
 	QSound* sound;
+
 private:
+	Logger logger;
 	GameProcessData gameProcess;
 	GameWindow gameWindow;
-	BattleList* battleList = new BattleList(&logger);
+	BattleList* battleList = new BattleList(&logger, &imgEditor);
 	Settings settings;
 	Timers timers;
 	Vitallity vitalitty;
@@ -41,7 +43,7 @@ private:
 	PlayerPosition position;
 	//MutexImg fullImage;
 	Equipment eq;
-
+	ImgEditor imgEditor;
 };
 
 

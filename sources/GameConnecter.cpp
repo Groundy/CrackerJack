@@ -3,13 +3,14 @@
 GameConnecter::GameConnecter(std::shared_ptr<VariablesClass> var, Profile* prof)
 		: var(var){
 	autoLootSetting = prof->getAutoLoot();
+	playingOnSmallMonitor = var->getSettings().getPlayingOnSmallMonitor();
 }
 GameConnecter::~GameConnecter(){
 	releaseShift();
 }
 
 void GameConnecter::clickLeft(QPoint pt) {
-	if(var->playingOnSmallMonitor)
+	if(playingOnSmallMonitor)
 		pt = QPoint(pt.x() / 0.8, pt.y() / 0.8);
 	HWND gameThreadHandler = var->getGameProcess().getHandlerToGameThread();
 	LPARAM lParam = (pt.y() << 16) + pt.x();
@@ -19,7 +20,7 @@ void GameConnecter::clickLeft(QPoint pt) {
 	senderMutex.unlock();
 }
 void GameConnecter::clickRight(QPoint pt) {
-	if (var->playingOnSmallMonitor)
+	if (playingOnSmallMonitor)
 		pt = QPoint(pt.x() / 0.8, pt.y() / 0.8);
 	HWND gameThreadHandler = var->getGameProcess().getHandlerToGameThread();
 	LPARAM lParam = (pt.y() << 16) + pt.x();
@@ -35,7 +36,7 @@ void GameConnecter::clickRightWithShift(QVector<QPoint> pts, int SLEEP_TIME_BETW
 	pressShift();
 	SLEEP_TIME_BETWEEN_LOOT_CLICK /= 3;
 	for each (auto pt in pts){
-		if (var->playingOnSmallMonitor)
+		if (playingOnSmallMonitor)
 			pt = QPoint(pt.x() / 0.8, pt.y() / 0.8);
 		LPARAM lParam = (pt.y() << 16) + pt.x();
 		Sleep(SLEEP_TIME_BETWEEN_LOOT_CLICK);

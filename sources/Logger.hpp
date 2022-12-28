@@ -12,6 +12,7 @@ class Logger : public QObject{
 
 signals:
 	void sendMsgToUserConsol(QStringList);
+	void sendMsgToUserConsolRed(QString);
 public:
 	Logger() {};
 	~Logger() {};

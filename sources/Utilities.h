@@ -57,7 +57,7 @@ private:
 
 class Utilities {
 public:
-	static QString StrCodeToLetter(QString code);
+	//static QString StrCodeToLetter(QString code);
 	static QMap<QString, QString> getQmapWithCodes();
 	static void showMessageBox_INFO(QString text);
 	static bool showMessageBox_NO_YES(QString text);

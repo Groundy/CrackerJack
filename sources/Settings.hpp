@@ -25,6 +25,7 @@ public:
 	bool getKeepHasted() const { return keepHasted; }
 	bool getKeepUpraded() const { return keepUpgraded; }
 	bool getClearVitalityImgs() const { return clearVitalityImgs; }
+	bool getPlayingOnSmallMonitor() const { return playingOnSmallMonitor; }
 private:
 	std::atomic<bool> keepRestoringManaAngHealth = true;
 	std::atomic<bool> keepTakingScreenShots = true;
@@ -36,4 +37,5 @@ private:
 	std::atomic<bool> keepHasted = true;
 	std::atomic<bool> keepUpgraded = false;
 	std::atomic<bool> clearVitalityImgs = false;
+	bool playingOnSmallMonitor = false;
 };

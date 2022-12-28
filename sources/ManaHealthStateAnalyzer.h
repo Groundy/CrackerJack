@@ -6,7 +6,6 @@
 
 #include "GameConnecter.h"
 #include "ImgEditor.h"
-#include "ImgEditor.h"
 #include "VariablesClass.hpp"
 #include "Utilities.h"
 #include "Profile.h"
@@ -92,6 +91,7 @@ private:
 
 	std::shared_ptr<VariablesClass> var;
 	std::shared_ptr<GameConnecter> gameConnector;
+	ImgEditor* imgEditor;
 	QMap<int, RestorationMethode> healthMap, manaMap;	
 	const int SLEEP_TIME = 50;
 	//bool usedRestorationMethodeOnLastLoop = false;
@@ -140,7 +140,7 @@ private:
 		if (!canHaste)
 			return;
 		gameConnector->sendKeyStrokeToProcess(VK_F12);//todo
-		var->logger.log("Hasted!", false, true, true);
+		var->log("Hasted!", false, true, true);
 		lastTimeHasted = currentTime;
 	}
 	void handleUpgrade(bool keepUpgraded, QVector<Equipment::STATES>& states) {
@@ -153,7 +153,7 @@ private:
 		if (!canUpgrade)
 			return;
 		gameConnector->sendKeyStrokeToProcess(VK_F11);//todo
-		var->logger.log("Upgraded!", false, true, true);
+		var->log("Upgraded!", false, true, true);
 		lastTimeUpgraded = currentTime;
 	}
 
