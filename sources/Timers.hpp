@@ -2,7 +2,6 @@
 #include <QString>
 #include <qmap.h>
 #include <qdatetime.h>
-#include <mutex>
 class Timers
 {
 public:
@@ -49,7 +48,7 @@ public:
 	}
 private:
 	std::atomic<qint64> timeLastItemUsage, timeLastSpellAttack, timeLastSpellHealing, timeLastSpellSupport;
-	std::mutex lastTimeUsagesMutex;
+	QMutex lastTimeUsagesMutex;
 	QMap<QString, qint64> lastTimeSpellUsagesMap;
 	QMap<QString, qint64> lastTimeItemUsagesMap;
 	qint64 now() { return QDateTime::currentMSecsSinceEpoch(); };

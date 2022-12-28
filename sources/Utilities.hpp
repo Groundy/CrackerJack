@@ -6,7 +6,7 @@
 #include "RGBstruct.h"
 #include "Key.h"
 #include <atomic>
-#include <mutex>
+#include <qmutex.h>
 
 struct MutexImg {
 public:
@@ -29,7 +29,7 @@ public:
 		mutex.unlock();
 	}
 private:
-	std::mutex mutex;
+	QMutex mutex;
 	QImage img;
 };
 struct MutexRect {
@@ -51,7 +51,7 @@ public:
 		mutex.unlock();
 	}
 private:
-	std::mutex mutex;
+	QMutex mutex;
 	QRect rect;
 };
 

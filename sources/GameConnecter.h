@@ -4,6 +4,7 @@
 #include "RestorationMethode.hpp"
 #include "VariablesClass.hpp"
 #include "Key.h"
+#include <qmutex.h>
 class GameConnecter
 {
 public:
@@ -17,7 +18,7 @@ public:
 	void useRestorationMethode(const RestorationMethode& methode, int additionalTime = 0);
 	void autoLootAroundPlayer();
 private:
-    std::mutex senderMutex;
+    QMutex senderMutex;
 	Profile::AutoLoot autoLootSetting;
 	QSharedPointer<VariablesClass> var;
     bool playingOnSmallMonitor = false;

@@ -1,5 +1,4 @@
 #pragma once
-#include <mutex>
 #include <qpoint.h>
 #include "Point3D.h"
 class PlayerPosition
@@ -43,7 +42,7 @@ public:
 		return xy;
 	}
 private:
-	std::mutex positionMutex;
+	QMutex positionMutex;
 	std::atomic<int> floor = 0;
 	QPoint xy;
 };
