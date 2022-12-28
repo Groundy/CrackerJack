@@ -1,6 +1,6 @@
 #include "ScreenSaver.h"
 
-ScreenSaver::ScreenSaver(QObject* parent, std::shared_ptr<VariablesClass> var, std::shared_ptr<GameConnecter> gameConnecter, Profile* profile)
+ScreenSaver::ScreenSaver(QObject* parent, QSharedPointer<VariablesClass> var, QSharedPointer<GameConnecter> gameConnecter, Profile* profile)
 	: QThread(parent), var(var), gameConnecter(gameConnecter), profile(profile){
 	var->getSettings().setTakingScreensState(true);
 }

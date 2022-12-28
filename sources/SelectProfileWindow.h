@@ -1,7 +1,5 @@
 #pragma once
 #include <QDialog>
-#include <memory>
-
 #include "Profile.h"
 #include "Profession.hpp"
 #include "NewProfileConfiguartor.h"
@@ -20,7 +18,6 @@ public slots:
 	void deleteProfileButtonAction();
 	void selectListAction();
 	void profSelected();
-
 private:
 	Ui::SelectProfileWindow *ui;
 	Profile* profileToBeChoosen;

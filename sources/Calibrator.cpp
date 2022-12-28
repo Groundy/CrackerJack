@@ -1,5 +1,5 @@
 #include "Calibrator.h"
-Calibrator::Calibrator(std::shared_ptr<VariablesClass> var)
+Calibrator::Calibrator(QSharedPointer<VariablesClass> var)
 	: var(var){
 }
 Calibrator::~Calibrator()
@@ -52,7 +52,7 @@ bool Calibrator::calibrateStoreButton(const QImage& fullImage) {
 	return true;
 }
 void Calibrator::test(QString pathToFilesWithScreens) {
-	auto var = std::shared_ptr<VariablesClass>();
+	auto var = QSharedPointer<VariablesClass>();
 	int totalTime = 0;
 	try {
 		QStringList namesOfScreenShots;

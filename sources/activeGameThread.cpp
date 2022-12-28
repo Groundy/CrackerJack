@@ -1,6 +1,6 @@
 #include "ActiveGameThread.h"
 
-ActiveGameThread::ActiveGameThread(QObject *parent, std::shared_ptr< VariablesClass> var)
+ActiveGameThread::ActiveGameThread(QObject *parent, QSharedPointer<VariablesClass> var)
 	: QThread(parent), var(var){
     connectSingalToGUI(parent);
 }

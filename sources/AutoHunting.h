@@ -14,7 +14,7 @@ class AutoHunting  : public QThread
 {
 	Q_OBJECT
 public:
-	AutoHunting(QObject *parent, std::shared_ptr<VariablesClass> var, std::shared_ptr<GameConnecter> gameConnector, Route route, Profile* profile);
+	AutoHunting(QObject *parent, QSharedPointer<VariablesClass> var, QSharedPointer<GameConnecter> gameConnector, Route route, Profile* profile);
 	~AutoHunting();
 	void run();
 	QObject* getMiniMapAnalyzer();
@@ -31,8 +31,8 @@ private:
 	const int breakBetweenAlarms = 3000;
 	QMap <QString, qint64> attacksMethodesTimers;
 
-	std::shared_ptr<VariablesClass> var;
-	std::shared_ptr<GameConnecter> gameConnector;
+	QSharedPointer<VariablesClass> var;
+	QSharedPointer<GameConnecter> gameConnector;
 	Profile* profile;
 
 	Point3D currentPos;

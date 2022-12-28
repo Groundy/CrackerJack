@@ -4,7 +4,6 @@
 #include <qrect.h>
 #include <qimage.h>
 #include <qmap.h>
-#include <memory>
 #include <qpoint.h>
 
 #include "Logger.hpp"
@@ -14,7 +13,7 @@
 #include "Profile.h"
 class Calibrator {
 public:
-	Calibrator(std::shared_ptr<VariablesClass> var);
+	Calibrator(QSharedPointer<VariablesClass> var);
 	~Calibrator();
 	bool calibrateBasicAreas(const QImage& fullImage);
 	bool calibrateBattleArea(const QImage& fullImage);
@@ -54,7 +53,7 @@ private:
 		}
 	};
 
-	std::shared_ptr<VariablesClass> var;
+	QSharedPointer<VariablesClass> var;
 
 	SlashesIndexes getIndexesOfImgsWithSlashes(const QImage& fullScreen, const QList<QRect>& importantFrames);
 	bool categorizeWindows(const QImage& fullscreen, QList<QRect>& importantRectangles);

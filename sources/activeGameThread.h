@@ -6,14 +6,13 @@
 #include <tlhelp32.h>
 #include <atlstr.h>
 #include <comdef.h>
-#include <memory>
 #include "VariablesClass.hpp"
 class ActiveGameThread : public QThread
 {
 	Q_OBJECT
 public:
 	enum GameActivityStates {NO_ACTIVE, NO_WINDOW, NO_LOGGED, NO_HANDLER, ACTIVE };
-	ActiveGameThread(QObject *parent, std::shared_ptr<VariablesClass> var);
+	ActiveGameThread(QObject *parent, QSharedPointer<VariablesClass> var);
 	~ActiveGameThread();
 	void run();
 
@@ -25,7 +24,7 @@ private:
 	const QString GAME_PROCESS_NAME = "client.exe";
 	const QString GAME_BROWESER_TITLE = "Tibia - Free Multiplayer Online Role Playing Game";
 	const uint SLEEP_TIME = 1234;
-	std::shared_ptr<VariablesClass> var;
+	QSharedPointer<VariablesClass> var;
 	HWND previousGameHandler = 0;
 
 	uint getGamePid(QMap<QString, unsigned int>& processes);

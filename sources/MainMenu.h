@@ -1,6 +1,5 @@
 #pragma once
 #include <QDialog>
-#include <memory>
 #include <qdatetime.h>
 #include <qsound.h>
 
@@ -49,8 +48,8 @@ private:
 	ManaHealthStateAnalyzer* healthManaStateAnalyzer;
 	ClickDetector* clickDetector;
 	AutoHunting* huntAutoThread = nullptr;
-	std::shared_ptr<VariablesClass> var;
-	std::shared_ptr<GameConnecter> gameConnector;
+	QSharedPointer<VariablesClass> var;
+	QSharedPointer<GameConnecter> gameConnector;
 	ActiveGameThread::GameActivityStates gameActivitystate;
 	QSound* sound = new QSound(":/sounds/testSound", this);
 	void threadStarter();

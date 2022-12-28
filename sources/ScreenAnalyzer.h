@@ -1,6 +1,5 @@
 #pragma once
 #include <QThread>
-#include <memory>
 #include <qdir.h>
 #include <qimage.h>
 #include <qmap.h>
@@ -19,14 +18,14 @@ class ScreenAnalyzer : public QThread
 	Q_OBJECT
 
 public:
-	ScreenAnalyzer( QObject *parent, std::shared_ptr<VariablesClass> var, Profile* prof);
+	ScreenAnalyzer( QObject *parent, QSharedPointer<VariablesClass> var, Profile* prof);
 	~ScreenAnalyzer();
 	void run();
 
 private:
 	const int SLEEP_TIME = 50;
 
-	std::shared_ptr<VariablesClass> var;
+	QSharedPointer<VariablesClass> var;
 	QDir screenShotFolder;
 	Profile* profile;
 

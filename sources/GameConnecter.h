@@ -7,7 +7,7 @@
 class GameConnecter
 {
 public:
-	GameConnecter(std::shared_ptr<VariablesClass> var, Profile* profile);
+	GameConnecter(QSharedPointer<VariablesClass> var, Profile* profile);
 	~GameConnecter();
 	void clickLeft(QPoint pt);
 	void clickRight(QPoint pt);
@@ -19,7 +19,7 @@ public:
 private:
     std::mutex senderMutex;
 	Profile::AutoLoot autoLootSetting;
-	std::shared_ptr<VariablesClass> var;
+	QSharedPointer<VariablesClass> var;
     bool playingOnSmallMonitor = false;
 	void sendCharToGame(const QChar charToSend, const HWND& gameThreadHandler);
 	void clickRightWithShift(QVector<QPoint> pts, int SLEEP_TIME_BETWEEN_LOOT_CLICK);

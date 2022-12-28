@@ -1,7 +1,5 @@
 #pragma once
 #include <QThread>
-#include <memory>
-
 #include "ActiveGameThread.h"
 #include "VariablesClass.hpp"
 #include "GameConnecter.h"
@@ -9,13 +7,13 @@
 class ScreenSaver : public QThread{
 public:
 	void run();
-	ScreenSaver(QObject *parent, std::shared_ptr<VariablesClass> var, std::shared_ptr<GameConnecter> gameConnector, Profile* prof);
+	ScreenSaver(QObject *parent, QSharedPointer<VariablesClass> var, QSharedPointer<GameConnecter> gameConnector, Profile* prof);
 	~ScreenSaver();
 
 private:
 	const uint SLEEP_TIME = 985;
-	std::shared_ptr<VariablesClass> var;
-	std::shared_ptr<GameConnecter> gameConnecter;	
+	QSharedPointer<VariablesClass> var;
+	QSharedPointer<GameConnecter> gameConnecter;	
 	Profile* profile;
 
 	void sendScreenRequestToGame();

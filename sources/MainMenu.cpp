@@ -7,8 +7,8 @@ MainMenu::MainMenu(Profile* prof, QWidget* parent)
 	ui = new Ui::MainMenu();
 	ui->setupUi(this);
 
-	var = std::shared_ptr<VariablesClass>(new VariablesClass(sound));
-	gameConnector = std::shared_ptr<GameConnecter>(new GameConnecter(var, prof));
+	var = QSharedPointer<VariablesClass>(new VariablesClass(sound));
+	gameConnector = QSharedPointer<GameConnecter>(new GameConnecter(var, prof));
 	ui->profileNameLabel->setText(prof->getName());
 	
 	ui->playerPosGroup->setVisible(false);

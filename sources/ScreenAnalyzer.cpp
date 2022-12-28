@@ -1,6 +1,6 @@
 #include "ScreenAnalyzer.h"
 
-ScreenAnalyzer::ScreenAnalyzer(QObject *parent, std::shared_ptr<VariablesClass> var, Profile* profile)
+ScreenAnalyzer::ScreenAnalyzer(QObject *parent, QSharedPointer<VariablesClass> var, Profile* profile)
 	: QThread(parent), var(var), profile(profile){
 	screenShotFolder = setUpScreenFolder();
 	var->getSettings().setLoadingState(true);

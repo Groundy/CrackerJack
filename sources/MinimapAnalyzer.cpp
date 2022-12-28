@@ -1,6 +1,6 @@
 #include "MinimapAnalyzer.h"
 
-MinimapAnalyzer::MinimapAnalyzer(QObject* parent, std::shared_ptr<VariablesClass> var)
+MinimapAnalyzer::MinimapAnalyzer(QObject* parent, QSharedPointer<VariablesClass> var)
 	: QThread(parent), var(var) {
 }
 MinimapAnalyzer::~MinimapAnalyzer() {};

@@ -4,13 +4,12 @@
 #include <qdebug.h>
 #include <qdatetime.h>
 #include <windows.h>
-#include <memory>
 #include "GameConnecter.h"
 class ClickDetector : public QThread
 {
 	Q_OBJECT
 public:
-	ClickDetector(QObject* parent, std::shared_ptr<GameConnecter> gameConnetorPtr)
+	ClickDetector(QObject* parent, QSharedPointer<GameConnecter> gameConnetorPtr)
 		: gameConnetorPtr(gameConnetorPtr), QThread(parent) {
 	};
 	~ClickDetector() {};
@@ -25,7 +24,7 @@ public:
 	}
 
 private:
-	std::shared_ptr<GameConnecter> gameConnetorPtr;
+	QSharedPointer<GameConnecter> gameConnetorPtr;
 	const int minMSecBetweenClicks = 6;
 	bool keyPressed(int key) {
 		return (GetAsyncKeyState(key) & 0x8000 != 0) != 0;

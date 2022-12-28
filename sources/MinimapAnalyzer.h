@@ -17,7 +17,7 @@
 class MinimapAnalyzer : public QThread {
 	Q_OBJECT
 public:
-	MinimapAnalyzer(QObject* parent, std::shared_ptr<VariablesClass> var);
+	MinimapAnalyzer(QObject* parent, QSharedPointer<VariablesClass> var);
 	~MinimapAnalyzer();
 	void run();
 
@@ -26,7 +26,7 @@ signals:
 private:
 	enum class MapType { REGULAR, WAYPOINT };
 
-	std::shared_ptr<VariablesClass> var;
+	QSharedPointer<VariablesClass> var;
 	const int SLEEP_TIME_BETWEEN_LOOPS = 20, SLEEP_TIME_NO_ACTIVE = 1000;
 	const int MIN_LAYER = -8, MAX_LAYER = 7;
 	const QImage LAYER_SLIDER_IMG = setSliderImg();
