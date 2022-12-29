@@ -14,7 +14,10 @@ public:
 	VariablesClass(QSound* sound) : sound(sound) {
 		sound->setLoops(QSound::Infinite);
 	};
-	~VariablesClass() {};
+	~VariablesClass() {
+		delete battleList;
+		delete eq;
+	};
 	void log(QString msg, bool sendToDebug = true, bool sendToUserConsol = true, bool addTimeSTamp = true) {
 		logger.log(msg, sendToDebug, sendToUserConsol, addTimeSTamp);
 	}
@@ -26,7 +29,7 @@ public:
 	GameWindow& getGameWindow() {return gameWindow;}
 	GameProcessData& getGameProcess() {return gameProcess;}
 	PlayerPosition& getPosition() {return position;}
-	Equipment& getEquipment() {return eq; }
+	Equipment& getEquipment() {return *eq; }
 	Logger& getLogger() { return logger; }
 	ImgEditor& getImgEditorObj() { return imgEditor; }
 	QSound* sound;
@@ -42,7 +45,7 @@ private:
 	MiniMap minimap;
 	PlayerPosition position;
 	//MutexImg fullImage;
-	Equipment eq;
+	Equipment* eq = new Equipment(&imgEditor);
 	ImgEditor imgEditor;
 };
 

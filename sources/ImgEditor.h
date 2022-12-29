@@ -12,8 +12,16 @@ public:
 
 	static void imgToBlackAndWhiteAllColors(QImage& img, int threshold);	
 	static void imgToBlackAndWhiteOneColor(QImage& img, int threshold);
+    static void imgToBlackAndWhiteExactColor(QImage& img, const QRgb COLOR) {
+        for (int x = 0; x < img.height(); x++){
+            for (int y = 0; y < img.width(); y++){
+                bool setWhite = img.pixel(x, y) == COLOR;
+                img.setPixel(x, y, setWhite ? WHITE : BLACK);
+            }
+        }
+    }
 	static void cutBlackBordersOfImg(QImage& img);
-	static QString binaryLetterImgToLetterStr (QImage& singleLetterImg);
+	static QString binaryLetterImgToCode (QImage& singleLetterImg);
     static void rotateImgToRight(QImage& imgToRotate, int timesToRotateRight);
 	static bool isItPixelFromFrame(const uint& color, const int& minValueAcceptable, const int& maxValueAcceptable, bool requireSameValuesOfRGB);
 	static QImage getColorImageFromCode(const QString& codeOfImg);

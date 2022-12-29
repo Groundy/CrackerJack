@@ -180,28 +180,25 @@ QString ImgEditor::imgWithStrToStr(QImage& img, int threshold) {
     QList<QImage> lettersImgs;
 	cutImgWithLettersToSingleLettersImgList(img, lettersImgs);
     QString toRet;
-    for (size_t i = 0; i < lettersImgs.size(); i++) {
-		QImage tmp = lettersImgs.at(i);
-	    cutBlackBordersOfImg(tmp);
-	    QString letterCode = binaryLetterImgToLetterStr(tmp);
+	for each (QImage& img in lettersImgs){
+	    cutBlackBordersOfImg(img);
+	    QString letterCode = binaryLetterImgToCode(img);
 	    QString letter = normalLettersMap.value(letterCode);
 		if (letter == '\0')
 			continue;
 		toRet.append(letter);
-    }
+	}
     return toRet;
  }
-QString ImgEditor::binaryLetterImgToLetterStr(QImage& singleLetterImg) {
+QString ImgEditor::binaryLetterImgToCode(QImage& singleLetterImg) {
     const int WIDTH = singleLetterImg.width();
     const int HEIGHT = singleLetterImg.height();
     const QString ZERO = QString("0"), ONE = QString("1");
 	QString toRet = QString("%1_%2_").arg(QString::number(WIDTH), QString::number(HEIGHT));
     for (size_t x = 0; x < WIDTH; x++) {
 	    for (size_t y = 0; y < HEIGHT; y++) {
-		    uint pixelColor = singleLetterImg.pixel(x, y);
-			bool isBlack = RGBstruct(pixelColor).isBlack();
-		    QString toAppend = isBlack ? ZERO : ONE;
-		    toRet.append(toAppend);
+		    bool isBlack = singleLetterImg.pixel(x, y) == BLACK;
+		    toRet.append(isBlack ? ZERO : ONE);
 	    }
     }
     return toRet;

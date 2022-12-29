@@ -8,14 +8,14 @@ class Equipment
 public:
 	enum STATES { HASTE, BATTLE, PROTECTOR_ZONE, POISONED, PARALYZED, UPGRADED, HUNGER, DRUNKEN };
 	enum class EqRect { StateBar, SoulPoints, Capacity, Helmet, Armor, Legs, Boots, Ring, Amulet, Weapon, Shield, Backpack, Torch };
-	Equipment() {};
+	Equipment(ImgEditor* imgEditor) : imgEditor(imgEditor){};
 	~Equipment() {};
 	void setStoreRect(const QRect& storeRectToSet) {
 		storeRect.setRect(storeRectToSet);
 		QPoint storeRectStart = storeRectToSet.topLeft();
 	}
 	QRect getStoreRect() { return storeRect.getRect(); }
-	void setStateBarImg(const QImage& stateBarImgToSet) { statesBarImg.setImg(stateBarImgToSet); }
+
 	QVector<STATES> getCurrentStates(bool clearImg = true) {
 		QImage stateBar = statesBarImg.getImgCopy();
 		if (stateBar.isNull())
@@ -28,14 +28,21 @@ public:
 		QVector<STATES> toRet = {};
 		for each (QImage img in imgs) {
 			ImgEditor::cutBlackBordersOfImg(img);
-			QString code = ImgEditor::binaryLetterImgToLetterStr(img);
+			QString code = ImgEditor::binaryLetterImgToCode(img);
 			if (!codeStateMap.contains(code))
 				continue;
 			toRet.append(codeStateMap.value(code));
 		}
 		return toRet;
 	}
-
+	QString getEqRectBottomText(EqRect eqRect) {
+		QImage bottomStrImg = getImg(eqRect);
+		if (bottomStrImg.isNull())
+			return QString();
+		ImgEditor::imgToBlackAndWhiteExactColor(bottomStrImg, GREY_COL_OF_EQ_STRINGS);
+		QString str = imgEditor->imgWithStrToStr(bottomStrImg);
+		return str;
+	}
 	QRect getRect(EqRect eqRect) {
 		const QPoint EQ_FRAME_TOPLEFT = storeRect.getRect().topLeft() - QPoint(74, 0);
 		switch (eqRect)
@@ -100,13 +107,45 @@ public:
 	void setImg(EqRect eqRect, const QImage& imgToSet) {
 		switch (eqRect)
 		{
-		case Equipment::EqRect::StateBar: statesBarImg.setImg(imgToSet); return;
-		default: break;
+		case EqRect::StateBar: statesBarImg.setImg(imgToSet); return;
+		case EqRect::SoulPoints: soulPtsImg.setImg(imgToSet); return;;
+		case EqRect::Capacity: capImg.setImg(imgToSet); return;
+		case EqRect::Helmet: helmetCap.setImg(imgToSet); return;
+		case EqRect::Armor: armorImg.setImg(imgToSet); return;
+		case EqRect::Legs: legsImg.setImg(imgToSet); return;
+		case EqRect::Boots: bootsImg.setImg(imgToSet); return;
+		case EqRect::Ring: ringImg.setImg(imgToSet); return;
+		case EqRect::Amulet: amuletImg.setImg(imgToSet); return;
+		case EqRect::Weapon: weaponImg.setImg(imgToSet); return;
+		case EqRect::Shield: shieldImg.setImg(imgToSet); return;
+		case EqRect::Backpack: backpackImg.setImg(imgToSet); return;
+		case EqRect::Torch: torchImg.setImg(imgToSet); return;
+		default:return;
+		}
+	}
+	QImage getImg(EqRect eqRect) {
+		switch (eqRect)
+		{
+		case EqRect::StateBar: return statesBarImg.getImgCopy();
+		case EqRect::SoulPoints: return soulPtsImg.getImgCopy();
+		case EqRect::Capacity: return capImg.getImgCopy();
+		case EqRect::Helmet: return helmetCap.getImgCopy();
+		case EqRect::Armor: return armorImg.getImgCopy();
+		case EqRect::Legs: return legsImg.getImgCopy();
+		case EqRect::Boots: return bootsImg.getImgCopy();
+		case EqRect::Ring: return ringImg.getImgCopy();
+		case EqRect::Amulet: return amuletImg.getImgCopy();
+		case EqRect::Weapon: return weaponImg.getImgCopy();
+		case EqRect::Shield: return shieldImg.getImgCopy();
+		case EqRect::Backpack: backpackImg.getImgCopy();
+		case EqRect::Torch:torchImg.getImgCopy();
+		default: return QImage();
 		}
 	}
 private:
-	MutexImg statesBarImg;
+	MutexImg statesBarImg, soulPtsImg, capImg, helmetCap, armorImg, legsImg, bootsImg, ringImg, amuletImg, weaponImg, shieldImg, backpackImg, torchImg;
 	MutexRect storeRect;
+	ImgEditor* imgEditor;
 	const int toBlackAndWhiteThreshold = 100;
 	const QRgb GREY_COL_OF_EQ_STRINGS = qRgb(191, 191, 191);
 	const QSize EQ_FIELD_SIZE = QSize(32, 32);
@@ -127,7 +166,7 @@ private:
 		QImage img(":/statesIcons/" + fileName);
 		ImgEditor::imgToBlackAndWhiteOneColor(img, toBlackAndWhiteThreshold);
 		ImgEditor::cutBlackBordersOfImg(img);
-		QString code = ImgEditor::binaryLetterImgToLetterStr(img);
+		QString code = ImgEditor::binaryLetterImgToCode(img);
 		return code;
 	}
 
