@@ -90,6 +90,8 @@ void MainMenu::signalSlotConnector(){
 	}
 }
 void MainMenu::startAutoHunting() {
+	var->getSettings().setKeepHuntingAutomaticly(true);
+	var->getSettings().setKeepAnalyzeMiniMap(true);
 	Route route;
 	JsonParser::readRoute(route, "trolls");
 	huntAutoThread = new AutoHunting(this, var, gameConnector, route, prof);

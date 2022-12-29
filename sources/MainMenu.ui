@@ -476,7 +476,7 @@ p, li { white-space: pre-wrap; }
    <sender>restoreHealthMana</sender>
    <signal>stateChanged(int)</signal>
    <receiver>MainMenu</receiver>
-   <slot>autoHealAndManaRegCheckBoxChanged()</slot>
+   <slot>checkBoxChanged()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>580</x>
@@ -508,7 +508,7 @@ p, li { white-space: pre-wrap; }
    <sender>autoHuntingButton</sender>
    <signal>clicked()</signal>
    <receiver>MainMenu</receiver>
-   <slot>checkBoxChanged()</slot>
+   <slot>autoHuntButtonClicked()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>339</x>
