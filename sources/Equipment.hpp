@@ -7,7 +7,7 @@ class Equipment
 {
 public:
 	enum STATES { HASTE, BATTLE, PROTECTOR_ZONE, POISONED, PARALYZED, UPGRADED, HUNGER, DRUNKEN };
-	enum class EqRect { StateBar, SoulPoints, Capacity, Helmet, Armor, Legs, Boots, Ring, Amulet, Weapon, Shield, BackPack, Torch };
+	enum class EqRect { StateBar, SoulPoints, Capacity, Helmet, Armor, Legs, Boots, Ring, Amulet, Weapon, Shield, Backpack, Torch };
 	Equipment() {};
 	~Equipment() {};
 	void setStoreRect(const QRect& storeRectToSet) {
@@ -36,18 +36,66 @@ public:
 		return toRet;
 	}
 
-
 	QRect getRect(EqRect eqRect) {
-		QRect storeRectCpy = storeRect.getRect();
+		const QPoint EQ_FRAME_TOPLEFT = storeRect.getRect().topLeft() - QPoint(74, 0);
 		switch (eqRect)
 		{
-		case Equipment::EqRect::StateBar: {
-			QPoint start = storeRectCpy.topLeft() + QPoint(1753 - 1826, 264 - 119);
-			QSize size(106,11);
-			return QRect(start, size);
+		case EqRect::Armor: {
+			QPoint start = EQ_FRAME_TOPLEFT + QPoint(38, 37);
+			return QRect(start, EQ_FIELD_SIZE);
 		}
+		case EqRect::Legs: {
+			QPoint start = EQ_FRAME_TOPLEFT + QPoint(38, 73);
+			return QRect(start, EQ_FIELD_SIZE);
 		}
-		return QRect();
+		case EqRect::Helmet: {
+			QPoint start = EQ_FRAME_TOPLEFT + QPoint(38, 1);
+			return QRect(start, EQ_FIELD_SIZE);
+		}
+		case EqRect::Boots: {
+			QPoint start = EQ_FRAME_TOPLEFT + QPoint(38, 109);
+			return QRect(start, EQ_FIELD_SIZE);
+		}
+		case EqRect::Ring: {
+			QPoint start = EQ_FRAME_TOPLEFT + QPoint(1, 87);
+			return QRect(start, EQ_FIELD_SIZE);
+		}
+		case EqRect::Amulet: {
+			QPoint start = EQ_FRAME_TOPLEFT + QPoint(1, 15);
+			return QRect(start, EQ_FIELD_SIZE);
+		}
+		case EqRect::Weapon: {
+			QPoint start = EQ_FRAME_TOPLEFT + QPoint(1, 51);
+			return QRect(start, EQ_FIELD_SIZE);
+		}
+		case EqRect::Shield: {
+			QPoint start = EQ_FRAME_TOPLEFT + QPoint(75, 51);
+			return QRect(start, EQ_FIELD_SIZE);
+		}
+		case EqRect::Backpack: {
+			QPoint start = EQ_FRAME_TOPLEFT + QPoint(75, 15);
+			return QRect(start, EQ_FIELD_SIZE); }
+		case EqRect::Torch: {
+			QPoint start = EQ_FRAME_TOPLEFT + QPoint(75, 87);
+			return QRect(start, EQ_FIELD_SIZE); }
+
+		case EqRect::StateBar: {
+			QPoint start = EQ_FRAME_TOPLEFT + QPoint(1, 145);
+			const QSize STATUS_BAR_SIZE = QSize(106, 11);
+			return QRect(start, STATUS_BAR_SIZE);
+		}
+		case EqRect::SoulPoints: {
+			QPoint start = EQ_FRAME_TOPLEFT + QPoint(1, 132);
+			const QSize SOUL_AMOUNT_BAR_SIZE = QSize(32, 9);//not whole sqare but only amount!!!
+			return QRect(start, SOUL_AMOUNT_BAR_SIZE);
+		}
+		case EqRect::Capacity: {
+			QPoint start = EQ_FRAME_TOPLEFT + QPoint(75, 132);
+			const QSize CAP_AMOUNT_BAR_SIZE = QSize(32, 9);//not whole sqare but only amount!!!
+			return QRect(start, CAP_AMOUNT_BAR_SIZE);
+		}
+		default: return QRect();
+		}
 	}
 	void setImg(EqRect eqRect, const QImage& imgToSet) {
 		switch (eqRect)
@@ -60,6 +108,8 @@ private:
 	MutexImg statesBarImg;
 	MutexRect storeRect;
 	const int toBlackAndWhiteThreshold = 100;
+	const QRgb GREY_COL_OF_EQ_STRINGS = qRgb(191, 191, 191);
+	const QSize EQ_FIELD_SIZE = QSize(32, 32);
 
 	QMap<QString, STATES> codeStateMap = populateMap();
 	QMap<QString, STATES> populateMap() {

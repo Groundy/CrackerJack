@@ -46,7 +46,7 @@ private:
 	int minEnemiesToStop = 2;
 	int minEnemiesToContinue = 0;
 	MinimapAnalyzer* miniMapAnalyzer;
-	QStringList alloweNamesOnBattleList = QStringList() << "SwampTroll";
+	QStringList alloweNamesOnBattleList = QStringList() << "Falcon Paladin" << "PreceptorLazare" << "Monk" ;
 
 	QPoint getDistFromOnePtToAnother(QPoint start, QPoint end);
 	QPoint addTwoPoints(QPoint start, QPoint end);
@@ -73,7 +73,8 @@ private:
 		}
 		if (!playerFound)
 			return playerFound;
-		playSound();
+		if (var->getSettings().playSoundWhenIntruderIsOnScreen)
+			playSound();
 		return playerFound;
 	}
 	inline void playSound() {
