@@ -16,7 +16,7 @@ AutoHunting::~AutoHunting(){
 void AutoHunting::run() {
 	while (true) {
 		msleep(SLEEP_TIME);
-		if (!var->getSettings().getKeepHuntingAutomaticly() || !var->getSettings().getKeepAnalyzeMiniMap()) {
+		if (!var->getSettings().getKeepHuntingAutomaticly()) {
 			msleep(SLEEP_TIME * 30);
 			continue;
 		}

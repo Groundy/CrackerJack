@@ -14,6 +14,11 @@ public:
 	void clickRight(QPoint pt);
 	void sendStringToGame(QString str);
 	bool sendKeyStrokeToProcess(Key key, int sleepTime = 20);
+    void sendKeyStrokeToProcessWithShift(Key key, int sleepTime = 20) {
+        pressShift();
+        sendKeyStrokeToProcess(key, sleepTime);
+        releaseShift();
+    }
     bool sendKeyStrokeToProcess(int virtualKey, int sleepTime = 20);
 	void useRestorationMethode(const RestorationMethode& methode, int additionalTime = 0);
 	void autoLootAroundPlayer();

@@ -180,7 +180,7 @@ QString ImgEditor::imgWithStrToStr(QImage& img, int threshold) {
     QList<QImage> lettersImgs;
 	cutImgWithLettersToSingleLettersImgList(img, lettersImgs);
     QString toRet;
-	for each (QImage& img in lettersImgs){
+	for (QImage& img : lettersImgs){
 	    cutBlackBordersOfImg(img);
 	    QString letterCode = binaryLetterImgToCode(img);
 	    QString letter = normalLettersMap.value(letterCode);

@@ -110,7 +110,7 @@ public:
 		case EqRect::StateBar: statesBarImg.setImg(imgToSet); return;
 		case EqRect::SoulPoints: soulPtsImg.setImg(imgToSet); return;;
 		case EqRect::Capacity: capImg.setImg(imgToSet); return;
-		case EqRect::Helmet: helmetCap.setImg(imgToSet); return;
+		case EqRect::Helmet: helmetImg.setImg(imgToSet); return;
 		case EqRect::Armor: armorImg.setImg(imgToSet); return;
 		case EqRect::Legs: legsImg.setImg(imgToSet); return;
 		case EqRect::Boots: bootsImg.setImg(imgToSet); return;
@@ -129,25 +129,52 @@ public:
 		case EqRect::StateBar: return statesBarImg.getImgCopy();
 		case EqRect::SoulPoints: return soulPtsImg.getImgCopy();
 		case EqRect::Capacity: return capImg.getImgCopy();
-		case EqRect::Helmet: return helmetCap.getImgCopy();
-		case EqRect::Armor: return armorImg.getImgCopy();
+		case EqRect::Helmet: {		
+			QImage toRet = helmetImg.getImgCopy();
+			helmetImg.clear();
+			return toRet;
+		}
+		case EqRect::Armor: {
+			QImage toRet = armorImg.getImgCopy();
+			armorImg.clear();
+			return toRet; 
+		}
 		case EqRect::Legs: return legsImg.getImgCopy();
 		case EqRect::Boots: return bootsImg.getImgCopy();
 		case EqRect::Ring: return ringImg.getImgCopy();
 		case EqRect::Amulet: return amuletImg.getImgCopy();
-		case EqRect::Weapon: return weaponImg.getImgCopy();
+		case EqRect::Weapon: {
+			QImage toRet = weaponImg.getImgCopy();
+			weaponImg.clear();
+			return toRet;
+		}
 		case EqRect::Shield: return shieldImg.getImgCopy();
 		case EqRect::Backpack: backpackImg.getImgCopy();
 		case EqRect::Torch:torchImg.getImgCopy();
 		default: return QImage();
 		}
 	}
+	bool wearsEquipment(EqRect eqRect, bool& ok) {
+		QImage equipmentPiece = getImg(eqRect);
+		if (equipmentPiece.isNull()) {
+			ok = false;
+			return false;
+		}
+		equipmentPiece = equipmentPiece.copy(0, equipmentPiece.height() / 2, equipmentPiece.width(), 1);
+		ImgEditor::imgToBlackAndWhiteOneColor(equipmentPiece, 120);
+		for (int x = 0; x < equipmentPiece.width(); x++){
+			if (equipmentPiece.pixel(x, 0) == WHITE)
+				return true;
+		}
+		return false;
+	}
 private:
-	MutexImg statesBarImg, soulPtsImg, capImg, helmetCap, armorImg, legsImg, bootsImg, ringImg, amuletImg, weaponImg, shieldImg, backpackImg, torchImg;
+	MutexImg statesBarImg, soulPtsImg, capImg, helmetImg, armorImg, legsImg, bootsImg, ringImg, amuletImg, weaponImg, shieldImg, backpackImg, torchImg;
 	MutexRect storeRect;
 	ImgEditor* imgEditor;
 	const int toBlackAndWhiteThreshold = 100;
 	const QRgb GREY_COL_OF_EQ_STRINGS = qRgb(191, 191, 191);
+	const QRgb WHITE = qRgb(255, 255, 255);
 	const QSize EQ_FIELD_SIZE = QSize(32, 32);
 
 	QMap<QString, STATES> codeStateMap = populateMap();

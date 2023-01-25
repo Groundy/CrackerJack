@@ -60,12 +60,22 @@ private:
 		var->getMiniMap().setImgMiniMapLayer(fullscreen.copy(miniMapLayerFrame));
 	}
 	void analyzeEquipment(const QImage& fullscreen) {
-		bool needCalibration = var->getEquipment().getStoreRect().isEmpty();
+		if (fullscreen.isNull())
+			return;
+
+		Equipment& eq = var->getEquipment();
+		Settings& settings = var->getSettings();
+		bool needCalibration = eq.getStoreRect().isEmpty();
 		if (needCalibration)
 			Calibrator(var).calibrateStoreButton(fullscreen);
-		if (var->getSettings().getKeepAnalyzeStates()) {
-			QRect stateBarRect = var->getEquipment().getRect(Equipment::EqRect::StateBar);
-			var->getEquipment().setImg(Equipment::EqRect::StateBar, fullscreen.copy(stateBarRect));
+		if (settings.getKeepAnalyzeStates()) {
+			QRect stateBarRect = eq.getRect(Equipment::EqRect::StateBar);
+			eq.setImg(Equipment::EqRect::StateBar, fullscreen.copy(stateBarRect));
+		}
+		if (settings.getAnaylzeEq()) {
+			eq.setImg(Equipment::EqRect::Helmet, fullscreen.copy(eq.getRect(Equipment::EqRect::Helmet)));
+			eq.setImg(Equipment::EqRect::Armor, fullscreen.copy(eq.getRect(Equipment::EqRect::Armor)));
+			eq.setImg(Equipment::EqRect::Weapon, fullscreen.copy(eq.getRect(Equipment::EqRect::Weapon)));
 		}
 	}
 };

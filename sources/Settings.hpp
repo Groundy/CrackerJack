@@ -26,6 +26,7 @@ public:
 	bool getKeepUpraded() const { return keepUpgraded; }
 	bool getClearVitalityImgs() const { return clearVitalityImgs; }
 	bool getPlayingOnSmallMonitor() const { return playingOnSmallMonitor; }	
+	bool getAnaylzeEq() const { return anaylzeEq; }
 	bool playSoundWhenIntruderIsOnScreen = true;
 private:
 	std::atomic<bool> keepRestoringManaAngHealth = true;
@@ -38,6 +39,7 @@ private:
 	std::atomic<bool> keepHasted = true;
 	std::atomic<bool> keepUpgraded = false;
 	std::atomic<bool> clearVitalityImgs = false;
-	bool playingOnSmallMonitor = false;
+	std::atomic<bool> anaylzeEq = true;
+	bool playingOnSmallMonitor = true;
 
 };

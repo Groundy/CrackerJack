@@ -24,6 +24,7 @@ signals:
 private:
 	qint64 lastTimeMovedToNextNode = now();
 	qint64 lastTimePressedAttack = now();
+	qint64 lastTimeEqChanged = now();
 	qint64 lastTimeSpecialAttackUsed = now();
 	qint64 lastTimeAlarmRang = now();
 	const int minPeriodBetweenAttackingMob = 1700;
@@ -46,7 +47,7 @@ private:
 	int minEnemiesToStop = 2;
 	int minEnemiesToContinue = 0;
 	MinimapAnalyzer* miniMapAnalyzer;
-	QStringList alloweNamesOnBattleList = QStringList() << "Falcon Paladin" << "PreceptorLazare" << "Monk" ;
+	QStringList alloweNamesOnBattleList = QStringList() << "Falcon Paladin" << "PreceptorLazare" << "Monk" << "SwampTroll" ;
 
 	QPoint getDistFromOnePtToAnother(QPoint start, QPoint end);
 	QPoint addTwoPoints(QPoint start, QPoint end);
@@ -63,6 +64,9 @@ private:
 	void keepAtackingTargetOnBattleList();
 	bool playerFoundOnBattleList() {
 		QStringList enemiesNamesOnBattleList = var->getBattleList().getUniqueMonstersNames();
+		//bool precoreFound = enemiesNamesOnBattleList.contains("PreceptorLazare");
+		bool precoreFound = enemiesNamesOnBattleList.contains("SwampTroll");
+		handleEquipment(precoreFound);
 		bool playerFound = false;
 		for each (QString name in enemiesNamesOnBattleList) {
 			bool nameIsAllowed = alloweNamesOnBattleList.contains(name);
@@ -78,7 +82,6 @@ private:
 		return playerFound;
 	}
 	inline void playSound() {
-
 		qint64 currentTime = now();
 		bool canAlreadyRangAlaram = currentTime >= lastTimeAlarmRang + breakBetweenAlarms;
 		if (!canAlreadyRangAlaram) return;
@@ -97,6 +100,37 @@ private:
 		if (pt.isNull())
 			return;
 		gameConnector->clickLeft(pt);
+	}
+	void handleEquipment(bool targetIsOnScreen) {
+		const int sleepTime = 700;
+		qint64 currentTime = now();
+		if (lastTimeEqChanged + 1500 > currentTime)
+			return;
+		lastTimeEqChanged = currentTime;
+		Equipment& eq = var->getEquipment();
+		bool okHelmet = true, okWeapon = true, okArmor = true;
+		bool wearingHelmet = eq.wearsEquipment(Equipment::EqRect::Helmet, okHelmet);
+		bool wearingWeapon = eq.wearsEquipment(Equipment::EqRect::Weapon, okWeapon);
+		bool wearingArmor = eq.wearsEquipment(Equipment::EqRect::Armor, okArmor);
+
+		bool changeHelmet = okHelmet && ((wearingHelmet && !targetIsOnScreen) || (!wearingHelmet && targetIsOnScreen));
+		if (changeHelmet) {
+			gameConnector->sendKeyStrokeToProcessWithShift(Key("8"));
+			msleep(sleepTime);
+		}
+
+		bool changeWeapon = okWeapon && ((wearingWeapon && !targetIsOnScreen) || (!wearingWeapon && targetIsOnScreen));
+		if (wearingWeapon) {
+			gameConnector->sendKeyStrokeToProcessWithShift(Key("9"));
+			msleep(sleepTime);
+		}
+
+		bool changeArmor = okArmor && ((wearingArmor && !targetIsOnScreen) || (!wearingArmor && targetIsOnScreen));
+		if (changeArmor) {
+			gameConnector->sendKeyStrokeToProcessWithShift(Key("7"));
+			msleep(sleepTime);
+		}
+
 	}
 };
 
