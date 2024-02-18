@@ -73,33 +73,33 @@ public:
 	bool isValid() const;
 
 	//setters
-	void setName(QString name) { this->profileName = name; }
-	void setProfession(Profession profession) { this->profession = profession; }
-	void setRestMethodesHealth(QVector<RestorationMethode> healthRestMethodes) { this->healthRestorations = healthRestMethodes; }
-	void setRestMethodesMana(QVector<RestorationMethode> manaRestMethodes) { this->manaRestorations = manaRestMethodes; }
-	void setScreenShotKey(Key key) { this->screenShotKey = key; }
-	void setBars(int left, int right) { barsLeft = left; barsRight = right; }
-	void setControls(int enumCode) { controls = Controls(enumCode); }
-	void setAutoLoot(int enumCode) { autoLoot = AutoLoot(enumCode); }
-	void setRopeKey(Key key) { this->ropeKey = key; }
-	void setAutoAttackKey(Key key) { this->autoAttackKey = key; }
-	void setShovelKey(Key key) { this->shovelKey = key; }
-	void setAutoHuntData(AutoHuntData autoHuntData) { this->autoHuntData = autoHuntData; }
+	void setName(QString name);
+	void setProfession(Profession profession) ;
+	void setRestMethodesHealth(QVector<RestorationMethode> healthRestMethodes) ;
+	void setRestMethodesMana(QVector<RestorationMethode> manaRestMethodes) ;
+	void setScreenShotKey(Key key) ;
+	void setBars(int left, int right) ;
+	void setControls(int enumCode) ;
+	void setAutoLoot(int enumCode) ;
+	void setRopeKey(Key key) ;
+	void setAutoAttackKey(Key key) ;
+	void setShovelKey(Key key) ;
+	void setAutoHuntData(AutoHuntData autoHuntData);
 
 	//getters 
-	QString getName() const { return profileName; }
-	Profession getProfession() const { return profession; }
-	QVector<RestorationMethode> getRestMethodesHealth() const { return healthRestorations; };
-	QVector<RestorationMethode> getRestMethodesMana() const { return manaRestorations; };
-	Key getScreenShotKey() const { return screenShotKey; }
-	int getControls() const { return controls; }
-	AutoLoot getAutoLoot() const { return autoLoot; }
-	int getBarsLeft() const { return barsLeft; }
-	int getBarsRight() const { return barsRight; }
-	Key getRopeKey() const { return ropeKey; }
-	Key getAutoAttackKey() const { return autoAttackKey; }
-	Key getShovelKey() const { return shovelKey; }
-	AutoHuntData getAutoHuntData() const { return autoHuntData; }
+	QString getName() const;
+	Profession getProfession() const;
+	QVector<RestorationMethode> getRestMethodesHealth() const ;
+	QVector<RestorationMethode> getRestMethodesMana() const;
+	Key getScreenShotKey() const ;
+	int getControls() const ;
+	AutoLoot getAutoLoot() const;
+	int getBarsLeft() const;
+	int getBarsRight() const;
+	Key getRopeKey() const ;
+	Key getAutoAttackKey() const ;
+	Key getShovelKey() const ;
+	AutoHuntData getAutoHuntData() const;
 private:	
 	QVector<RestorationMethode> manaRestorations;
 	QVector<RestorationMethode> healthRestorations;

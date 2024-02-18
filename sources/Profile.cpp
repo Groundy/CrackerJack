@@ -133,3 +133,79 @@ QStringList Profile::getManaRestorationNames() {
 bool Profile::isValid() const {
   return !profileName.isEmpty() && screenShotKey.isValid();
 }
+void Profile::setName(QString name) {
+  this->profileName = name;
+}
+void Profile::setProfession(Profession profession) {
+  this->profession = profession;
+}
+void Profile::setRestMethodesHealth(QVector<RestorationMethode> healthRestMethodes) {
+  this->healthRestorations = healthRestMethodes;
+}
+void Profile::setRestMethodesMana(QVector<RestorationMethode> manaRestMethodes) {
+  this->manaRestorations = manaRestMethodes;
+}
+void Profile::setScreenShotKey(Key key) {
+  this->screenShotKey = key;
+}
+void Profile::setBars(int left, int right) {
+  barsLeft  = left;
+  barsRight = right;
+}
+void Profile::setControls(int enumCode) {
+  controls = Controls(enumCode);
+}
+void Profile::setAutoLoot(int enumCode) {
+  autoLoot = AutoLoot(enumCode);
+}
+void Profile::setRopeKey(Key key) {
+  this->ropeKey = key;
+}
+void Profile::setAutoAttackKey(Key key) {
+  this->autoAttackKey = key;
+}
+void Profile::setShovelKey(Key key) {
+  this->shovelKey = key;
+}
+void Profile::setAutoHuntData(AutoHuntData autoHuntData) {
+  this->autoHuntData = autoHuntData;
+}
+QString Profile::getName() const {
+  return profileName;
+}
+Profession Profile::getProfession() const {
+  return profession;
+}
+QVector<RestorationMethode> Profile::getRestMethodesHealth() const {
+  return healthRestorations;
+};
+QVector<RestorationMethode> Profile::getRestMethodesMana() const {
+  return manaRestorations;
+};
+Key Profile::getScreenShotKey() const {
+  return screenShotKey;
+}
+int Profile::getControls() const {
+  return controls;
+}
+Profile::AutoLoot Profile::getAutoLoot() const {
+  return autoLoot;
+}
+int Profile::getBarsLeft() const {
+  return barsLeft;
+}
+int Profile::getBarsRight() const {
+  return barsRight;
+}
+Key Profile::getRopeKey() const {
+  return ropeKey;
+}
+Key Profile::getAutoAttackKey() const {
+  return autoAttackKey;
+}
+Key Profile::getShovelKey() const {
+  return shovelKey;
+}
+AutoHuntData Profile::getAutoHuntData() const {
+  return autoHuntData;
+}
