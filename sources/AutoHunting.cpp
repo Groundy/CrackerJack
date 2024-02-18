@@ -11,7 +11,7 @@ AutoHunting::AutoHunting(QObject* parent, QSharedPointer<VariablesClass> var, QS
   miniMapAnalyzer->start();
 }
 
-AutoHunting::~AutoHunting() {}
+AutoHunting::~AutoHunting() = default;
 
 void AutoHunting::run() {
   while (true) {

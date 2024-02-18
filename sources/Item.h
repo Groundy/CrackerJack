@@ -37,7 +37,7 @@ class Item {
   double       weight;
   TYPE_OF_ITEM type;
   SELLER       seller;
-  Item(){};
+  Item() = default;
   Item(const QJsonValue& jsonValue);
 
   static QStringList                 getListOfCategories();

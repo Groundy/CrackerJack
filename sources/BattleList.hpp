@@ -12,7 +12,7 @@ class BattleList {
     this->logger    = logger;
     this->imgEditor = imgEditor;
   };
-  ~BattleList(){};
+  ~BattleList() = default;
   void setFrame(QRect battleListAreaToSet) {
     battleListArea.setRect(battleListAreaToSet);
   }

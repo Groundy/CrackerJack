@@ -4,8 +4,8 @@
 #include <qstring.h>
 class GameProcessData {
  public:
-  GameProcessData(){};
-  ~GameProcessData(){};
+  GameProcessData()  = default;
+  ~GameProcessData() = default;
   uint getPid() {
     return pid;
   }

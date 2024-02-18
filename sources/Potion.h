@@ -6,9 +6,10 @@
 class Potion {
  public:
   enum class TypeOfPotion { HEALTH, MANA };
-  Potion(){};
+  Potion()  = default;
+  ~Potion() = default;
   Potion(QJsonObject obj);
-  ~Potion(){};
+
   bool isForProf(const Profession& prof) const {
     return userProfessions.contains(prof);
   }

@@ -12,8 +12,8 @@ struct HealthManaFrames {
 };
 class Vitallity {
  public:
-  Vitallity(){};
-  ~Vitallity(){};
+  Vitallity()  = default;
+  ~Vitallity() = default;
   void setCurrentPercentage(double health, double mana, double manaShield) {
     this->currentHealthPercentage = health;
     this->currentManaPercentage   = mana;
@@ -117,8 +117,8 @@ class Vitallity {
 
 class MiniMap {
  public:
-  MiniMap(){};
-  ~MiniMap(){};
+  MiniMap()  = default;
+  ~MiniMap() = default;
   void getImgMiniMap(QImage& imgToRet) {
     imgToRet = this->miniMap.getImgCopy();
     this->miniMap.clear();

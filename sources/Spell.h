@@ -6,9 +6,9 @@
 
 class Spell {
  public:
-  Spell(){};
+  Spell() = default;
   Spell(QJsonObject obj);
-  ~Spell(){};
+  ~Spell() = default;
   enum class SpellType { Healing, Support, Attack };
   bool isForProf(const Profession& prof) {
     return profesUsingSpell.contains(prof);
@@ -53,11 +53,19 @@ inline Spell::Spell(QJsonObject obj) {
   try {
     QString             nameToSet         = obj["name"].toString();
     QString             incantationsToSet = obj["incantantion"].toString();
-    QVector<Profession> profsToSet        = {};
-    if (obj["EK"].toBool()) profsToSet.push_back(Profession::Type::EK);
-    if (obj["RP"].toBool()) profsToSet.push_back(Profession::Type::RP);
-    if (obj["MS"].toBool()) profsToSet.push_back(Profession::Type::MS);
-    if (obj["ED"].toBool()) profsToSet.push_back(Profession::Type::ED);
+    QVector<Profession> profsToSet;
+    if (obj["EK"].toBool()) {
+      profsToSet.push_back(Profession::Type::EK);
+    }
+    if (obj["RP"].toBool()) {
+      profsToSet.push_back(Profession::Type::RP);
+    }
+    if (obj["MS"].toBool()) {
+      profsToSet.push_back(Profession::Type::MS);
+    }
+    if (obj["ED"].toBool()) {
+      profsToSet.push_back(Profession::Type::ED);
+    }
     int manaToSet       = obj["mana"].toInt();
     int cdToSet         = obj["CD"].toInt();
     int cdGroupToSet    = obj["CDGROUP"].toInt();
@@ -65,12 +73,13 @@ inline Spell::Spell(QJsonObject obj) {
 
     QString          typeAsStr = obj["TYPE"].toString();
     Spell::SpellType typeToSet = SpellType::Healing;
-    if (typeAsStr == "HEALING")
+    if (typeAsStr == "HEALING") {
       typeToSet = SpellType::Healing;
-    else if (typeAsStr == "SUPPORT")
+    } else if (typeAsStr == "SUPPORT") {
       typeToSet = SpellType::Support;
-    else if (typeAsStr == "ATTACK")
+    } else if (typeAsStr == "ATTACK") {
       typeToSet = SpellType::Attack;
+    }
 
     this->name             = nameToSet;
     this->incantations     = incantationsToSet;

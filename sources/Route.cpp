@@ -1,6 +1,5 @@
 ﻿#include "Route.h"
 
-Route::Route() {}
 Route::Route(QJsonObject obj) {
   try {
     QJsonArray pointsArray = obj["points"].toArray();
@@ -24,7 +23,6 @@ Route::Route(QJsonObject obj) {
     Logger::staticLog(e.what());
   }
 }
-Route::~Route() {}
 
 QStringList Route::toStringList() {
   if (route.isEmpty()) return QStringList();

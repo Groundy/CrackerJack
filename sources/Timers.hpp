@@ -5,8 +5,8 @@
 #include <QString>
 class Timers {
  public:
-  Timers(){};
-  ~Timers(){};
+  Timers()  = default;
+  ~Timers() = default;
   qint64 getTimeLastItemUsageGeneral() const {
     return timeLastItemUsage;
   }

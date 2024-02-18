@@ -5,8 +5,8 @@
 #include "Utilities.hpp"
 class GameWindow {
  public:
-  GameWindow(){};
-  ~GameWindow(){};
+  GameWindow()  = default;
+  ~GameWindow() = default;
   void getImgMainGameWindow(QImage& imgToRet) {
     imgToRet = this->gameWindow.getImgCopy();
   }

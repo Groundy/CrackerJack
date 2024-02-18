@@ -16,8 +16,8 @@ class Logger : public QObject {
   void sendMsgToUserConsolRed(QString);
 
  public:
-  Logger(){};
-  ~Logger(){};
+  Logger()  = default;
+  ~Logger() = default;
   void log(QString msg, bool sendToDebug = true, bool sendToUserConsol = false, bool addTimeSTamp = true) {
     if (addTimeSTamp) msg.push_front(getTimeStamp());
 

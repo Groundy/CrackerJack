@@ -18,8 +18,8 @@
 
 class AutoHuntData : JsonClass {
 public:
-	AutoHuntData() {};
-	~AutoHuntData() {};
+	AutoHuntData() = default;
+	~AutoHuntData() = default;
 	bool isValid() const { return true; }
 	QJsonObject toJson() const {
 		QJsonObject obj;
@@ -61,7 +61,7 @@ public:
 	enum AutoLoot { RIGHT_MOUSE_BUTTON, SHIFT_RIGHT, LEFT_MOUSE_BUTTON };//enable only if controls
 	enum Controls { CLSSIC_CONTROLS, REGULARCONTROLS, LEFT_SMART_CLICK };
 
-	Profile();
+	Profile() = default;
 	Profile(QJsonObject obj);
 	Profile(const Profile& profile);
 

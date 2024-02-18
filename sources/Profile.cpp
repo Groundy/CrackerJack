@@ -1,6 +1,5 @@
 #include "Profile.h"
 
-Profile::Profile() {}
 Profile::Profile(QJsonObject obj) {
   try {
     QString    field = "profileName";

@@ -8,9 +8,9 @@
 #include "RoutePoint.h"
 class Route : JsonClass {
  public:
-  Route();
+  Route() = default;
   Route(QJsonObject obj);
-  ~Route();
+  ~Route() = default;
 
   QStringList toStringList();
   void        addPoint(RoutePoint point);

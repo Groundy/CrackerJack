@@ -8,7 +8,6 @@ class RGBstruct : JsonClass {
  public:
   RGBstruct(uint rgb);
   RGBstruct(uint r, uint g, uint b);
-  ~RGBstruct();
   bool        operator==(const RGBstruct& rgb) const;
   bool        operator<(const RGBstruct& rgb) const;
   uint        toUint() const;

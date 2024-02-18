@@ -6,7 +6,7 @@
 class AttackMethode : JsonClass {
  public:
   AttackMethode(int cd, int cdGroup, int requiredMana, QString name, Key key, int monsersToUse)
-      : cd(cd), cdGroup(cdGroup), requiredMana(requiredMana), name(name), key(key), minMonstersToUse(monsersToUse) {}
+      : cd(cd), cdGroup(cdGroup), requiredMana(requiredMana), name(name), key(key), minMonstersToUse(monsersToUse){};
   AttackMethode(const Spell& spell, Key key, int monsersToUse) {
     this->cd               = spell.getCd();
     this->cdGroup          = spell.getCdGroup();
@@ -44,7 +44,7 @@ class AttackMethode : JsonClass {
     obj.insert("minMonstersToUse", minMonstersToUse);
     return obj;
   }
-  ~AttackMethode(){};
+  ~AttackMethode() = default;
   QString getName() const {
     return name;
   }

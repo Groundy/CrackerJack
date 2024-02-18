@@ -1,7 +1,7 @@
 #include "ImgEditor.h"
 
-ImgEditor::ImgEditor() {}
-ImgEditor::~ImgEditor() {}
+ImgEditor::ImgEditor()  = default;
+ImgEditor::~ImgEditor() = default;
 
 QImage ImgEditor::fromCharToImg(QChar CharToImg) {
   QString     keyCode = normalLettersMap.key(CharToImg);

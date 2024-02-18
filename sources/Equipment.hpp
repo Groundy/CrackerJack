@@ -9,7 +9,7 @@ class Equipment {
   enum STATES { HASTE, BATTLE, PROTECTOR_ZONE, POISONED, PARALYZED, UPGRADED, HUNGER, DRUNKEN };
   enum class EqRect { StateBar, SoulPoints, Capacity, Helmet, Armor, Legs, Boots, Ring, Amulet, Weapon, Shield, Backpack, Torch };
   Equipment(ImgEditor* imgEditor) : imgEditor(imgEditor){};
-  ~Equipment(){};
+  ~Equipment() = default;
   void setStoreRect(const QRect& storeRectToSet) {
     storeRect.setRect(storeRectToSet);
     QPoint storeRectStart = storeRectToSet.topLeft();
@@ -20,7 +20,9 @@ class Equipment {
 
   QVector<STATES> getCurrentStates(bool clearImg = true) {
     QImage stateBar = statesBarImg.getImgCopy();
-    if (stateBar.isNull()) return {};
+    if (stateBar.isNull()) {
+      return {};
+    }
     if (clearImg) statesBarImg.clear();
     ImgEditor::imgToBlackAndWhiteOneColor(stateBar, toBlackAndWhiteThreshold);
     QList<QImage>   imgs  = ImgEditor::cutImgWithLettersToSingleLettersImgList(stateBar);

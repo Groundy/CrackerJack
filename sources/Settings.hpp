@@ -2,8 +2,8 @@
 #include <atomic>
 class Settings {
  public:
-  Settings(){};
-  ~Settings(){};
+  Settings()  = default;
+  ~Settings() = default;
   void setRestoringState(bool enable) {
     this->keepRestoringManaAngHealth = enable;
   };
