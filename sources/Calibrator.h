@@ -11,6 +11,7 @@
 #include "VariablesClass.hpp"
 #include "PathResource.h"
 #include "Profile.h"
+#include <VariablesClass.hpp>
 class Calibrator {
 public:
 	Calibrator(QSharedPointer<VariablesClass> var);

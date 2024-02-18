@@ -12,7 +12,7 @@ public:
 	ClickDetector(QObject* parent, QSharedPointer<GameConnecter> gameConnetorPtr)
 		: gameConnetorPtr(gameConnetorPtr), QThread(parent) {
 	};
-	~ClickDetector() {};
+	~ClickDetector() = default;
 	void run() {
 		while (true) {
 			if (middleButtonPressed()) {

@@ -166,33 +166,34 @@ bool JsonParser::getItemsFromCategory(QList<Item>& itemsToRet, Item::TYPE_OF_ITE
 	itemsToRet = itemsTmp;
 	return true;
 }
-bool JsonParser::saveJsonFile(QString pathToFolder, QString fileNameWithOutExtension, QJsonObject jsonObj){
-	try{
-		QFileInfo folderInfo = QFileInfo(pathToFolder);
-		bool isDir = folderInfo.isDir();
-		if (!isDir)
-			throw("Error in saving json file, given pathToFolder is not really path to folder!");
-		bool isWritable = folderInfo.isWritable();
-		if (!isWritable) 
-			throw("Error in saving json file, given folder is not writtable!");
-
-		QString filePath;
-		if(pathToFolder.right(1) == "\\")
-			filePath = QString("%1%2.json").arg(pathToFolder, fileNameWithOutExtension);
-		else
-			filePath = QString("%1\\%2.json").arg(pathToFolder, fileNameWithOutExtension);
-		QFile file(filePath);
-		bool ok = file.open(QIODevice::OpenModeFlag::WriteOnly);
-		if (!ok)
-			throw("Error in saving json file!");
-		file.write(QJsonDocument(jsonObj).toJson());
-		file.close();
-		return true;
+bool JsonParser::saveJsonFile(const QString& pathToFolder, const QString& fileNameWithOutExtension,const QJsonObject& jsonObj){
+	if (!QDir(pathToFolder).exists()){
+		const bool success = QDir().mkdir(pathToFolder);
+		if (!success) {
+			qWarning() << "folder " << pathToFolder << " doesn't exist and cannot be created";
+			return false;
+		}
 	}
-	catch (const std::exception& e){
-		Logger::staticLog(e.what());
+	QFileInfo folderInfo = QFileInfo(pathToFolder);
+	bool isWritable = folderInfo.isWritable();
+	if (!isWritable) {
+		qWarning() << "Error in saving json file, given folder is not writtable!";
 		return false;
 	}
+	QString filePath;
+	if(pathToFolder.right(1) == "\\")
+		filePath = QString("%1%2.json").arg(pathToFolder, fileNameWithOutExtension);
+	else
+		filePath = QString("%1\\%2.json").arg(pathToFolder, fileNameWithOutExtension);
+	QFile file(filePath);
+	bool ok = file.open(QIODevice::OpenModeFlag::WriteOnly);
+	if (!ok) {
+		qWarning() << "Error in saving json file";
+		return false;
+	}
+	file.write(QJsonDocument(jsonObj).toJson());
+	file.close();
+	return true;
 }
 QMap<QString, int> JsonParser::readAvaibleKeys(){
 	QJsonObject obj;

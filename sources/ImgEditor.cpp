@@ -132,7 +132,8 @@ void ImgEditor::cutBlackBordersOfImg(QImage& img) {
     int heightToCut = anotherParametr_y >= 0 ? anotherParametr_y : 0;
     img = img.copy(linesOfBlackRows_LEFT, linesOfBlackRows_TOP, widthToCut, heightToCut);
  }
-void ImgEditor::cutImgWithLettersToSingleLettersImgList(QImage& img, QList<QImage>& letterImages) {
+QList<QImage> ImgEditor::cutImgWithLettersToSingleLettersImgList(QImage& img) {
+	QList<QImage> letterImages;
 	QList<int> colThatAreNotBlack;
 	const int WIDTH = img.width();
     const int HEIGHT = img.height();
@@ -147,7 +148,7 @@ void ImgEditor::cutImgWithLettersToSingleLettersImgList(QImage& img, QList<QImag
     }
     if (colThatAreNotBlack.isEmpty()) {
        //letterImages.push_back(img);
-       return;
+       return letterImages;
     }
 
     QList<int> indexesOfStartOfLetter, indexesOfEndsOfLetters;
@@ -173,14 +174,14 @@ void ImgEditor::cutImgWithLettersToSingleLettersImgList(QImage& img, QList<QImag
 		QImage letter = img.copy(rectToCut);
 		letterImages.push_back(letter);
     }
+	return letterImages;
  }
 QString ImgEditor::imgWithStrToStr(QImage& img, int threshold) {
 	imgToBlackAndWhiteAllColors(img, threshold);
 	cutBlackBordersOfImg(img);
-    QList<QImage> lettersImgs;
-	cutImgWithLettersToSingleLettersImgList(img, lettersImgs);
+    QList<QImage> lettersImgs = cutImgWithLettersToSingleLettersImgList(img);
     QString toRet;
-	for each (QImage& img in lettersImgs){
+	for each (QImage img in lettersImgs){
 	    cutBlackBordersOfImg(img);
 	    QString letterCode = binaryLetterImgToCode(img);
 	    QString letter = normalLettersMap.value(letterCode);

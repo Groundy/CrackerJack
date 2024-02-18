@@ -31,8 +31,8 @@ public:
 	static void deleteProfileFile(QString profileName);
 	static QStringList getNamesOManaPotsForProf(Profession profession);
 	static QStringList getNamesOfHealingPotsAndSpellsForProf(Profession profession);
-	static bool saveJsonFile(QString pathToFolder, QString fileNameWithoutExtension, QJsonObject jsonObj);
+	static bool saveJsonFile(const QString& pathToFolder, const QString& fileNameWithoutExtension, const QJsonObject& jsonObj);
 	static bool readRoute(Route& route, QString routeName);
 private:
-	JsonParser() {};
+	JsonParser() = default;
 };

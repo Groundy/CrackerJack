@@ -23,8 +23,7 @@ public:
 		if (clearImg)
 			statesBarImg.clear();
 		ImgEditor::imgToBlackAndWhiteOneColor(stateBar, toBlackAndWhiteThreshold);
-		QList<QImage> imgs;
-		ImgEditor::cutImgWithLettersToSingleLettersImgList(stateBar, imgs);
+		QList<QImage> imgs = ImgEditor::cutImgWithLettersToSingleLettersImgList(stateBar);
 		QVector<STATES> toRet = {};
 		for each (QImage img in imgs) {
 			ImgEditor::cutBlackBordersOfImg(img);
