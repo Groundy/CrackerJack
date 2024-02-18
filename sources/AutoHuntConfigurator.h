@@ -1,9 +1,9 @@
-#pragma once
+#include <QDialog>
+
 #include "JsonParser.h"
 #include "Profile.h"
 #include "RouteCreator.h"
 #include "ui_AutoHuntConfigurator.h"
-#include <QDialog>
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -14,24 +14,23 @@ QT_END_NAMESPACE
 class AutoHuntConfigurator : public QDialog {
   Q_OBJECT
 
-public:
-  AutoHuntConfigurator(QWidget *parent = nullptr, Profile *prof = nullptr);
+ public:
+  AutoHuntConfigurator(QWidget* parent = nullptr, Profile* prof = nullptr);
   ~AutoHuntConfigurator();
-public slots:
+
+ public slots:
   void selectRoute() {
-    QString pathToFile = Utilities::getFileByDialog(
-        "*.json", PathResource::getPathToRouteFolder());
+    QString     pathToFile = Utilities::getFileByDialog("*.json", PathResource::getPathToRouteFolder());
     QJsonObject obj;
-    if (!JsonParser::openJsonFile(obj, pathToFile))
-      return; // todo
+    if (!JsonParser::openJsonFile(obj, pathToFile)) return;  // todo
 
     QString name = Route(obj).getName();
     ui->routeLabel->setText(name);
     lastSelectedRoute = name;
   };
+
   void editRoute() {
-    if (lastSelectedRoute.isEmpty())
-      return;
+    if (lastSelectedRoute.isEmpty()) return;
 
     Route route;
     JsonParser::readRoute(route, lastSelectedRoute);
@@ -43,7 +42,11 @@ public slots:
     prof->setAutoHuntData(autoHuntData);
     this->accept();
   };
-  void cancelButtonClicked() { this->reject(); };
+
+  void cancelButtonClicked() {
+    this->reject();
+  }
+
   void checkBoxChanged() {
     int lastActiveCheckboxIndex = -1;
     for each (auto checkBox in checkBoxes)
@@ -61,6 +64,7 @@ public slots:
       }
     }
   }
+
 
 private:
   void fillKeyComboBoxes() {

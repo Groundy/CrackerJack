@@ -55,7 +55,7 @@ struct MutexRect {
 
  private:
   QMutex mutex;
-  QRect rect;
+  QRect  rect;
 };
 
 class Utilities {
@@ -68,14 +68,12 @@ class Utilities {
     box.exec();
   }
   static bool showMessageBox_NO_YES(QString text) {
-    QFlags<QMessageBox::StandardButton> flags = {
-        QMessageBox::StandardButton::Yes, QMessageBox::StandardButton::No};
-    int res = Utilities::showMessageBox("CrakerJack", text, flags);
-    bool toRet = res == QMessageBox::StandardButton::Yes;
+    QFlags<QMessageBox::StandardButton> flags = {QMessageBox::StandardButton::Yes, QMessageBox::StandardButton::No};
+    int                                 res   = Utilities::showMessageBox("CrakerJack", text, flags);
+    bool                                toRet = res == QMessageBox::StandardButton::Yes;
     return toRet;
   }
-  static int showMessageBox(QString title, QString text,
-                            QFlags<QMessageBox::StandardButton> buttons) {
+  static int showMessageBox(QString title, QString text, QFlags<QMessageBox::StandardButton> buttons) {
     QMessageBox box;
     box.setText(text);
     box.setWindowTitle(title);
@@ -87,7 +85,7 @@ class Utilities {
     QFileDialog fileDialog;
     fileDialog.setNameFilter(filter);
     fileDialog.setDirectory(startDirect);
-    int retCode = fileDialog.exec();
+    int  retCode  = fileDialog.exec();
     bool accepted = retCode == QDialog::Accepted;
     if (!accepted) return QString();
     QStringList fileList = fileDialog.selectedFiles();

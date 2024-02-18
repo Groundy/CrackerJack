@@ -7,10 +7,18 @@ class Timers {
  public:
   Timers(){};
   ~Timers(){};
-  qint64 getTimeLastItemUsageGeneral() const { return timeLastItemUsage; }
-  qint64 getTimeLastSpellUsageAttack() const { return timeLastSpellAttack; }
-  qint64 getTimeLastSpellUsageHealing() const { return timeLastSpellHealing; }
-  qint64 getTimeLastSpellUsageSupport() const { return timeLastSpellSupport; }
+  qint64 getTimeLastItemUsageGeneral() const {
+    return timeLastItemUsage;
+  }
+  qint64 getTimeLastSpellUsageAttack() const {
+    return timeLastSpellAttack;
+  }
+  qint64 getTimeLastSpellUsageHealing() const {
+    return timeLastSpellHealing;
+  }
+  qint64 getTimeLastSpellUsageSupport() const {
+    return timeLastSpellSupport;
+  }
   qint64 getTimeLastSpellUsed(QString spellName) {
     lastTimeUsagesMutex.lock();
     qint64 value = lastTimeSpellUsagesMap.value(spellName, 0);
@@ -24,10 +32,18 @@ class Timers {
     return value;
   }
 
-  void setTimeLastItemUsageGeneral() { timeLastItemUsage = now(); }
-  void setTimeLastSpellUsageAttack() { timeLastSpellAttack = now(); }
-  void setTimeLastSpellUsageHealing() { timeLastSpellHealing = now(); }
-  void setTimeLastSpellUsageSupport() { timeLastSpellSupport = now(); }
+  void setTimeLastItemUsageGeneral() {
+    timeLastItemUsage = now();
+  }
+  void setTimeLastSpellUsageAttack() {
+    timeLastSpellAttack = now();
+  }
+  void setTimeLastSpellUsageHealing() {
+    timeLastSpellHealing = now();
+  }
+  void setTimeLastSpellUsageSupport() {
+    timeLastSpellSupport = now();
+  }
   void setTimeLastSpellUsed(QString spellName) {
     lastTimeUsagesMutex.lock();
     bool alreadyOnList = lastTimeSpellUsagesMap.contains(spellName);
@@ -48,10 +64,11 @@ class Timers {
   }
 
  private:
-  std::atomic<qint64> timeLastItemUsage, timeLastSpellAttack,
-      timeLastSpellHealing, timeLastSpellSupport;
-  QMutex lastTimeUsagesMutex;
+  std::atomic<qint64>   timeLastItemUsage, timeLastSpellAttack, timeLastSpellHealing, timeLastSpellSupport;
+  QMutex                lastTimeUsagesMutex;
   QMap<QString, qint64> lastTimeSpellUsagesMap;
   QMap<QString, qint64> lastTimeItemUsagesMap;
-  qint64 now() { return QDateTime::currentMSecsSinceEpoch(); };
+  qint64                now() {
+    return QDateTime::currentMSecsSinceEpoch();
+  };
 };

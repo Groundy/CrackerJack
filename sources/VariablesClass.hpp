@@ -20,34 +20,55 @@ class VariablesClass {
     delete battleList;
     delete eq;
   };
-  void log(QString msg, bool sendToDebug = true, bool sendToUserConsol = true,
-           bool addTimeSTamp = true) {
+  void log(QString msg, bool sendToDebug = true, bool sendToUserConsol = true, bool addTimeSTamp = true) {
     logger.log(msg, sendToDebug, sendToUserConsol, addTimeSTamp);
   }
-  Timers& getTimers() { return timers; }
-  BattleList& getBattleList() { return *battleList; }
-  Settings& getSettings() { return settings; }
-  Vitallity& getVitalitty() { return vitalitty; }
-  MiniMap& getMiniMap() { return minimap; }
-  GameWindow& getGameWindow() { return gameWindow; }
-  GameProcessData& getGameProcess() { return gameProcess; }
-  PlayerPosition& getPosition() { return position; }
-  Equipment& getEquipment() { return *eq; }
-  Logger& getLogger() { return logger; }
-  ImgEditor& getImgEditorObj() { return imgEditor; }
-  QSound* sound; 
+  Timers& getTimers() {
+    return timers;
+  }
+  BattleList& getBattleList() {
+    return *battleList;
+  }
+  Settings& getSettings() {
+    return settings;
+  }
+  Vitallity& getVitalitty() {
+    return vitalitty;
+  }
+  MiniMap& getMiniMap() {
+    return minimap;
+  }
+  GameWindow& getGameWindow() {
+    return gameWindow;
+  }
+  GameProcessData& getGameProcess() {
+    return gameProcess;
+  }
+  PlayerPosition& getPosition() {
+    return position;
+  }
+  Equipment& getEquipment() {
+    return *eq;
+  }
+  Logger& getLogger() {
+    return logger;
+  }
+  ImgEditor& getImgEditorObj() {
+    return imgEditor;
+  }
+  QSound* sound;
 
  private:
-  Logger logger;
+  Logger          logger;
   GameProcessData gameProcess;
-  GameWindow gameWindow;
-  BattleList* battleList = new BattleList(&logger, &imgEditor);
-  Settings settings;
-  Timers timers;
-  Vitallity vitalitty;
-  MiniMap minimap;
-  PlayerPosition position;
+  GameWindow      gameWindow;
+  BattleList*     battleList = new BattleList(&logger, &imgEditor);
+  Settings        settings;
+  Timers          timers;
+  Vitallity       vitalitty;
+  MiniMap         minimap;
+  PlayerPosition  position;
   // MutexImg fullImage;
   Equipment* eq = new Equipment(&imgEditor);
-  ImgEditor imgEditor;
+  ImgEditor  imgEditor;
 };

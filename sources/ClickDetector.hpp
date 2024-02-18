@@ -8,9 +8,8 @@
 #include "GameConnecter.h"
 class ClickDetector : public QThread {
   Q_OBJECT
-public:
-  ClickDetector(QObject *parent, QSharedPointer<GameConnecter> gameConnetorPtr)
-      : gameConnetorPtr(gameConnetorPtr), QThread(parent){};
+ public:
+  ClickDetector(QObject* parent, QSharedPointer<GameConnecter> gameConnetorPtr) : gameConnetorPtr(gameConnetorPtr), QThread(parent){};
   ~ClickDetector() = default;
   void run() {
     while (true) {
@@ -22,10 +21,10 @@ public:
     }
   }
 
-private:
+ private:
   QSharedPointer<GameConnecter> gameConnetorPtr;
-  const int minMSecBetweenClicks = 6;
-  bool keyPressed(int key) {
+  const int                     minMSecBetweenClicks = 6;
+  bool                          keyPressed(int key) {
     return (GetAsyncKeyState(key) & 0x8000 != 0) != 0;
   }
   bool middleButtonPressed() {

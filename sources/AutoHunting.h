@@ -1,4 +1,3 @@
-#pragma once
 #include "AttackMethode.hpp"
 #include "GameConnecter.h"
 #include "MinimapAnalyzer.h"

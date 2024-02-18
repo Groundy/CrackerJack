@@ -1,5 +1,5 @@
 #pragma once
-#include <qmap.h>
+#include <qmap>
 #include <QObject>
 #include <string>
 #include <qjsonarray.h>

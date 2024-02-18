@@ -3,22 +3,30 @@
 #include <basetsd.h>
 #include <qstring.h>
 class GameProcessData {
-public:
+ public:
   GameProcessData(){};
   ~GameProcessData(){};
-  uint getPid() { return pid; }
-  void setPid(uint newPid) { pid = newPid; }
-  QString getNameOfGameWindow() { return nameOfGameWindow; }
+  uint getPid() {
+    return pid;
+  }
+  void setPid(uint newPid) {
+    pid = newPid;
+  }
+  QString getNameOfGameWindow() {
+    return nameOfGameWindow;
+  }
   void setNameOfGameWindow(QString newNameOfGameWindow) {
     nameOfGameWindow = newNameOfGameWindow;
   }
-  HWND getHandlerToGameThread() { return handlerToGameThread; }
+  HWND getHandlerToGameThread() {
+    return handlerToGameThread;
+  }
   void setHandlerToGameThread(HWND newHandlerToGameThread) {
     handlerToGameThread = newHandlerToGameThread;
   }
 
-private:
+ private:
   std::atomic<uint> pid;
   std::atomic<HWND> handlerToGameThread;
-  QString nameOfGameWindow;
+  QString           nameOfGameWindow;
 };
