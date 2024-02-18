@@ -1,13 +1,6 @@
 /Profiles
-/.vs
-/x64
-/Debug
-/Release
-/enc_temp_folder
-/TMP
-/ResourcesUsing/maps
-/CrackerJackClient.vcxproj.user
-CrackerJackClient.vcxproj.user
 /Routes
-builds
-builds_trash
+CrackerJackClient.vcxproj.user
+/.vs
+/builds
+/builds_trash

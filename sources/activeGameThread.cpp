@@ -47,19 +47,14 @@ QString ActiveGameThread::getGameWindowTitile(){
     return QString();
 }
 uint ActiveGameThread::getGamePid(QMap<QString, unsigned int>& processes){
-    try{
-        auto iteratorToProcess = processes.find(GAME_PROCESS_NAME);
-        if (iteratorToProcess == processes.end())
-            throw std::exception("Can't find Game on running processes list!");
-        return iteratorToProcess.value();
-    }
-    catch (const std::exception& e){
-        qDebug() << e.what();
+    auto iteratorToProcess = processes.find(GAME_PROCESS_NAME);
+    if (iteratorToProcess == processes.end()) {
+        qDebug() << "Can't find Game on running processes list!";
         return 0;
     }
-
+    return iteratorToProcess.value();
 }
-int ActiveGameThread::windowIsAccessible(const uint PID, QString windowTitle){
+int ActiveGameThread::windowIsAccessible(const uint PID, const QString& windowTitle){
     if (PID == 0)
         return NO_ACTIVE;
     if (windowTitle.isEmpty())
@@ -78,29 +73,26 @@ int ActiveGameThread::windowIsAccessible(const uint PID, QString windowTitle){
     return ACTIVE;
 }
 int ActiveGameThread::checkGameState(){
-    try {
-        auto processes = getListOfRunningProcess();
-        uint PID = getGamePid(processes);
-        QString windowTitle = getGameWindowTitile();
-        if (windowTitle.isEmpty())
-            throw std::exception("Can't get GameWindowTitle");
-        int gameWinState = windowIsAccessible(PID, windowTitle);
-        if (gameWinState == ACTIVE) {     
-            HWND handlerToGameThread = getHandlerToGameWindow(PID, windowTitle);
-            if (handlerToGameThread != previousGameHandler)
-                var->getGameProcess().setHandlerToGameThread(handlerToGameThread);
-            if (var->getGameProcess().getNameOfGameWindow() != windowTitle)
-                var->getGameProcess().setNameOfGameWindow(windowTitle);
-            if (var->getGameProcess().getPid() != PID)
-                var->getGameProcess().setPid(PID);
-        }
-        return gameWinState;
-    }
-    catch (const std::exception& e){
+    auto processes = getListOfRunningProcess();
+    uint PID = getGamePid(processes);
+    QString windowTitle = getGameWindowTitile();
+    if (windowTitle.isEmpty()) {
+        qWarning() << "Can't get game window title.";
         var->getGameProcess().setNameOfGameWindow("");
         var->getGameProcess().setPid(0);
         return NO_WINDOW;
     }
+    int gameWinState = windowIsAccessible(PID, windowTitle);
+    if (gameWinState == ACTIVE) {     
+        HWND handlerToGameThread = getHandlerToGameWindow(PID, windowTitle);
+        if (handlerToGameThread != previousGameHandler)
+            var->getGameProcess().setHandlerToGameThread(handlerToGameThread);
+        if (var->getGameProcess().getNameOfGameWindow() != windowTitle)
+            var->getGameProcess().setNameOfGameWindow(windowTitle);
+        if (var->getGameProcess().getPid() != PID)
+            var->getGameProcess().setPid(PID);
+    }
+    return gameWinState;
 }
 QMap<QString, unsigned int> ActiveGameThread::getListOfRunningProcess() {
     QMap<QString, unsigned int> toRet;

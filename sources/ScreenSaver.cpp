@@ -30,7 +30,7 @@ void ScreenSaver::run(){
 	while (true){
 		msleep(SLEEP_TIME);
 		if (!var->getSettings().getTakingScreensState())
-			continue;
+		     	continue;
 		sendScreenRequestToGame();
 	}
 }

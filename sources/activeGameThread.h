@@ -32,6 +32,6 @@ private:
 	int checkGameState();
 	QMap<QString, unsigned int> getListOfRunningProcess();
 	void connectSingalToGUI(QObject* parent);
-	int windowIsAccessible(unsigned int PID, QString windowTitle);
+	int windowIsAccessible(const uint PID,const QString& windowTitle);
 	HWND getHandlerToGameWindow(unsigned int PID, QString WindowName);
 };
