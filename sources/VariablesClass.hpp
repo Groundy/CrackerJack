@@ -1,6 +1,4 @@
 #pragma once
-#include <qsound.h>
-
 #include "BattleList.hpp"
 #include "Equipment.hpp"
 #include "GameProcessData.hpp"
@@ -13,9 +11,7 @@
 
 class VariablesClass {
  public:
-  VariablesClass(QSound* sound) : sound(sound) {
-    sound->setLoops(QSound::Infinite);
-  };
+  VariablesClass() = default;
   ~VariablesClass() {
     delete battleList;
     delete eq;
@@ -56,7 +52,6 @@ class VariablesClass {
   ImgEditor& getImgEditorObj() {
     return imgEditor;
   }
-  QSound* sound;
 
  private:
   Logger          logger;

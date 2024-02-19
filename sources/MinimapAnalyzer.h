@@ -8,13 +8,12 @@
 #include <qstring.h>
 #include <qthread.h>
 
-#include <QObject>
+#include <QObject.h>
 
 #include "Calibrator.h"
 #include "ImgEditor.h"
 #include "PathResource.h"
 #include "VariablesClass.hpp"
-#include "qsound.h"
 class MinimapAnalyzer : public QThread {
   Q_OBJECT
  public:

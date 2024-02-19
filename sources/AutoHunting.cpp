@@ -162,32 +162,20 @@ bool AutoHunting::playerFoundOnBattleList() {
   bool        playerFound              = false;
   for each (QString name in enemiesNamesOnBattleList) {
     bool nameIsAllowed = alloweNamesOnBattleList.contains(name);
-    if (nameIsAllowed) continue;
+    if (nameIsAllowed) {
+      continue;
+    }
     playerFound = true;
     break;
   }
-  if (!playerFound) return playerFound;
-  if (var->getSettings().playSoundWhenIntruderIsOnScreen) {
-    playSound();
-  }
   return playerFound;
 }
-void AutoHunting::playSound() {
-  qint64 currentTime          = now();
-  bool   canAlreadyRangAlaram = currentTime >= lastTimeAlarmRang + breakBetweenAlarms;
-  if (!canAlreadyRangAlaram) return;
-  lastTimeAlarmRang = currentTime;
 
-  qDebug() << var->sound->fileName();
-  qDebug() << var->sound->loopsRemaining();
-  QSound::play(var->sound->fileName());
-  var->sound->setLoops(1);
-  var->sound->play();
-  msleep(1000);
-}
 void AutoHunting::clickOnMiddleOfCompass() {
   // doing it prevents losing focus after click on minimap!
   QPoint pt = var->getMiniMap().getCompasMiddlePoint();
-  if (pt.isNull()) return;
+  if (pt.isNull()) {
+    return;
+  }
   gameConnector->clickLeft(pt);
 }

@@ -7,7 +7,7 @@ MainMenu::MainMenu(Profile* prof, QWidget* parent) : QDialog(parent), prof(prof)
   ui = new Ui::MainMenu();
   ui->setupUi(this);
 
-  var           = QSharedPointer<VariablesClass>(new VariablesClass(sound));
+  var           = QSharedPointer<VariablesClass>(new VariablesClass());
   gameConnector = QSharedPointer<GameConnecter>(new GameConnecter(var, prof));
 
   Settings& settings = var->getSettings();
@@ -26,7 +26,6 @@ MainMenu::~MainMenu() {
     thread->terminate();
     delete thread;
   }
-  delete sound;
   delete ui;
 }
 

@@ -2,7 +2,6 @@
 #include <qfiledialog.h>
 #include <qmessagebox.h>
 #include <qmutex.h>
-#include <qsound.h>
 #include <qstring.h>
 
 #include <atomic>

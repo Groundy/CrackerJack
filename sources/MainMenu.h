@@ -1,8 +1,6 @@
 #pragma once
+#include <QDialog.h>
 #include <qdatetime.h>
-#include <qsound.h>
-
-#include <QDialog>
 
 #include "AttackMethode.hpp"
 #include "AutoHunting.h"
@@ -54,7 +52,6 @@ class MainMenu : public QDialog {
   QSharedPointer<VariablesClass>       var;
   QSharedPointer<GameConnecter>        gameConnector;
   ActiveGameThread::GameActivityStates gameActivitystate;
-  QSound*                              sound = new QSound(":/sounds/testSound", this);
   void                                 threadStarter();
   void                                 startAutoHunting();
 };

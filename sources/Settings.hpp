@@ -68,7 +68,6 @@ class Settings {
   bool getPlayingOnSmallMonitor() const {
     return playingOnSmallMonitor;
   }
-  bool playSoundWhenIntruderIsOnScreen = true;
 
  private:
   std::atomic<bool> keepRestoringManaAngHealth = true;
