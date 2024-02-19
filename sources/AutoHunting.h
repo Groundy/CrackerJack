@@ -17,8 +17,8 @@ class AutoHunting : public QThread {
   AutoHunting(QObject* parent, QSharedPointer<VariablesClass> var, QSharedPointer<GameConnecter> gameConnector, Route route,
               Profile* profile);
   ~AutoHunting();
-  void     run();
-  QObject* getMiniMapAnalyzer();
+  void             run();
+  MinimapAnalyzer& getMiniMapAnalyzer();
 
  signals:
   void updateHeadingPointInGUI(QString);

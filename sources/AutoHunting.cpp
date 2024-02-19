@@ -33,8 +33,8 @@ void AutoHunting::run() {
     // clickOnMiddleOfCompass();
   }
 }
-QObject* AutoHunting::getMiniMapAnalyzer() {
-  return miniMapAnalyzer;
+MinimapAnalyzer& AutoHunting::getMiniMapAnalyzer() {
+  return *miniMapAnalyzer;
 };
 QPoint AutoHunting::getDistFromOnePtToAnother(QPoint start, QPoint end) {
   return QPoint(end.x() - start.x(), end.y() - start.y());

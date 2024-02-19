@@ -25,10 +25,12 @@ class PlayerPosition {
     return toRet;
   }
   void clear() {
+    QMutexLocker locker(&positionMutex);
     xy    = QPoint(-1, -1);
     floor = -20;
   }
   int getFloor() {
+    QMutexLocker locker(&positionMutex);
     return floor;
   }
   QPoint getXY() {

@@ -10,7 +10,7 @@ class SelectProfileWindow : public QDialog {
   Q_OBJECT
 
  public:
-  SelectProfileWindow(Profile* profileToBeChoosen, QWidget* parent = Q_NULLPTR);
+  SelectProfileWindow(Profile& profileToBeChoosen, QWidget* parent = Q_NULLPTR);
   ~SelectProfileWindow();
  public slots:
   void addNewProfileButtonAction();
@@ -21,7 +21,7 @@ class SelectProfileWindow : public QDialog {
 
  private:
   Ui::SelectProfileWindow* ui;
-  Profile*                 profileToBeChoosen;
+  Profile                  profileToBeChoosen;
 
   void    refreshProfilesOnList();
   void    setUpGui();

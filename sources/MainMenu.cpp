@@ -3,15 +3,15 @@
 #include "ui_MainMenu.h"
 
 //const
-MainMenu::MainMenu(Profile* prof, QWidget* parent) : QDialog(parent), prof(prof) {
+MainMenu::MainMenu(Profile& prof, QWidget* parent) : QDialog(parent), prof(prof) {
   ui = new Ui::MainMenu();
   ui->setupUi(this);
 
   var           = QSharedPointer<VariablesClass>(new VariablesClass());
-  gameConnector = QSharedPointer<GameConnecter>(new GameConnecter(var, prof));
+  gameConnector = QSharedPointer<GameConnecter>(new GameConnecter(var, &prof));
 
   Settings& settings = var->getSettings();
-  ui->profileNameLabel->setText(prof->getName());
+  ui->profileNameLabel->setText(prof.getName());
   ui->playerPosGroup->setVisible(false);
   ui->resourceGroup->setVisible(false);
   ui->keepHastedCheckBox->setChecked(settings.getKeepHasted());
@@ -22,7 +22,9 @@ MainMenu::MainMenu(Profile* prof, QWidget* parent) : QDialog(parent), prof(prof)
 MainMenu::~MainMenu() {
   QList<QThread*> threads{activityThread, screenSaverThread, screenAnalyzer, healthManaStateAnalyzer, huntAutoThread, clickDetector};
   for each (QThread* thread in threads) {
-    if (thread == nullptr) continue;
+    if (thread == nullptr) {
+      continue;
+    }
     thread->terminate();
     delete thread;
   }
@@ -34,13 +36,13 @@ void MainMenu::threadStarter() {
   activityThread = new ActiveGameThread(this, var);
   activityThread->start();
 
-  screenSaverThread = new ScreenSaver(this, var, gameConnector, prof);
+  screenSaverThread = new ScreenSaver(this, var, gameConnector, &prof);
   screenSaverThread->start();
 
-  screenAnalyzer = new ScreenAnalyzer(this, var, prof);
+  screenAnalyzer = new ScreenAnalyzer(this, var, &prof);
   screenAnalyzer->start();
 
-  healthManaStateAnalyzer = new ManaHealthStateAnalyzer(this, prof, var, gameConnector);
+  healthManaStateAnalyzer = new ManaHealthStateAnalyzer(this, &prof, var, gameConnector);
   healthManaStateAnalyzer->start();
 
   clickDetector = new ClickDetector(this, gameConnector);
@@ -56,14 +58,14 @@ void MainMenu::threadStarter() {
     exit(0);
   }
 
-  if (connect(activityThread, &ActiveGameThread::GameStateChanged, this, &MainMenu::onGameStateChanged, Qt::UniqueConnection)) {
-    qCritical() << "Failed to connect thread signal of game activity";
-    exit(0);
-  }
-
   if (!connect(healthManaStateAnalyzer, &ManaHealthStateAnalyzer::sendValueToMainThread, this, &MainMenu::changedValueOfCharHealthOrMana,
                Qt::UniqueConnection)) {
     qCritical() << "Connection failed. Health & Mana analyzer";
+    exit(0);
+  }
+
+  if (!connect(activityThread, &ActiveGameThread::GameStateChanged, this, &MainMenu::onGameStateChanged, Qt::UniqueConnection)) {
+    qCritical() << "Failed to connect thread signal of game activity";
     exit(0);
   }
 }
@@ -72,22 +74,23 @@ void MainMenu::startAutoHunting() {
   var->getSettings().setKeepAnalyzeMiniMap(true);
   Route route;
   JsonParser::readRoute(route, "trolls");
-  huntAutoThread = new AutoHunting(this, var, gameConnector, route, prof);
+  huntAutoThread = new AutoHunting(this, var, gameConnector, route, &prof);
   huntAutoThread->start();
   ui->playerPosGroup->setVisible(true);
 
-  const char* sig                = SIGNAL(updateHeadingPointInGUI(QString));
-  const char* slot               = SLOT(updateHeadingPoint(QString));
-  bool        connectionAccepted = connect(huntAutoThread, sig, this, slot, Qt::UniqueConnection);
-  sig                            = SIGNAL(updateEnemiesAmountInGUI(int));
-  slot                           = SLOT(updateEnemiesAmount(int));
-  connectionAccepted             = connect(huntAutoThread, sig, this, slot, Qt::UniqueConnection);
-
-  QObject* sigSender = huntAutoThread->getMiniMapAnalyzer();
-  QObject* slotRec   = this;
-  sig                = SIGNAL(sendPostitionsToGUI(QString, QString, QString));
-  slot               = SLOT(updatePlayerPosition(QString, QString, QString));
-  connectionAccepted = connect(sigSender, sig, slotRec, slot, Qt::UniqueConnection);
+  if (!connect(huntAutoThread, &AutoHunting::updateHeadingPointInGUI, this, &MainMenu::updateHeadingPoint, Qt::UniqueConnection)) {
+    qCritical() << "Failed to connect thread signal. Auto hunt heading point";
+    exit(0);
+  }
+  if (!connect(huntAutoThread, &AutoHunting::updateEnemiesAmountInGUI, this, &MainMenu::updateEnemiesAmount, Qt::UniqueConnection)) {
+    qCritical() << "Failed to connect thread signal. Auto hunt enemies amount";
+    exit(0);
+  }
+  if (!connect(&huntAutoThread->getMiniMapAnalyzer(), &MinimapAnalyzer::sendPostitionsToGUI, this, &MainMenu::updatePlayerPosition,
+               Qt::UniqueConnection)) {
+    qCritical() << "Failed to connect thread signal. Auto hunt enemies amount";
+    exit(0);
+  }
 }
 
 //slots

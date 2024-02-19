@@ -22,7 +22,7 @@ class MainMenu;
 class MainMenu : public QDialog {
   Q_OBJECT
  public:
-  MainMenu(Profile* prof, QWidget* parent = Q_NULLPTR);
+  MainMenu(Profile& prof, QWidget* parent = Q_NULLPTR);
   ~MainMenu();
 
  public slots:
@@ -42,7 +42,7 @@ class MainMenu : public QDialog {
 
  private:
   Ui::MainMenu*                        ui;
-  Profile*                             prof;
+  Profile                              prof;
   ActiveGameThread*                    activityThread;
   ScreenSaver*                         screenSaverThread;
   ScreenAnalyzer*                      screenAnalyzer;
