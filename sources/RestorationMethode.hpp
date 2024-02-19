@@ -79,53 +79,49 @@ inline RestorationMethode::RestorationMethode(int threshold, Key key, QString re
     : threshold(threshold), key(key), name(restorationName) {}
 inline RestorationMethode::RestorationMethode() : threshold(0), key(Key()), name(""){};
 inline RestorationMethode::RestorationMethode(QJsonObject jsonObj) {
-  try {
-    QStringList fields = QStringList() << "threshold"
-                                       << "methodeName"
-                                       << "key"
-                                       << "manaNeeded"
-                                       << "cd"
-                                       << "cdGroup"
-                                       << "type";
-    for each (QString field in fields) {
-      if (!jsonObj.contains(field)) {
-        QString msg = QString("There is no %1 field in RestorationMethode in json prof file").arg(field);
-        throw std::exception(msg.toStdString().c_str());
-      }
+  QStringList fields = QStringList() << "threshold"
+                                     << "methodeName"
+                                     << "key"
+                                     << "manaNeeded"
+                                     << "cd"
+                                     << "cdGroup"
+                                     << "type";
+
+  for each (QString field in fields) {
+    if (!jsonObj.contains(field)) {
+      qWarning() << "There is no" << field << "field in RestorationMethode in json prof file";
     }
-
-    QJsonValue value          = jsonObj["threshold"];
-    int        thresholdToSet = value.isDouble() ? value.toInt() : throw std::exception("Json Rest methode error with field threshold");
-
-    value                    = jsonObj["methodeName"];
-    QString methodeNameToSet = value.isString() ? value.toString() : throw std::exception("Json Rest methode error with field methodeName");
-
-    value        = jsonObj["key"];
-    Key keyToSet = value.isObject() ? Key(value.toObject()) : throw std::exception("Json Rest methode error with field key");
-
-    value               = jsonObj["manaNeeded"];
-    int manaNeededToSet = value.isDouble() ? value.toInt() : throw std::exception("Json Rest methode error with field manaNeeded");
-
-    value       = jsonObj["cd"];
-    int cdToSet = value.isDouble() ? value.toInt() : throw std::exception("Json Rest methode error with field cd");
-
-    value            = jsonObj["cdGroup"];
-    int cdGroupToSet = value.isDouble() ? value.toInt() : throw std::exception("Json Rest methode error with field cdGroup");
-
-    value                = jsonObj["type"];
-    QString typeStrToSet = value.isString() ? value.toString() : throw std::exception("Json Rest methode error with field type");
-    Type    typeToSet    = (typeStrToSet == "potion") ? Type::POTION : Type::SPELL;
-
-    threshold  = thresholdToSet;
-    name       = methodeNameToSet;
-    key        = keyToSet;
-    manaNeeded = manaNeededToSet;
-    cd         = cdToSet;
-    cdGroup    = cdGroupToSet;
-    type       = typeToSet;
-  } catch (const std::exception& e) {
-    qDebug() << e.what();
   }
+
+  QJsonValue value          = jsonObj["threshold"];
+  int        thresholdToSet = value.isDouble() ? value.toInt() : throw std::exception("Json Rest methode error with field threshold");
+
+  value                    = jsonObj["methodeName"];
+  QString methodeNameToSet = value.isString() ? value.toString() : throw std::exception("Json Rest methode error with field methodeName");
+
+  value        = jsonObj["key"];
+  Key keyToSet = value.isObject() ? Key(value.toObject()) : throw std::exception("Json Rest methode error with field key");
+
+  value               = jsonObj["manaNeeded"];
+  int manaNeededToSet = value.isDouble() ? value.toInt() : throw std::exception("Json Rest methode error with field manaNeeded");
+
+  value       = jsonObj["cd"];
+  int cdToSet = value.isDouble() ? value.toInt() : throw std::exception("Json Rest methode error with field cd");
+
+  value            = jsonObj["cdGroup"];
+  int cdGroupToSet = value.isDouble() ? value.toInt() : throw std::exception("Json Rest methode error with field cdGroup");
+
+  value                = jsonObj["type"];
+  QString typeStrToSet = value.isString() ? value.toString() : throw std::exception("Json Rest methode error with field type");
+  Type    typeToSet    = (typeStrToSet == "potion") ? Type::POTION : Type::SPELL;
+
+  threshold  = thresholdToSet;
+  name       = methodeNameToSet;
+  key        = keyToSet;
+  manaNeeded = manaNeededToSet;
+  cd         = cdToSet;
+  cdGroup    = cdGroupToSet;
+  type       = typeToSet;
 }
 inline QJsonObject RestorationMethode::toJson() const {
   QJsonObject mainObj;

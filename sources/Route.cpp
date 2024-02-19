@@ -81,56 +81,50 @@ QJsonObject Route::toJson() const {
 };
 bool Route::checkRouteCorectness(QString& errorTextToDisplay) {
   typedef RoutePoint::FieldType FieldType;
-  try {
-    if (route.size() < 2) {
-      throw std::exception("Route is too short.");
-    }
-
-    bool samePoint = route.first() == route.last();
-    if (!samePoint) {
-      throw std::exception("Route should start and end in the same point.");
-    }
-
-    QVector<FieldType> typesGoingDown = RoutePoint::getGoingDownTypes();
-    QVector<FieldType> typesGoingSame = RoutePoint::getStayingSameLevelTypes();
-    QVector<FieldType> typesGoingUp   = RoutePoint::getGoingUpTypes();
-
-    enum class FLOOR_CHANGE { UP, SAME, DOWN };
-    FLOOR_CHANGE flChange;
-
-    for (int i = 0; i < route.size() - 1; i++) {
-      Point3D   current     = route[i].getPosition();
-      Point3D   next        = route[i + 1].getPosition();
-      FieldType currentType = route[i].getFieldType();
-
-      bool      canGoToNextPoint;
-      const int currentF = current.getFloor();
-      const int nextF    = next.getFloor();
-      if (currentF < nextF) {
-        canGoToNextPoint = typesGoingUp.contains(currentType);
-        flChange         = FLOOR_CHANGE::UP;
-      } else if (currentF == nextF) {
-        canGoToNextPoint = typesGoingSame.contains(currentType);
-        flChange         = FLOOR_CHANGE::SAME;
-      } else if (currentF > nextF) {
-        canGoToNextPoint = typesGoingDown.contains(currentType);
-        flChange         = FLOOR_CHANGE::DOWN;
-      }
-      if (canGoToNextPoint) continue;
-
-      QString typeStr      = pointTypeNameMap.value(currentType);
-      QString argumentText = flChange == FLOOR_CHANGE::DOWN ? "down" : "up";
-      QString errorText    = QString("Can't find a way from point [%1] to point [%2], because type %3, can't move to %4 floor.")
-                              .arg(QString::number(i), QString::number(i + 1), typeStr, argumentText);
-
-      throw std::exception(errorText.toStdString().c_str());
-    }
-
-    return true;
-  } catch (const std::exception& e) {
-    errorTextToDisplay = e.what();
+  if (route.size() < 2) {
+    qWarning() << "Route is too short";
     return false;
   }
+
+  bool samePoint = route.first() == route.last();
+  if (!samePoint) {
+    qWarning() << "Route should start and end in the same point";
+    return false;
+  }
+
+  QVector<FieldType> typesGoingDown = RoutePoint::getGoingDownTypes();
+  QVector<FieldType> typesGoingSame = RoutePoint::getStayingSameLevelTypes();
+  QVector<FieldType> typesGoingUp   = RoutePoint::getGoingUpTypes();
+
+  enum class FLOOR_CHANGE { UP, SAME, DOWN };
+  FLOOR_CHANGE flChange;
+
+  for (int i = 0; i < route.size() - 1; i++) {
+    Point3D   current     = route[i].getPosition();
+    Point3D   next        = route[i + 1].getPosition();
+    FieldType currentType = route[i].getFieldType();
+
+    bool      canGoToNextPoint;
+    const int currentF = current.getFloor();
+    const int nextF    = next.getFloor();
+    if (currentF < nextF) {
+      canGoToNextPoint = typesGoingUp.contains(currentType);
+      flChange         = FLOOR_CHANGE::UP;
+    } else if (currentF == nextF) {
+      canGoToNextPoint = typesGoingSame.contains(currentType);
+      flChange         = FLOOR_CHANGE::SAME;
+    } else if (currentF > nextF) {
+      canGoToNextPoint = typesGoingDown.contains(currentType);
+      flChange         = FLOOR_CHANGE::DOWN;
+    }
+    if (canGoToNextPoint) {
+      continue;
+    }
+    qWarning() << "Can't find a way from point" << i << "to point" << QString::number(i + 1) << ", because type"
+               << pointTypeNameMap.value(currentType) << ", can't move to " << (flChange == FLOOR_CHANGE::DOWN ? "down" : "up") << "floor;";
+    return false;
+  }
+  return true;
 }
 RoutePoint Route::getPoint(int index) {
   if (index < route.size()) {

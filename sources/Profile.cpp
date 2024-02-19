@@ -1,84 +1,119 @@
 #include "Profile.h"
 
 Profile::Profile(QJsonObject obj) {
-  try {
-    QString    field = "profileName";
-    QJsonValue value = obj[field];
-    if (value.isUndefined() || !value.isString()) throw std::exception(field.toStdString().c_str());
-    this->profileName = value.toString();
+  const QString base = "Error in reading profile from json file, problem with field";
 
-    field = "profession";
-    value = obj[field];
-    if (value.isUndefined() || !value.isString()) throw std::exception(field.toStdString().c_str());
-    this->profession = Profession(value.toString());
-
-    field = "healthRestorations";
-    value = obj[field];
-    if (value.isUndefined() || !value.isArray()) throw std::exception(field.toStdString().c_str());
-    auto healRestorationArr = value.toArray();
-    for each (auto var in healRestorationArr) {
-      RestorationMethode resStr(var.toObject());
-      this->healthRestorations.push_back(resStr);
-    }
-
-    field = "manaRestorations";
-    value = obj[field];
-    if (value.isUndefined() || !value.isArray()) throw std::exception(field.toStdString().c_str());
-    auto manaRestorationArr = value.toArray();
-    for each (auto var in manaRestorationArr) {
-      RestorationMethode resStr(var.toObject());
-      this->manaRestorations.push_back(resStr);
-    }
-
-    field = "lootKey";
-    value = obj[field];
-    if (value.isUndefined() || !value.isDouble()) throw std::exception(field.toStdString().c_str());
-    this->autoLoot = AutoLoot(value.toInt());
-
-    field = "controls";
-    value = obj[field];
-    if (value.isUndefined() || !value.isDouble()) throw std::exception(field.toStdString().c_str());
-    this->controls = Controls(value.toInt());
-
-    field = "screenShotKey";
-    value = obj["screenShotKey"];
-    if (value.isUndefined() || !value.isObject()) throw std::exception(field.toStdString().c_str());
-    this->screenShotKey = Key(value.toObject());
-
-    field = "leftBars";
-    value = obj[field];
-    if (value.isUndefined() || !value.isDouble()) throw std::exception(field.toStdString().c_str());
-    this->barsLeft = value.toInt();
-
-    field = "rightBars";
-    value = obj[field];
-    if (value.isUndefined() || !value.isDouble()) throw std::exception(field.toStdString().c_str());
-    this->barsRight = value.toInt();
-
-    field = "shovelKey";
-    value = obj[field];
-    if (value.isUndefined() || !value.isObject()) throw std::exception(field.toStdString().c_str());
-    this->shovelKey = Key(value.toObject());
-
-    field = "autoAttackKey";
-    value = obj[field];
-    if (value.isUndefined() || !value.isObject()) throw std::exception(field.toStdString().c_str());
-    this->autoAttackKey = Key(value.toObject());
-
-    field = "ropeKey";
-    value = obj[field];
-    if (value.isUndefined() || !value.isObject()) throw std::exception(field.toStdString().c_str());
-    this->ropeKey = Key(value.toObject());
-
-    field = "autoHunt";
-    value = obj[field];
-    if (value.isUndefined() || !value.isObject()) throw std::exception(field.toStdString().c_str());
-    this->autoHuntData = AutoHuntData(value.toObject());
-  } catch (const std::exception& e) {
-    QString msg = QString("Error in reading profile from json file, problem with field %1").arg(e.what());
-    qDebug() << msg << endl;
-    Utilities::showMessageBox_INFO(msg);
+  QString    field = "profileName";
+  QJsonValue value = obj[field];
+  if (value.isUndefined() || !value.isString()) {
+    qWarning() << base << field;
+    return;
   }
+  this->profileName = value.toString();
+
+  field = "profession";
+  value = obj[field];
+  if (value.isUndefined() || !value.isString()) {
+    qWarning() << base << field;
+    return;
+  }
+  this->profession = Profession(value.toString());
+
+  field = "healthRestorations";
+  value = obj[field];
+  if (value.isUndefined() || !value.isArray()) {
+    qWarning() << base << field;
+    return;
+  }
+  auto healRestorationArr = value.toArray();
+  for each (auto var in healRestorationArr) {
+    RestorationMethode resStr(var.toObject());
+    this->healthRestorations.push_back(resStr);
+  }
+
+  field = "manaRestorations";
+  value = obj[field];
+  if (value.isUndefined() || !value.isArray()) {
+    qWarning() << base << field;
+    return;
+  }
+  auto manaRestorationArr = value.toArray();
+  for each (auto var in manaRestorationArr) {
+    RestorationMethode resStr(var.toObject());
+    this->manaRestorations.push_back(resStr);
+  }
+
+  field = "lootKey";
+  value = obj[field];
+  if (value.isUndefined() || !value.isDouble()) {
+    qWarning() << base << field;
+    return;
+  }
+  this->autoLoot = AutoLoot(value.toInt());
+
+  field = "controls";
+  value = obj[field];
+  if (value.isUndefined() || !value.isDouble()) {
+    qWarning() << base << field;
+    return;
+  }
+  this->controls = Controls(value.toInt());
+
+  field = "screenShotKey";
+  value = obj["screenShotKey"];
+  if (value.isUndefined() || !value.isObject()) {
+    qWarning() << base << field;
+    return;
+  }
+  this->screenShotKey = Key(value.toObject());
+
+  field = "leftBars";
+  value = obj[field];
+  if (value.isUndefined() || !value.isDouble()) {
+    qWarning() << base << field;
+    return;
+  }
+  this->barsLeft = value.toInt();
+
+  field = "rightBars";
+  value = obj[field];
+  if (value.isUndefined() || !value.isDouble()) {
+    qWarning() << base << field;
+    return;
+  }
+  this->barsRight = value.toInt();
+
+  field = "shovelKey";
+  value = obj[field];
+  if (value.isUndefined() || !value.isObject()) {
+    qWarning() << base << field;
+    return;
+  }
+  this->shovelKey = Key(value.toObject());
+
+  field = "autoAttackKey";
+  value = obj[field];
+  if (value.isUndefined() || !value.isObject()) {
+    qWarning() << base << field;
+    return;
+  }
+  this->autoAttackKey = Key(value.toObject());
+
+  field = "ropeKey";
+  value = obj[field];
+  if (value.isUndefined() || !value.isObject()) {
+    qWarning() << base << field;
+    return;
+  }
+  this->ropeKey = Key(value.toObject());
+
+  field = "autoHunt";
+  value = obj[field];
+  if (value.isUndefined() || !value.isObject()) {
+    qWarning() << base << field;
+    return;
+  }
+  this->autoHuntData = AutoHuntData(value.toObject());
 }
 Profile::Profile(const Profile& profile) {
   this->healthRestorations = profile.healthRestorations;
