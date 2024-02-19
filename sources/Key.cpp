@@ -36,12 +36,10 @@ Key::Key(QString keyNameToSet) {
 }
 
 Key::Key(QJsonObject obj) {
-  if (!obj.contains("keyVal")) throw std::exception("no keyVal field in key object in json file");
-  if (!obj.value("keyVal").isDouble()) throw std::exception("invalid keyVal field in key object in json file");
-
-  if (!obj.contains("keyName")) throw std::exception("no keyName field in key object in json file");
-  if (!obj.value("keyName").isString()) throw std::exception("invalid keyName field in key object in json file");
-
+  if (!obj.contains("keyVal") || !obj.value("keyVal").isDouble() || !obj.contains("keyName") || !obj.value("keyName").isString()) {
+    qWarning() << "Wrong json object source to create Key object";
+    return;
+  }
   keyVal  = obj.value("keyVal").toInt();
   keyName = obj.value("keyName").toString();
 }

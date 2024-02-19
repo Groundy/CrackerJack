@@ -77,40 +77,40 @@ QStringList JsonParser::readRunesNames() {
   return toRet;
 }
 bool JsonParser::readPotions(QList<Potion>& potions, Profession* prof, Potion::TypeOfPotion* filterType) {
-  try {
-    potions.clear();
-    QJsonObject obj;
-    bool        openCorrectly = openJsonFile(obj, PathResource::getPathToPotionsJsonFile());
-    if (!openCorrectly) {
-      throw std::exception("Can't open items json file!");
-    }
-    if (!obj.contains("potions")) {
-      throw std::exception("No potions field in items json file!");
-    }
-    if (!obj["potions"].isArray()) {
-      throw std::exception("potions field in items json file is not array type!");
-    }
-    QJsonArray arr = obj["potions"].toArray();
-    for each (QJsonValue potionJsonVal in arr) {
-      Potion potionToAdd(potionJsonVal.toObject());
-      if (prof != NULL) {
-        if (!potionToAdd.isForProf(*prof)) {
-          continue;
-        }
-      }
-      if (filterType != NULL) {
-        if (!potionToAdd.isType(*filterType)) {
-          continue;
-        }
-      }
-      potions.push_back(potionToAdd);
-    }
-    return true;
-  } catch (const std::exception& e) {
-    qDebug() << e.what();
-    Utilities::showMessageBox_INFO(e.what());
+  potions.clear();
+  QJsonObject obj;
+  bool        openCorrectly = openJsonFile(obj, PathResource::getPathToPotionsJsonFile());
+  if (!openCorrectly) {
+    qWarning() << "Can't open items json file";
+    Utilities::showMessageBox_INFO("Can't open items json file");
     return false;
   }
+  if (!obj.contains("potions")) {
+    qWarning() << "No potions field in items json file!";
+    Utilities::showMessageBox_INFO("No potions field in items json file!");
+    return false;
+  }
+  if (!obj["potions"].isArray()) {
+    qWarning() << "potions field in items json file is not array type!";
+    Utilities::showMessageBox_INFO("potions field in items json file is not array type!");
+    return false;
+  }
+  QJsonArray arr = obj["potions"].toArray();
+  for each (QJsonValue potionJsonVal in arr) {
+    Potion potionToAdd(potionJsonVal.toObject());
+    if (prof != NULL) {
+      if (!potionToAdd.isForProf(*prof)) {
+        continue;
+      }
+    }
+    if (filterType != NULL) {
+      if (!potionToAdd.isType(*filterType)) {
+        continue;
+      }
+    }
+    potions.push_back(potionToAdd);
+  }
+  return true;
 }
 bool JsonParser::readItemJson(QList<Item>& items) {
   items.clear();
