@@ -1,9 +1,8 @@
 #pragma once
+#include <QChar.h>
+#include <QThread.h>
 #include <qdatetime.h>
 #include <qimage.h>
-
-#include <QChar>
-#include <QThread>
 
 #include "GameConnecter.h"
 #include "ImgEditor.h"
