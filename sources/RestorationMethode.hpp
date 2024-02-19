@@ -10,10 +10,96 @@ class RestorationMethode : JsonClass {
  public:
   enum class Type { POTION, SPELL };
 
-  RestorationMethode(int threshold, Key key, QString restorationName);
-  RestorationMethode();
-  RestorationMethode(QJsonObject jsonObj);
-  QJsonObject toJson() const;
+  RestorationMethode::RestorationMethode(int threshold, Key key, QString restorationName)
+      : threshold(threshold), key(key), name(restorationName) {}
+
+  RestorationMethode::RestorationMethode() : threshold(0), key(Key()), name(""){};
+
+  RestorationMethode::RestorationMethode(QJsonObject jsonObj) {
+    QString field = "threshold";
+    if (jsonObj.contains(field)) {
+      QJsonValue value = jsonObj[field];
+      if (value.isDouble()) {
+        threshold = value.toDouble();
+      } else {
+        qWarning() << "Wrong type of rest method field " << field;
+      }
+    } else {
+      qWarning() << "There is no" << field << "field in RestorationMethode in json prof file";
+    }
+
+    field = "methodeName";
+    if (jsonObj.contains(field)) {
+      QJsonValue value = jsonObj[field];
+      if (value.isString()) {
+        name = value.toString();
+      } else {
+        qWarning() << "Wrong type of rest method field " << field;
+      }
+    } else {
+      qWarning() << "There is no" << field << "field in RestorationMethode in json prof file";
+    }
+
+    field = "key";
+    if (jsonObj.contains(field)) {
+      Key keyToSet(jsonObj[field].toObject());
+      if (key.isValid()) {
+        key = keyToSet;
+      } else {
+        qWarning() << "Wrong type of rest method field " << field;
+      }
+    } else {
+      qWarning() << "There is no" << field << "field in RestorationMethode in json prof file";
+    }
+
+    field = "manaNeeded";
+    if (jsonObj.contains(field)) {
+      QJsonValue value = jsonObj[field];
+      if (value.isDouble()) {
+        manaNeeded = value.toDouble();
+      } else {
+        qWarning() << "Wrong type of rest method field " << field;
+      }
+    } else {
+      qWarning() << "There is no" << field << "field in RestorationMethode in json prof file";
+    }
+
+    field = "cd";
+    if (jsonObj.contains(field)) {
+      QJsonValue value = jsonObj[field];
+      if (value.isDouble()) {
+        cd = value.toDouble();
+      } else {
+        qWarning() << "Wrong type of rest method field " << field;
+      }
+    } else {
+      qWarning() << "There is no" << field << "field in RestorationMethode in json prof file";
+    }
+
+    field = "cdGroup";
+    if (jsonObj.contains(field)) {
+      QJsonValue value = jsonObj[field];
+      if (value.isDouble()) {
+        cdGroup = value.toDouble();
+      } else {
+        qWarning() << "Wrong type of rest method field " << field;
+      }
+    } else {
+      qWarning() << "There is no" << field << "field in RestorationMethode in json prof file";
+    }
+
+    field = "type";
+    if (jsonObj.contains(field)) {
+      QJsonValue value = jsonObj[field];
+      if (value.isString()) {
+        type = (value.toString() == "potion") ? Type::POTION : Type::SPELL;
+      } else {
+        qWarning() << "Wrong type of rest method field " << field;
+      }
+    } else {
+      qWarning() << "There is no" << field << "field in RestorationMethode in json prof file";
+    }
+  }
 
   //getters
   int getCd() const {
@@ -22,7 +108,6 @@ class RestorationMethode : JsonClass {
   int getCdGroup() const {
     return cdGroup;
   };
-  bool    isValid() const;
   QString getName() const {
     return name;
   };
@@ -66,75 +151,26 @@ class RestorationMethode : JsonClass {
   bool isType(RestorationMethode::Type typeToCheck) const {
     return type == typeToCheck;
   }
-
- private:
-  int     threshold;
-  Key     key;
-  QString name;
-  int     manaNeeded, cd, cdGroup;
-  Type    type;
-};
-
-inline RestorationMethode::RestorationMethode(int threshold, Key key, QString restorationName)
-    : threshold(threshold), key(key), name(restorationName) {}
-inline RestorationMethode::RestorationMethode() : threshold(0), key(Key()), name(""){};
-inline RestorationMethode::RestorationMethode(QJsonObject jsonObj) {
-  QStringList fields = QStringList() << "threshold"
-                                     << "methodeName"
-                                     << "key"
-                                     << "manaNeeded"
-                                     << "cd"
-                                     << "cdGroup"
-                                     << "type";
-
-  for each (QString field in fields) {
-    if (!jsonObj.contains(field)) {
-      qWarning() << "There is no" << field << "field in RestorationMethode in json prof file";
-    }
+  QJsonObject toJson() const {
+    QJsonObject mainObj;
+    mainObj.insert("threshold", threshold);
+    mainObj.insert("methodeName", name);
+    mainObj.insert("key", key.toJson());
+    mainObj.insert("manaNeeded", manaNeeded);
+    mainObj.insert("cd", cd);
+    mainObj.insert("cdGroup", cdGroup);
+    QString typeStr = isPotion() ? "potion" : "spell";
+    mainObj.insert("type", typeStr);
+    return mainObj;
+  };
+  bool isValid() const {
+    return threshold > 0 && threshold <= 100 && !name.isEmpty() && key.isValid();
   }
 
-  QJsonValue value          = jsonObj["threshold"];
-  int        thresholdToSet = value.isDouble() ? value.toInt() : throw std::exception("Json Rest methode error with field threshold");
-
-  value                    = jsonObj["methodeName"];
-  QString methodeNameToSet = value.isString() ? value.toString() : throw std::exception("Json Rest methode error with field methodeName");
-
-  value        = jsonObj["key"];
-  Key keyToSet = value.isObject() ? Key(value.toObject()) : throw std::exception("Json Rest methode error with field key");
-
-  value               = jsonObj["manaNeeded"];
-  int manaNeededToSet = value.isDouble() ? value.toInt() : throw std::exception("Json Rest methode error with field manaNeeded");
-
-  value       = jsonObj["cd"];
-  int cdToSet = value.isDouble() ? value.toInt() : throw std::exception("Json Rest methode error with field cd");
-
-  value            = jsonObj["cdGroup"];
-  int cdGroupToSet = value.isDouble() ? value.toInt() : throw std::exception("Json Rest methode error with field cdGroup");
-
-  value                = jsonObj["type"];
-  QString typeStrToSet = value.isString() ? value.toString() : throw std::exception("Json Rest methode error with field type");
-  Type    typeToSet    = (typeStrToSet == "potion") ? Type::POTION : Type::SPELL;
-
-  threshold  = thresholdToSet;
-  name       = methodeNameToSet;
-  key        = keyToSet;
-  manaNeeded = manaNeededToSet;
-  cd         = cdToSet;
-  cdGroup    = cdGroupToSet;
-  type       = typeToSet;
-}
-inline QJsonObject RestorationMethode::toJson() const {
-  QJsonObject mainObj;
-  mainObj.insert("threshold", threshold);
-  mainObj.insert("methodeName", name);
-  mainObj.insert("key", key.toJson());
-  mainObj.insert("manaNeeded", manaNeeded);
-  mainObj.insert("cd", cd);
-  mainObj.insert("cdGroup", cdGroup);
-  QString typeStr = isPotion() ? "potion" : "spell";
-  mainObj.insert("type", typeStr);
-  return mainObj;
+ private:
+  int     threshold  = 0;
+  Key     key        = Key();
+  QString name       = QString();
+  int     manaNeeded = 0, cd = 0, cdGroup = 0;
+  Type    type = Type::POTION;
 };
-inline bool RestorationMethode::isValid() const {
-  return threshold > 0 && threshold <= 100 && !name.isEmpty() && key.isValid();
-}
