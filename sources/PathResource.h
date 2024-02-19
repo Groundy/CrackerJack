@@ -1,18 +1,41 @@
 #pragma once
+#include <qdir.h>
 #include <qstring.h>
 class PathResource {
  public:
-  static QString getPathToProfileFolder() {
-    return "C:\\Moje\\pliki\\repos\\CrackerJackClient\\Profiles\\";
+  static QDir getProfileFolder() {
+    const QString dirName = "Profiles";
+
+    QDir mainDir = get_local_dir();
+    if (!mainDir.exists(dirName)) {
+      if (!mainDir.mkdir(dirName)) {
+        qWarning() << "Creating" << dirName << "directory failed.";
+        return mainDir.path();
+      }
+    }
+    mainDir.cd(dirName);
+    return mainDir;
   }
   static QString getPathToProfileFile(const QString profileName) {
-    return getPathToProfileFolder() + profileName + ".json";
+    return getProfileFolder().absoluteFilePath(profileName + ".json");
   }
-  static QString getPathToRouteFolder() {
-    return "C:\\Moje\\pliki\\repos\\CrackerJackClient\\Routes\\";
+
+  static QDir getRouteFolder() {
+    const QString dirName = "Routes";
+
+    QDir mainDir = get_local_dir();
+    if (!mainDir.exists(dirName)) {
+      if (!mainDir.mkdir(dirName)) {
+        qWarning() << "Creating" << dirName << "directory failed.";
+        return mainDir;
+      }
+    }
+    mainDir.cd(dirName);
+    return mainDir;
   }
+
   static QString getPathToRouteFile(const QString routeNameWithoutExtension) {
-    return QString("%1%2.json").arg(getPathToRouteFolder(), routeNameWithoutExtension);
+    return getRouteFolder().absoluteFilePath(routeNameWithoutExtension + ".json");
   }
 
   //jsons
@@ -32,6 +55,7 @@ class PathResource {
   static QString getPathToRunesFile() {
     return ":/jsons/runes.json";
   }
+
   //imgs
   static QString getPathToMiniMapSliderImg() {
     return ":/imgs/mapLayer";
@@ -55,4 +79,17 @@ class PathResource {
   }
 
  private:
+  static QDir get_local_dir() {
+    QDir tmpDir = QDir::temp();
+    tmpDir.cdUp();
+    const QString mainFolderName = "CrackerJack";  //TODO
+    if (!tmpDir.exists(mainFolderName)) {
+      if (!tmpDir.mkdir(mainFolderName)) {
+        qWarning() << "Creating main directory failed.";
+        return QDir::current();
+      }
+    }
+    tmpDir.cd(mainFolderName);
+    return tmpDir;
+  }
 };

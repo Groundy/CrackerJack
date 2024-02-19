@@ -66,20 +66,27 @@ bool JsonParser::readPotions(QList<Potion>& potions, Profession* prof, Potion::T
     potions.clear();
     QJsonObject obj;
     bool        openCorrectly = openJsonFile(obj, PathResource::getPathToPotionsJsonFile());
-    if (!openCorrectly) throw std::exception("Can't open items json file!");
-
-    if (!obj.contains("potions")) throw std::exception("No potions field in items json file!");
-
-    if (!obj["potions"].isArray()) throw std::exception("potions field in items json file is not array type!");
-
+    if (!openCorrectly) {
+      throw std::exception("Can't open items json file!");
+    }
+    if (!obj.contains("potions")) {
+      throw std::exception("No potions field in items json file!");
+    }
+    if (!obj["potions"].isArray()) {
+      throw std::exception("potions field in items json file is not array type!");
+    }
     QJsonArray arr = obj["potions"].toArray();
     for each (QJsonValue potionJsonVal in arr) {
       Potion potionToAdd(potionJsonVal.toObject());
       if (prof != NULL) {
-        if (!potionToAdd.isForProf(*prof)) continue;
+        if (!potionToAdd.isForProf(*prof)) {
+          continue;
+        }
       }
       if (filterType != NULL) {
-        if (!potionToAdd.isType(*filterType)) continue;
+        if (!potionToAdd.isType(*filterType)) {
+          continue;
+        }
       }
       potions.push_back(potionToAdd);
     }
@@ -108,8 +115,9 @@ bool JsonParser::readItemJson(QList<Item>& items) {
   if (items.size() == 0) {
     //Logger::logPotenialBug("No items in json file", "JsonParser", "readSpellsJson");
     return false;
-  } else
+  } else {
     return true;
+  }
 }
 bool JsonParser::getManaRestoreMethodes(QStringList potionNameToBeFound, QList<Potion>& potionToReturn) {
   /*
@@ -138,7 +146,9 @@ bool JsonParser::getManaRestoreMethodes(QStringList potionNameToBeFound, QList<P
 bool JsonParser::getItemsFromCategory(QList<Item>& itemsToRet, Item::TYPE_OF_ITEM type) {
   QList<Item> readItems, itemsTmp;
   bool        sucess = readItemJson(readItems);
-  if (!sucess) return false;
+  if (!sucess) {
+    return false;
+  }
 
   for each (Item var in readItems) {
     bool isProperCategory = type == var.type;
@@ -190,12 +200,13 @@ QMap<QString, int> JsonParser::readAvaibleKeys() {
   return keys;
 }
 QStringList JsonParser::readNamesOfAllSavedProfiles() {
-  QDir        profilesDir(PathResource::getPathToProfileFolder());
-  QStringList fillters = QStringList() << "*.json";
+  QDir        profilesDir = PathResource::getProfileFolder();
+  QStringList fillters    = QStringList() << "*.json";
   return profilesDir.entryList(fillters, QDir::Files);
 }
 void JsonParser::saveProfile(Profile* prof) {
-  saveJsonFile(PathResource::getPathToProfileFolder(), prof->getName(), prof->toJson());
+  const QString dirPath = PathResource::getProfileFolder().absolutePath();
+  saveJsonFile(dirPath, prof->getName(), prof->toJson());
 }
 Profile JsonParser::loadProfile(QString profileName) {
   const QString filePath = PathResource::getPathToProfileFile(profileName);
@@ -204,8 +215,8 @@ Profile JsonParser::loadProfile(QString profileName) {
   return Profile(profJsonObj);
 }
 void JsonParser::deleteProfileFile(QString profileName) {
-  QString profileFileName = profileName + ".json";
-  QDir(PathResource::getPathToProfileFolder()).remove(profileFileName);
+  QDir profilesDir = PathResource::getProfileFolder();
+  profilesDir.remove(profileName + ".json");
 };
 QStringList JsonParser::getNamesOManaPotsForProf(Profession profession) {
   QList<Potion> potions;

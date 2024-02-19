@@ -12,8 +12,9 @@ AutoHuntConfigurator::~AutoHuntConfigurator() {
 }
 
 void AutoHuntConfigurator::selectRoute() {
-  QString     pathToFile = Utilities::getFileByDialog("*.json", PathResource::getPathToRouteFolder());
-  QJsonObject obj;
+  const QString dirPath    = PathResource::getProfileFolder().absolutePath();
+  QString       pathToFile = Utilities::getFileByDialog("*.json", dirPath);
+  QJsonObject   obj;
   if (!JsonParser::openJsonFile(obj, pathToFile)) {
     return;
   }  // todo
