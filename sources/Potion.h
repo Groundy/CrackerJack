@@ -6,14 +6,69 @@
 class Potion {
  public:
   enum class TypeOfPotion { HEALTH, MANA };
-  Potion()  = default;
-  ~Potion() = default;
-  Potion(QJsonObject obj);
+  Potion(const QJsonObject& obj) {
+    QString field = "name";
+    if (!obj.contains(field) || !obj[field].isString() || obj[field].toString().isEmpty()) {
+      qWarning() << "Error in parsing potion obj, invalid field:" << field;
+      return;
+    }
+    this->name = obj["name"].toString();
+
+    field = "health";
+    if (!obj.contains(field) || !obj[field].isDouble()) {
+      qWarning() << "Error in parsing potion obj, invalid field:" << field;
+      return;
+    }
+    this->healthReg = obj[field].toInt();
+
+    field = "mana";
+    if (!obj.contains(field) || !obj[field].isDouble()) {
+      qWarning() << "Error in parsing potion obj, invalid field:" << field;
+      return;
+    }
+    this->manaReg = obj[field].toInt();
+
+    QVector<Profession> profsToSet;
+    field = "for_mage";
+    if (!obj.contains(field) || !obj[field].isBool()) {
+      qWarning() << "Error in parsing potion obj, invalid field:" << field;
+      return;
+    } else if (obj[field].toBool()) {
+      profsToSet.push_back(Profession::Type::MS);
+      profsToSet.push_back(Profession::Type::ED);
+    }
+
+    field = "for_RP";
+    if (!obj.contains(field) || !obj[field].isBool()) {
+      qWarning() << "Error in parsing potion obj, invalid field:" << field;
+      return;
+    } else if (obj[field].toBool()) {
+      profsToSet.push_back(Profession::Type::RP);
+    }
+
+    field = "for_EK";
+    if (!obj.contains(field) || !obj[field].isBool()) {
+      qWarning() << "Error in parsing potion obj, invalid field:" << field;
+      return;
+    } else if (obj[field].toBool()) {
+      profsToSet.push_back(Profession::Type::EK);
+    }
+
+    this->userProfessions = profsToSet;
+  };
 
   bool isForProf(const Profession& prof) const {
     return userProfessions.contains(prof);
   }
-  bool isType(const TypeOfPotion& type) const;
+  bool isType(const TypeOfPotion& type) const {
+    if (type == TypeOfPotion::HEALTH) {
+      return healthReg > 0;
+    } else if (type == TypeOfPotion::MANA) {
+      return manaReg > 0;
+    }
+    qDebug() << "Error Potion::isType";
+    return false;
+  }
   bool isHealing() const {
     return healthReg > 0;
   };
@@ -29,50 +84,3 @@ class Potion {
   QVector<Profession> userProfessions;
   QString             name;
 };
-
-inline Potion::Potion(QJsonObject obj) {
-  try {
-    if (!obj.contains("name") || !obj["name"].isString() || obj["name"].toString().isEmpty())
-      throw std::exception("Error in parsing potion obj, invalid name field!");
-    QString nameToSet = obj["name"].toString();
-
-    if (!obj.contains("health") || !obj["health"].isDouble()) throw std::exception("Error in parsing potion obj, invalid health field!");
-    int healthToSet = obj["health"].toInt();
-
-    if (!obj.contains("mana") || !obj["mana"].isDouble()) throw std::exception("Error in parsing potion obj, invalid mana field!");
-    int manaToSet = obj["mana"].toDouble();
-
-    QVector<Profession> profsToSet;
-
-    if (!obj.contains("for_mage") || !obj["for_mage"].isBool())
-      throw std::exception("Error in parsing potion obj, invalid for_mage field!");
-    if (obj["for_mage"].toBool()) {
-      profsToSet.push_back(Profession::Type::MS);
-      profsToSet.push_back(Profession::Type::ED);
-    }
-
-    if (!obj.contains("for_RP") || !obj["for_RP"].isBool()) throw std::exception("Error in parsing potion obj, invalid for_RP field!");
-    if (obj["for_RP"].toBool()) profsToSet.push_back(Profession::Type::RP);
-
-    if (!obj.contains("for_EK") || !obj["for_EK"].isBool()) throw std::exception("Error in parsing potion obj, invalid for_EK field!");
-    if (obj["for_EK"].toBool()) profsToSet.push_back(Profession::Type::EK);
-
-    this->name            = nameToSet;
-    this->healthReg       = healthToSet;
-    this->manaReg         = manaToSet;
-    this->userProfessions = profsToSet;
-  } catch (const std::exception& e) {
-    qDebug() << e.what();
-  }
-};
-inline bool Potion::isType(const TypeOfPotion& type) const {
-  if (type == TypeOfPotion::HEALTH)
-    return healthReg > 0;
-  else if (type == TypeOfPotion::MANA)
-    return manaReg > 0;
-  else {
-    QString msg = "Error Potion::isType";
-    qDebug() << msg;
-    return false;
-  }
-}

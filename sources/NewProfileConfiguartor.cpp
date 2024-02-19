@@ -424,7 +424,9 @@ void NewProfileConfiguartor::saveDataToProfile() {
   profToEdit->setRopeKey(Key(ui->ropeBox->currentText()));
 }
 void NewProfileConfiguartor::fillRestorationMethodesDetails(QVector<RestorationMethode>& restorationMethodes) {
-  if (restorationMethodes.size() == 0) return;
+  if (restorationMethodes.size() == 0) {
+    return;
+  }
 
   QList<Spell>  spells;
   QList<Potion> potions;
@@ -443,7 +445,9 @@ void NewProfileConfiguartor::fillRestorationMethodesDetails(QVector<RestorationM
         break;
       }
     }
-    if (alreadySet) continue;
+    if (alreadySet) {
+      continue;
+    }
 
     for each (auto potion in potions) {
       if (potion.getName() == name) {
@@ -452,6 +456,8 @@ void NewProfileConfiguartor::fillRestorationMethodesDetails(QVector<RestorationM
         break;
       }
     }
-    if (!alreadySet) throw std::exception("Cant get details for rest methode");
+    if (!alreadySet) {
+      qWarning() << "Cant get details for rest methode";
+    }
   }
 }

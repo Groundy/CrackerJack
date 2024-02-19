@@ -70,10 +70,11 @@ void SelectProfileWindow::refreshProfilesOnList() {
   for each (QString fileName in list) {
     bool tooShortName = fileName.size() < (EXTENSION_SIZE + 1);
     if (tooShortName) {
-      qWarning() << "Too short profile json file name";
+      QString msg = "Too short profile json file name";
+      qWarning() << msg;
       ui->listOfProfs->clear();
-      Utilities::showMessageBox_INFO("Too short profile json file name");
-      throw std::exception();
+      Utilities::showMessageBox_INFO(msg);
+      return;
     }
     QString profName = fileName.left(fileName.size() - EXTENSION_SIZE);
     ui->listOfProfs->addItem(profName);
