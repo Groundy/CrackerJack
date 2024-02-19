@@ -32,7 +32,7 @@ void ManaHealthStateAnalyzer::run() {
   }
 }
 
-ManaHealthStateAnalyzer::ValuesDoubles ManaHealthStateAnalyzer::toDoubles(ValuesInts currentValues) {
+ValuesDoubles ManaHealthStateAnalyzer::toDoubles(ValuesInts currentValues) {
   double healthPercentage;
   if (currentValues.isHealthOk())
     healthPercentage = 100.0 * currentValues.health / currentValues.maxHealth;
@@ -80,7 +80,7 @@ bool ManaHealthStateAnalyzer::populateHealthManaMaps(const Profile* profile) {
 
   return true;
 }
-ManaHealthStateAnalyzer::ValuesStrs ManaHealthStateAnalyzer::toStrsValues(FoundFlags foundFlags, ImageValues imgVals) {
+ValuesStrs ManaHealthStateAnalyzer::toStrsValues(FoundFlags foundFlags, ImageValues imgVals) {
   ValuesStrs strVals;
   if (foundFlags.health)
     strVals.health = imgEditor->imgWithStrToStr(imgVals.health).remove("\0");
@@ -114,7 +114,7 @@ ManaHealthStateAnalyzer::ValuesStrs ManaHealthStateAnalyzer::toStrsValues(FoundF
   return strVals;
 }
 
-ManaHealthStateAnalyzer::ValuesInts ManaHealthStateAnalyzer::toIntsValues(FoundFlags foundFlags, ValuesStrs valueStrs) {
+ValuesInts ManaHealthStateAnalyzer::toIntsValues(FoundFlags foundFlags, ValuesStrs valueStrs) {
   ValuesInts valuesInts;
   if (foundFlags.health) {
     getValuesFromStringRegularCase(valueStrs.health, valuesInts.health, valuesInts.maxHealth);
@@ -130,7 +130,7 @@ ManaHealthStateAnalyzer::ValuesInts ManaHealthStateAnalyzer::toIntsValues(FoundF
   }
   return valuesInts;
 };
-ManaHealthStateAnalyzer::FoundFlags ManaHealthStateAnalyzer::getFoundFlags() {
+FoundFlags ManaHealthStateAnalyzer::getFoundFlags() {
   FoundFlags flags;
   flags.health   = !var->getVitalitty().getHealthArea().isEmpty();
   flags.mana     = !var->getVitalitty().getManaArea().isEmpty();
@@ -223,7 +223,7 @@ QVector<RestorationMethode> ManaHealthStateAnalyzer::findRestorationToUse(double
     return toRet;
   }
 }
-ManaHealthStateAnalyzer::ValuesDoubles ManaHealthStateAnalyzer::getCurrentPercentage() {
+ValuesDoubles ManaHealthStateAnalyzer::getCurrentPercentage() {
   if (!var->getSettings().getRestoringState()) return ValuesDoubles();
   ImageValues imgs = getImages();
   if (!imgs.isValid()) return ValuesDoubles();
@@ -250,10 +250,10 @@ void ManaHealthStateAnalyzer::writeDataToVariableClass(ValuesDoubles values) {
 void ManaHealthStateAnalyzer::writeDataToVariableClass(ValuesInts values) {
   var->getVitalitty().setCurrentRawValues(values.health, values.mana, values.shield);
 }
-ManaHealthStateAnalyzer::ImageValues ManaHealthStateAnalyzer::getImages() {
+ImageValues ManaHealthStateAnalyzer::getImages() {
   ImageValues toRet;
   bool        clearImgs = var->getSettings().getClearVitalityImgs();
-  ;
+
   var->getVitalitty().getImageHealth(toRet.health, clearImgs);
   var->getVitalitty().getImageMana(toRet.mana, clearImgs);
   var->getVitalitty().getImageMS(toRet.manaShield, clearImgs);
@@ -280,3 +280,142 @@ bool ManaHealthStateAnalyzer::restMethodeCanBeUsed(const RestorationMethode& res
       break;
   }
 }
+int ManaHealthStateAnalyzer::calcTimeBetweenManaPots(int currentManaPercentage) {
+  return 1200 * currentManaPercentage / 100.0;
+}
+void ManaHealthStateAnalyzer::handleStates() {
+  Settings& settings = var->getSettings();
+  if (!settings.getKeepHasted()) {
+    return;
+  }
+  auto states = var->getEquipment().getCurrentStates(true);
+  if (states.isEmpty()) {
+    return;
+  }
+  handleHaste(settings.getKeepHasted(), states);
+  handleUpgrade(settings.getKeepUpraded(), states);
+}
+void ManaHealthStateAnalyzer::handleHaste(bool keepHasting, QVector<Equipment::STATES>& states) {
+  if (!keepHasting) {
+    return;
+  }
+  if (states.contains(Equipment::HASTE)) {
+    return;
+  }
+  qint64 currentTime = now();
+  bool   canHaste    = currentTime >= lastTimeHasted + 1333;
+  if (!canHaste) {
+    return;
+  }
+  gameConnector->sendKeyStrokeToProcess(VK_F12);  //todo
+  var->log("Hasted!", false, true, true);
+  lastTimeHasted = currentTime;
+}
+void ManaHealthStateAnalyzer::handleUpgrade(bool keepUpgraded, QVector<Equipment::STATES>& states) {
+  if (!keepUpgraded) {
+    return;
+  }
+  if (states.contains(Equipment::UPGRADED)) {
+    return;
+  }
+  qint64 currentTime = now();
+  bool   canUpgrade  = currentTime >= lastTimeUpgraded + 20000;
+  if (!canUpgrade) {
+    return;
+  }
+  gameConnector->sendKeyStrokeToProcess(VK_F11);  //todo
+  var->log("Upgraded!", false, true, true);
+  lastTimeUpgraded = currentTime;
+}
+qint64 ManaHealthStateAnalyzer::now() {
+  return QDateTime::currentMSecsSinceEpoch();
+}
+/*
+bool ManaHealthStateAnalyzer::populareMapsWithBottomBarsLetters(QMap<QString, int>& lightMap, QMap<QString, int>& darkMap) {
+  try {
+    QString     path = PathResource::getPathToFileWithBottomsBarDigitsCodes();
+    QJsonObject obj;
+    bool        readCorrectly = JsonParser::openJsonFile(obj, path);
+    if (!readCorrectly) throw std::exception("Error, can't find bottomBarsDigits.json file");
+
+    QJsonValue value = obj["darkNumbers"];
+    if (value.isUndefined() || !value.isArray()) throw std::exception("No darkNumbers field in bottomBar json file!");
+    QJsonArray array = value.toArray();
+    for each (auto singleValue in array) {
+      QJsonObject singleObject = singleValue.toObject();
+      int         intVal       = singleObject["name"].toString().toInt();
+      QString     pixValues    = singleObject["value"].toString();
+      darkMap.insert(pixValues, intVal);
+    }
+
+    value = obj["lightNumbers"];
+    if (value.isUndefined() || !value.isArray()) throw std::exception("No lightNumbers field in bottomBar json file!");
+    array = value.toArray();
+    for each (auto singleValue in array) {
+      QJsonObject singleObject = singleValue.toObject();
+      int         intVal       = singleObject["name"].toInt();
+      QString     pixValues    = singleObject["value"].toString();
+      lightMap.insert(pixValues, intVal);
+    }
+    bool toRet = lightMap.size() == 10 && darkMap.size() == 10;
+    return toRet;
+  } catch (const std::exception& e) {
+    var->log(e.what(), true, false, false);
+    return false;
+  }
+};
+*/
+
+/*
+int ManaHealthStateAnalyzer::getNumberFromBottomBar(QImage& imgToShearchWithin) {
+  QMap<QString, int> lightMap, darkMap;
+  Utilities::getMapWithNumbersFromBottomBar(lightMap, darkMap);
+  QStringList lightCodes = lightMap.keys();
+  QStringList darkCodes  = darkMap.keys();
+
+  QMap<int, int> anotherMap;  // <positionX, value>
+
+  for (size_t i = 0; i < lightCodes.size(); i++) {
+    QList<QImage*> listWithLightAndDarkLetterImg;
+    QImage         darkLetter  = ImgEditor::getImageFromAdvancedCode(darkCodes[i]);
+    QImage         lightLetter = ImgEditor::getImageFromAdvancedCode(lightCodes[i]);
+    listWithLightAndDarkLetterImg.push_back(&darkLetter);
+    listWithLightAndDarkLetterImg.push_back(&lightLetter);
+
+    int           digit                = lightMap[lightCodes[i]];
+    QList<QPoint> listOfStartingPoints = ImgEditor::findStartPositionInImg_mulitpeImgs(
+        listWithLightAndDarkLetterImg, imgToShearchWithin);  // (listWithLightAndDarkLetterImg, imgToShearchWithin);
+    for each (QPoint var in listOfStartingPoints) anotherMap.insert(var.x(), digit);
+  }
+
+  QString strToRe;
+  for each (auto key in anotherMap.keys()) strToRe.push_back(QString::number(anotherMap[key]));
+
+  return strToRe.toInt();
+}
+*/
+
+/*
+void getAmountsOfPotions() {
+  QMap<QString, QRect> map_copy = var->potionName_rectPosOnScreen_map;
+  QList<int>           amountOfPots;
+  QStringList          namesOfPots;
+  QImage               wholeImg;
+  var->getCopyOfCurrentFullImg(wholeImg);
+  for each (QString nameOfPot in map_copy.keys()) {
+    QRect rect = map_copy[nameOfPot];
+    if (rect.isEmpty()) continue;
+    QImage img    = wholeImg.copy(rect);
+    int    amount = ImgEditor::getNumberFromBottomBar(img);
+    amountOfPots.push_back(amount);
+    namesOfPots.push_back(nameOfPot);
+  }
+
+  QStringList infoToSendToMainThread;
+  for (size_t i = 0; i < namesOfPots.size(); i++) {
+    QString toAdd = namesOfPots[i] + ": " + QString::number(amountOfPots[i]);
+    infoToSendToMainThread.push_back(toAdd);
+  }
+  sendInfoAboutPotAmountsToGUI(infoToSendToMainThread);
+}
+*/
