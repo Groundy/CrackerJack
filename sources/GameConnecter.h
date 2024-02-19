@@ -10,6 +10,7 @@ class GameConnecter {
  public:
   GameConnecter(QSharedPointer<VariablesClass> var, Profile* profile);
   ~GameConnecter();
+
   void clickLeft(QPoint pt);
   void clickRight(QPoint pt);
   void sendStringToGame(QString str);
@@ -19,31 +20,12 @@ class GameConnecter {
   void autoLootAroundPlayer();
 
  private:
+  void sendCharToGame(const QChar charToSend, const HWND& gameThreadHandler);
+  void clickRightWithShift(QVector<QPoint> pts, int SLEEP_TIME_BETWEEN_LOOT_CLICK);
+  void setShiftPressed(const bool pressed);
+
   QMutex                         senderMutex;
   Profile::AutoLoot              autoLootSetting;
   QSharedPointer<VariablesClass> var;
   bool                           playingOnSmallMonitor = false;
-  void                           sendCharToGame(const QChar charToSend, const HWND& gameThreadHandler);
-  void                           clickRightWithShift(QVector<QPoint> pts, int SLEEP_TIME_BETWEEN_LOOT_CLICK);
-  void                           pressShift() {
-    INPUT ip;
-    ip.type           = INPUT_KEYBOARD;  // Set up a generic keyboard event.
-    ip.ki.wScan       = 0;               // hardware scan code for key
-    ip.ki.time        = 0;
-    ip.ki.dwExtraInfo = 0;
-
-    ip.ki.wVk     = VK_SHIFT;  // virtual-key code for the "a" key
-    ip.ki.dwFlags = 0;         // 0 for key press
-    SendInput(1, &ip, sizeof(INPUT));
-  }
-  void releaseShift() {
-    INPUT ip;
-    ip.type           = INPUT_KEYBOARD;
-    ip.ki.wScan       = 0;
-    ip.ki.time        = 0;
-    ip.ki.dwExtraInfo = 0;
-    ip.ki.wVk         = VK_SHIFT;
-    ip.ki.dwFlags     = KEYEVENTF_KEYUP;
-    SendInput(1, &ip, sizeof(INPUT));
-  }
 };

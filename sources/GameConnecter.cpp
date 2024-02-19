@@ -5,11 +5,13 @@ GameConnecter::GameConnecter(QSharedPointer<VariablesClass> var, Profile* prof) 
   playingOnSmallMonitor = var->getSettings().getPlayingOnSmallMonitor();
 }
 GameConnecter::~GameConnecter() {
-  releaseShift();
+  setShiftPressed(false);
 }
 
 void GameConnecter::clickLeft(QPoint pt) {
-  if (playingOnSmallMonitor) pt = QPoint(pt.x() / 0.8, pt.y() / 0.8);
+  if (playingOnSmallMonitor) {
+    pt = QPoint(pt.x() / 0.8, pt.y() / 0.8);
+  }
   HWND   gameThreadHandler = var->getGameProcess().getHandlerToGameThread();
   LPARAM lParam            = (pt.y() << 16) + pt.x();
   senderMutex.lock();
@@ -30,10 +32,12 @@ void GameConnecter::clickRightWithShift(QVector<QPoint> pts, int SLEEP_TIME_BETW
   HWND gameThreadHandler = var->getGameProcess().getHandlerToGameThread();
 
   senderMutex.lock();
-  pressShift();
+  setShiftPressed(true);
   SLEEP_TIME_BETWEEN_LOOT_CLICK /= 3;
   for each (auto pt in pts) {
-    if (playingOnSmallMonitor) pt = QPoint(pt.x() / 0.8, pt.y() / 0.8);
+    if (playingOnSmallMonitor) {
+      pt = QPoint(pt.x() / 0.8, pt.y() / 0.8);
+    }
     LPARAM lParam = (pt.y() << 16) + pt.x();
     Sleep(SLEEP_TIME_BETWEEN_LOOT_CLICK);
     PostMessage(gameThreadHandler, WM_RBUTTONDOWN, 0, lParam);
@@ -41,7 +45,7 @@ void GameConnecter::clickRightWithShift(QVector<QPoint> pts, int SLEEP_TIME_BETW
     PostMessage(gameThreadHandler, WM_RBUTTONUP, 0, lParam);
     Sleep(SLEEP_TIME_BETWEEN_LOOT_CLICK);
   }
-  releaseShift();
+  setShiftPressed(false);
   senderMutex.unlock();
 }
 bool GameConnecter::sendKeyStrokeToProcess(Key key, int sleepTime) {
@@ -116,14 +120,14 @@ void GameConnecter::autoLootAroundPlayer() {
   const int SLEEP_TIME_BETWEEN_LOOT_CLICK = 111;
   switch (autoLootSetting) {
     case Profile::RIGHT_MOUSE_BUTTON:
-      for each (auto pt in potinsToClick) {
+      for each (const QPoint& pt in potinsToClick) {
         clickRight(pt);
         Sleep(SLEEP_TIME_BETWEEN_LOOT_CLICK);
       }
       break;
     case Profile::SHIFT_RIGHT:
       clickRightWithShift(potinsToClick, SLEEP_TIME_BETWEEN_LOOT_CLICK);
-      this->releaseShift();
+      setShiftPressed(false);
       break;
     case Profile::LEFT_MOUSE_BUTTON:
       for each (auto pt in potinsToClick) {
@@ -136,3 +140,13 @@ void GameConnecter::autoLootAroundPlayer() {
   }
   var->log("auto loot.", false, true, true);
 }
+void GameConnecter::setShiftPressed(const bool pressed) {
+  INPUT ip{};
+  ip.type           = INPUT_KEYBOARD;  // Set up a generic keyboard event.
+  ip.ki.wScan       = 0;               // hardware scan code for key
+  ip.ki.time        = 0;
+  ip.ki.dwExtraInfo = 0;
+  ip.ki.wVk         = VK_SHIFT;  // virtual-key code for the "a" key
+  ip.ki.dwFlags     = pressed ? 0 : KEYEVENTF_KEYUP;
+  SendInput(1, &ip, sizeof(INPUT));
+};
