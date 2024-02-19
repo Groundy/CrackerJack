@@ -19,36 +19,51 @@ bool JsonParser::openJsonFile(QJsonObject& jsonDoc, QString pathToFile) {
   return true;
 }
 bool JsonParser::readSpellsJson(QList<Spell>& spells, Spell::SpellType* type, Profession* profession) {
-  try {
-    QJsonObject obj;
-    bool        openCorrectly = openJsonFile(obj, PathResource::getPathToSpellJsonFile());
-    if (!openCorrectly) throw std::exception("Can't read json file with spells");
-
-    if (!obj.contains("spells")) throw std::exception("No spells field in json file with spells");
-
-    if (!obj["spells"].isArray()) throw std::exception("spell field in json file is not an array!");
-
-    QJsonArray arr = obj["spells"].toArray();
-    if (arr.isEmpty()) throw std::exception("spell array in json file is empty!");
-
-    for (size_t i = 0; i < arr.size(); i++) {
-      QJsonObject singleSpellJsonObj = arr.at(i).toObject();
-
-      Spell toAdd(singleSpellJsonObj);
-      if (profession != NULL) {  //filtr by prof
-        if (!toAdd.isForProf(*profession)) continue;
-      }
-      if (type != NULL) {  //filtr by type
-        if (!toAdd.isSpellType(*type)) continue;
-      }
-      spells.push_back(toAdd);
-    }
-    return true;
-  } catch (const std::exception& e) {
-    qDebug() << e.what();
-    Utilities::showMessageBox_INFO(e.what());
+  QJsonObject obj;
+  bool        openCorrectly = openJsonFile(obj, PathResource::getPathToSpellJsonFile());
+  if (!openCorrectly) {
+    QString msg = "Can't read json file with spells";
+    qWarning() << msg;
+    Utilities::showMessageBox_INFO(msg);
     return false;
   }
+  if (!obj.contains("spells")) {
+    QString msg = "No spells field in json file with spells";
+    qWarning() << msg;
+    Utilities::showMessageBox_INFO(msg);
+    return false;
+  }
+  if (!obj["spells"].isArray()) {
+    QString msg = "spell field in json file is not an array";
+    qWarning() << msg;
+    Utilities::showMessageBox_INFO(msg);
+    return false;
+  }
+  QJsonArray arr = obj["spells"].toArray();
+  if (arr.isEmpty()) {
+    QString msg = "spell array in json file is empty!";
+    qWarning() << msg;
+    Utilities::showMessageBox_INFO(msg);
+    return false;
+  }
+
+  for (size_t i = 0; i < arr.size(); i++) {
+    QJsonObject singleSpellJsonObj = arr.at(i).toObject();
+
+    Spell toAdd(singleSpellJsonObj);
+    if (profession != NULL) {  //filtr by prof
+      if (!toAdd.isForProf(*profession)) {
+        continue;
+      }
+    }
+    if (type != NULL) {  //filtr by type
+      if (!toAdd.isSpellType(*type)) {
+        continue;
+      }
+    }
+    spells.push_back(toAdd);
+  }
+  return true;
 }
 QStringList JsonParser::readRunesNames() {
   QString     path = PathResource::getPathToRunesFile();
