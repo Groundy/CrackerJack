@@ -19,26 +19,33 @@ NewProfileConfiguartor::~NewProfileConfiguartor() {
 
 //correctnessCheck
 bool NewProfileConfiguartor::checkNameGroup() {
-  try {
-    QString nameOfProf  = ui->nameField->text();
-    bool    wrongLength = nameOfProf.size() > 50 || nameOfProf.size() < 3;
-    if (wrongLength) throw std::exception("Profile name must be between 3 and 50 characters long");
-
-    bool nameConsistForbiddenChars = nameOfProf.contains(QChar::LineFeed) || nameOfProf.contains(QChar::CarriageReturn);
-
-    if (nameConsistForbiddenChars)
-      throw std::exception("Profile name can't have any special characters, please use only letters, numbers or spaces.");
-
-    for each (auto character in nameOfProf) {
-      bool allowed = character.isLetterOrNumber() || character.isSpace();
-      if (!allowed) throw std::exception("Profile name can't have any special characters, please use only letters, numbers or spaces.");
-    }
-    return true;
-  } catch (const std::exception& e) {
-    qDebug() << e.what();
-    Utilities::showMessageBox_INFO(e.what());
+  const QString nameOfProf  = ui->nameField->text();
+  const bool    wrongLength = nameOfProf.size() > 50 || nameOfProf.size() < 3;
+  if (wrongLength) {
+    const QString msg = "Profile name must be between 3 and 50 characters long";
+    qDebug() << msg;
+    Utilities::showMessageBox_INFO(msg);
     return false;
   }
+
+  const bool nameConsistForbiddenChars = nameOfProf.contains(QChar::LineFeed) || nameOfProf.contains(QChar::CarriageReturn);
+  if (nameConsistForbiddenChars) {
+    const QString msg = "Profile name can't have any special characters, please use only letters, numbers or spaces.";
+    qDebug() << msg;
+    Utilities::showMessageBox_INFO(msg);
+    return false;
+  }
+
+  for each (auto character in nameOfProf) {
+    bool allowed = character.isLetterOrNumber() || character.isSpace();
+    if (!allowed) {
+      const QString msg = "Profile name can't have any special characters, please use only letters, numbers or spaces.";
+      qDebug() << msg;
+      Utilities::showMessageBox_INFO(msg);
+      return false;
+    }
+  }
+  return true;
 }
 bool NewProfileConfiguartor::checkControlsGroup() {
   //change //TODO
