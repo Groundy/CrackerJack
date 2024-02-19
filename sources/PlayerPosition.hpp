@@ -4,30 +4,24 @@
 #include "Point3D.h"
 class PlayerPosition {
  public:
-  PlayerPosition(){};
-  ~PlayerPosition(){};
   void setPlayerPos(const QPoint xyToSet, int floorToSet) {
-    positionMutex.lock();
-    xy = xyToSet;
-    positionMutex.unlock();
+    QMutexLocker locker(&positionMutex);
+    xy    = xyToSet;
     floor = floorToSet;
   }
   void setPlayerPos(const Point3D toSet) {
-    positionMutex.lock();
-    xy = QPoint(toSet.getX(), toSet.getY());
-    positionMutex.unlock();
+    QMutexLocker locker(&positionMutex);
+    xy    = QPoint(toSet.getX(), toSet.getY());
     floor = toSet.getFloor();
   }
   void setPlayerPos(const int x, const int y, const int f) {
-    positionMutex.lock();
-    xy = QPoint(x, y);
-    positionMutex.unlock();
+    QMutexLocker locker(&positionMutex);
+    xy    = QPoint(x, y);
     floor = f;
   }
   Point3D getPlayerPos() {
-    positionMutex.lock();
-    Point3D toRet = Point3D(xy.x(), xy.y(), floor);
-    positionMutex.unlock();
+    QMutexLocker locker(&positionMutex);
+    Point3D      toRet = Point3D(xy.x(), xy.y(), floor);
     return toRet;
   }
   void clear() {
@@ -38,9 +32,8 @@ class PlayerPosition {
     return floor;
   }
   QPoint getXY() {
-    positionMutex.lock();
-    QPoint toRet = xy;
-    positionMutex.unlock();
+    QMutexLocker locker(&positionMutex);
+    QPoint       toRet = xy;
     return xy;
   }
 

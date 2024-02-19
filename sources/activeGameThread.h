@@ -1,12 +1,11 @@
 #pragma once
+#include <QThread.h>
 #include <Windows.h>
 #include <atlstr.h>
 #include <comdef.h>
 #include <psapi.h>
 #include <qdebug.h>
 #include <tlhelp32.h>
-
-#include <QThread>
 
 #include "VariablesClass.hpp"
 class ActiveGameThread : public QThread {
@@ -28,7 +27,7 @@ class ActiveGameThread : public QThread {
   QSharedPointer<VariablesClass> var;
   HWND                           previousGameHandler = 0;
 
-  uint                        getGamePid(QMap<QString, unsigned int>& processes);
+  uint                        getGamePid(const QMap<QString, unsigned int>& processes);
   QString                     getGameWindowTitile();
   int                         checkGameState();
   QMap<QString, unsigned int> getListOfRunningProcess();

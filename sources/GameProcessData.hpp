@@ -6,22 +6,22 @@ class GameProcessData {
  public:
   GameProcessData()  = default;
   ~GameProcessData() = default;
-  uint getPid() {
+  uint getPid() const {
     return pid;
   }
-  void setPid(uint newPid) {
+  void setPid(const uint newPid) {
     pid = newPid;
   }
-  QString getNameOfGameWindow() {
+  QString getNameOfGameWindow() const {
     return nameOfGameWindow;
   }
-  void setNameOfGameWindow(QString newNameOfGameWindow) {
+  void setNameOfGameWindow(const QString& newNameOfGameWindow) {
     nameOfGameWindow = newNameOfGameWindow;
   }
   HWND getHandlerToGameThread() {
     return handlerToGameThread;
   }
-  void setHandlerToGameThread(HWND newHandlerToGameThread) {
+  void setHandlerToGameThread(const HWND newHandlerToGameThread) {
     handlerToGameThread = newHandlerToGameThread;
   }
 

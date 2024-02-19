@@ -46,7 +46,7 @@ QString ActiveGameThread::getGameWindowTitile() {
   }
   return QString();
 }
-uint ActiveGameThread::getGamePid(QMap<QString, unsigned int>& processes) {
+uint ActiveGameThread::getGamePid(const QMap<QString, unsigned int>& processes) {
   auto iteratorToProcess = processes.find(GAME_PROCESS_NAME);
   if (iteratorToProcess == processes.end()) {
     qDebug() << "Can't find Game on running processes list!";
