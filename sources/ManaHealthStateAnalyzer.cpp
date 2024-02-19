@@ -54,71 +54,80 @@ ManaHealthStateAnalyzer::ValuesDoubles ManaHealthStateAnalyzer::toDoubles(Values
   return toRet;
 }
 bool ManaHealthStateAnalyzer::populateHealthManaMaps(const Profile* profile) {
-  try {
-    auto         healthRestorationsMethode = profile->getRestMethodesHealth();
-    QVector<int> healthThresholds;
-    for each (auto var in healthRestorationsMethode) healthThresholds.push_back(var.getThreshold());
-    if (healthThresholds.size() != healthRestorationsMethode.size())
-      throw std::exception("wrong sizes of health restoration methodes passed to ManaHealthAnalyzer!");
-    for (size_t i = 0; i < healthThresholds.size(); i++) healthMap.insert(healthThresholds[i], healthRestorationsMethode[i]);
-
-    auto         manaRestorationsMethode = profile->getRestMethodesMana();
-    QVector<int> manaThresholds;
-    for each (auto var in manaRestorationsMethode) manaThresholds.push_back(var.getThreshold());
-    if (manaThresholds.size() != manaRestorationsMethode.size())
-      throw std::exception("wrong sizes of health restoration methodes passed to ManaHealthAnalyzer!");
-    for (size_t i = 0; i < manaThresholds.size(); i++) manaMap.insert(manaThresholds[i], manaRestorationsMethode[i]);
-
-    return true;
-  } catch (const std::exception& e) {
-    qDebug() << e.what();
+  auto         healthRestorationsMethode = profile->getRestMethodesHealth();
+  QVector<int> healthThresholds;
+  for each (auto var in healthRestorationsMethode) healthThresholds.push_back(var.getThreshold());
+  if (healthThresholds.size() != healthRestorationsMethode.size()) {
+    qWarning() << "wrong sizes of health restoration methodes passed to ManaHealthAnalyzer!";
     return false;
   }
+  for (size_t i = 0; i < healthThresholds.size(); i++) {
+    healthMap.insert(healthThresholds[i], healthRestorationsMethode[i]);
+  }
+
+  auto         manaRestorationsMethode = profile->getRestMethodesMana();
+  QVector<int> manaThresholds;
+  for each (auto var in manaRestorationsMethode) {
+    manaThresholds.push_back(var.getThreshold());
+  }
+  if (manaThresholds.size() != manaRestorationsMethode.size()) {
+    qWarning() << "wrong sizes of health restoration methodes passed to ManaHealthAnalyzer!";
+    return false;
+  }
+  for (size_t i = 0; i < manaThresholds.size(); i++) {
+    manaMap.insert(manaThresholds[i], manaRestorationsMethode[i]);
+  }
+
+  return true;
 }
 ManaHealthStateAnalyzer::ValuesStrs ManaHealthStateAnalyzer::toStrsValues(FoundFlags foundFlags, ImageValues imgVals) {
-  try {
-    ValuesStrs strVals;
-    if (foundFlags.health)
-      strVals.health = imgEditor->imgWithStrToStr(imgVals.health).remove("\0");
-    else
-      strVals.health = QString();
+  ValuesStrs strVals;
+  if (foundFlags.health)
+    strVals.health = imgEditor->imgWithStrToStr(imgVals.health).remove("\0");
+  else
+    strVals.health = QString();
 
-    if (foundFlags.mana)
-      strVals.mana = imgEditor->imgWithStrToStr(imgVals.mana).remove("\0");
-    else
-      strVals.mana = QString();
+  if (foundFlags.mana)
+    strVals.mana = imgEditor->imgWithStrToStr(imgVals.mana).remove("\0");
+  else
+    strVals.mana = QString();
 
-    if (foundFlags.shield)
-      strVals.manaShield = imgEditor->imgWithStrToStr(imgVals.manaShield).remove("\0");
-    else
-      strVals.manaShield = QString();
-
-    if (foundFlags.combined)
-      strVals.combined = imgEditor->imgWithStrToStr(imgVals.combined).remove("\0");
-    else
-      strVals.combined = QString();
-
-    const int MIN_LENGTH_FOR_CORR_STR = 3;
-    if (strVals.health.length() < MIN_LENGTH_FOR_CORR_STR) throw std::exception("Error in converting ims with health bar to str form");
-    if (strVals.mana.length() < MIN_LENGTH_FOR_CORR_STR && strVals.combined.length() < MIN_LENGTH_FOR_CORR_STR)
-      throw std::exception("Error in converting ims with mana bar to str form");
-
-    return strVals;
-  } catch (const std::exception& e) {
-    qDebug() << e.what();
-    return ValuesStrs();
-  }
-}
-ManaHealthStateAnalyzer::ValuesInts ManaHealthStateAnalyzer::toIntsValues(FoundFlags foundFlags, ValuesStrs valueStrs) {
-  ValuesInts valuesInts;
-  if (foundFlags.health) getValuesFromStringRegularCase(valueStrs.health, valuesInts.health, valuesInts.maxHealth);
+  if (foundFlags.shield)
+    strVals.manaShield = imgEditor->imgWithStrToStr(imgVals.manaShield).remove("\0");
+  else
+    strVals.manaShield = QString();
 
   if (foundFlags.combined)
+    strVals.combined = imgEditor->imgWithStrToStr(imgVals.combined).remove("\0");
+  else
+    strVals.combined = QString();
+
+  constexpr int MIN_LENGTH_FOR_CORR_STR = 3;
+  if (strVals.health.length() < MIN_LENGTH_FOR_CORR_STR) {
+    qWarning() << "Error in converting ims with health bar to str form";
+    return ValuesStrs();
+  }
+  if (strVals.mana.length() < MIN_LENGTH_FOR_CORR_STR && strVals.combined.length() < MIN_LENGTH_FOR_CORR_STR) {
+    qWarning() << "Error in converting ims with mana bar to str form";
+    return ValuesStrs();
+  }
+  return strVals;
+}
+
+ManaHealthStateAnalyzer::ValuesInts ManaHealthStateAnalyzer::toIntsValues(FoundFlags foundFlags, ValuesStrs valueStrs) {
+  ValuesInts valuesInts;
+  if (foundFlags.health) {
+    getValuesFromStringRegularCase(valueStrs.health, valuesInts.health, valuesInts.maxHealth);
+  }
+  if (foundFlags.combined) {
     getValuesFromStringOfCombinedBox(valueStrs.combined, valuesInts.mana, valuesInts.maxMana, valuesInts.shield, valuesInts.maxShield);
-
-  if (foundFlags.shield) getValuesFromStringRegularCase(valueStrs.manaShield, valuesInts.shield, valuesInts.maxShield);
-
-  if (foundFlags.mana) getValuesFromStringRegularCase(valueStrs.mana, valuesInts.mana, valuesInts.maxMana);
+  }
+  if (foundFlags.shield) {
+    getValuesFromStringRegularCase(valueStrs.manaShield, valuesInts.shield, valuesInts.maxShield);
+  }
+  if (foundFlags.mana) {
+    getValuesFromStringRegularCase(valueStrs.mana, valuesInts.mana, valuesInts.maxMana);
+  }
   return valuesInts;
 };
 ManaHealthStateAnalyzer::FoundFlags ManaHealthStateAnalyzer::getFoundFlags() {

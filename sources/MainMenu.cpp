@@ -50,29 +50,33 @@ void MainMenu::threadStarter() {
   clickDetector->start();
 }
 void MainMenu::signalSlotConnector() {
-  try {
-    QObject*    sigSender = healthManaStateAnalyzer;
-    QObject*    slotRec   = this;
-    const char* sig       = SIGNAL(sendValueToMainThread(double, double, double));
-    const char* slot      = SLOT(changedValueOfCharHealthOrMana(double, double, double));
-    bool        connected = connect(sigSender, sig, slotRec, slot, Qt::UniqueConnection);
-    if (!connected) throw std::exception("to do!");
+  QObject*    sigSender = healthManaStateAnalyzer;
+  QObject*    slotRec   = this;
+  const char* sig       = SIGNAL(sendValueToMainThread(double, double, double));
+  const char* slot      = SLOT(changedValueOfCharHealthOrMana(double, double, double));
+  bool        connected = connect(sigSender, sig, slotRec, slot, Qt::UniqueConnection);
+  if (!connected) {
+    qCritical() << "Connection failed.";
+    exit(0);
+  }
 
-    sigSender = &this->var->getLogger();
-    slotRec   = this;
-    sig       = SIGNAL(sendMsgToUserConsol(QStringList));
-    slot      = SLOT(printToUserConsol(QStringList));
-    connected = connect(sigSender, sig, slotRec, slot, Qt::UniqueConnection);
-    if (!connected) throw std::exception("to do!");
+  sigSender = &this->var->getLogger();
+  slotRec   = this;
+  sig       = SIGNAL(sendMsgToUserConsol(QStringList));
+  slot      = SLOT(printToUserConsol(QStringList));
+  connected = connect(sigSender, sig, slotRec, slot, Qt::UniqueConnection);
+  if (!connected) {
+    qCritical() << "Connection failed.";
+    exit(0);
+  }
 
-    sigSender = &this->var->getLogger();
-    slotRec   = this;
-    sig       = SIGNAL(sendMsgToUserConsolRed(QString));
-    slot      = SLOT(printToUserConsolRed(QString));
-    connected = connect(sigSender, sig, slotRec, slot, Qt::UniqueConnection);
-    if (!connected) throw std::exception("to do!");
-  } catch (const std::exception& e) {
-    //todo
+  sigSender = &this->var->getLogger();
+  slotRec   = this;
+  sig       = SIGNAL(sendMsgToUserConsolRed(QString));
+  slot      = SLOT(printToUserConsolRed(QString));
+  connected = connect(sigSender, sig, slotRec, slot, Qt::UniqueConnection);
+  if (!connected) {
+    qCritical() << "Connection failed.";
     exit(0);
   }
 }
