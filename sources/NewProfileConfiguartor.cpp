@@ -49,60 +49,92 @@ bool NewProfileConfiguartor::checkNameGroup() {
 }
 bool NewProfileConfiguartor::checkControlsGroup() {
   //change //TODO
-  try {
-    int  indexOfControlBox = ui->controlsBox->currentIndex();
-    bool controlsWrong     = indexOfControlBox < 0 || indexOfControlBox > ui->controlsBox->count() - 1 || indexOfControlBox < 0;
-    if (controlsWrong) throw std::exception("Something is wrong with selected controls");
 
-    int  indexOfAutoLootlBox = ui->autoLootBox->currentIndex();
-    bool autoLootWrongs      = indexOfControlBox < 0 || indexOfAutoLootlBox > ui->autoLootBox->count() - 1 || indexOfAutoLootlBox < 0;
-    if (autoLootWrongs) throw std::exception("Something is wrong with selected auto loot key");
-
-    return true;
-  } catch (const std::exception& e) {
-    qDebug() << e.what();
-    Utilities::showMessageBox_INFO(e.what());
+  int  indexOfControlBox = ui->controlsBox->currentIndex();
+  bool controlsWrong     = indexOfControlBox < 0 || indexOfControlBox > ui->controlsBox->count() - 1 || indexOfControlBox < 0;
+  if (controlsWrong) {
+    QString msg = "Something is wrong with selected controls";
+    qWarning() << msg;
+    Utilities::showMessageBox_INFO(msg);
     return false;
   }
+  int  indexOfAutoLootlBox = ui->autoLootBox->currentIndex();
+  bool autoLootWrongs      = indexOfControlBox < 0 || indexOfAutoLootlBox > ui->autoLootBox->count() - 1 || indexOfAutoLootlBox < 0;
+  if (autoLootWrongs) {
+    QString msg = "Something is wrong with selected auto loot key";
+    qWarning() << msg;
+    Utilities::showMessageBox_INFO(msg);
+    return false;
+  }
+  return true;
 }
 bool NewProfileConfiguartor::checkSlidersGroup(GuiPointers guiPtrs) {
-  try {
-    int activeElements = guiPtrs.activeElementsCounter->value();
-    if (activeElements == 0) return true;
+  int activeElements = guiPtrs.activeElementsCounter->value();
+  if (activeElements == 0) {
+    return true;
+  }
 
-    QVector<int> slidersValue;
-    QStringList  keyNames, methodeNames;
-    for (size_t i = 0; i < activeElements; i++) {
-      slidersValue.push_back(guiPtrs.sliders[i]->value());
-      keyNames.push_back(guiPtrs.keyShortCuts[i]->currentText());
-      methodeNames.push_back(guiPtrs.methodeNames[i]->currentText());
-    }
+  QVector<int> slidersValue;
+  QStringList  keyNames, methodeNames;
+  for (size_t i = 0; i < activeElements; i++) {
+    slidersValue.push_back(guiPtrs.sliders[i]->value());
+    keyNames.push_back(guiPtrs.keyShortCuts[i]->currentText());
+    methodeNames.push_back(guiPtrs.methodeNames[i]->currentText());
+  }
 
-    if (activeElements > 1) {
-      for (int i = 1; i < activeElements; i++) {
-        if (slidersValue[i - 1] < slidersValue[i])
-          throw std::exception("Sliders are in wrong order, please set it from biggest value to lowest.");
-        if (slidersValue[i - 1] == slidersValue[i]) throw std::exception("Two sliders can't be in the same position.");
+  if (activeElements > 1) {
+    for (int i = 1; i < activeElements; i++) {
+      if (slidersValue[i - 1] < slidersValue[i]) {
+        QString msg = "Sliders are in wrong order, please set it from biggest value to lowest.";
+        qWarning() << msg;
+        Utilities::showMessageBox_INFO(msg);
+        return false;
+      }
+      if (slidersValue[i - 1] == slidersValue[i]) {
+        QString msg = "Two sliders can't be in the same position.";
+        qWarning() << msg;
+        Utilities::showMessageBox_INFO(msg);
+        return false;
       }
     }
+  }
 
-    if (slidersValue.last() == 0) throw std::exception("Last slider has to have value above zero.");
-
-    for (size_t i = 0; i < activeElements; i++) {
-      if (keyNames[i].isEmpty()) throw std::exception("One of key field doesn't have hotkey assigned to itself.");
-      if (methodeNames[i].isEmpty()) throw std::exception("Methode field can't be empty.");
-    }
-
-    if (keyNames.removeDuplicates() > 0) throw std::exception("Two key fields can't share the same key.");
-
-    if (methodeNames.removeDuplicates() > 0) throw std::exception("Two  fields can't share the same value.");
-
-    return true;
-  } catch (const std::exception& e) {
-    std::cout << e.what() << std::endl;
-    Utilities::showMessageBox_INFO(e.what());
+  if (slidersValue.last() == 0) {
+    QString msg = "Last slider has to have value above zero.";
+    qWarning() << msg;
+    Utilities::showMessageBox_INFO(msg);
     return false;
   }
+
+  for (size_t i = 0; i < activeElements; i++) {
+    if (keyNames[i].isEmpty()) {
+      QString msg = "One of key field doesn't have hotkey assigned to itself.";
+      qWarning() << msg;
+      Utilities::showMessageBox_INFO(msg);
+      return false;
+    }
+    if (methodeNames[i].isEmpty()) {
+      QString msg = "Methode field can't be empty.";
+      qWarning() << msg;
+      Utilities::showMessageBox_INFO(msg);
+      return false;
+    }
+  }
+
+  if (keyNames.removeDuplicates() > 0) {
+    QString msg = "Two key fields can't share the same key.";
+    qWarning() << msg;
+    Utilities::showMessageBox_INFO(msg);
+    return false;
+  }
+  if (methodeNames.removeDuplicates() > 0) {
+    QString msg = "Two fields can't share the same value.";
+    qWarning() << msg;
+    Utilities::showMessageBox_INFO(msg);
+    return false;
+  }
+
+  return true;
 }
 bool NewProfileConfiguartor::checkHealthGroup() {
   return checkSlidersGroup(healthPtrs);
