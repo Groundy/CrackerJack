@@ -159,69 +159,70 @@ bool ManaHealthStateAnalyzer::getValuesFromStringRegularCase(QString in, int& cu
 bool ManaHealthStateAnalyzer::getValuesFromStringOfCombinedBox(QString in, int& currentMana, int& maxMana, int& currentManaShield,
                                                                int& maxManaShield) {
   //wanted form of input manaMinVal/maxVal(minShieldValue/maxShieldValue)
-  try {
-    bool inputOk = in.count("\\") == 2 && in.count("(") == 1 && in.count(")") == 1;
-    if (!inputOk) {
-      QString msg = "Wrong input in splitting str with values of mana combined with magic shield, input = " + in;
-      throw std::exception(msg.toStdString().c_str());
-    }
-
-    in.remove(")");
-    QStringList parts = in.split("(");
-    if (parts.size() != 2) throw std::exception("error in splitting  str with values of mana combined with magic shield");
-
-    QString manaStr   = parts[0];
-    QString shieldStr = parts[1];
-    int     currentManaTMP, maxManaTMP, currentManaShieldTMP, maxManaShieldTMP;
-    bool    splittingOk1 = getValuesFromStringRegularCase(manaStr, currentManaTMP, maxManaTMP);
-    bool    splittingOk2 = getValuesFromStringRegularCase(shieldStr, currentManaShieldTMP, maxManaShieldTMP);
-    bool    okResult     = splittingOk1 && splittingOk2 && maxManaTMP > 0;
-    if (!okResult) throw std::exception("error in splitting  str with values of mana combined with magic shield");
-
-    currentMana       = currentManaTMP;
-    maxMana           = maxManaTMP;
-    currentManaShield = currentManaShieldTMP;
-    maxManaShield     = maxManaShieldTMP;
-    return true;
-  } catch (const std::exception& e) {
-    qDebug() << e.what();
+  bool inputOk = in.count("\\") == 2 && in.count("(") == 1 && in.count(")") == 1;
+  if (!inputOk) {
+    qWarning() << "Wrong input in splitting str with values of mana combined with magic shield, input = " + in;
     return false;
   }
+
+  in.remove(")");
+  QStringList parts = in.split("(");
+  if (parts.size() != 2) {
+    qWarning() << "error in splitting  str with values of mana combined with magic shield";
+    return false;
+  }
+
+  QString manaStr   = parts[0];
+  QString shieldStr = parts[1];
+  int     currentManaTMP, maxManaTMP, currentManaShieldTMP, maxManaShieldTMP;
+  bool    splittingOk1 = getValuesFromStringRegularCase(manaStr, currentManaTMP, maxManaTMP);
+  bool    splittingOk2 = getValuesFromStringRegularCase(shieldStr, currentManaShieldTMP, maxManaShieldTMP);
+  bool    okResult     = splittingOk1 && splittingOk2 && maxManaTMP > 0;
+  if (!okResult) {
+    qWarning() << "error in splitting  str with values of mana combined with magic shield";
+    return false;
+  }
+
+  currentMana       = currentManaTMP;
+  maxMana           = maxManaTMP;
+  currentManaShield = currentManaShieldTMP;
+  maxManaShield     = maxManaShieldTMP;
+  return true;
 }
 QVector<RestorationMethode> ManaHealthStateAnalyzer::findRestorationToUse(double                               currentValue,
                                                                           const QMap<int, RestorationMethode>& methodes) {
   QVector<RestorationMethode> toRet = {};
-  if (methodes.size() == 0) return toRet;
-
-  try {
-    bool wrongInput = currentValue < 0.0 || currentValue > 100.0 || methodes.size() > 5;
-    if (wrongInput) throw std::exception("Wrong input passed to fun looking for neareast threshold");
-
-    auto thresholds = methodes.keys();
-    for (int i = 0; i < thresholds.size(); i++) {
-      if (currentValue > thresholds[i]) continue;
-
-      if (toRet.size() == 2) break;
-
-      auto currentMethode          = methodes[thresholds[i]];
-      bool suchTypeIsAlreadyOnList = false;
-      for each (auto var in toRet) {
-        if (var.isType(currentMethode.getType())) {
-          suchTypeIsAlreadyOnList = true;
-          break;
-        }
-      }
-      if (suchTypeIsAlreadyOnList) continue;
-
-      if (!restMethodeCanBeUsed(currentMethode)) continue;
-
-      toRet.push_back(currentMethode);
-    }
-    return toRet;
-  } catch (const std::exception& e) {
-    qDebug() << e.what();
+  if (methodes.size() == 0) {
     return toRet;
   }
+
+  if (currentValue < 0.0 || currentValue > 100.0 || methodes.size() > 5) {
+    qWarning() << "Wrong input passed to fun looking for neareast threshold";
+    return toRet;
+  }
+
+  auto thresholds = methodes.keys();
+  for (int i = 0; i < thresholds.size(); i++) {
+    if (currentValue > thresholds[i]) {
+      continue;
+    }
+    if (toRet.size() == 2) {
+      break;
+    }
+    auto currentMethode          = methodes[thresholds[i]];
+    bool suchTypeIsAlreadyOnList = false;
+    for each (auto var in toRet) {
+      if (var.isType(currentMethode.getType())) {
+        suchTypeIsAlreadyOnList = true;
+        break;
+      }
+    }
+    if (suchTypeIsAlreadyOnList || !restMethodeCanBeUsed(currentMethode)) {
+      continue;
+    }
+    toRet.push_back(currentMethode);
+  }
+  return toRet;
 }
 ValuesDoubles ManaHealthStateAnalyzer::getCurrentPercentage() {
   if (!var->getSettings().getRestoringState()) return ValuesDoubles();
