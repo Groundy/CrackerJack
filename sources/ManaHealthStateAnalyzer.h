@@ -86,6 +86,8 @@ class ManaHealthStateAnalyzer : public QThread {
   ImgEditor*                     imgEditor;
   QMap<int, RestorationMethode>  healthMap, manaMap;
   const int                      SLEEP_TIME = 50;
+  ///Max possible value of Health or Mana in game
+  const int MAX_POSSIBLE_VALUE = 100000;
   //bool usedRestorationMethodeOnLastLoop = false;
 
   //qint64 lastTimeAnalyzed = now();

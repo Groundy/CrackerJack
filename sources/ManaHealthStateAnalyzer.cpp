@@ -139,21 +139,22 @@ ManaHealthStateAnalyzer::FoundFlags ManaHealthStateAnalyzer::getFoundFlags() {
   return flags;
 }
 bool ManaHealthStateAnalyzer::getValuesFromStringRegularCase(QString in, int& current, int& max) {
-  try {
-    const QStringList partOfStr = in.split("\\");  //wanted form of input currentVal/maxVal
-    if (partOfStr.size() != 2) throw std::exception(QString("ManaHealthAnalyzer recived wrong input, input = " + in).toStdString().c_str());
-    const int  currentVal         = partOfStr[0].toInt();
-    const int  maxVal             = partOfStr[1].toInt();
-    const int  MAX_POSSIBLE_VALUE = 100000;
-    const bool wrongValues        = currentVal > MAX_POSSIBLE_VALUE || currentVal > maxVal || currentVal < 0 || maxVal < 0;
-    if (wrongValues) throw std::exception("Wrong int values in splittling str currentVal/maxVal");
-    current = currentVal;
-    max     = maxVal;
-    return true;
-  } catch (const std::exception& e) {
-    qDebug() << e.what();
+  const QStringList partOfStr = in.split("\\");  //wanted form of input currentVal/maxVal
+  if (partOfStr.size() != 2) {
+    qWarning() << "ManaHealthAnalyzer recived wrong input, input = " + in;
     return false;
   }
+  const int currentVal = partOfStr[0].toInt();
+  const int maxVal     = partOfStr[1].toInt();
+
+  if (currentVal > MAX_POSSIBLE_VALUE || currentVal > maxVal || currentVal < 0 || maxVal < 0) {
+    qWarning() << "Wrong int values in splittling str currentVal/maxVal";
+    return false;
+  }
+
+  current = currentVal;
+  max     = maxVal;
+  return true;
 }
 bool ManaHealthStateAnalyzer::getValuesFromStringOfCombinedBox(QString in, int& currentMana, int& maxMana, int& currentManaShield,
                                                                int& maxManaShield) {
