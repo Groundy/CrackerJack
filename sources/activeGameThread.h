@@ -32,7 +32,6 @@ class ActiveGameThread : public QThread {
   QString                     getGameWindowTitile();
   int                         checkGameState();
   QMap<QString, unsigned int> getListOfRunningProcess();
-  void                        connectSingalToGUI(QObject* parent);
   int                         windowIsAccessible(const uint PID, const QString& windowTitle);
   HWND                        getHandlerToGameWindow(unsigned int PID, QString WindowName);
 };

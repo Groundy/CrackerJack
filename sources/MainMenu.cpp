@@ -35,6 +35,10 @@ MainMenu::~MainMenu() {
 //funcs
 void MainMenu::threadStarter() {
   activityThread = new ActiveGameThread(this, var);
+  if (connect(activityThread, &ActiveGameThread::GameStateChanged, this, &MainMenu::onGameStateChanged)) {
+    qCritical() << "Failed to connect thread signal of game activity";
+    //TODO;
+  }
   activityThread->start();
 
   screenSaverThread = new ScreenSaver(this, var, gameConnector, prof);

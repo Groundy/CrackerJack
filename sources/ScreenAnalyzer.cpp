@@ -20,10 +20,14 @@ ScreenAnalyzer::~ScreenAnalyzer() {
 void ScreenAnalyzer::run() {
   while (true) {
     msleep(SLEEP_TIME);
-    if (!var->getSettings().getLoadingState()) continue;
+    if (!var->getSettings().getLoadingState()) {
+      continue;
+    }
     QImage img;
     bool   openCorrectly = loadScreen(img);
-    if (!openCorrectly) continue;
+    if (!openCorrectly) {
+      continue;
+    }
     if (var->getVitalitty().needCalibration()) {
       bool basicCalibrationOk = Calibrator(var).calibrateBasicAreas(img);
       if (!basicCalibrationOk) {
@@ -122,7 +126,9 @@ void ScreenAnalyzer::analyzeBattleList(const QImage& fullscreen) {
   cutBattleList(fullscreen);
 }
 void ScreenAnalyzer::analyzeMiniMap(const QImage& fullscreen) {
-  if (!var->getSettings().getKeepAnalyzeMiniMap()) return;
+  if (!var->getSettings().getKeepAnalyzeMiniMap()) {
+    return;
+  }
 
   QRect frame = var->getMiniMap().getFrameMiniMap();
   var->getMiniMap().setImgMiniMap(fullscreen.copy(frame));
@@ -134,7 +140,9 @@ void ScreenAnalyzer::analyzeMiniMap(const QImage& fullscreen) {
 }
 void ScreenAnalyzer::analyzeEquipment(const QImage& fullscreen) {
   bool needCalibration = var->getEquipment().getStoreRect().isEmpty();
-  if (needCalibration) Calibrator(var).calibrateStoreButton(fullscreen);
+  if (needCalibration) {
+    Calibrator(var).calibrateStoreButton(fullscreen);
+  }
   if (var->getSettings().getKeepAnalyzeStates()) {
     QRect stateBarRect = var->getEquipment().getRect(Equipment::EqRect::StateBar);
     var->getEquipment().setImg(Equipment::EqRect::StateBar, fullscreen.copy(stateBarRect));

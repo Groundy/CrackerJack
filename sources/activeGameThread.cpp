@@ -1,8 +1,6 @@
 #include "ActiveGameThread.h"
 
-ActiveGameThread::ActiveGameThread(QObject* parent, QSharedPointer<VariablesClass> var) : QThread(parent), var(var) {
-  connectSingalToGUI(parent);
-}
+ActiveGameThread::ActiveGameThread(QObject* parent, QSharedPointer<VariablesClass> var) : QThread(parent), var(var) {}
 ActiveGameThread::~ActiveGameThread() {
   this->terminate();
 }
@@ -17,27 +15,34 @@ void ActiveGameThread::run() {
 }
 QString ActiveGameThread::getGameWindowTitile() {
   for (HWND hwnd = GetTopWindow(NULL); hwnd != NULL; hwnd = GetNextWindow(hwnd, GW_HWNDNEXT)) {
-    if (!IsWindowVisible(hwnd)) continue;
-
-    int length = GetWindowTextLength(hwnd);
-    if (length == 0) continue;
+    if (!IsWindowVisible(hwnd)) {
+      continue;
+    }
+    const uint length = GetWindowTextLength(hwnd);
+    if (length == 0) {
+      continue;
+    }
 
     wchar_t* tmp = new wchar_t[length + 1];
     GetWindowText(hwnd, tmp, length + 1);
-    std::wstring wStrTitle(tmp);
-    // possible problems with converting wstr to str
-    std::string strTitle(wStrTitle.begin(), wStrTitle.end());
-    const char* titleAsChars = strTitle.c_str();
-    QString     title(titleAsChars);
+    QString title = QString::fromWCharArray(tmp);
+    delete[] tmp;
 
-    if (title == "Program Manager") continue;
-
-    if (title.contains(GAME_BROWESER_TITLE))  // browser
+    if (title == "Program Manager") {
       continue;
+    }
 
-    if (title.contains("Tibia - ")) return title;
+    if (title.contains(GAME_BROWESER_TITLE)) {
+      continue;
+    }
 
-    if (title.contains("Tibia")) return QString("Tibia");
+    if (title.contains("Tibia - ")) {
+      return title;
+    }
+
+    if (title.contains("Tibia")) {
+      return QString("Tibia");
+    }
   }
   return QString();
 }
@@ -50,11 +55,14 @@ uint ActiveGameThread::getGamePid(QMap<QString, unsigned int>& processes) {
   return iteratorToProcess.value();
 }
 int ActiveGameThread::windowIsAccessible(const uint PID, const QString& windowTitle) {
-  if (PID == 0) return NO_ACTIVE;
-  if (windowTitle.isEmpty())
+  if (PID == 0) {
+    return NO_ACTIVE;
+  }
+  if (windowTitle.isEmpty()) {
     return NO_WINDOW;
-  else if (windowTitle == "Tibia")
+  } else if (windowTitle == "Tibia") {
     return NO_LOGGED;
+  }
 
   LPCWSTR nameOfWindowLPCWSTR = (const wchar_t*)windowTitle.utf16();
   HWND    handler             = FindWindow(NULL, nameOfWindowLPCWSTR);
@@ -113,16 +121,11 @@ HWND ActiveGameThread::getHandlerToGameWindow(unsigned int PID, QString WindowNa
   DWORD tmp     = PID;
   DWORD hThread = GetWindowThreadProcessId(handler, &tmp);
 
-  if (hThread != NULL)
+  if (hThread != NULL) {
     return handler;
-  else {
+  } else {
     // Logger::logPotenialBug("Can't get thread PID for used handler",
     // "Utilities", "clickRight");
     return HWND();
   }
-}
-void ActiveGameThread::connectSingalToGUI(QObject* parent) {
-  const char* signal = SIGNAL(GameStateChanged(int));
-  const char* slot   = SLOT(onGameStateChanged(int));
-  bool        good   = connect(this, signal, parent, slot);
 }

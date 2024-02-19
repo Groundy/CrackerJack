@@ -48,13 +48,17 @@ class BattleList {
     for (int y = 0; y < 20; y += 19) {
       for (int x = 0; x < 20; x++) {  // top//down
         uint pix = innerBattleListLImg.pixel(x, y);
-        if (pix == RED || pix == LIGHT_RED) redPixels++;
+        if (pix == RED || pix == LIGHT_RED) {
+          redPixels++;
+        }
       }
     }
     for (int x = 0; x < 20; x += 19) {  // left//right
       for (int y = 1; y < 19; y++) {
         uint pix = innerBattleListLImg.pixel(x, y);
-        if (pix == RED || pix == LIGHT_RED) redPixels++;
+        if (pix == RED || pix == LIGHT_RED) {
+          redPixels++;
+        }
       }
     }
     const int ALL_PIX_TO_CHECK = 76;
