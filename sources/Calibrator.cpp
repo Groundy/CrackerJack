@@ -44,33 +44,32 @@ bool Calibrator::calibrateStoreButton(const QImage& fullImage) {
 void Calibrator::test(QString pathToFilesWithScreens) {
   auto var       = QSharedPointer<VariablesClass>();
   int  totalTime = 0;
-  try {
-    QStringList namesOfScreenShots;
-    QDir        screenShotFolder(pathToFilesWithScreens);
-    QStringList listOfFIlesNames = screenShotFolder.entryList(QDir::Files);
 
-    for each (QString fileName in listOfFIlesNames) {
-      QString pathToFile = screenShotFolder.absoluteFilePath(fileName);
-      QImage  fullScreen;
-      bool    loaded = fullScreen.load(pathToFile);
-      if (!loaded) throw std::exception("cant load img!");
+  QStringList namesOfScreenShots;
+  QDir        screenShotFolder(pathToFilesWithScreens);
+  QStringList listOfFIlesNames = screenShotFolder.entryList(QDir::Files);
 
-      auto calibrator  = Calibrator(var);
-      auto start       = QDateTime::currentMSecsSinceEpoch();
-      bool categroized = calibrator.calibrateBasicAreas(fullScreen);
-      auto time        = QDateTime::currentMSecsSinceEpoch() - start;
-      if (categroized)
-        qDebug() << "analyzed in : " + QString::number(time);
-      else {
-        QString msg = QString("cant sort windows in %1").arg(fileName);
-        throw std::exception(msg.toStdString().c_str());
-      }
-      totalTime += time;
+  for each (QString fileName in listOfFIlesNames) {
+    QString pathToFile = screenShotFolder.absoluteFilePath(fileName);
+    QImage  fullScreen;
+    bool    loaded = fullScreen.load(pathToFile);
+    if (!loaded) {
+      qDebug() << "cant load img!";
+      return;
     }
-    qDebug() << "avg time : " + QString::number(totalTime / listOfFIlesNames.size());
-  } catch (const std::exception& e) {
-    qDebug() << e.what();
+    auto calibrator  = Calibrator(var);
+    auto start       = QDateTime::currentMSecsSinceEpoch();
+    bool categroized = calibrator.calibrateBasicAreas(fullScreen);
+    auto time        = QDateTime::currentMSecsSinceEpoch() - start;
+    if (categroized) {
+      qDebug() << fileName << "analyzed in : " << time << "ms";
+    } else {
+      qDebug() << "cant sort windows in" << fileName;
+      return;
+    }
+    totalTime += time;
   }
+  qDebug() << "avg time : " + QString::number(totalTime / listOfFIlesNames.size());
 }
 
 // private
@@ -103,162 +102,163 @@ Calibrator::SlashesIndexes Calibrator::getIndexesOfImgsWithSlashes(const QImage&
   return indexes;
 }
 Calibrator::Indexes Calibrator::getIndexesOfHealthManaBars(const QImage& fullscreen, const QList<QRect>& listOfImportantRectangles) {
-  try {
-    Indexes        indexes;
-    SlashesIndexes slashesIndexes = getIndexesOfImgsWithSlashes(fullscreen, listOfImportantRectangles);
-    if (!slashesIndexes.isValid()) throw std::exception("No enough frames with slashes on full screen");
-    indexes.combined = slashesIndexes.combinedIndex;
-
-    int  SlashesXSize  = slashesIndexes.sizeX();
-    int  SlashesYSize  = slashesIndexes.sizeY();
-    bool foundSlsahesX = SlashesXSize >= 2 && SlashesYSize == 0;
-    bool foundSlsahesY = SlashesYSize >= 2 && SlashesXSize == 0;
-    if (!foundSlsahesY && !foundSlsahesX) throw std::exception("Wrong slsashes frame in configuration!");
-
-    BarsPostion position;
-    QPoint      midOfScreen(fullscreen.width() / 2, fullscreen.height() / 2);
-    if (foundSlsahesY) {
-      QRect firstRectangle = listOfImportantRectangles[slashesIndexes.slashesY[0]];
-      position             = firstRectangle.x() < midOfScreen.x() ? LEFT : RIGHT;
-    } else {
-      QRect firstRectangle = listOfImportantRectangles[slashesIndexes.slashesX[0]];
-      position             = firstRectangle.y() < midOfScreen.y() ? TOP : DOWN;
-    }
-
-    ManaShieldType shieldType;
-    if (indexes.combined != -1)
-      shieldType = COMBINED;
-    else {
-      if (SlashesXSize == 3 || SlashesYSize == 3)
-        shieldType = SEPARATE;
-      else if (SlashesXSize == 2 || SlashesYSize == 2)
-        shieldType = NO_SHIELD;
-    }
-
-    switch (position) {
-      case LEFT: {
-        indexes.rotation = 1;
-        QList<QRect> sortedByX, sortedByY, rectangles;
-        for each (int var in slashesIndexes.slashesY) rectangles.push_back(listOfImportantRectangles[var]);
-        sortByXY(rectangles, sortedByX, sortedByY);
-        switch (shieldType) {
-          case NO_SHIELD: {
-            // 25 is more less width of big bar, smaller is half of its width
-            int w                = listOfImportantRectangles[slashesIndexes.slashesY[0]].width();
-            indexes.shield       = -1;
-            indexes.combined     = -1;
-            bool isParallelStyle = sortedByX[0].x() != sortedByX[1].x();
-            if (isParallelStyle) {
-              indexes.health = listOfImportantRectangles.indexOf(sortedByX[0]);
-              indexes.mana   = listOfImportantRectangles.indexOf(sortedByX[1]);
-            } else {
-              indexes.health = listOfImportantRectangles.indexOf(sortedByY[0]);
-              indexes.mana   = listOfImportantRectangles.indexOf(sortedByY[1]);
-            }
-            break;
-          }
-          case COMBINED: {
-            indexes.mana   = -1;
-            indexes.shield = -1;
-            indexes.health = slashesIndexes.slashesY[1];
-            break;
-          }
-          case SEPARATE: {
-            indexes.health   = listOfImportantRectangles.indexOf(sortedByX[1]);
-            indexes.mana     = listOfImportantRectangles.indexOf(sortedByX[0]);
-            indexes.shield   = listOfImportantRectangles.indexOf(sortedByX[2]);
-            indexes.combined = -1;
-            break;
-          }
-        }
-        break;
-      }
-      case RIGHT: {
-        indexes.rotation = -1;
-        QList<QRect> sortedByX, sortedByY, rectangles;
-        for each (int var in slashesIndexes.slashesY) rectangles.push_back(listOfImportantRectangles[var]);
-        sortByXY(rectangles, sortedByX, sortedByY);
-        switch (shieldType) {
-          case NO_SHIELD: {
-            bool isParallelStyle = sortedByY[0].y() == sortedByY[1].y();
-            indexes.shield       = -1;
-            indexes.combined     = -1;
-            if (isParallelStyle) {
-              indexes.health = listOfImportantRectangles.indexOf(sortedByX[0]);
-              indexes.mana   = listOfImportantRectangles.indexOf(sortedByX[1]);
-            } else {
-              indexes.health = listOfImportantRectangles.indexOf(sortedByY[0]);
-              indexes.mana   = listOfImportantRectangles.indexOf(sortedByY[1]);
-            }
-            break;
-          }
-          case COMBINED: {
-            indexes.mana   = -1;
-            indexes.shield = -1;
-            indexes.health = slashesIndexes.slashesY[1];
-            break;
-          }
-          case SEPARATE: {
-            indexes.health   = listOfImportantRectangles.indexOf(sortedByX[1]);
-            indexes.combined = -1;
-            indexes.mana     = listOfImportantRectangles.indexOf(sortedByX[2]);
-            indexes.shield   = listOfImportantRectangles.indexOf(sortedByX[0]);
-            break;
-          }
-        }
-        break;
-      }
-      case DOWN:
-      case TOP: {
-        indexes.rotation = 0;
-        QList<QRect> sortedByX, sortedByY, rectangles;
-        for each (int var in slashesIndexes.slashesX) rectangles.push_back(listOfImportantRectangles[var]);
-        sortByXY(rectangles, sortedByX, sortedByY);
-        switch (shieldType) {
-          case NO_SHIELD: {
-            indexes.combined     = -1;
-            indexes.shield       = -1;
-            bool isParallelStyle = sortedByY[0].y() == sortedByY[1].y();
-            if (isParallelStyle) {
-              indexes.health = listOfImportantRectangles.indexOf(sortedByX[0]);
-              indexes.mana   = listOfImportantRectangles.indexOf(sortedByX[1]);
-            } else {
-              indexes.health = listOfImportantRectangles.indexOf(sortedByY[0]);
-              indexes.mana   = listOfImportantRectangles.indexOf(sortedByY[1]);
-            }
-            break;
-          }
-          case COMBINED: {
-            bool isParallelStyle = sortedByY[0].y() != sortedByY[1].y();
-            indexes.mana         = -1;
-            indexes.shield       = -1;
-            if (isParallelStyle) {
-              indexes.health   = listOfImportantRectangles.indexOf(sortedByY[0]);
-              indexes.combined = listOfImportantRectangles.indexOf(sortedByY[1]);
-            } else {
-              indexes.health   = listOfImportantRectangles.indexOf(sortedByX[0]);
-              indexes.combined = listOfImportantRectangles.indexOf(sortedByX[1]);
-            }
-            break;
-          }
-          case SEPARATE: {
-            indexes.health = listOfImportantRectangles.indexOf(sortedByX[0]);
-            rectangles.removeOne(sortedByX[0]);
-            sortByXY(rectangles, sortedByX, sortedByY);
-            indexes.mana     = listOfImportantRectangles.indexOf(sortedByY[0]);
-            indexes.shield   = listOfImportantRectangles.indexOf(sortedByY[1]);
-            indexes.combined = -1;
-            break;
-          }
-        }
-        break;
-      }
-    }
-    return indexes;
-  } catch (const std::exception& e) {
-    qDebug() << e.what();
+  Indexes        indexes;
+  SlashesIndexes slashesIndexes = getIndexesOfImgsWithSlashes(fullscreen, listOfImportantRectangles);
+  if (!slashesIndexes.isValid()) {
+    qWarning() << "No enough frames with slashes on full screen";
     return Indexes();
   }
+  indexes.combined = slashesIndexes.combinedIndex;
+
+  int  SlashesXSize  = slashesIndexes.sizeX();
+  int  SlashesYSize  = slashesIndexes.sizeY();
+  bool foundSlsahesX = SlashesXSize >= 2 && SlashesYSize == 0;
+  bool foundSlsahesY = SlashesYSize >= 2 && SlashesXSize == 0;
+  if (!foundSlsahesY && !foundSlsahesX) {
+    qWarning() << "Wrong slsashes frame in configuration";
+    return Indexes();
+  }
+
+  BarsPostion position;
+  QPoint      midOfScreen(fullscreen.width() / 2, fullscreen.height() / 2);
+  if (foundSlsahesY) {
+    QRect firstRectangle = listOfImportantRectangles[slashesIndexes.slashesY[0]];
+    position             = firstRectangle.x() < midOfScreen.x() ? LEFT : RIGHT;
+  } else {
+    QRect firstRectangle = listOfImportantRectangles[slashesIndexes.slashesX[0]];
+    position             = firstRectangle.y() < midOfScreen.y() ? TOP : DOWN;
+  }
+
+  ManaShieldType shieldType;
+  if (indexes.combined != -1)
+    shieldType = COMBINED;
+  else {
+    if (SlashesXSize == 3 || SlashesYSize == 3)
+      shieldType = SEPARATE;
+    else if (SlashesXSize == 2 || SlashesYSize == 2)
+      shieldType = NO_SHIELD;
+  }
+
+  switch (position) {
+    case LEFT: {
+      indexes.rotation = 1;
+      QList<QRect> sortedByX, sortedByY, rectangles;
+      for each (int var in slashesIndexes.slashesY) rectangles.push_back(listOfImportantRectangles[var]);
+      sortByXY(rectangles, sortedByX, sortedByY);
+      switch (shieldType) {
+        case NO_SHIELD: {
+          // 25 is more less width of big bar, smaller is half of its width
+          int w                = listOfImportantRectangles[slashesIndexes.slashesY[0]].width();
+          indexes.shield       = -1;
+          indexes.combined     = -1;
+          bool isParallelStyle = sortedByX[0].x() != sortedByX[1].x();
+          if (isParallelStyle) {
+            indexes.health = listOfImportantRectangles.indexOf(sortedByX[0]);
+            indexes.mana   = listOfImportantRectangles.indexOf(sortedByX[1]);
+          } else {
+            indexes.health = listOfImportantRectangles.indexOf(sortedByY[0]);
+            indexes.mana   = listOfImportantRectangles.indexOf(sortedByY[1]);
+          }
+          break;
+        }
+        case COMBINED: {
+          indexes.mana   = -1;
+          indexes.shield = -1;
+          indexes.health = slashesIndexes.slashesY[1];
+          break;
+        }
+        case SEPARATE: {
+          indexes.health   = listOfImportantRectangles.indexOf(sortedByX[1]);
+          indexes.mana     = listOfImportantRectangles.indexOf(sortedByX[0]);
+          indexes.shield   = listOfImportantRectangles.indexOf(sortedByX[2]);
+          indexes.combined = -1;
+          break;
+        }
+      }
+      break;
+    }
+    case RIGHT: {
+      indexes.rotation = -1;
+      QList<QRect> sortedByX, sortedByY, rectangles;
+      for each (int var in slashesIndexes.slashesY) rectangles.push_back(listOfImportantRectangles[var]);
+      sortByXY(rectangles, sortedByX, sortedByY);
+      switch (shieldType) {
+        case NO_SHIELD: {
+          bool isParallelStyle = sortedByY[0].y() == sortedByY[1].y();
+          indexes.shield       = -1;
+          indexes.combined     = -1;
+          if (isParallelStyle) {
+            indexes.health = listOfImportantRectangles.indexOf(sortedByX[0]);
+            indexes.mana   = listOfImportantRectangles.indexOf(sortedByX[1]);
+          } else {
+            indexes.health = listOfImportantRectangles.indexOf(sortedByY[0]);
+            indexes.mana   = listOfImportantRectangles.indexOf(sortedByY[1]);
+          }
+          break;
+        }
+        case COMBINED: {
+          indexes.mana   = -1;
+          indexes.shield = -1;
+          indexes.health = slashesIndexes.slashesY[1];
+          break;
+        }
+        case SEPARATE: {
+          indexes.health   = listOfImportantRectangles.indexOf(sortedByX[1]);
+          indexes.combined = -1;
+          indexes.mana     = listOfImportantRectangles.indexOf(sortedByX[2]);
+          indexes.shield   = listOfImportantRectangles.indexOf(sortedByX[0]);
+          break;
+        }
+      }
+      break;
+    }
+    case DOWN:
+    case TOP: {
+      indexes.rotation = 0;
+      QList<QRect> sortedByX, sortedByY, rectangles;
+      for each (int var in slashesIndexes.slashesX) rectangles.push_back(listOfImportantRectangles[var]);
+      sortByXY(rectangles, sortedByX, sortedByY);
+      switch (shieldType) {
+        case NO_SHIELD: {
+          indexes.combined     = -1;
+          indexes.shield       = -1;
+          bool isParallelStyle = sortedByY[0].y() == sortedByY[1].y();
+          if (isParallelStyle) {
+            indexes.health = listOfImportantRectangles.indexOf(sortedByX[0]);
+            indexes.mana   = listOfImportantRectangles.indexOf(sortedByX[1]);
+          } else {
+            indexes.health = listOfImportantRectangles.indexOf(sortedByY[0]);
+            indexes.mana   = listOfImportantRectangles.indexOf(sortedByY[1]);
+          }
+          break;
+        }
+        case COMBINED: {
+          bool isParallelStyle = sortedByY[0].y() != sortedByY[1].y();
+          indexes.mana         = -1;
+          indexes.shield       = -1;
+          if (isParallelStyle) {
+            indexes.health   = listOfImportantRectangles.indexOf(sortedByY[0]);
+            indexes.combined = listOfImportantRectangles.indexOf(sortedByY[1]);
+          } else {
+            indexes.health   = listOfImportantRectangles.indexOf(sortedByX[0]);
+            indexes.combined = listOfImportantRectangles.indexOf(sortedByX[1]);
+          }
+          break;
+        }
+        case SEPARATE: {
+          indexes.health = listOfImportantRectangles.indexOf(sortedByX[0]);
+          rectangles.removeOne(sortedByX[0]);
+          sortByXY(rectangles, sortedByX, sortedByY);
+          indexes.mana     = listOfImportantRectangles.indexOf(sortedByY[0]);
+          indexes.shield   = listOfImportantRectangles.indexOf(sortedByY[1]);
+          indexes.combined = -1;
+          break;
+        }
+      }
+      break;
+    }
+  }
+  return indexes;
 }
 bool Calibrator::categorizeWindows(const QImage& fullscreen, QList<QRect>& importantRectangles) {
   // 4 cause 1-minimap 2-gameScreen 3-health 4-mana, those 4 have to be found
@@ -440,8 +440,14 @@ QList<QRect> Calibrator::filterAreasCoveredByFrameFromBottomRight(const QImage& 
   const uint   MAX_ACCEPTABLE_VAL = 130;
   QList<QRect> toRet;
   for each (QRect area in areas) {
-    if (area.bottom() + 1 >= fullScreen.height()) throw std::exception("a");
-    if (area.right() + 1 >= fullScreen.width()) throw std::exception("b");
+    if (area.bottom() + 1 >= fullScreen.height()) {
+      qWarning() << "????";
+      return toRet;
+    }
+    if (area.right() + 1 >= fullScreen.width()) {
+      qWarning() << "????";
+      return toRet;
+    }
 
     // botom of area
     bool skip = false;
@@ -453,7 +459,9 @@ QList<QRect> Calibrator::filterAreasCoveredByFrameFromBottomRight(const QImage& 
         break;
       }
     }
-    if (skip) continue;
+    if (skip) {
+      continue;
+    }
 
     // right
     for (size_t y = 0; y < area.height(); y++) {
@@ -464,8 +472,9 @@ QList<QRect> Calibrator::filterAreasCoveredByFrameFromBottomRight(const QImage& 
         break;
       }
     }
-    if (skip) continue;
-
+    if (skip) {
+      continue;
+    }
     toRet.push_back(area);
   }
   return toRet;

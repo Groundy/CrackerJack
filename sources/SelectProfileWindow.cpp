@@ -64,22 +64,21 @@ void SelectProfileWindow::profSelected() {
 
 //funcs
 void SelectProfileWindow::refreshProfilesOnList() {
-  try {
-    const int EXTENSION_SIZE = QString(".json").size();
-    ui->listOfProfs->clear();
-    QStringList list = JsonParser::readNamesOfAllSavedProfiles();
-    for each (QString fileName in list) {
-      bool tooShortName = fileName.size() < (EXTENSION_SIZE + 1);
-      if (tooShortName) throw std::exception("Too short profile json file name");
-      QString profName = fileName.left(fileName.size() - EXTENSION_SIZE);
-      ui->listOfProfs->addItem(profName);
+  const int EXTENSION_SIZE = QString(".json").size();
+  ui->listOfProfs->clear();
+  QStringList list = JsonParser::readNamesOfAllSavedProfiles();
+  for each (QString fileName in list) {
+    bool tooShortName = fileName.size() < (EXTENSION_SIZE + 1);
+    if (tooShortName) {
+      qWarning() << "Too short profile json file name";
+      ui->listOfProfs->clear();
+      Utilities::showMessageBox_INFO("Too short profile json file name");
+      throw std::exception();
     }
-    ui->listOfProfs->repaint();
-  } catch (const std::exception& e) {
-    ui->listOfProfs->clear();
-    qDebug() << e.what();
-    Utilities::showMessageBox_INFO(e.what());
+    QString profName = fileName.left(fileName.size() - EXTENSION_SIZE);
+    ui->listOfProfs->addItem(profName);
   }
+  ui->listOfProfs->repaint();
 }
 void SelectProfileWindow::setUpGui() {
   ui->addProfileButton->setText(tr("Add profile"));
