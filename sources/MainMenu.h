@@ -26,6 +26,7 @@ class MainMenu : public QDialog {
  public:
   MainMenu(Profile* prof, QWidget* parent = Q_NULLPTR);
   ~MainMenu();
+
  public slots:
   void checkBoxChanged();
   void changeProfileButtonAction();
@@ -56,5 +57,4 @@ class MainMenu : public QDialog {
   QSound*                              sound = new QSound(":/sounds/testSound", this);
   void                                 threadStarter();
   void                                 startAutoHunting();
-  void                                 signalSlotConnector();
 };

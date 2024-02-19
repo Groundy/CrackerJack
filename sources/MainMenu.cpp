@@ -19,7 +19,6 @@ MainMenu::MainMenu(Profile* prof, QWidget* parent) : QDialog(parent), prof(prof)
   ui->keepUpgradedCheckBox->setChecked(settings.getKeepUpraded());
 
   threadStarter();
-  signalSlotConnector();
 }
 MainMenu::~MainMenu() {
   QList<QThread*> threads{activityThread, screenSaverThread, screenAnalyzer, healthManaStateAnalyzer, huntAutoThread, clickDetector};
@@ -35,10 +34,6 @@ MainMenu::~MainMenu() {
 //funcs
 void MainMenu::threadStarter() {
   activityThread = new ActiveGameThread(this, var);
-  if (connect(activityThread, &ActiveGameThread::GameStateChanged, this, &MainMenu::onGameStateChanged)) {
-    qCritical() << "Failed to connect thread signal of game activity";
-    //TODO;
-  }
   activityThread->start();
 
   screenSaverThread = new ScreenSaver(this, var, gameConnector, prof);
@@ -52,35 +47,25 @@ void MainMenu::threadStarter() {
 
   clickDetector = new ClickDetector(this, gameConnector);
   clickDetector->start();
-}
-void MainMenu::signalSlotConnector() {
-  QObject*    sigSender = healthManaStateAnalyzer;
-  QObject*    slotRec   = this;
-  const char* sig       = SIGNAL(sendValueToMainThread(double, double, double));
-  const char* slot      = SLOT(changedValueOfCharHealthOrMana(double, double, double));
-  bool        connected = connect(sigSender, sig, slotRec, slot, Qt::UniqueConnection);
-  if (!connected) {
-    qCritical() << "Connection failed.";
+
+  if (!connect(&this->var->getLogger(), &Logger::sendMsgToUserConsol, this, &MainMenu::printToUserConsol, Qt::UniqueConnection)) {
+    qCritical() << "Connection failed. Logger";
     exit(0);
   }
 
-  sigSender = &this->var->getLogger();
-  slotRec   = this;
-  sig       = SIGNAL(sendMsgToUserConsol(QStringList));
-  slot      = SLOT(printToUserConsol(QStringList));
-  connected = connect(sigSender, sig, slotRec, slot, Qt::UniqueConnection);
-  if (!connected) {
-    qCritical() << "Connection failed.";
+  if (!connect(&this->var->getLogger(), &Logger::sendMsgToUserConsolRed, this, &MainMenu::printToUserConsolRed, Qt::UniqueConnection)) {
+    qCritical() << "Connection failed. Logger";
     exit(0);
   }
 
-  sigSender = &this->var->getLogger();
-  slotRec   = this;
-  sig       = SIGNAL(sendMsgToUserConsolRed(QString));
-  slot      = SLOT(printToUserConsolRed(QString));
-  connected = connect(sigSender, sig, slotRec, slot, Qt::UniqueConnection);
-  if (!connected) {
-    qCritical() << "Connection failed.";
+  if (connect(activityThread, &ActiveGameThread::GameStateChanged, this, &MainMenu::onGameStateChanged, Qt::UniqueConnection)) {
+    qCritical() << "Failed to connect thread signal of game activity";
+    exit(0);
+  }
+
+  if (!connect(healthManaStateAnalyzer, &ManaHealthStateAnalyzer::sendValueToMainThread, this, &MainMenu::changedValueOfCharHealthOrMana,
+               Qt::UniqueConnection)) {
+    qCritical() << "Connection failed. Health & Mana analyzer";
     exit(0);
   }
 }
