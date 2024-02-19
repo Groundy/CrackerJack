@@ -3,7 +3,7 @@
 #include "ui_SelectProfileWindow.h"
 
 //const
-SelectProfileWindow::SelectProfileWindow(Profile& profileToBeChoosen, QWidget* parent)
+SelectProfileWindow::SelectProfileWindow(QSharedPointer<Profile> profileToBeChoosen, QWidget* parent)
     : QDialog(parent), profileToBeChoosen(profileToBeChoosen) {
   ui = new Ui::SelectProfileWindow();
   ui->setupUi(this);
@@ -57,8 +57,8 @@ void SelectProfileWindow::selectListAction() {
   ui->editProfileButton->setEnabled(oneItemIsSelected);
 }
 void SelectProfileWindow::profSelected() {
-  QString profName   = getSelectedProfName();
-  profileToBeChoosen = JsonParser::loadProfile(profName);
+  QString profName    = getSelectedProfName();
+  *profileToBeChoosen = JsonParser::loadProfile(profName);
   this->accept();
 }
 

@@ -3,15 +3,15 @@
 #include "ui_MainMenu.h"
 
 //const
-MainMenu::MainMenu(Profile& prof, QWidget* parent) : QDialog(parent), prof(prof) {
+MainMenu::MainMenu(QSharedPointer<Profile> prof, QWidget* parent) : QDialog(parent), prof(prof) {
   ui = new Ui::MainMenu();
   ui->setupUi(this);
 
   var           = QSharedPointer<VariablesClass>(new VariablesClass());
-  gameConnector = QSharedPointer<GameConnecter>(new GameConnecter(var, &prof));
+  gameConnector = QSharedPointer<GameConnecter>(new GameConnecter(var, prof.get()));
 
   Settings& settings = var->getSettings();
-  ui->profileNameLabel->setText(prof.getName());
+  ui->profileNameLabel->setText(prof->getName());
   ui->playerPosGroup->setVisible(false);
   ui->resourceGroup->setVisible(false);
   ui->keepHastedCheckBox->setChecked(settings.getKeepHasted());
@@ -36,13 +36,13 @@ void MainMenu::threadStarter() {
   activityThread = new ActiveGameThread(this, var);
   activityThread->start();
 
-  screenSaverThread = new ScreenSaver(this, var, gameConnector, &prof);
+  screenSaverThread = new ScreenSaver(this, var, gameConnector, prof.get());
   screenSaverThread->start();
 
-  screenAnalyzer = new ScreenAnalyzer(this, var, &prof);
+  screenAnalyzer = new ScreenAnalyzer(this, var, prof.get());
   screenAnalyzer->start();
 
-  healthManaStateAnalyzer = new ManaHealthStateAnalyzer(this, &prof, var, gameConnector);
+  healthManaStateAnalyzer = new ManaHealthStateAnalyzer(this, prof.get(), var, gameConnector);
   healthManaStateAnalyzer->start();
 
   clickDetector = new ClickDetector(this, gameConnector);
@@ -74,7 +74,7 @@ void MainMenu::startAutoHunting() {
   var->getSettings().setKeepAnalyzeMiniMap(true);
   Route route;
   JsonParser::readRoute(route, "trolls");
-  huntAutoThread = new AutoHunting(this, var, gameConnector, route, &prof);
+  huntAutoThread = new AutoHunting(this, var, gameConnector, route, prof.get());
   huntAutoThread->start();
   ui->playerPosGroup->setVisible(true);
 
