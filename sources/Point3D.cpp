@@ -4,13 +4,9 @@ Point3D::Point3D() : x(625), y(1265), floor(0) /*thias temple*/ {}
 Point3D::~Point3D() {}
 Point3D::Point3D(int x, int y, int floor) : x(x), y(y), floor(floor){};
 Point3D::Point3D(QJsonObject obj) {
-  try {
-    floor = obj.value("f").toInt();
-    y     = obj.value("y").toInt();
-    x     = obj.value("x").toInt();
-  } catch (const std::exception& e) {
-    Logger::staticLog(e.what());
-  }
+  floor = obj.value("f").toInt();
+  y     = obj.value("y").toInt();
+  x     = obj.value("x").toInt();
 };
 
 Point3D::Point3D(QString str) {

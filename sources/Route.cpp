@@ -1,31 +1,29 @@
 ﻿#include "Route.h"
 
 Route::Route(QJsonObject obj) {
-  try {
-    QJsonArray pointsArray = obj["points"].toArray();
-    if (pointsArray.isEmpty()) {
-      QString text = QString("Brak pola points w pliku Route");
-      throw std::exception(text.toStdString().c_str());
-    }
-
-    QList<RoutePoint> tmpRoute;
-    for each (QJsonValue val in pointsArray) {
-      RoutePoint toAdd(val.toObject());
-      tmpRoute.append(toAdd);
-    }
-    if (tmpRoute.size() < 2) {
-      QString text = QString("Za malo punktow w pliku Route");
-      throw std::exception(text.toStdString().c_str());
-    }
-    route     = tmpRoute;
-    routeName = obj.value("routeName").toString();
-  } catch (const std::exception& e) {
-    Logger::staticLog(e.what());
+  QJsonArray pointsArray = obj["points"].toArray();
+  if (pointsArray.isEmpty()) {
+    qWarning() << "No points fields in route file";
+    return;
   }
+
+  QList<RoutePoint> tmpRoute;
+  for each (QJsonValue val in pointsArray) {
+    RoutePoint toAdd(val.toObject());
+    tmpRoute.append(toAdd);
+  }
+  if (tmpRoute.size() < 2) {
+    qWarning() << "not enough points in route";
+    return;
+  }
+  route     = tmpRoute;
+  routeName = obj.value("routeName").toString();
 }
 
 QStringList Route::toStringList() {
-  if (route.isEmpty()) return QStringList();
+  if (route.isEmpty()) {
+    return QStringList();
+  }
 
   QStringList ToRet;
   for (int i = 0; i < route.size(); i++) {
@@ -42,19 +40,25 @@ void Route::addPoint(RoutePoint routePointToAdd) {
 }
 bool Route::removePoint(int index) {
   bool indexInRange = index < route.size();
-  if (!indexInRange) return false;
+  if (!indexInRange) {
+    return false;
+  }
   route.removeAt(index);
   return true;
 }
 bool Route::movePointUp(int index) {
   bool itFirst = index == 0;
-  if (itFirst) return false;
+  if (itFirst) {
+    return false;
+  }
   route.swap(index, index - 1);
   return true;
 }
 bool Route::movePointDown(int index) {
   bool isLast = index == route.size() - 1;
-  if (isLast) return false;
+  if (isLast) {
+    return false;
+  }
 
   route.swap(index, index + 1);
   return true;
@@ -78,10 +82,14 @@ QJsonObject Route::toJson() const {
 bool Route::checkRouteCorectness(QString& errorTextToDisplay) {
   typedef RoutePoint::FieldType FieldType;
   try {
-    if (route.size() < 2) throw std::exception("Route is too short.");
+    if (route.size() < 2) {
+      throw std::exception("Route is too short.");
+    }
 
     bool samePoint = route.first() == route.last();
-    if (!samePoint) throw std::exception("Route should start and end in the same point.");
+    if (!samePoint) {
+      throw std::exception("Route should start and end in the same point.");
+    }
 
     QVector<FieldType> typesGoingDown = RoutePoint::getGoingDownTypes();
     QVector<FieldType> typesGoingSame = RoutePoint::getStayingSameLevelTypes();
@@ -125,26 +133,33 @@ bool Route::checkRouteCorectness(QString& errorTextToDisplay) {
   }
 }
 RoutePoint Route::getPoint(int index) {
-  if (index < route.size())
+  if (index < route.size()) {
     return route[index];
-  else if (index == route.size())
+  } else if (index == route.size()) {
     return route[0];
-  else
+  } else {
     return RoutePoint();
+  }
 }
 bool Route::isValid() const {
   return (route.size() > 2) && (route.first().getPosition() == route.last().getPosition());
 }
 bool Route::checkIfPositionIsOnListOnIndex(Point3D toCheck, int index) {
-  if (index < 0 || index >= route.size()) return false;
+  if (index < 0 || index >= route.size()) {
+    return false;
+  }
 
   int  currentX = toCheck.getX();
   int  currentY = toCheck.getY();
   int  x        = route[index].getPosition().getX();
   bool properX  = currentX >= x - 1 && currentX <= x + 1;
-  if (!properX) return false;
+  if (!properX) {
+    return false;
+  }
   int  y       = route[index].getPosition().getY();
   bool properY = currentY >= y - 1 && currentY <= y + 1;
-  if (!properY) return false;
+  if (!properY) {
+    return false;
+  }
   return true;
 }

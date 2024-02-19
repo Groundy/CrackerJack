@@ -117,14 +117,14 @@ void RouteCreator::finishButtonPressed() {
 }
 bool RouteCreator::loadMap(int floor) {
   if (floor < -8 || floor > 7) {
-    Logger::staticLog("Wrong input for loading map function!");
+    qWarning() << "Wrong input for loading map function";
     return false;
   }
   bool mapAlreadyLoaded = floorMaps.contains(floor);
   if (!mapAlreadyLoaded) {
     QImage* mapImg = new QImage(PathResource::getPathToMap(floor));
     if (mapImg->isNull()) {
-      Logger::staticLog("Cant read map from qrc!");
+      qWarning() << "Cant read map from qrc";
       return false;
     }
     floorMaps.insert(floor, mapImg);

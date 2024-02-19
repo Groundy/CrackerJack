@@ -21,11 +21,12 @@ class Logger : public QObject {
   void log(QString msg, bool sendToDebug = true, bool sendToUserConsol = false, bool addTimeSTamp = true) {
     if (addTimeSTamp) msg.push_front(getTimeStamp());
 
-    if (sendToDebug) qDebug() << msg;
-    if (sendToUserConsol) emit sendMsgToUserConsol(QStringList() << msg);
-  }
-  static void staticLog(QString msg) {
-    qDebug() << msg;
+    if (sendToDebug) {
+      qDebug() << msg;
+    }
+    if (sendToUserConsol) {
+      emit sendMsgToUserConsol(QStringList() << msg);
+    }
   }
 
  private:

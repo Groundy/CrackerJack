@@ -84,7 +84,9 @@ QPoint MinimapAnalyzer::findPlayerPosition(const QImage& miniMap, const QImage* 
   const QList<QImage> miniMapParts = splitMiniMap(miniMap);
   for (size_t i = 0; i < miniMapParts.size(); i++) {
     QPoint startPositionOfImgPiece = ImgEditor::findExactStartPositionInImg(miniMapParts[i], *wholeMap, getFrameToLookByPreviousPos());
-    if (startPositionOfImgPiece.isNull()) continue;
+    if (startPositionOfImgPiece.isNull()) {
+      continue;
+    }
     QPoint vectorToPlayerPos = getVectorToPlayerFromImgPieceIndex(i);
     QPoint playerPos         = vectorToPlayerPos + startPositionOfImgPiece;
     return playerPos;
@@ -92,51 +94,70 @@ QPoint MinimapAnalyzer::findPlayerPosition(const QImage& miniMap, const QImage* 
   return QPoint();
 }
 QList<QPoint> MinimapAnalyzer::findStartPosOfImgMap(const QImage& imgToFind, const QImage& imgToSearchWithin, QRect frameInBigWindow) {
-  try {
-    const int WIDTH_SMALL_PIC  = imgToFind.width();
-    const int HEIGHT_SMALL_PIC = imgToFind.height();
-    const int WIDTH_BIG_PIC    = imgToSearchWithin.width();
-    const int HEIGHT_BIG_PIC   = imgToSearchWithin.height();
+  const int WIDTH_SMALL_PIC  = imgToFind.width();
+  const int HEIGHT_SMALL_PIC = imgToFind.height();
+  const int WIDTH_BIG_PIC    = imgToSearchWithin.width();
+  const int HEIGHT_BIG_PIC   = imgToSearchWithin.height();
 
-    if (imgToFind.isNull() || imgToSearchWithin.isNull()) throw std::exception("Cant find postion, one of imgs is null");
-    if (WIDTH_SMALL_PIC > WIDTH_BIG_PIC) throw std::exception("Cant find postion, Wrong imgs size");
-    if (HEIGHT_SMALL_PIC > HEIGHT_BIG_PIC) throw std::exception("Cant find postion, Wrong imgs size");
-    if (imgToFind.format() != imgToSearchWithin.format()) throw std::exception("Cant find postion, wrong formats");
-    if (frameInBigWindow.right() > WIDTH_BIG_PIC) throw std::exception("Cant find postion, Wrong frame size");
-    if (frameInBigWindow.bottom() > HEIGHT_BIG_PIC) throw std::exception("Cant find postion, Wrong frame size");
-
-    const int maxIndexToCheckX = frameInBigWindow.isEmpty() ? WIDTH_BIG_PIC - WIDTH_SMALL_PIC : frameInBigWindow.right();
-    const int maxIndexToCheckY = frameInBigWindow.isEmpty() ? HEIGHT_BIG_PIC - HEIGHT_SMALL_PIC : frameInBigWindow.bottom();
-    const int minIndexToCheckX = frameInBigWindow.isEmpty() ? 0 : frameInBigWindow.left();
-    const int minIndexToCheckY = frameInBigWindow.isEmpty() ? 0 : frameInBigWindow.top();
-
-    QList<QPoint> startPointsListToRet;
-    for (int x = minIndexToCheckX; x <= maxIndexToCheckX; x++) {
-      for (int y = minIndexToCheckY; y <= maxIndexToCheckY; y++) {
-        uint pixSmallImg = imgToFind.pixel(0, 0);
-        uint pixBigImg   = imgToSearchWithin.pixel(x, y);
-        if (pixSmallImg != pixBigImg) continue;
-
-        bool foundPosition = true;
-        for (int offsetX = 1; offsetX < WIDTH_SMALL_PIC; offsetX++) {
-          for (int offsetY = 1; offsetY < HEIGHT_SMALL_PIC; offsetY++) {
-            pixSmallImg = imgToFind.pixel(offsetX, offsetY);
-            pixBigImg   = imgToSearchWithin.pixel(x + offsetX, y + offsetY);
-            if (pixBigImg == pixSmallImg) continue;
-            //break both loops
-            offsetX       = WIDTH_SMALL_PIC;
-            offsetY       = HEIGHT_SMALL_PIC;
-            foundPosition = false;
-          }
-        }
-        if (foundPosition) startPointsListToRet.push_back(QPoint(x, y));
-      }
-    }
-    return startPointsListToRet;
-  } catch (const std::exception& e) {
-    Logger::staticLog(e.what());
+  if (imgToFind.isNull() || imgToSearchWithin.isNull()) {
+    qWarning() << "Cant find postion, one of imgs is null";
     return QList<QPoint>();
   }
+  if (WIDTH_SMALL_PIC > WIDTH_BIG_PIC) {
+    qWarning() << "Cant find postion, Wrong imgs size";
+    return QList<QPoint>();
+  }
+  if (HEIGHT_SMALL_PIC > HEIGHT_BIG_PIC) {
+    qWarning() << "Cant find postion, Wrong imgs size";
+    return QList<QPoint>();
+  }
+  if (imgToFind.format() != imgToSearchWithin.format()) {
+    qWarning() << "Cant find postion, wrong formats";
+    return QList<QPoint>();
+  }
+  if (frameInBigWindow.right() > WIDTH_BIG_PIC) {
+    qWarning() << "Cant find postion, Wrong frame size";
+    return QList<QPoint>();
+  }
+  if (frameInBigWindow.bottom() > HEIGHT_BIG_PIC) {
+    qWarning() << "Cant find postion, Wrong frame size";
+    return QList<QPoint>();
+  }
+
+  const int maxIndexToCheckX = frameInBigWindow.isEmpty() ? WIDTH_BIG_PIC - WIDTH_SMALL_PIC : frameInBigWindow.right();
+  const int maxIndexToCheckY = frameInBigWindow.isEmpty() ? HEIGHT_BIG_PIC - HEIGHT_SMALL_PIC : frameInBigWindow.bottom();
+  const int minIndexToCheckX = frameInBigWindow.isEmpty() ? 0 : frameInBigWindow.left();
+  const int minIndexToCheckY = frameInBigWindow.isEmpty() ? 0 : frameInBigWindow.top();
+
+  QList<QPoint> startPointsListToRet;
+  for (int x = minIndexToCheckX; x <= maxIndexToCheckX; x++) {
+    for (int y = minIndexToCheckY; y <= maxIndexToCheckY; y++) {
+      uint pixSmallImg = imgToFind.pixel(0, 0);
+      uint pixBigImg   = imgToSearchWithin.pixel(x, y);
+      if (pixSmallImg != pixBigImg) {
+        continue;
+      }
+
+      bool foundPosition = true;
+      for (int offsetX = 1; offsetX < WIDTH_SMALL_PIC; offsetX++) {
+        for (int offsetY = 1; offsetY < HEIGHT_SMALL_PIC; offsetY++) {
+          pixSmallImg = imgToFind.pixel(offsetX, offsetY);
+          pixBigImg   = imgToSearchWithin.pixel(x + offsetX, y + offsetY);
+          if (pixBigImg == pixSmallImg) {
+            continue;
+          }
+          //break both loops
+          offsetX       = WIDTH_SMALL_PIC;
+          offsetY       = HEIGHT_SMALL_PIC;
+          foundPosition = false;
+        }
+      }
+      if (foundPosition) {
+        startPointsListToRet.push_back(QPoint(x, y));
+      }
+    }
+  }
+  return startPointsListToRet;
 }
 QRect MinimapAnalyzer::getFrameToLookByPreviousPos() {
   if (previousPosition.isNull()) return QRect();
