@@ -1,6 +1,8 @@
 #pragma once
 #include <qdir.h>
 #include <qstring.h>
+
+#include <optional>
 class PathResource {
  public:
   static QDir getProfileFolder() {
@@ -33,26 +35,28 @@ class PathResource {
     mainDir.cd(dirName);
     return mainDir;
   }
-  static QDir getScreenShotFolder() {
-    try {
-      QDir dir = QDir::tempPath();
-      if (!dir.cdUp()) throw std::exception("Error in setting up screenshot folder");
-      if (!dir.cd("Tibia"))
-        throw std::exception(QString("Error in finding screenshot folder, No Tibia folder in : %1").arg(dir.path()).toStdString().c_str());
-      if (!dir.cd("packages"))
-        throw std::exception(
-            QString("Error in finding screenshot folder, No packages folder in : %1").arg(dir.path()).toStdString().c_str());
-      if (!dir.cd("Tibia"))
-        throw std::exception(QString("Error in finding screenshot folder, No Tibia folder in : %1").arg(dir.path()).toStdString().c_str());
-      if (!dir.cd("screenshots"))
-        throw std::exception(
-            QString("Error in finding screenshot folder, No screenshots folder in : %1").arg(dir.path()).toStdString().c_str());
-      return dir;
-    } catch (const std::exception& e) {
-      qDebug() << e.what();
-      return QDir();
+  static std::optional<QDir> getScreenShotFolder() {
+    QDir dir = QDir::tempPath();
+    dir.cdUp();
+    if (!dir.cd("Tibia")) {
+      qWarning() << "Error in finding screenshot folder, current dir" << dir.absolutePath();
+      return std::nullopt;
     }
+    if (!dir.cd("packages")) {
+      qWarning() << "Error in finding screenshot folder, current dir" << dir.absolutePath();
+      return std::nullopt;
+    }
+    if (!dir.cd("Tibia")) {
+      qWarning() << "Error in finding screenshot folder, current dir" << dir.absolutePath();
+      return std::nullopt;
+    }
+    if (!dir.cd("screenshots")) {
+      qWarning() << "Error in finding screenshot folder, current dir" << dir.absolutePath();
+      return std::nullopt;
+    }
+    return dir;
   }
+
   static QString getPathToRouteFile(const QString routeNameWithoutExtension) {
     return getRouteFolder().absoluteFilePath(routeNameWithoutExtension + ".json");
   }

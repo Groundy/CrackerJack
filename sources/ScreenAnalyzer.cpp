@@ -2,7 +2,12 @@
 
 ScreenAnalyzer::ScreenAnalyzer(QObject* parent, QSharedPointer<VariablesClass> var, Profile* profile)
     : QThread(parent), var(var), profile(profile) {
-  screenShotFolder = PathResource::getScreenShotFolder();
+  auto screenshotDir = PathResource::getScreenShotFolder();
+  if (!screenshotDir.has_value()) {
+    qCritical() << "No screenshot directory";
+    exit(0);
+  }
+  screenShotFolder = screenshotDir.value();
   var->getSettings().setLoadingState(true);
   deleteScreenShotFolder();
 }
