@@ -9,12 +9,11 @@ MainMenu::MainMenu(Profile* prof, QWidget* parent) : QDialog(parent), prof(prof)
 
   var           = QSharedPointer<VariablesClass>(new VariablesClass(sound));
   gameConnector = QSharedPointer<GameConnecter>(new GameConnecter(var, prof));
-  ui->profileNameLabel->setText(prof->getName());
-
-  ui->playerPosGroup->setVisible(false);
-  ui->resourceGroup->setVisible(false);
 
   Settings& settings = var->getSettings();
+  ui->profileNameLabel->setText(prof->getName());
+  ui->playerPosGroup->setVisible(false);
+  ui->resourceGroup->setVisible(false);
   ui->keepHastedCheckBox->setChecked(settings.getKeepHasted());
   ui->keepUpgradedCheckBox->setChecked(settings.getKeepUpraded());
 
@@ -48,12 +47,12 @@ void MainMenu::threadStarter() {
   clickDetector = new ClickDetector(this, gameConnector);
   clickDetector->start();
 
-  if (!connect(&this->var->getLogger(), &Logger::sendMsgToUserConsol, this, &MainMenu::printToUserConsol, Qt::UniqueConnection)) {
+  if (!connect(&var->getLogger(), &Logger::sendMsgToUserConsol, this, &MainMenu::printToUserConsol, Qt::UniqueConnection)) {
     qCritical() << "Connection failed. Logger";
     exit(0);
   }
 
-  if (!connect(&this->var->getLogger(), &Logger::sendMsgToUserConsolRed, this, &MainMenu::printToUserConsolRed, Qt::UniqueConnection)) {
+  if (!connect(&var->getLogger(), &Logger::sendMsgToUserConsolRed, this, &MainMenu::printToUserConsolRed, Qt::UniqueConnection)) {
     qCritical() << "Connection failed. Logger";
     exit(0);
   }
