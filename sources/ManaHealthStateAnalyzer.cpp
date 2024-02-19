@@ -264,21 +264,30 @@ ImageValues ManaHealthStateAnalyzer::getImages() {
 bool ManaHealthStateAnalyzer::restMethodeCanBeUsed(const RestorationMethode& restMethode) {
   const qint64 now    = QDateTime::currentMSecsSinceEpoch();
   Timers&      timers = var->getTimers();
-  switch (restMethode.getType()) {
-    case RestorationMethode::Type::POTION:
-      if (now < timers.getTimeLastItemUsageGeneral() + (1000 * restMethode.getCdGroup())) return false;
-      if (now < timers.getTimeLastItemUsage(restMethode.getName()) + (1000 * restMethode.getCd())) return false;
-      //later should be added checking if char has proper pot!
+  const auto   type   = restMethode.getType();
+  {
+    if (type == RestorationMethode::Type::POTION) {
+      if (now < timers.getTimeLastItemUsageGeneral() + (1000 * restMethode.getCdGroup())) {
+        return false;
+      }
+      if (now < timers.getTimeLastItemUsage(restMethode.getName()) + (1000 * restMethode.getCd())) {
+        return false;
+      }
+      return true;  // todo later should be added checking if char has proper pot!
+    } else if (type == RestorationMethode::Type::SPELL) {
+      if (var->getVitalitty().getCurrentRawManaVal() < restMethode.getMana()) {
+        return false;
+      }
+      if (now < timers.getTimeLastSpellUsageHealing() + (1000 * restMethode.getCdGroup())) {
+        return false;
+      }
+      if (now < timers.getTimeLastSpellUsed(restMethode.getName()) + (1000 * restMethode.getCd())) {
+        return false;
+      }
       return true;
-    case RestorationMethode::Type::SPELL:
-      if (var->getVitalitty().getCurrentRawManaVal() < restMethode.getMana()) return false;
-      if (now < timers.getTimeLastSpellUsageHealing() + (1000 * restMethode.getCdGroup())) return false;
-      if (now < timers.getTimeLastSpellUsed(restMethode.getName()) + (1000 * restMethode.getCd())) return false;
-      return true;
-      break;
-    default:
+    } else {
       return false;
-      break;
+    }
   }
 }
 int ManaHealthStateAnalyzer::calcTimeBetweenManaPots(int currentManaPercentage) {
