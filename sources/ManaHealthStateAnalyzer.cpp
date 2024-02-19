@@ -265,29 +265,28 @@ bool ManaHealthStateAnalyzer::restMethodeCanBeUsed(const RestorationMethode& res
   const qint64 now    = QDateTime::currentMSecsSinceEpoch();
   Timers&      timers = var->getTimers();
   const auto   type   = restMethode.getType();
-  {
-    if (type == RestorationMethode::Type::POTION) {
-      if (now < timers.getTimeLastItemUsageGeneral() + (1000 * restMethode.getCdGroup())) {
-        return false;
-      }
-      if (now < timers.getTimeLastItemUsage(restMethode.getName()) + (1000 * restMethode.getCd())) {
-        return false;
-      }
-      return true;  // todo later should be added checking if char has proper pot!
-    } else if (type == RestorationMethode::Type::SPELL) {
-      if (var->getVitalitty().getCurrentRawManaVal() < restMethode.getMana()) {
-        return false;
-      }
-      if (now < timers.getTimeLastSpellUsageHealing() + (1000 * restMethode.getCdGroup())) {
-        return false;
-      }
-      if (now < timers.getTimeLastSpellUsed(restMethode.getName()) + (1000 * restMethode.getCd())) {
-        return false;
-      }
-      return true;
-    } else {
+
+  if (type == RestorationMethode::Type::POTION) {
+    if (now < timers.getTimeLastItemUsageGeneral() + (1000 * restMethode.getCdGroup())) {
       return false;
     }
+    if (now < timers.getTimeLastItemUsage(restMethode.getName()) + (1000 * restMethode.getCd())) {
+      return false;
+    }
+    return true;  // todo later should be added checking if char has proper pot!
+  } else if (type == RestorationMethode::Type::SPELL) {
+    if (var->getVitalitty().getCurrentRawManaVal() < restMethode.getMana()) {
+      return false;
+    }
+    if (now < timers.getTimeLastSpellUsageHealing() + (1000 * restMethode.getCdGroup())) {
+      return false;
+    }
+    if (now < timers.getTimeLastSpellUsed(restMethode.getName()) + (1000 * restMethode.getCd())) {
+      return false;
+    }
+    return true;
+  } else {
+    return false;
   }
 }
 int ManaHealthStateAnalyzer::calcTimeBetweenManaPots(int currentManaPercentage) {
