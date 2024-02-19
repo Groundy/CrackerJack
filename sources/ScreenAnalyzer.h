@@ -16,7 +16,7 @@ class ScreenAnalyzer : public QThread {
   Q_OBJECT
 
  public:
-  ScreenAnalyzer(QObject* parent, QSharedPointer<VariablesClass> var, Profile* prof);
+  ScreenAnalyzer(QObject* parent, QSharedPointer<VariablesClass> var);
   ~ScreenAnalyzer();
   void run();
 
@@ -24,7 +24,6 @@ class ScreenAnalyzer : public QThread {
   const int                      SLEEP_TIME = 50;
   QSharedPointer<VariablesClass> var;
   QDir                           screenShotFolder;
-  Profile*                       profile;
 
   void    deleteScreenShotFolder();
   QString getNameOfLastTakenScreenShot();

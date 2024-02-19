@@ -22,7 +22,7 @@ int main(int argc, char* argv[]) {
   setTranslation(app);
   setStyle(app);
 
-  QSharedPointer<Profile> profile;
+  QSharedPointer<Profile> profile(new Profile());
   SelectProfileWindow     win(profile);
   if (!(win.exec() == QDialog::Accepted)) {
     exit(0);

@@ -3,10 +3,10 @@
 #include "ui_SelectProfileWindow.h"
 
 //const
-SelectProfileWindow::SelectProfileWindow(QSharedPointer<Profile> profileToBeChoosen, QWidget* parent)
-    : QDialog(parent), profileToBeChoosen(profileToBeChoosen) {
+SelectProfileWindow::SelectProfileWindow(QSharedPointer<Profile> profileToBeChoosen, QWidget* parent) : QDialog(parent) {
   ui = new Ui::SelectProfileWindow();
   ui->setupUi(this);
+  this->profileToBeChoosen = profileToBeChoosen;
   setFixedSize(this->size());
   setUpGui();
   refreshProfilesOnList();

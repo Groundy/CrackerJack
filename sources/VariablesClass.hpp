@@ -1,4 +1,7 @@
 #pragma once
+#include <Profile.h>
+#include <qsharedpointer.h>
+
 #include "BattleList.hpp"
 #include "Equipment.hpp"
 #include "GameProcessData.hpp"
@@ -11,7 +14,7 @@
 
 class VariablesClass {
  public:
-  VariablesClass() = default;
+  VariablesClass(QSharedPointer<Profile> prof) : prof(prof){};
   ~VariablesClass() {
     delete battleList;
     delete eq;
@@ -52,17 +55,21 @@ class VariablesClass {
   ImgEditor& getImgEditorObj() {
     return imgEditor;
   }
+  QSharedPointer<Profile> getProf() {
+    return prof;
+  }
 
  private:
-  Logger          logger;
-  GameProcessData gameProcess;
-  GameWindow      gameWindow;
-  BattleList*     battleList = new BattleList(&logger, &imgEditor);
-  Settings        settings;
-  Timers          timers;
-  Vitallity       vitalitty;
-  MiniMap         minimap;
-  PlayerPosition  position;
+  QSharedPointer<Profile> prof;
+  Logger                  logger;
+  GameProcessData         gameProcess;
+  GameWindow              gameWindow;
+  BattleList*             battleList = new BattleList(&logger, &imgEditor);
+  Settings                settings;
+  Timers                  timers;
+  Vitallity               vitalitty;
+  MiniMap                 minimap;
+  PlayerPosition          position;
   // MutexImg fullImage;
   Equipment* eq = new Equipment(&imgEditor);
   ImgEditor  imgEditor;

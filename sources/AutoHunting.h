@@ -14,8 +14,7 @@
 class AutoHunting : public QThread {
   Q_OBJECT
  public:
-  AutoHunting(QObject* parent, QSharedPointer<VariablesClass> var, QSharedPointer<GameConnecter> gameConnector, Route route,
-              Profile* profile);
+  AutoHunting(QObject* parent, QSharedPointer<VariablesClass> var, QSharedPointer<GameConnecter> gameConnector, Route route);
   ~AutoHunting();
   void             run();
   MinimapAnalyzer& getMiniMapAnalyzer();
@@ -36,7 +35,6 @@ class AutoHunting : public QThread {
 
   QSharedPointer<VariablesClass> var;
   QSharedPointer<GameConnecter>  gameConnector;
-  Profile*                       profile;
 
   Point3D                currentPos;
   int                    lastAchivedPoint = -1;

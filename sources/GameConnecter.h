@@ -1,6 +1,7 @@
 #pragma once
 #include <comdef.h>
 #include <qmutex.h>
+#include <qsharedpointer.h>
 
 #include "Key.h"
 #include "Profile.h"
@@ -8,7 +9,7 @@
 #include "VariablesClass.hpp"
 class GameConnecter {
  public:
-  GameConnecter(QSharedPointer<VariablesClass> var, Profile* profile);
+  GameConnecter(QSharedPointer<VariablesClass> var);
   ~GameConnecter();
 
   void clickLeft(QPoint pt);

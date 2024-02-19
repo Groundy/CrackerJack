@@ -1,7 +1,7 @@
 #include "GameConnecter.h"
 
-GameConnecter::GameConnecter(QSharedPointer<VariablesClass> var, Profile* prof) : var(var) {
-  autoLootSetting       = prof->getAutoLoot();
+GameConnecter::GameConnecter(QSharedPointer<VariablesClass> var) : var(var) {
+  autoLootSetting       = var->getProf()->getAutoLoot();
   playingOnSmallMonitor = var->getSettings().getPlayingOnSmallMonitor();
 }
 GameConnecter::~GameConnecter() {

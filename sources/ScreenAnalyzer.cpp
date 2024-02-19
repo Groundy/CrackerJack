@@ -1,7 +1,6 @@
 #include "ScreenAnalyzer.h"
 
-ScreenAnalyzer::ScreenAnalyzer(QObject* parent, QSharedPointer<VariablesClass> var, Profile* profile)
-    : QThread(parent), var(var), profile(profile) {
+ScreenAnalyzer::ScreenAnalyzer(QObject* parent, QSharedPointer<VariablesClass> var) : QThread(parent), var(var) {
   auto screenshotDir = PathResource::getScreenShotFolder();
   if (!screenshotDir.has_value()) {
     qCritical() << "No screenshot directory";

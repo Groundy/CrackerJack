@@ -1,9 +1,9 @@
 #include "ManaHealthStateAnalyzer.h"
 
-ManaHealthStateAnalyzer::ManaHealthStateAnalyzer(QObject* parent, Profile* profile, QSharedPointer<VariablesClass> var,
+ManaHealthStateAnalyzer::ManaHealthStateAnalyzer(QObject* parent, QSharedPointer<VariablesClass> var,
                                                  QSharedPointer<GameConnecter> gameConnector)
     : QThread(parent), var(var), gameConnector(gameConnector) {
-  populateHealthManaMaps(profile);
+  populateHealthManaMaps(var->getProf().get());
   imgEditor = &var->getImgEditorObj();
 }
 ManaHealthStateAnalyzer::~ManaHealthStateAnalyzer() {

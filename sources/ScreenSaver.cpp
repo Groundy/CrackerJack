@@ -1,7 +1,7 @@
 #include "ScreenSaver.h"
 
-ScreenSaver::ScreenSaver(QObject* parent, QSharedPointer<VariablesClass> var, QSharedPointer<GameConnecter> gameConnecter, Profile* profile)
-    : QThread(parent), var(var), gameConnecter(gameConnecter), profile(profile) {
+ScreenSaver::ScreenSaver(QObject* parent, QSharedPointer<VariablesClass> var, QSharedPointer<GameConnecter> gameConnecter)
+    : QThread(parent), var(var), gameConnecter(gameConnecter) {
   var->getSettings().setTakingScreensState(true);
 }
 
@@ -20,7 +20,7 @@ void ScreenSaver::sendScreenRequestToGame() {
     qWarning() << "Can't send screenshot key to game, there is no known title ofwindow";
     return;
   }
-  const Key key = profile->getScreenShotKey();
+  const Key key = var->getProf()->getScreenShotKey();
   gameConnecter->sendKeyStrokeToProcess(key);
 }
 

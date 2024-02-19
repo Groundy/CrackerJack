@@ -1,9 +1,8 @@
 #include "AutoHunting.h"
 
-AutoHunting::AutoHunting(QObject* parent, QSharedPointer<VariablesClass> var, QSharedPointer<GameConnecter> gameConnector, Route route,
-                         Profile* profile)
-    : QThread(parent), var(var), route(route), gameConnector(gameConnector), profile(profile) {
-  auto data            = profile->getAutoHuntData();
+AutoHunting::AutoHunting(QObject* parent, QSharedPointer<VariablesClass> var, QSharedPointer<GameConnecter> gameConnector, Route route)
+    : QThread(parent), var(var), route(route), gameConnector(gameConnector) {
+  auto data            = var->getProf()->getAutoHuntData();
   attackMethodes       = data.getAttacks();
   minEnemiesToStop     = data.getMinMonToStop();
   minEnemiesToContinue = data.getMinMonToContinue();
@@ -150,11 +149,15 @@ qint64 AutoHunting::now() {
 }
 void AutoHunting::keepAtackingTargetOnBattleList() {
   qint64 nowTime = now();
-  if (var->getBattleList().firstEnemieIsInRedFrame()) return;
-  if (nowTime < minPeriodBetweenAttackingMob + lastTimePressedAttack) return;
+  if (var->getBattleList().firstEnemieIsInRedFrame()) {
+    return;
+  }
+  if (nowTime < minPeriodBetweenAttackingMob + lastTimePressedAttack) {
+    return;
+  }
   gameConnector->sendKeyStrokeToProcess(VK_ESCAPE);
   msleep(50);
-  gameConnector->sendKeyStrokeToProcess(profile->getAutoAttackKey());
+  gameConnector->sendKeyStrokeToProcess(var->getProf()->getAutoAttackKey());
   lastTimePressedAttack = nowTime;
 }
 bool AutoHunting::playerFoundOnBattleList() {
