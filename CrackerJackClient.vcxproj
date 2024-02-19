@@ -262,6 +262,7 @@ xcopy /y /d ".\dependencies\32-bit\libcrypto-1_1.dll" "$(OutDir)"
     <QtUic Include="sources\SelectProfileWindow.ui" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AutoHuntData.hpp" />
     <ClInclude Include="sources\BattleList.hpp" />
     <ClInclude Include="sources\GameConnecter.h" />
     <ClInclude Include="sources\AttackMethode.hpp" />
