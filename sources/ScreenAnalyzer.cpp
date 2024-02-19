@@ -2,7 +2,7 @@
 
 ScreenAnalyzer::ScreenAnalyzer(QObject* parent, QSharedPointer<VariablesClass> var, Profile* profile)
     : QThread(parent), var(var), profile(profile) {
-  screenShotFolder = setUpScreenFolder();
+  screenShotFolder = PathResource::getScreenShotFolder();
   var->getSettings().setLoadingState(true);
   deleteScreenShotFolder();
 }
@@ -57,25 +57,7 @@ QString ScreenAnalyzer::getNameOfLastTakenScreenShot() {
 
   return listOfFIlesNames[0];
 }
-QDir ScreenAnalyzer::setUpScreenFolder() {
-  try {
-    QDir dir = QDir::tempPath();
-    if (!dir.cdUp()) throw std::exception("Error in setting up screenshot folder");
-    if (!dir.cd("Tibia"))
-      throw std::exception(QString("Error in finding screenshot folder, No Tibia folder in : %1").arg(dir.path()).toStdString().c_str());
-    if (!dir.cd("packages"))
-      throw std::exception(QString("Error in finding screenshot folder, No packages folder in : %1").arg(dir.path()).toStdString().c_str());
-    if (!dir.cd("Tibia"))
-      throw std::exception(QString("Error in finding screenshot folder, No Tibia folder in : %1").arg(dir.path()).toStdString().c_str());
-    if (!dir.cd("screenshots"))
-      throw std::exception(
-          QString("Error in finding screenshot folder, No screenshots folder in : %1").arg(dir.path()).toStdString().c_str());
-    return dir;
-  } catch (const std::exception& e) {
-    qDebug() << e.what();
-    return QDir();
-  }
-}
+
 void ScreenAnalyzer::deleteScreenShotFolder() {
   QStringList filterPatter("*_*_*_Hotkey.png");  //yyyy-MM-dd_hhmmsszzzz_CharNick_Methode.png
   screenShotFolder.setNameFilters(filterPatter);
@@ -122,4 +104,34 @@ void ScreenAnalyzer::cutBattleList(const QImage& fullscreen) {
 
   QRect frame = var->getBattleList().getFrame();
   var->getBattleList().setImg(fullscreen.copy(frame));
+}
+void ScreenAnalyzer::analyzeBattleList(const QImage& fullscreen) {
+  if (!var->getSettings().getKeepHuntingAutomaticly()) return;
+  if (var->getBattleList().getFrame().isEmpty()) {
+    bool foundBattleArea = Calibrator(var).calibrateBattleArea(fullscreen);
+    if (!foundBattleArea) {
+      QString msg = "Nie mozna otworzy battle listy";
+      var->log(msg, true, true, false);
+    }
+  }
+  cutBattleList(fullscreen);
+}
+void ScreenAnalyzer::analyzeMiniMap(const QImage& fullscreen) {
+  if (!var->getSettings().getKeepAnalyzeMiniMap()) return;
+
+  QRect frame = var->getMiniMap().getFrameMiniMap();
+  var->getMiniMap().setImgMiniMap(fullscreen.copy(frame));
+  const QPoint DIFF_DIST_SINCE_TOPLEFT_MINIMAP       = QPoint(137, 41);
+  const QPoint TOP_LEFT_START_OF_MINIMAP_LAYER_FRAME = frame.topLeft() + DIFF_DIST_SINCE_TOPLEFT_MINIMAP;
+  const QSize  SIZE_MINIMAP_LAYER_FRAME              = QSize(24, 71);
+  QRect        miniMapLayerFrame(TOP_LEFT_START_OF_MINIMAP_LAYER_FRAME, SIZE_MINIMAP_LAYER_FRAME);
+  var->getMiniMap().setImgMiniMapLayer(fullscreen.copy(miniMapLayerFrame));
+}
+void ScreenAnalyzer::analyzeEquipment(const QImage& fullscreen) {
+  bool needCalibration = var->getEquipment().getStoreRect().isEmpty();
+  if (needCalibration) Calibrator(var).calibrateStoreButton(fullscreen);
+  if (var->getSettings().getKeepAnalyzeStates()) {
+    QRect stateBarRect = var->getEquipment().getRect(Equipment::EqRect::StateBar);
+    var->getEquipment().setImg(Equipment::EqRect::StateBar, fullscreen.copy(stateBarRect));
+  }
 }
