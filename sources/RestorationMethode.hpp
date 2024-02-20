@@ -43,7 +43,7 @@ class RestorationMethode : JsonClass {
     field = "key";
     if (jsonObj.contains(field)) {
       Key keyToSet(jsonObj[field].toObject());
-      if (key.isValid()) {
+      if (keyToSet.isValid()) {
         key = keyToSet;
       } else {
         qWarning() << "Wrong type of rest method field " << field;
