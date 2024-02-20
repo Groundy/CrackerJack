@@ -27,7 +27,9 @@ int main(int argc, char* argv[]) {
   if (!(win.exec() == QDialog::Accepted)) {
     exit(0);
   }
-  MainMenu mainMenu(profile);
-  mainMenu.exec();
+  MainMenu* mainMenu = new MainMenu(profile);
+  mainMenu->exec();
+  delete mainMenu;
+  exit(0);
   return app.exec();
 }
