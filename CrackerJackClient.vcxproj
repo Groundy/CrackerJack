@@ -21,10 +21,10 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{F9338802-AA39-4ECF-A29E-5370179C0F11}</ProjectGuid>
     <Keyword>QtVS_v303</Keyword>
-    <WindowsTargetPlatformVersion Condition="'$(Configuration)|$(Platform)' == 'Debug|Win32'">10.0.18362.0</WindowsTargetPlatformVersion>
-    <WindowsTargetPlatformVersion Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">10.0.19041.0</WindowsTargetPlatformVersion>
-    <WindowsTargetPlatformVersion Condition="'$(Configuration)|$(Platform)' == 'Release|Win32'">10.0.18362.0</WindowsTargetPlatformVersion>
-    <WindowsTargetPlatformVersion Condition="'$(Configuration)|$(Platform)'=='Release|x64'">10.0.19041.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion Condition="'$(Configuration)|$(Platform)' == 'Debug|Win32'">10.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">10.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion Condition="'$(Configuration)|$(Platform)' == 'Release|Win32'">10.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion Condition="'$(Configuration)|$(Platform)'=='Release|x64'">10.0</WindowsTargetPlatformVersion>
     <QtMsBuild Condition="'$(QtMsBuild)'=='' OR !Exists('$(QtMsBuild)\qt.targets')">$(MSBuildProjectDirectory)\QtMsBuild</QtMsBuild>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -67,12 +67,25 @@
     <Import Project="$(QtMsBuild)\qt_defaults.props" />
   </ImportGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|Win32'">
+    <OutDir>$(SolutionDir)builds\$(Configuration)\</OutDir>
+    <IntDir>builds_trash\$(ShortProjectName)\$(Configuration)\</IntDir>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|Win32'" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <OutDir>$(SolutionDir)builds\$(Configuration)\</OutDir>
+    <IntDir>builds_trash\$(ShortProjectName)\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|Win32'">
+    <OutDir>$(SolutionDir)builds\$(Configuration)\</OutDir>
+    <IntDir>builds_trash\$(ShortProjectName)\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <OutDir>$(SolutionDir)builds\$(Configuration)\</OutDir>
+    <IntDir>builds_trash\$(ShortProjectName)\$(Configuration)\</IntDir>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <AdditionalIncludeDirectories>.\;.\sources;.\Resources;.\dependencies;.\dependencies\32-bit;C:\Program Files %28x86%29\OpenSSL-Win32\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <AdditionalDependencies>libssl.lib;libcrypto.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -106,6 +119,7 @@ xcopy /y /d ".\dependencies\32-bit\libcrypto-1_1.dll" "$(OutDir)"
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <AdditionalIncludeDirectories>C:\Program Files %28x86%29\OpenSSL-Win32\include;.\sources;.\Resources;.\dependencies;.\dependencies\32-bit;.\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <PostBuildEvent>
       <Command>xcopy /y /d ".\dependencies\32-bit\libssl-1_1.dll" "$(OutDir)"
@@ -139,23 +153,19 @@ xcopy /y /d ".\dependencies\32-bit\libcrypto-1_1.dll" "$(OutDir)"
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|Win32'" Label="QtSettings">
-    <QtInstall>msvc2019</QtInstall>
-    <QtModules>core;gui;testlib;widgets</QtModules>
+    <QtModules>core;gui;multimedia;widgets</QtModules>
     <QtBuildConfig>debug</QtBuildConfig>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="QtSettings">
-    <QtInstall>5.15.2_msvc2015_64</QtInstall>
     <QtModules>core;gui;multimedia;widgets</QtModules>
     <QtBuildConfig>debug</QtBuildConfig>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|Win32'" Label="QtSettings">
-    <QtInstall>msvc2019</QtInstall>
-    <QtModules>core;gui;testlib;widgets</QtModules>
+    <QtModules>core;gui;multimedia;widgets;testlib;widgets</QtModules>
     <QtBuildConfig>release</QtBuildConfig>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="QtSettings">
-    <QtInstall>5.15.2_msvc2015_64</QtInstall>
-    <QtModules>core;gui;multimedia;widgets</QtModules>
+    <QtModules>core;gui;multimedia;widgets;multimedia;widgets</QtModules>
     <QtBuildConfig>release</QtBuildConfig>
   </PropertyGroup>
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.props')">
@@ -252,11 +262,17 @@ xcopy /y /d ".\dependencies\32-bit\libcrypto-1_1.dll" "$(OutDir)"
     <QtUic Include="sources\SelectProfileWindow.ui" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AutoHuntData.hpp" />
     <ClInclude Include="sources\BattleList.hpp" />
     <ClInclude Include="sources\GameConnecter.h" />
     <ClInclude Include="sources\AttackMethode.hpp" />
     <QtMoc Include="sources\AutoHuntConfigurator.h" />
-    <QtMoc Include="sources\ClickDetector.hpp" />
+    <QtMoc Include="sources\ClickDetector.hpp">
+      <QtMocDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\$(IntDir)moc\</QtMocDir>
+      <QtMocDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\$(IntDir)moc\</QtMocDir>
+      <QtMocDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">..\$(IntDir)moc\</QtMocDir>
+      <QtMocDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">..\$(IntDir)moc\</QtMocDir>
+    </QtMoc>
     <ClInclude Include="sources\Equipment.hpp" />
     <ClInclude Include="sources\GameProcessData.hpp" />
     <ClInclude Include="sources\GameWindow.hpp" />

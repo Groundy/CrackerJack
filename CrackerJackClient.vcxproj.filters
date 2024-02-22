@@ -140,10 +140,10 @@
     <QtMoc Include="sources\AutoHunting.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="sources\AutoHuntConfigurator.h">
+    <QtMoc Include="sources\ClickDetector.hpp">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="sources\ClickDetector.hpp">
+    <QtMoc Include="sources\AutoHuntConfigurator.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>

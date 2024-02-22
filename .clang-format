@@ -1,0 +1,12 @@
+Language: Cpp
+BasedOnStyle: Google
+AllowShortBlocksOnASingleLine: Empty
+AllowShortFunctionsOnASingleLine: Empty
+ColumnLimit: 140
+DerivePointerAlignment: false
+ReflowComments: false
+SpacesInContainerLiterals: false
+AlignConsecutiveAssignments: true
+AlignConsecutiveDeclarations: true
+AlignConsecutiveMacros: true
+InsertNewlineAtEOF: true

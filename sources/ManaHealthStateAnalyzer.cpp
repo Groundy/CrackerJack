@@ -1,306 +1,430 @@
 #include "ManaHealthStateAnalyzer.h"
 
-ManaHealthStateAnalyzer::ManaHealthStateAnalyzer(QObject *parent, Profile* profile, QSharedPointer<VariablesClass> var, QSharedPointer<GameConnecter> gameConnector)
-	: QThread(parent), var(var), gameConnector(gameConnector){
-	populateHealthManaMaps(profile);
-	imgEditor = &var->getImgEditorObj();
+ManaHealthStateAnalyzer::ManaHealthStateAnalyzer(QObject* parent, QSharedPointer<VariablesClass> var,
+                                                 QSharedPointer<GameConnecter> gameConnector)
+    : QThread(parent), var(var), gameConnector(gameConnector) {
+  populateHealthManaMaps(var->getProf().get());
+  imgEditor = &var->getImgEditorObj();
 }
-ManaHealthStateAnalyzer::~ManaHealthStateAnalyzer(){
-	this->terminate();
+ManaHealthStateAnalyzer::~ManaHealthStateAnalyzer() {
+  this->terminate();
 }
-void ManaHealthStateAnalyzer::run(){
-	while (true) {
-		msleep(SLEEP_TIME);
-		ValuesDoubles percentages = getCurrentPercentage();
-		if (!percentages.isValid())
-			continue;
-		sendDataToGui(percentages);
+void ManaHealthStateAnalyzer::run() {
+  while (true) {
+    msleep(SLEEP_TIME);
+    ValuesDoubles percentages = getCurrentPercentage();
+    if (!percentages.isValid()) continue;
+    sendDataToGui(percentages);
 
-		auto healthMetodes = findRestorationToUse(percentages.health, healthMap);
-		for each (auto methode in healthMetodes) {
-			gameConnector->useRestorationMethode(methode);
-			//var->getVitalitty().clearHealth();
-		}
-		auto manahMetodes = findRestorationToUse(percentages.mana, manaMap);
-		for each (auto methode in manahMetodes) {
-			int additionalManaBreak = calcTimeBetweenManaPots(percentages.mana);
-			gameConnector->useRestorationMethode(methode, additionalManaBreak);
-			//var->getVitalitty().clearMana();
-		}
+    auto healthMetodes = findRestorationToUse(percentages.health, healthMap);
+    for each (auto methode in healthMetodes) {
+      gameConnector->useRestorationMethode(methode);
+      //var->getVitalitty().clearHealth();
+    }
+    auto manahMetodes = findRestorationToUse(percentages.mana, manaMap);
+    for each (auto methode in manahMetodes) {
+      int additionalManaBreak = calcTimeBetweenManaPots(percentages.mana);
+      gameConnector->useRestorationMethode(methode, additionalManaBreak);
+      //var->getVitalitty().clearMana();
+    }
 
-		handleStates();
-	}
+    handleStates();
+  }
 }
 
+ValuesDoubles ManaHealthStateAnalyzer::toDoubles(ValuesInts currentValues) {
+  double healthPercentage;
+  if (currentValues.isHealthOk())
+    healthPercentage = 100.0 * currentValues.health / currentValues.maxHealth;
+  else
+    healthPercentage = NULL;
 
-ManaHealthStateAnalyzer::ValuesDoubles ManaHealthStateAnalyzer::toDoubles(ValuesInts currentValues) {
-	double healthPercentage;
-	if (currentValues.isHealthOk())
-		healthPercentage = 100.0 * currentValues.health / currentValues.maxHealth;
-	else
-		healthPercentage = NULL;
+  double manaPercentage;
+  if (currentValues.isManaOk())
+    manaPercentage = 100.0 * currentValues.mana / currentValues.maxMana;
+  else
+    manaPercentage = NULL;
 
-	double manaPercentage;
-	if (currentValues.isManaOk())
-		manaPercentage = 100.0 * currentValues.mana / currentValues.maxMana;
-	else
-		manaPercentage = NULL;
-
-	double manaShieldPercentage;
-	if (currentValues.isShieldOk())
-		manaShieldPercentage = 100.0 * currentValues.shield / currentValues.maxShield;
-	else
-		manaShieldPercentage = NULL;
-	ValuesDoubles toRet(healthPercentage, manaPercentage, manaShieldPercentage);
-	return toRet;
+  double manaShieldPercentage;
+  if (currentValues.isShieldOk())
+    manaShieldPercentage = 100.0 * currentValues.shield / currentValues.maxShield;
+  else
+    manaShieldPercentage = NULL;
+  ValuesDoubles toRet(healthPercentage, manaPercentage, manaShieldPercentage);
+  return toRet;
 }
 bool ManaHealthStateAnalyzer::populateHealthManaMaps(const Profile* profile) {
-	try {
-		auto healthRestorationsMethode = profile->getRestMethodesHealth();
-		QVector<int> healthThresholds;
-		for each (auto var in healthRestorationsMethode)
-			healthThresholds.push_back(var.getThreshold());
-		if (healthThresholds.size() != healthRestorationsMethode.size())
-			throw std::exception("wrong sizes of health restoration methodes passed to ManaHealthAnalyzer!");
-		for (size_t i = 0; i < healthThresholds.size(); i++)
-			healthMap.insert(healthThresholds[i], healthRestorationsMethode[i]);
+  auto         healthRestorationsMethode = profile->getRestMethodesHealth();
+  QVector<int> healthThresholds;
+  for each (auto var in healthRestorationsMethode) healthThresholds.push_back(var.getThreshold());
+  if (healthThresholds.size() != healthRestorationsMethode.size()) {
+    qWarning() << "wrong sizes of health restoration methodes passed to ManaHealthAnalyzer!";
+    return false;
+  }
+  for (size_t i = 0; i < healthThresholds.size(); i++) {
+    healthMap.insert(healthThresholds[i], healthRestorationsMethode[i]);
+  }
 
-		auto manaRestorationsMethode = profile->getRestMethodesMana();
-		QVector<int> manaThresholds;
-		for each (auto var in manaRestorationsMethode)
-			manaThresholds.push_back(var.getThreshold());
-		if (manaThresholds.size() != manaRestorationsMethode.size())
-			throw std::exception("wrong sizes of health restoration methodes passed to ManaHealthAnalyzer!");
-		for (size_t i = 0; i < manaThresholds.size(); i++)
-			manaMap.insert(manaThresholds[i], manaRestorationsMethode[i]);
+  auto         manaRestorationsMethode = profile->getRestMethodesMana();
+  QVector<int> manaThresholds;
+  for each (auto var in manaRestorationsMethode) {
+    manaThresholds.push_back(var.getThreshold());
+  }
+  if (manaThresholds.size() != manaRestorationsMethode.size()) {
+    qWarning() << "wrong sizes of health restoration methodes passed to ManaHealthAnalyzer!";
+    return false;
+  }
+  for (size_t i = 0; i < manaThresholds.size(); i++) {
+    manaMap.insert(manaThresholds[i], manaRestorationsMethode[i]);
+  }
 
-		return true;
-	}
-	catch (const std::exception& e) {
-		qDebug() << e.what();
-		return false;
-	}
+  return true;
 }
-ManaHealthStateAnalyzer::ValuesStrs ManaHealthStateAnalyzer::toStrsValues(FoundFlags foundFlags, ImageValues imgVals) {
-	try {
-		ValuesStrs strVals;
-		if (foundFlags.health)
-			strVals.health = imgEditor->imgWithStrToStr(imgVals.health).remove("\0");
-		else
-			strVals.health = QString();
+ValuesStrs ManaHealthStateAnalyzer::toStrsValues(FoundFlags foundFlags, ImageValues imgVals) {
+  ValuesStrs strVals;
+  if (foundFlags.health)
+    strVals.health = imgEditor->imgWithStrToStr(imgVals.health).remove("\0");
+  else
+    strVals.health = QString();
 
-		if (foundFlags.mana)
-			strVals.mana = imgEditor->imgWithStrToStr(imgVals.mana).remove("\0");
-		else
-			strVals.mana = QString();
+  if (foundFlags.mana)
+    strVals.mana = imgEditor->imgWithStrToStr(imgVals.mana).remove("\0");
+  else
+    strVals.mana = QString();
 
+  if (foundFlags.shield)
+    strVals.manaShield = imgEditor->imgWithStrToStr(imgVals.manaShield).remove("\0");
+  else
+    strVals.manaShield = QString();
 
-		if (foundFlags.shield)
-			strVals.manaShield = imgEditor->imgWithStrToStr(imgVals.manaShield).remove("\0");
-		else
-			strVals.manaShield = QString();
+  if (foundFlags.combined)
+    strVals.combined = imgEditor->imgWithStrToStr(imgVals.combined).remove("\0");
+  else
+    strVals.combined = QString();
 
-		if (foundFlags.combined)
-			strVals.combined = imgEditor->imgWithStrToStr(imgVals.combined).remove("\0");
-		else
-			strVals.combined = QString();
-
-		const int MIN_LENGTH_FOR_CORR_STR = 3;
-		if (strVals.health.length() < MIN_LENGTH_FOR_CORR_STR)
-			throw std::exception("Error in converting ims with health bar to str form");
-		if (strVals.mana.length() < MIN_LENGTH_FOR_CORR_STR && strVals.combined.length() < MIN_LENGTH_FOR_CORR_STR)
-			throw std::exception("Error in converting ims with mana bar to str form");
-
-		return strVals;
-	}
-	catch (const std::exception& e) {
-		qDebug() << e.what();
-		return ValuesStrs();
-	}
+  constexpr int MIN_LENGTH_FOR_CORR_STR = 3;
+  if (strVals.health.length() < MIN_LENGTH_FOR_CORR_STR) {
+    qWarning() << "Error in converting ims with health bar to str form";
+    return ValuesStrs();
+  }
+  if (strVals.mana.length() < MIN_LENGTH_FOR_CORR_STR && strVals.combined.length() < MIN_LENGTH_FOR_CORR_STR) {
+    qWarning() << "Error in converting ims with mana bar to str form";
+    return ValuesStrs();
+  }
+  return strVals;
 }
-ManaHealthStateAnalyzer::ValuesInts ManaHealthStateAnalyzer::toIntsValues(FoundFlags foundFlags, ValuesStrs valueStrs) {
-	ValuesInts valuesInts;
-	if (foundFlags.health)
-		getValuesFromStringRegularCase(valueStrs.health, valuesInts.health, valuesInts.maxHealth);
 
-	if (foundFlags.combined)
-		getValuesFromStringOfCombinedBox(valueStrs.combined, valuesInts.mana, valuesInts.maxMana, valuesInts.shield, valuesInts.maxShield);
-
-	if (foundFlags.shield)
-		getValuesFromStringRegularCase(valueStrs.manaShield, valuesInts.shield, valuesInts.maxShield);
-
-	if (foundFlags.mana)
-		getValuesFromStringRegularCase(valueStrs.mana, valuesInts.mana, valuesInts.maxMana);
-	return valuesInts;
+ValuesInts ManaHealthStateAnalyzer::toIntsValues(FoundFlags foundFlags, ValuesStrs valueStrs) {
+  ValuesInts valuesInts;
+  if (foundFlags.health) {
+    getValuesFromStringRegularCase(valueStrs.health, valuesInts.health, valuesInts.maxHealth);
+  }
+  if (foundFlags.combined) {
+    getValuesFromStringOfCombinedBox(valueStrs.combined, valuesInts.mana, valuesInts.maxMana, valuesInts.shield, valuesInts.maxShield);
+  }
+  if (foundFlags.shield) {
+    getValuesFromStringRegularCase(valueStrs.manaShield, valuesInts.shield, valuesInts.maxShield);
+  }
+  if (foundFlags.mana) {
+    getValuesFromStringRegularCase(valueStrs.mana, valuesInts.mana, valuesInts.maxMana);
+  }
+  return valuesInts;
 };
-ManaHealthStateAnalyzer::FoundFlags ManaHealthStateAnalyzer::getFoundFlags() {
-	FoundFlags flags;
-	flags.health = !var->getVitalitty().getHealthArea().isEmpty();
-	flags.mana = !var->getVitalitty().getManaArea().isEmpty();
-	flags.combined = !var->getVitalitty().getCombinedArea().isEmpty();
-	flags.shield = !var->getVitalitty().getMSArea().isEmpty();
-	return flags;
+FoundFlags ManaHealthStateAnalyzer::getFoundFlags() {
+  FoundFlags flags;
+  flags.health   = !var->getVitalitty().getHealthArea().isEmpty();
+  flags.mana     = !var->getVitalitty().getManaArea().isEmpty();
+  flags.combined = !var->getVitalitty().getCombinedArea().isEmpty();
+  flags.shield   = !var->getVitalitty().getMSArea().isEmpty();
+  return flags;
 }
 bool ManaHealthStateAnalyzer::getValuesFromStringRegularCase(QString in, int& current, int& max) {
-	try {
-		const QStringList partOfStr = in.split("\\");//wanted form of input currentVal/maxVal
-		if (partOfStr.size() != 2)
-			throw std::exception(QString("ManaHealthAnalyzer recived wrong input, input = " + in).toStdString().c_str());
-		const int currentVal = partOfStr[0].toInt();
-		const int maxVal = partOfStr[1].toInt();
-		const int MAX_POSSIBLE_VALUE = 100000;
-		const bool wrongValues = currentVal > MAX_POSSIBLE_VALUE || currentVal > maxVal || currentVal < 0 || maxVal < 0;
-		if (wrongValues)
-			throw std::exception("Wrong int values in splittling str currentVal/maxVal");
-		current = currentVal;
-		max = maxVal;
-		return true;
-	}
-	catch (const std::exception& e) {
-		qDebug() << e.what();
-		return false;
-	}
+  const QStringList partOfStr = in.split("\\");  //wanted form of input currentVal/maxVal
+  if (partOfStr.size() != 2) {
+    qWarning() << "ManaHealthAnalyzer recived wrong input, input = " + in;
+    return false;
+  }
+  const int currentVal = partOfStr[0].toInt();
+  const int maxVal     = partOfStr[1].toInt();
+
+  if (currentVal > MAX_POSSIBLE_VALUE || currentVal > maxVal || currentVal < 0 || maxVal < 0) {
+    qWarning() << "Wrong int values in splittling str currentVal/maxVal";
+    return false;
+  }
+
+  current = currentVal;
+  max     = maxVal;
+  return true;
 }
-bool ManaHealthStateAnalyzer::getValuesFromStringOfCombinedBox(QString in, int& currentMana, int& maxMana, int& currentManaShield, int& maxManaShield) {
-	//wanted form of input manaMinVal/maxVal(minShieldValue/maxShieldValue)
-	try {
-		bool inputOk = in.count("\\") == 2 && in.count("(") == 1 && in.count(")") == 1;
-		if (!inputOk) {
-			QString msg = "Wrong input in splitting str with values of mana combined with magic shield, input = " + in;
-			throw std::exception(msg.toStdString().c_str());
-		}
+bool ManaHealthStateAnalyzer::getValuesFromStringOfCombinedBox(QString in, int& currentMana, int& maxMana, int& currentManaShield,
+                                                               int& maxManaShield) {
+  //wanted form of input manaMinVal/maxVal(minShieldValue/maxShieldValue)
+  bool inputOk = in.count("\\") == 2 && in.count("(") == 1 && in.count(")") == 1;
+  if (!inputOk) {
+    qWarning() << "Wrong input in splitting str with values of mana combined with magic shield, input = " + in;
+    return false;
+  }
 
-		in.remove(")");
-		QStringList parts = in.split("(");
-		if (parts.size() != 2)
-			throw std::exception("error in splitting  str with values of mana combined with magic shield");
+  in.remove(")");
+  QStringList parts = in.split("(");
+  if (parts.size() != 2) {
+    qWarning() << "error in splitting  str with values of mana combined with magic shield";
+    return false;
+  }
 
-		QString manaStr = parts[0];
-		QString shieldStr = parts[1];
-		int currentManaTMP, maxManaTMP, currentManaShieldTMP, maxManaShieldTMP;
-		bool splittingOk1 = getValuesFromStringRegularCase(manaStr, currentManaTMP, maxManaTMP);
-		bool splittingOk2 = getValuesFromStringRegularCase(shieldStr, currentManaShieldTMP, maxManaShieldTMP);
-		bool okResult = splittingOk1 && splittingOk2 && maxManaTMP > 0;
-		if (!okResult)
-			throw std::exception("error in splitting  str with values of mana combined with magic shield");
+  QString manaStr   = parts[0];
+  QString shieldStr = parts[1];
+  int     currentManaTMP, maxManaTMP, currentManaShieldTMP, maxManaShieldTMP;
+  bool    splittingOk1 = getValuesFromStringRegularCase(manaStr, currentManaTMP, maxManaTMP);
+  bool    splittingOk2 = getValuesFromStringRegularCase(shieldStr, currentManaShieldTMP, maxManaShieldTMP);
+  bool    okResult     = splittingOk1 && splittingOk2 && maxManaTMP > 0;
+  if (!okResult) {
+    qWarning() << "error in splitting  str with values of mana combined with magic shield";
+    return false;
+  }
 
-		currentMana = currentManaTMP;
-		maxMana = maxManaTMP;
-		currentManaShield = currentManaShieldTMP;
-		maxManaShield = maxManaShieldTMP;
-		return true;
-	}
-	catch (const std::exception& e) {
-		qDebug() << e.what();
-		return false;
-	}
+  currentMana       = currentManaTMP;
+  maxMana           = maxManaTMP;
+  currentManaShield = currentManaShieldTMP;
+  maxManaShield     = maxManaShieldTMP;
+  return true;
 }
-QVector<RestorationMethode> ManaHealthStateAnalyzer::findRestorationToUse(double currentValue, const QMap<int, RestorationMethode>& methodes) {
-	QVector<RestorationMethode> toRet = {};
-	if (methodes.size() == 0)
-		return toRet;
+QVector<RestorationMethode> ManaHealthStateAnalyzer::findRestorationToUse(double                               currentValue,
+                                                                          const QMap<int, RestorationMethode>& methodes) {
+  QVector<RestorationMethode> toRet = {};
+  if (methodes.size() == 0) {
+    return toRet;
+  }
 
-	try {
-		bool wrongInput = currentValue < 0.0 || currentValue > 100.0 || methodes.size() > 5;
-		if (wrongInput)
-			throw std::exception("Wrong input passed to fun looking for neareast threshold");
+  if (currentValue < 0.0 || currentValue > 100.0 || methodes.size() > 5) {
+    qWarning() << "Wrong input passed to fun looking for neareast threshold";
+    return toRet;
+  }
 
-		auto thresholds = methodes.keys();
-		for (int i = 0; i < thresholds.size(); i++) {
-			if (currentValue > thresholds[i])
-				continue;
-
-			if (toRet.size() == 2)
-				break;
-
-			auto currentMethode = methodes[thresholds[i]];
-			bool suchTypeIsAlreadyOnList = false;
-			for each (auto var in toRet){
-				if (var.isType(currentMethode.getType())){
-					suchTypeIsAlreadyOnList = true;
-					break;
-				}
-			}
-			if (suchTypeIsAlreadyOnList)
-				continue;
-
-			if(!restMethodeCanBeUsed(currentMethode))
-				continue;
-
-			toRet.push_back(currentMethode);
-		}
-		return toRet;
-	}
-	catch (const std::exception& e) {
-		qDebug() << e.what();
-		return toRet;
-	}
+  auto thresholds = methodes.keys();
+  for (int i = 0; i < thresholds.size(); i++) {
+    if (currentValue > thresholds[i]) {
+      continue;
+    }
+    if (toRet.size() == 2) {
+      break;
+    }
+    auto currentMethode          = methodes[thresholds[i]];
+    bool suchTypeIsAlreadyOnList = false;
+    for each (auto var in toRet) {
+      if (var.isType(currentMethode.getType())) {
+        suchTypeIsAlreadyOnList = true;
+        break;
+      }
+    }
+    if (suchTypeIsAlreadyOnList || !restMethodeCanBeUsed(currentMethode)) {
+      continue;
+    }
+    toRet.push_back(currentMethode);
+  }
+  return toRet;
 }
-ManaHealthStateAnalyzer::ValuesDoubles ManaHealthStateAnalyzer::getCurrentPercentage() {
-	if (!var->getSettings().getRestoringState())
-		return ValuesDoubles();
-	ImageValues imgs = getImages();
-	if (!imgs.isValid())
-		return ValuesDoubles();
-	FoundFlags flags = getFoundFlags();
-	if (!flags.isValid())
-		return ValuesDoubles();
-	ValuesStrs strsValues = toStrsValues(flags, imgs);
-	if (!strsValues.isValid())
-		return ValuesDoubles();
-	ValuesInts intsValues = toIntsValues(flags, strsValues);
-	if (!intsValues.isValid())
-		return ValuesDoubles();
-	ValuesDoubles percentages = toDoubles(intsValues);
-	if (!percentages.isValid())
-		return ValuesDoubles();
+ValuesDoubles ManaHealthStateAnalyzer::getCurrentPercentage() {
+  if (!var->getSettings().getRestoringState()) return ValuesDoubles();
+  ImageValues imgs = getImages();
+  if (!imgs.isValid()) return ValuesDoubles();
+  FoundFlags flags = getFoundFlags();
+  if (!flags.isValid()) return ValuesDoubles();
+  ValuesStrs strsValues = toStrsValues(flags, imgs);
+  if (!strsValues.isValid()) return ValuesDoubles();
+  ValuesInts intsValues = toIntsValues(flags, strsValues);
+  if (!intsValues.isValid()) return ValuesDoubles();
+  ValuesDoubles percentages = toDoubles(intsValues);
+  if (!percentages.isValid()) return ValuesDoubles();
 
-	writeDataToVariableClass(percentages);
-	writeDataToVariableClass(intsValues);
+  writeDataToVariableClass(percentages);
+  writeDataToVariableClass(intsValues);
 
-	return percentages;
+  return percentages;
 }
 void ManaHealthStateAnalyzer::sendDataToGui(ValuesDoubles currentValues) {
-	emit sendValueToMainThread(currentValues.health, currentValues.mana, currentValues.manaShield);
+  emit sendValueToMainThread(currentValues.health, currentValues.mana, currentValues.manaShield);
 }
 void ManaHealthStateAnalyzer::writeDataToVariableClass(ValuesDoubles values) {
-	var->getVitalitty().setCurrentPercentage(values.health, values.mana, values.manaShield);
+  var->getVitalitty().setCurrentPercentage(values.health, values.mana, values.manaShield);
 }
 void ManaHealthStateAnalyzer::writeDataToVariableClass(ValuesInts values) {
-	var->getVitalitty().setCurrentRawValues(values.health, values.mana, values.shield);
+  var->getVitalitty().setCurrentRawValues(values.health, values.mana, values.shield);
 }
-ManaHealthStateAnalyzer::ImageValues ManaHealthStateAnalyzer::getImages() {
-	ImageValues toRet;
-	bool clearImgs = var->getSettings().getClearVitalityImgs();;
-	var->getVitalitty().getImageHealth(toRet.health, clearImgs);
-	var->getVitalitty().getImageMana(toRet.mana, clearImgs);
-	var->getVitalitty().getImageMS(toRet.manaShield, clearImgs);
-	var->getVitalitty().getImageCombined(toRet.combined, clearImgs);
-	return toRet;
+ImageValues ManaHealthStateAnalyzer::getImages() {
+  ImageValues toRet;
+  bool        clearImgs = var->getSettings().getClearVitalityImgs();
+
+  var->getVitalitty().getImageHealth(toRet.health, clearImgs);
+  var->getVitalitty().getImageMana(toRet.mana, clearImgs);
+  var->getVitalitty().getImageMS(toRet.manaShield, clearImgs);
+  var->getVitalitty().getImageCombined(toRet.combined, clearImgs);
+  return toRet;
 }
 bool ManaHealthStateAnalyzer::restMethodeCanBeUsed(const RestorationMethode& restMethode) {
-	const qint64 now = QDateTime::currentMSecsSinceEpoch();
-	Timers& timers = var->getTimers();
-	switch (restMethode.getType())
-	{
-	case RestorationMethode::Type::POTION:
-		if (now < timers.getTimeLastItemUsageGeneral() + (1000 * restMethode.getCdGroup()))
-			return false;
-		if (now < timers.getTimeLastItemUsage(restMethode.getName()) + (1000 * restMethode.getCd()))
-			return false;
-		//later should be added checking if char has proper pot!
-		return true;
-	case RestorationMethode::Type::SPELL:
-		if (var->getVitalitty().getCurrentRawManaVal() < restMethode.getMana())
-			return false;
-		if (now < timers.getTimeLastSpellUsageHealing() + (1000 * restMethode.getCdGroup()))
-			return false;
-		if (now < timers.getTimeLastSpellUsed(restMethode.getName()) + (1000 * restMethode.getCd()))
-			return false;
-		return true;
-		break;
-	default: 
-		return false;
-		break;
-	}
+  const qint64 now    = QDateTime::currentMSecsSinceEpoch();
+  Timers&      timers = var->getTimers();
+  const auto   type   = restMethode.getType();
+
+  if (type == RestorationMethode::Type::POTION) {
+    if (now < timers.getTimeLastItemUsageGeneral() + (1000 * restMethode.getCdGroup())) {
+      return false;
+    }
+    if (now < timers.getTimeLastItemUsage(restMethode.getName()) + (1000 * restMethode.getCd())) {
+      return false;
+    }
+    return true;  // todo later should be added checking if char has proper pot!
+  } else if (type == RestorationMethode::Type::SPELL) {
+    if (var->getVitalitty().getCurrentRawManaVal() < restMethode.getMana()) {
+      return false;
+    }
+    if (now < timers.getTimeLastSpellUsageHealing() + (1000 * restMethode.getCdGroup())) {
+      return false;
+    }
+    if (now < timers.getTimeLastSpellUsed(restMethode.getName()) + (1000 * restMethode.getCd())) {
+      return false;
+    }
+    return true;
+  } else {
+    return false;
+  }
 }
+int ManaHealthStateAnalyzer::calcTimeBetweenManaPots(int currentManaPercentage) {
+  return 1200 * currentManaPercentage / 100.0;
+}
+void ManaHealthStateAnalyzer::handleStates() {
+  Settings& settings = var->getSettings();
+  if (!settings.getKeepHasted()) {
+    return;
+  }
+  auto states = var->getEquipment().getCurrentStates(true);
+  if (states.isEmpty()) {
+    return;
+  }
+  handleHaste(settings.getKeepHasted(), states);
+  handleUpgrade(settings.getKeepUpraded(), states);
+}
+void ManaHealthStateAnalyzer::handleHaste(bool keepHasting, QVector<Equipment::STATES>& states) {
+  if (!keepHasting) {
+    return;
+  }
+  if (states.contains(Equipment::HASTE)) {
+    return;
+  }
+  qint64 currentTime = now();
+  bool   canHaste    = currentTime >= lastTimeHasted + 1333;
+  if (!canHaste) {
+    return;
+  }
+  gameConnector->sendKeyStrokeToProcess(VK_F12);  //todo
+  var->log("Hasted!", false, true, true);
+  lastTimeHasted = currentTime;
+}
+void ManaHealthStateAnalyzer::handleUpgrade(bool keepUpgraded, QVector<Equipment::STATES>& states) {
+  if (!keepUpgraded) {
+    return;
+  }
+  if (states.contains(Equipment::UPGRADED)) {
+    return;
+  }
+  qint64 currentTime = now();
+  bool   canUpgrade  = currentTime >= lastTimeUpgraded + 20000;
+  if (!canUpgrade) {
+    return;
+  }
+  gameConnector->sendKeyStrokeToProcess(VK_F11);  //todo
+  var->log("Upgraded!", false, true, true);
+  lastTimeUpgraded = currentTime;
+}
+qint64 ManaHealthStateAnalyzer::now() {
+  return QDateTime::currentMSecsSinceEpoch();
+}
+/*
+bool ManaHealthStateAnalyzer::populareMapsWithBottomBarsLetters(QMap<QString, int>& lightMap, QMap<QString, int>& darkMap) {
+  try {
+    QString     path = PathResource::getPathToFileWithBottomsBarDigitsCodes();
+    QJsonObject obj;
+    bool        readCorrectly = JsonParser::openJsonFile(obj, path);
+    if (!readCorrectly) throw std::exception("Error, can't find bottomBarsDigits.json file");
+
+    QJsonValue value = obj["darkNumbers"];
+    if (value.isUndefined() || !value.isArray()) throw std::exception("No darkNumbers field in bottomBar json file!");
+    QJsonArray array = value.toArray();
+    for each (auto singleValue in array) {
+      QJsonObject singleObject = singleValue.toObject();
+      int         intVal       = singleObject["name"].toString().toInt();
+      QString     pixValues    = singleObject["value"].toString();
+      darkMap.insert(pixValues, intVal);
+    }
+
+    value = obj["lightNumbers"];
+    if (value.isUndefined() || !value.isArray()) throw std::exception("No lightNumbers field in bottomBar json file!");
+    array = value.toArray();
+    for each (auto singleValue in array) {
+      QJsonObject singleObject = singleValue.toObject();
+      int         intVal       = singleObject["name"].toInt();
+      QString     pixValues    = singleObject["value"].toString();
+      lightMap.insert(pixValues, intVal);
+    }
+    bool toRet = lightMap.size() == 10 && darkMap.size() == 10;
+    return toRet;
+  } catch (const std::exception& e) {
+    var->log(e.what(), true, false, false);
+    return false;
+  }
+};
+*/
+
+/*
+int ManaHealthStateAnalyzer::getNumberFromBottomBar(QImage& imgToShearchWithin) {
+  QMap<QString, int> lightMap, darkMap;
+  Utilities::getMapWithNumbersFromBottomBar(lightMap, darkMap);
+  QStringList lightCodes = lightMap.keys();
+  QStringList darkCodes  = darkMap.keys();
+
+  QMap<int, int> anotherMap;  // <positionX, value>
+
+  for (size_t i = 0; i < lightCodes.size(); i++) {
+    QList<QImage*> listWithLightAndDarkLetterImg;
+    QImage         darkLetter  = ImgEditor::getImageFromAdvancedCode(darkCodes[i]);
+    QImage         lightLetter = ImgEditor::getImageFromAdvancedCode(lightCodes[i]);
+    listWithLightAndDarkLetterImg.push_back(&darkLetter);
+    listWithLightAndDarkLetterImg.push_back(&lightLetter);
+
+    int           digit                = lightMap[lightCodes[i]];
+    QList<QPoint> listOfStartingPoints = ImgEditor::findStartPositionInImg_mulitpeImgs(
+        listWithLightAndDarkLetterImg, imgToShearchWithin);  // (listWithLightAndDarkLetterImg, imgToShearchWithin);
+    for each (QPoint var in listOfStartingPoints) anotherMap.insert(var.x(), digit);
+  }
+
+  QString strToRe;
+  for each (auto key in anotherMap.keys()) strToRe.push_back(QString::number(anotherMap[key]));
+
+  return strToRe.toInt();
+}
+*/
+
+/*
+void getAmountsOfPotions() {
+  QMap<QString, QRect> map_copy = var->potionName_rectPosOnScreen_map;
+  QList<int>           amountOfPots;
+  QStringList          namesOfPots;
+  QImage               wholeImg;
+  var->getCopyOfCurrentFullImg(wholeImg);
+  for each (QString nameOfPot in map_copy.keys()) {
+    QRect rect = map_copy[nameOfPot];
+    if (rect.isEmpty()) continue;
+    QImage img    = wholeImg.copy(rect);
+    int    amount = ImgEditor::getNumberFromBottomBar(img);
+    amountOfPots.push_back(amount);
+    namesOfPots.push_back(nameOfPot);
+  }
+
+  QStringList infoToSendToMainThread;
+  for (size_t i = 0; i < namesOfPots.size(); i++) {
+    QString toAdd = namesOfPots[i] + ": " + QString::number(amountOfPots[i]);
+    infoToSendToMainThread.push_back(toAdd);
+  }
+  sendInfoAboutPotAmountsToGUI(infoToSendToMainThread);
+}
+*/

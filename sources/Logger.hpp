@@ -1,50 +1,50 @@
 #pragma once
-#include <qfile>
-#include <QObject>
+#include <qdatetime.h>
+#include <qdebug.h>
 #include <qdir.h>
 #include <qtextstream.h>
-#include <qdebug.h>
-#include <qdatetime.h>
+
+#include <QObject>
 #include <atomic>
+#include <qfile>
 
-class Logger : public QObject{
-	Q_OBJECT
+class Logger : public QObject {
+  Q_OBJECT
 
-signals:
-	void sendMsgToUserConsol(QStringList);
-	void sendMsgToUserConsolRed(QString);
-public:
-	Logger() {};
-	~Logger() {};
-	void log(QString msg, bool sendToDebug = true, bool sendToUserConsol = false, bool addTimeSTamp = true) {
-		if (addTimeSTamp)
-			msg.push_front(getTimeStamp());
+ signals:
+  void sendMsgToUserConsol(QStringList);
+  void sendMsgToUserConsolRed(QString);
 
-		if (sendToDebug)
-			qDebug() << msg;
-		if (sendToUserConsol)
-			emit sendMsgToUserConsol(QStringList() << msg);
-	}
-	static void staticLog(QString msg) {
-		qDebug() << msg;
-	}
+ public:
+  Logger()  = default;
+  ~Logger() = default;
+  void log(QString msg, bool sendToDebug = true, bool sendToUserConsol = false, bool addTimeSTamp = true) {
+    if (addTimeSTamp) msg.push_front(getTimeStamp());
 
-private:
-	std::atomic<long long> time = QDateTime::currentDateTime().toMSecsSinceEpoch();
+    if (sendToDebug) {
+      qDebug() << msg;
+    }
+    if (sendToUserConsol) {
+      emit sendMsgToUserConsol(QStringList() << msg);
+    }
+  }
 
-	QString getTimeStamp() {
-		QDateTime time = QDateTime::currentDateTime();
-		return time.toString("mm:ss:zzz") + " ";
-	};
-	
-	QString getMSecTillLastCommunicate() {
-		qint64 current = QDateTime::currentDateTime().toMSecsSinceEpoch();
-		qint64 timeDifference = current - time;
-		time = current;
-		return QString::number(timeDifference) + "  ";
-	}
-	
-	//static void logPotenialBug(const QString textToSave);
-	//static void logPotenialBug(const QString textToSave, const QString className, const QString functionName);
-	//static QString getPathToLogFolder();
+ private:
+  std::atomic<long long> time = QDateTime::currentDateTime().toMSecsSinceEpoch();
+
+  QString getTimeStamp() {
+    QDateTime time = QDateTime::currentDateTime();
+    return time.toString("mm:ss:zzz") + " ";
+  };
+
+  QString getMSecTillLastCommunicate() {
+    qint64 current        = QDateTime::currentDateTime().toMSecsSinceEpoch();
+    qint64 timeDifference = current - time;
+    time                  = current;
+    return QString::number(timeDifference) + "  ";
+  }
+
+  //static void logPotenialBug(const QString textToSave);
+  //static void logPotenialBug(const QString textToSave, const QString className, const QString functionName);
+  //static QString getPathToLogFolder();
 };
