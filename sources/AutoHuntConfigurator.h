@@ -33,10 +33,10 @@ class AutoHuntConfigurator : public QDialog {
 
   Profile*                       prof;
   Ui::AutoHuntConfiguratorClass* ui;
-  QVector<QCheckBox*>            checkBoxes          = {};
-  QVector<QComboBox*>            attackKeysBoxes     = {};
-  QVector<QComboBox*>            attackNamesBoxes    = {};
-  QVector<QSpinBox*>             attackMonstersBoxes = {};
-  AutoHuntData                   autoHuntData        = AutoHuntData();
-  QString                        lastSelectedRoute   = QString();
+  QVector<QCheckBox*>            checkBoxes_;
+  QVector<QComboBox*>            attackKeysBoxes_;
+  QVector<QComboBox*>            attackNamesBoxes_;
+  QVector<QSpinBox*>             attackMonstersBoxes_;
+  AutoHuntData                   autoHuntData = AutoHuntData();
+  QString                        lastSelectedRoute_;
 };

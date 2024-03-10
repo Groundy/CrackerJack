@@ -1,16 +1,16 @@
 #include "ActiveGameThread.h"
 
-ActiveGameThread::ActiveGameThread(QObject* parent, QSharedPointer<VariablesClass> var) : QThread(parent), var(var) {}
+ActiveGameThread::ActiveGameThread(QObject* parent, QSharedPointer<VariablesClass> var) : QThread(parent), var_(var) {}
 ActiveGameThread::~ActiveGameThread() {
   this->terminate();
 }
 void ActiveGameThread::run() {
   while (true) {
     int gameStateCode = checkGameState();
-    if (gameStateCode != previousGameState) {
+    if (gameStateCode != previousGameState_) {
       emit GameStateChanged(gameStateCode);
     }
-    msleep(SLEEP_TIME);
+    msleep(SLEEP_TIME_);
   }
 }
 QString ActiveGameThread::getGameWindowTitile() {
@@ -32,7 +32,7 @@ QString ActiveGameThread::getGameWindowTitile() {
       continue;
     }
 
-    if (title.contains(GAME_BROWESER_TITLE)) {
+    if (title.contains(GAME_BROWESER_TITLE_)) {
       continue;
     }
 
@@ -47,7 +47,7 @@ QString ActiveGameThread::getGameWindowTitile() {
   return QString();
 }
 uint ActiveGameThread::getGamePid(const QMap<QString, unsigned int>& processes) {
-  auto iteratorToProcess = processes.find(GAME_PROCESS_NAME);
+  auto iteratorToProcess = processes.find(GAME_PROCESS_NAME_);
   if (iteratorToProcess == processes.end()) {
     qDebug() << "Can't find Game on running processes list!";
     return 0;
@@ -66,10 +66,14 @@ int ActiveGameThread::windowIsAccessible(const uint PID, const QString& windowTi
 
   LPCWSTR nameOfWindowLPCWSTR = (const wchar_t*)windowTitle.utf16();
   HWND    handler             = FindWindow(NULL, nameOfWindowLPCWSTR);
-  if (handler == NULL) return NO_HANDLER;
+  if (handler == NULL) {
+    return NO_HANDLER;
+  }
   DWORD tmp     = PID;
   DWORD hThread = GetWindowThreadProcessId(handler, &tmp);
-  if (hThread == NULL) return NO_HANDLER;
+  if (hThread == NULL) {
+    return NO_HANDLER;
+  }
   return ACTIVE;
 }
 int ActiveGameThread::checkGameState() {
@@ -78,16 +82,22 @@ int ActiveGameThread::checkGameState() {
   QString windowTitle = getGameWindowTitile();
   if (windowTitle.isEmpty()) {
     qWarning() << "Can't get game window title.";
-    var->getGameProcess().setNameOfGameWindow("");
-    var->getGameProcess().setPid(0);
+    var_->getGameProcess().setNameOfGameWindow("");
+    var_->getGameProcess().setPid(0);
     return NO_WINDOW;
   }
   int gameWinState = windowIsAccessible(PID, windowTitle);
   if (gameWinState == ACTIVE) {
     HWND handlerToGameThread = getHandlerToGameWindow(PID, windowTitle);
-    if (handlerToGameThread != previousGameHandler) var->getGameProcess().setHandlerToGameThread(handlerToGameThread);
-    if (var->getGameProcess().getNameOfGameWindow() != windowTitle) var->getGameProcess().setNameOfGameWindow(windowTitle);
-    if (var->getGameProcess().getPid() != PID) var->getGameProcess().setPid(PID);
+    if (handlerToGameThread != previousGameHandler_) {
+      var_->getGameProcess().setHandlerToGameThread(handlerToGameThread);
+    }
+    if (var_->getGameProcess().getNameOfGameWindow() != windowTitle) {
+      var_->getGameProcess().setNameOfGameWindow(windowTitle);
+    }
+    if (var_->getGameProcess().getPid() != PID) {
+      var_->getGameProcess().setPid(PID);
+    }
   }
   return gameWinState;
 }

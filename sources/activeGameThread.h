@@ -20,12 +20,12 @@ class ActiveGameThread : public QThread {
   void GameStateChanged(int i);
 
  private:
-  int                            previousGameState   = -1;
-  const QString                  GAME_PROCESS_NAME   = "client.exe";
-  const QString                  GAME_BROWESER_TITLE = "Tibia - Free Multiplayer Online Role Playing Game";
-  const uint                     SLEEP_TIME          = 1234;
-  QSharedPointer<VariablesClass> var;
-  HWND                           previousGameHandler = 0;
+  int                            previousGameState_   = -1;
+  const QString                  GAME_PROCESS_NAME_   = "client.exe";
+  const QString                  GAME_BROWESER_TITLE_ = "Tibia - Free Multiplayer Online Role Playing Game";
+  const uint                     SLEEP_TIME_          = 1234;
+  QSharedPointer<VariablesClass> var_;
+  HWND                           previousGameHandler_ = 0;
 
   uint                        getGamePid(const QMap<QString, unsigned int>& processes);
   QString                     getGameWindowTitile();

@@ -6,64 +6,64 @@
 class AttackMethode : JsonClass {
  public:
   AttackMethode(int cd, int cdGroup, int requiredMana, QString name, Key key, int monsersToUse)
-      : cd(cd), cdGroup(cdGroup), requiredMana(requiredMana), name(name), key(key), minMonstersToUse(monsersToUse){};
+      : cd_(cd), cdGroup_(cdGroup), requiredMana_(requiredMana), name_(name), key_(key), minMonstersToUse_(monsersToUse){};
   AttackMethode(const Spell& spell, Key key, int monsersToUse) {
-    this->cd               = spell.getCd();
-    this->cdGroup          = spell.getCdGroup();
-    this->requiredMana     = spell.getManaNeeded();
-    this->name             = spell.getIncantation();
-    this->key              = key;
-    this->minMonstersToUse = monsersToUse;
+    cd_               = spell.getCd();
+    cdGroup_          = spell.getCdGroup();
+    requiredMana_     = spell.getManaNeeded();
+    name_             = spell.getIncantation();
+    key_              = key;
+    minMonstersToUse_ = monsersToUse;
   };
   AttackMethode(const QString runeName, Key key, int monsersToUse) {
-    this->cd               = 2;
-    this->cdGroup          = 2;
-    this->requiredMana     = 0;
-    this->name             = runeName;
-    this->minMonstersToUse = monsersToUse;
-    this->key              = key;
+    cd_               = 2;
+    cdGroup_          = 2;
+    requiredMana_     = 0;
+    name_             = runeName;
+    minMonstersToUse_ = monsersToUse;
+    key_              = key;
   };
   AttackMethode(const QJsonObject obj) {
-    this->cd               = obj["cd"].toInt();
-    this->cdGroup          = obj["cdGroup"].toInt();
-    this->requiredMana     = obj["requiredMana"].toInt();
-    this->name             = obj["name"].toString();
-    this->minMonstersToUse = obj["minMonstersToUse"].toInt();
-    this->key              = Key(obj["key"].toObject());
+    cd_               = obj["cd"].toInt();
+    cdGroup_          = obj["cdGroup"].toInt();
+    requiredMana_     = obj["requiredMana"].toInt();
+    name_             = obj["name"].toString();
+    minMonstersToUse_ = obj["minMonstersToUse"].toInt();
+    key_              = Key(obj["key"].toObject());
   };
   bool isValid() const {
-    return cd >= 1 && cdGroup >= 1 && requiredMana >= 0 && name.size() > 5 && key.isValid() && minMonstersToUse >= 1;
+    return cd_ >= 1 && cdGroup_ >= 1 && requiredMana_ >= 0 && name_.size() > 5 && key_.isValid() && minMonstersToUse_ >= 1;
   }
   QJsonObject toJson() const {
     QJsonObject obj;
-    obj.insert("cd", cd);
-    obj.insert("cdGroup", cdGroup);
-    obj.insert("requiredMana", requiredMana);
-    obj.insert("name", name);
-    obj.insert("key", key.toJson());
-    obj.insert("minMonstersToUse", minMonstersToUse);
+    obj.insert("cd", cd_);
+    obj.insert("cdGroup", cdGroup_);
+    obj.insert("requiredMana", requiredMana_);
+    obj.insert("name", name_);
+    obj.insert("key", key_.toJson());
+    obj.insert("minMonstersToUse", minMonstersToUse_);
     return obj;
   }
   ~AttackMethode() = default;
   QString getName() const {
-    return name;
+    return name_;
   }
   Key getKey() const {
-    return key;
+    return key_;
   }
   int getCd() const {
-    return cd;
+    return cd_;
   }
   int getCdGroup() const {
-    return cdGroup;
+    return cdGroup_;
   }
   int getMinMonsters() const {
-    return minMonstersToUse;
+    return minMonstersToUse_;
   }
 
  private:
-  int     cd = 0, cdGroup = 0, requiredMana = 0;
-  QString name;
-  Key     key;
-  int     minMonstersToUse = 0;
+  int     cd_ = 0, cdGroup_ = 0, requiredMana_ = 0;
+  QString name_;
+  Key     key_;
+  int     minMonstersToUse_ = 0;
 };

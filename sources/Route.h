@@ -21,23 +21,23 @@ class Route : JsonClass {
   void        clear();
   bool        checkRouteCorectness(QString& errorTextToDisplay);
   void        setName(QString name) {
-    routeName = name;
+    routeName_ = name;
   };
   QString getName() const {
-    return routeName;
+    return routeName_;
   };
   RoutePoint  getPoint(int index);
   QJsonObject toJson() const;
   bool        isValid() const;
   bool        checkIfPositionIsOnListOnIndex(Point3D toCheck, int indexToCheck);
   Route&      operator=(const Route& newRoute) {
-    this->route     = newRoute.route;
-    this->routeName = newRoute.getName();
+    this->route_     = newRoute.route_;
+    this->routeName_ = newRoute.getName();
     return *this;
   }
 
  private:
-  QList<RoutePoint>                    route;
-  QString                              routeName;
-  QMap<RoutePoint::FieldType, QString> pointTypeNameMap = RoutePoint::getPointTypeNameMap();
+  QList<RoutePoint>                    route_;
+  QString                              routeName_;
+  QMap<RoutePoint::FieldType, QString> pointTypeNameMap_ = RoutePoint::getPointTypeNameMap();
 };
