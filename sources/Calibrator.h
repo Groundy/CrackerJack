@@ -80,15 +80,3 @@ class Calibrator {
   QList<QRect>   filterAreasCoveredByFrameFromBottomRight(const QImage& fullScreen, const QList<QRect>& areas);
   QList<QRect>   getOutsideFramesOfOpenEntitiesOnSideBars(const QImage& wholeScreen);
 };
-
-/*
-void TEST_setPositionHealthImhs(QString
-pathToFolderWithDiffrentPositionsStylesScreen, QString pathToOutPutFolder); bool
-getRectsFromProfile(QList<QRect>& importRectsFromProf); bool
-fillRectWithPotsInVarClass(QImage& fullscreen, QStringList
-nameOfPotionsToLookFor); bool findPotionsOnBottomBar(QStringList
-namesOfPotionsToFind, QStringList& namesOfPotionosFound, QList<QRect>&
-rectsWithFoundPots, QImage& bottomBarImg); void
-getMapWithPotionsImgCodes(QMap<QString, QString>& name_code_light, QMap<QString,
-QString>& name_code_dark);
-*/

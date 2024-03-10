@@ -53,12 +53,3 @@ class RouteCreator : public QDialog {
   bool                  checkRouteButtonPressed();
   void                  loadFromRoute(Route* route);
 };
-
-/*
-public:
-	
-	bool currentPixIsWalkable();
-private:
-	QPixmap getPixMapWithZoomAndCenterPix(QImage imgWithMap, QSize sizeToScale);
-};
-*/

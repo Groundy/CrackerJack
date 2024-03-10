@@ -258,10 +258,21 @@
     <ClInclude Include="sources\GameProcessData.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="AutoHuntData.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="old_code.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <QtTranslation Include="crackerjackclient_pl.ts">
       <Filter>Translation Files</Filter>
     </QtTranslation>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="_OLD.hpp">
+      <Filter>Header Files</Filter>
+    </Text>
   </ItemGroup>
 </Project>

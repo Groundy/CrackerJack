@@ -25,6 +25,5 @@ class SelectProfileWindow : public QDialog {
 
   void    refreshProfilesOnList();
   void    setUpGui();
-  void    readAndSetLastUsedProFromINI();
   QString getSelectedProfName();
 };

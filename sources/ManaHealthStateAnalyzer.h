@@ -109,12 +109,4 @@ class ManaHealthStateAnalyzer : public QThread {
   void                        handleUpgrade(bool keepUpgraded, QVector<Equipment::STATES>& states);
   static qint64               now();
   Logger&                     logger = Logger::instance();
-  //bool usedRestorationMethodeOnLastLoop = false;
-  ///Max possible value of Health or Mana in game
-  //qint64 lastTimeAnalyzed = now();
-  //
-  //void sendInfoAboutPotAmountsToGUI(QStringList);  //SIGNAL
-  //bool populareMapsWithBottomBarsLetters(QMap<QString, int>& lightMap, QMap<QString, int>& darkMap);
-  //int getNumberFromBottomBar(QImage& imgToShearchWithin);
-  //void getAmountsOfPotions();
 };

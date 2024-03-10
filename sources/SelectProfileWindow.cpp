@@ -12,7 +12,6 @@ SelectProfileWindow::SelectProfileWindow(QSharedPointer<Profile> profileToBeChoo
   refreshProfilesOnList();
   ui->listOfProfs->setItemSelected(NULL, true);
   selectListAction();
-  readAndSetLastUsedProFromINI();
 }
 SelectProfileWindow::~SelectProfileWindow() {
   delete ui;
@@ -94,30 +93,7 @@ void SelectProfileWindow::setUpGui() {
   ui->label->setText(tr("Select Profile"));
   ui->label->repaint();
 }
-void SelectProfileWindow::readAndSetLastUsedProFromINI() {
-  /*
-	if (lastUsedProfName.size() == 0)
-		return;
-	QStringList listOfDisplayNames;
-	if (!ok)
-		return;
-	int indexToSet = 0;
-	for (size_t i = 0; i < listOfDisplayNames.size(); i++){
-		QString nameToSplit = listOfDisplayNames[i];
-		QStringList partOfName = nameToSplit.split("] ",Qt::SkipEmptyParts);
-		if (partOfName.size() >= 2) {
-			QString exactProfName = partOfName[1];
-			bool matched = exactProfName == lastUsedProfName;
-			if (matched) {
-				indexToSet = i;
-				break;
-			}
-		}
-	}
-	ui->listOfProfs->setCurrentRow(indexToSet);
-	ui->listOfProfs->repaint();
-	*/
-}
+
 QString SelectProfileWindow::getSelectedProfName() {
   int     row         = ui->listOfProfs->currentRow();
   QString profileName = ui->listOfProfs->item(row)->text();

@@ -272,17 +272,3 @@ void RouteCreator::loadFromRoute(Route* route) {
   repaintList();
   repaintMap();
 }
-
-/*
-bool RouteCreator::currentPixIsWalkable(){
-	uint pixCol = currentMapOfWalkability.pixel(currentChoosenPoint.getXY());
-	RGBstruct rgb(pixCol);
-	bool isWalkable = rgb.isGrey();
-	if (!isWalkable) {
-		uint pixColFromNormalMap = currentMap.pixel(currentChoosenPoint.getXY());
-		RGBstruct rgbFromNormalMap = RGBstruct(pixColFromNormalMap);
-		isWalkable = rgbFromNormalMap.isYellow();
-	}
-	return isWalkable;
-}
-*/

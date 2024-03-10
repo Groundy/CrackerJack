@@ -263,6 +263,7 @@ xcopy /y /d ".\dependencies\32-bit\libcrypto-1_1.dll" "$(OutDir)"
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AutoHuntData.hpp" />
+    <ClInclude Include="old_code.hpp" />
     <ClInclude Include="sources\BattleList.hpp" />
     <ClInclude Include="sources\GameConnecter.h" />
     <ClInclude Include="sources\AttackMethode.hpp" />
@@ -316,6 +317,9 @@ xcopy /y /d ".\dependencies\32-bit\libcrypto-1_1.dll" "$(OutDir)"
     <QtTranslation Include="crackerjackclient_pl.ts">
       <BuildAction Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">lupdate_lrelease</BuildAction>
     </QtTranslation>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="_OLD.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

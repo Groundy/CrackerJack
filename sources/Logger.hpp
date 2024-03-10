@@ -51,8 +51,4 @@ class Logger : public QObject {
     time                  = current;
     return QString::number(timeDifference) + "  ";
   }
-
-  //static void logPotenialBug(const QString textToSave);
-  //static void logPotenialBug(const QString textToSave, const QString className, const QString functionName);
-  //static QString getPathToLogFolder();
 };
