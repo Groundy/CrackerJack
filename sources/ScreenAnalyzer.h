@@ -24,6 +24,7 @@ class ScreenAnalyzer : public QThread {
   const int                      SLEEP_TIME = 50;
   QSharedPointer<VariablesClass> var;
   QDir                           screenShotFolder;
+  Logger&                        logger = Logger::instance();
 
   void    deleteScreenShotFolder();
   QString getNameOfLastTakenScreenShot();

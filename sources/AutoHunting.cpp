@@ -77,7 +77,7 @@ void AutoHunting::moveToNextNode() {
   QString msgToConsole =
       QString("%1, x=%2, y=%3 ")
           .arg(msgToDisplayToUser, QString::number(fromPlayerToTargetOnWholeMap.x()), QString::number(fromPlayerToTargetOnWholeMap.y()));
-  var->log(msgToConsole, false, true, true);
+  logger.log(msgToConsole, false, true, true);
   emit updateHeadingPointInGUI(msgToDisplayToUser);
   gameConnector->clickLeft(whereToClick);
 }

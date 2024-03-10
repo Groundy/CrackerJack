@@ -28,5 +28,6 @@ class GameConnecter {
   QMutex                         senderMutex;
   Profile::AutoLoot              autoLootSetting;
   QSharedPointer<VariablesClass> var;
+  Logger&                        logger                = Logger::instance();
   bool                           playingOnSmallMonitor = false;
 };

@@ -8,8 +8,7 @@
 #include "Utilities.hpp"
 class BattleList {
  public:
-  BattleList(Logger* logger, ImgEditor* imgEditor) {
-    this->logger    = logger;
+  BattleList(ImgEditor* imgEditor) {
     this->imgEditor = imgEditor;
   };
   ~BattleList() = default;
@@ -75,7 +74,7 @@ class BattleList {
   QStringList getUniqueMonstersNames() {
     QImage innerList = getInnerBattleList();
     if (innerList.isNull()) {
-      logger->log("Blad czytania listy potworow.", true, true, false);
+      logger.log("Blad czytania listy potworow.", true, true, false);
       return QStringList();
     }
     QVector<QRect> nameRect = getFramesOfMonstersNames();
@@ -91,7 +90,7 @@ class BattleList {
   }
 
  private:
-  Logger*          logger;
+  Logger&          logger = Logger::instance();
   ImgEditor*       imgEditor;
   MutexRect        battleListArea;
   MutexImg         battleListImg;

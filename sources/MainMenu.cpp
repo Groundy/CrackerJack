@@ -48,12 +48,12 @@ void MainMenu::threadStarter() {
   clickDetector = new ClickDetector(this, gameConnector);
   clickDetector->start();
 
-  if (!connect(&var->getLogger(), &Logger::sendMsgToUserConsol, this, &MainMenu::printToUserConsol, Qt::UniqueConnection)) {
+  if (!connect(&Logger::instance(), &Logger::sendMsgToUserConsol, this, &MainMenu::printToUserConsol, Qt::UniqueConnection)) {
     qCritical() << "Connection failed. Logger";
     exit(0);
   }
 
-  if (!connect(&var->getLogger(), &Logger::sendMsgToUserConsolRed, this, &MainMenu::printToUserConsolRed, Qt::UniqueConnection)) {
+  if (!connect(&Logger::instance(), &Logger::sendMsgToUserConsolRed, this, &MainMenu::printToUserConsolRed, Qt::UniqueConnection)) {
     qCritical() << "Connection failed. Logger";
     exit(0);
   }

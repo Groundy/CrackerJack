@@ -15,18 +15,13 @@
 class VariablesClass {
  public:
   VariablesClass(QSharedPointer<Profile> prof) : prof(prof){};
-  ~VariablesClass() {
-    delete battleList;
-    delete eq;
-  };
-  void log(QString msg, bool sendToDebug = true, bool sendToUserConsol = true, bool addTimeSTamp = true) {
-    logger.log(msg, sendToDebug, sendToUserConsol, addTimeSTamp);
-  }
+  ~VariablesClass() = default;
+
   Timers& getTimers() {
     return timers;
   }
   BattleList& getBattleList() {
-    return *battleList;
+    return battleList;
   }
   Settings& getSettings() {
     return settings;
@@ -47,10 +42,7 @@ class VariablesClass {
     return position;
   }
   Equipment& getEquipment() {
-    return *eq;
-  }
-  Logger& getLogger() {
-    return logger;
+    return eq;
   }
   ImgEditor& getImgEditorObj() {
     return imgEditor;
@@ -61,16 +53,15 @@ class VariablesClass {
 
  private:
   QSharedPointer<Profile> prof;
-  Logger                  logger;
   GameProcessData         gameProcess;
   GameWindow              gameWindow;
-  BattleList*             battleList = new BattleList(&logger, &imgEditor);
+  BattleList              battleList = BattleList(&imgEditor);
   Settings                settings;
   Timers                  timers;
   Vitallity               vitalitty;
   MiniMap                 minimap;
   PlayerPosition          position;
   // MutexImg fullImage;
-  Equipment* eq = new Equipment(&imgEditor);
-  ImgEditor  imgEditor;
+  Equipment eq = Equipment(&imgEditor);
+  ImgEditor imgEditor;
 };

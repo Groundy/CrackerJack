@@ -108,7 +108,7 @@ class ManaHealthStateAnalyzer : public QThread {
   void                        handleHaste(bool keepHasting, QVector<Equipment::STATES>& states);
   void                        handleUpgrade(bool keepUpgraded, QVector<Equipment::STATES>& states);
   static qint64               now();
-
+  Logger&                     logger = Logger::instance();
   //bool usedRestorationMethodeOnLastLoop = false;
   ///Max possible value of Health or Mana in game
   //qint64 lastTimeAnalyzed = now();

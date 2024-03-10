@@ -16,11 +16,10 @@ class Logger : public QObject {
   void sendMsgToUserConsolRed(QString);
 
  public:
-  Logger()  = default;
-  ~Logger() = default;
   void log(QString msg, bool sendToDebug = true, bool sendToUserConsol = false, bool addTimeSTamp = true) {
-    if (addTimeSTamp) msg.push_front(getTimeStamp());
-
+    if (addTimeSTamp) {
+      msg.push_front(getTimeStamp());
+    }
     if (sendToDebug) {
       qDebug() << msg;
     }
@@ -28,8 +27,17 @@ class Logger : public QObject {
       emit sendMsgToUserConsol(QStringList() << msg);
     }
   }
+  static Logger& instance() {
+    static Logger logger;
+    return logger;
+  }
 
  private:
+  Logger()                      = default;
+  ~Logger()                     = default;
+  void operator=(const Logger&) = delete;
+  Logger(Logger& other)         = delete;
+
   std::atomic<long long> time = QDateTime::currentDateTime().toMSecsSinceEpoch();
 
   QString getTimeStamp() {

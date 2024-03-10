@@ -317,7 +317,7 @@ void ManaHealthStateAnalyzer::handleHaste(bool keepHasting, QVector<Equipment::S
     return;
   }
   gameConnector->sendKeyStrokeToProcess(VK_F12);  //todo
-  var->log("Hasted!", false, true, true);
+  logger.log("Hasted!", false, true, true);
   lastTimeHasted = currentTime;
 }
 void ManaHealthStateAnalyzer::handleUpgrade(bool keepUpgraded, QVector<Equipment::STATES>& states) {
@@ -333,7 +333,7 @@ void ManaHealthStateAnalyzer::handleUpgrade(bool keepUpgraded, QVector<Equipment
     return;
   }
   gameConnector->sendKeyStrokeToProcess(VK_F11);  //todo
-  var->log("Upgraded!", false, true, true);
+  logger.log("Upgraded!", false, true, true);
   lastTimeUpgraded = currentTime;
 }
 qint64 ManaHealthStateAnalyzer::now() {

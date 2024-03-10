@@ -87,7 +87,7 @@ void GameConnecter::useRestorationMethode(const RestorationMethode& methode, int
 
   Key key = methode.getKey();
   sendKeyStrokeToProcess(key);
-  var->log(methode.getName(), false, true, true);
+  logger.log(methode.getName(), false, true, true);
 }
 void GameConnecter::sendCharToGame(const QChar charToSend, const HWND& gameThreadHandler) {
   senderMutex.lock();
@@ -138,7 +138,7 @@ void GameConnecter::autoLootAroundPlayer() {
     default:
       break;
   }
-  var->log("auto loot.", false, true, true);
+  logger.log("auto loot.", false, true, true);
 }
 void GameConnecter::setShiftPressed(const bool pressed) {
   INPUT ip{};

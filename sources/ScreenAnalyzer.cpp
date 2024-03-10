@@ -31,7 +31,7 @@ void ScreenAnalyzer::run() {
       bool basicCalibrationOk = Calibrator(var).calibrateBasicAreas(img);
       if (!basicCalibrationOk) {
         QString msg = "Problem z kalibracja!";
-        var->log(msg, true, true, false);
+        logger.log(msg, true, true, false);
         deleteScreenShotFolder();
         continue;
       }
@@ -119,7 +119,7 @@ void ScreenAnalyzer::analyzeBattleList(const QImage& fullscreen) {
     bool foundBattleArea = Calibrator(var).calibrateBattleArea(fullscreen);
     if (!foundBattleArea) {
       QString msg = "Nie mozna otworzy battle listy";
-      var->log(msg, true, true, false);
+      logger.log(msg, true, true, false);
     }
   }
   cutBattleList(fullscreen);
