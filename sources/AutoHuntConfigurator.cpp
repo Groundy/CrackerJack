@@ -3,7 +3,6 @@
 AutoHuntConfigurator::AutoHuntConfigurator(QWidget* parent, Profile* profile)
     : QDialog(parent), prof(profile), ui(new Ui::AutoHuntConfiguratorClass()) {
   ui->setupUi(this);
-  fillPointersGUI();
   fillGuiFromProfileData(profile);
 }
 
@@ -130,23 +129,6 @@ QStringList AutoHuntConfigurator::getNamesOfAttacksMethodes(Profession professio
   namesToFill.sort();
   return namesToFill;
 };
-
-void AutoHuntConfigurator::fillPointersGUI() {
-  checkBoxes_      = {ui->actvieAtackCheckBox_1, ui->actvieAtackCheckBox_2, ui->actvieAtackCheckBox_3, ui->actvieAtackCheckBox_4};
-  attackKeysBoxes_ = {
-      ui->atakKeyBox_1,
-      ui->atakKeyBox_2,
-      ui->atakKeyBox_3,
-      ui->atakKeyBox_4,
-  };
-  attackNamesBoxes_ = {
-      ui->atakNameBox_1,
-      ui->atakNameBox_2,
-      ui->atakNameBox_3,
-      ui->atakNameBox_4,
-  };
-  attackMonstersBoxes_ = {ui->attackMinMonsers_1, ui->attackMinMonsers_2, ui->attackMinMonsers_3, ui->attackMinMonsers_4};
-}
 
 void AutoHuntConfigurator::getDataFromGUI() {
   autoHuntData.setMinMonToContinue(ui->minMonContinueSpiner->value());

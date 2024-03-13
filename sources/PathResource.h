@@ -38,19 +38,9 @@ class PathResource {
   static std::optional<QDir> getScreenShotFolder() {
     QDir dir = QDir::tempPath();
     dir.cdUp();
-    if (!dir.cd("Tibia")) {
-      qWarning() << "Error in finding screenshot folder, current dir" << dir.absolutePath();
-      return std::nullopt;
-    }
-    if (!dir.cd("packages")) {
-      qWarning() << "Error in finding screenshot folder, current dir" << dir.absolutePath();
-      return std::nullopt;
-    }
-    if (!dir.cd("Tibia")) {
-      qWarning() << "Error in finding screenshot folder, current dir" << dir.absolutePath();
-      return std::nullopt;
-    }
-    if (!dir.cd("screenshots")) {
+    const bool moved = dir.cd("Tibia") && dir.cd("packages") && dir.cd("Tibia") && dir.cd("screenshots");
+
+    if (!moved) {
       qWarning() << "Error in finding screenshot folder, current dir" << dir.absolutePath();
       return std::nullopt;
     }
