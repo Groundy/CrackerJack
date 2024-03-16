@@ -333,15 +333,14 @@ bool Calibrator::findWindowsOnScreen(const QImage& fullScreen, QVector<QRect>& i
   importantRectangles                   = areasWithinFullFrames;
   return areasWithoutFrames.size() >= 4;
 }
-void Calibrator::sortByXY(QVector<QPoint>& points, QVector<QPoint>& sortedByX, QVector<QPoint>& sortedByY) {
+std::tuple<QVector<QPoint>, QVector<QPoint>> Calibrator::sortByXY(QVector<QPoint>& const points) {
   QMultiMap<int, QPoint> mapX;
   QMultiMap<int, QPoint> mapY;
   for each (QPoint point in points) {
     mapX.insert(point.x(), point);
     mapY.insert(point.y(), point);
   }
-  sortedByX = mapX.values().toVector();
-  sortedByY = mapY.values().toVector();
+  return {mapX.values().toVector(), mapY.values().toVector()};
 }
 void Calibrator::sortByXY(QVector<QRect>& inputRects, QVector<QRect>& sortedByX, QVector<QRect>& sortedByY) {
   QMultiMap<int, QRect> mapX;
@@ -356,8 +355,8 @@ void Calibrator::sortByXY(QVector<QRect>& inputRects, QVector<QRect>& sortedByX,
 QVector<QPoint> Calibrator::getStartOfPossibleFrames(const QImage& fullScreen, int minVal, int maxVal) {
   const int       WIDTH              = fullScreen.width();
   const int       HEIGHT             = fullScreen.height();
-  const uint      MIN_ACCEPTABLE_VAL = 17;
-  const uint      MAX_ACCEPTABLE_VAL = 29;
+  constexpr uint  MIN_ACCEPTABLE_VAL = 17;
+  constexpr uint  MAX_ACCEPTABLE_VAL = 29;
   QVector<QPoint> topLeftCorners;
   for (size_t x = 1; x < WIDTH - 2; x++) {
     for (size_t y = 1; y < HEIGHT - 2; y++) {
@@ -489,13 +488,13 @@ QVector<QRect> Calibrator::getOutsideFramesOfOpenEntitiesOnSideBars(const QImage
   for each (QPoint currPt in startPoints) {
     QRect rectToSheachWithIn(currPt, QSize(wholeScreen.width() - currPt.x(), wholeScreen.height() - currPt.y()));
     auto  endsOfFrame = ImgEditor::findStartPositionInImg(endOfSideBarEntity, wholeScreen, rectToSheachWithIn);
-    if (endsOfFrame.size() == 0) continue;
-    QVector<QPoint> sortedByX, sortedByY;
-    sortByXY(endsOfFrame, sortedByX, sortedByY);
-    QPoint pt = sortedByY[0];
+    if (endsOfFrame.size() == 0) {
+      continue;
+    }
+    auto [sortedByX, sortedByY] = sortByXY(endsOfFrame);
+    QPoint pt                   = sortedByY[0];
     QSize  size(pt.x() + endOfSideBarEntity.width() - currPt.x(), pt.y() + endOfSideBarEntity.height() - currPt.y());
     QRect  toAdd(currPt, size);
-    // wholeScreen.copy(toAdd).save(QString("C:\\Users\\szczy\\Desktop\\inne\\%1.png").arg(QString::number(QDateTime::currentMSecsSinceEpoch())));
     outerFramesOfSideBarsEntity.push_back(toAdd);
   }
   return outerFramesOfSideBarsEntity;

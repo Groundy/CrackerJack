@@ -69,14 +69,14 @@ class Calibrator {
 
   QSharedPointer<VariablesClass> var;
 
-  SlashesIndexes getIndexesOfImgsWithSlashes(const QImage& fullScreen, const QVector<QRect>& importantFrames);
-  bool           categorizeWindows(const QImage& fullscreen, QVector<QRect>& importantRectangles);
-  bool           findWindowsOnScreen(const QImage& fullScreen, QVector<QRect>& importantRectangles);
-  void           sortByXY(QVector<QPoint>& points, QVector<QPoint>& sortedByX, QVector<QPoint>& sortedByY);
-  void           sortByXY(QVector<QRect>& inputRects, QVector<QRect>& sortedByX, QVector<QRect>& sortedByY);
-  Indexes        getIndexesOfHealthManaBars(const QImage& fullscreen, const QVector<QRect>& listOfImportantRectangles);
-  QVector<QPoint>  getStartOfPossibleFrames(const QImage& fullScreen, int minVal, int maxVal);
-  QVector<QRect>   getAreasInsideFrames(const QImage& fullScreen, const QVector<QPoint>& startOfFrames, const int MIN_DIM);
-  QVector<QRect>   filterAreasCoveredByFrameFromBottomRight(const QImage& fullScreen, const QVector<QRect>& areas);
-  QVector<QRect>   getOutsideFramesOfOpenEntitiesOnSideBars(const QImage& wholeScreen);
+  SlashesIndexes                               getIndexesOfImgsWithSlashes(const QImage& fullScreen, const QVector<QRect>& importantFrames);
+  bool                                         categorizeWindows(const QImage& fullscreen, QVector<QRect>& importantRectangles);
+  bool                                         findWindowsOnScreen(const QImage& fullScreen, QVector<QRect>& importantRectangles);
+  std::tuple<QVector<QPoint>, QVector<QPoint>> Calibrator::sortByXY(QVector<QPoint>& const points);
+  void                                         sortByXY(QVector<QRect>& inputRects, QVector<QRect>& sortedByX, QVector<QRect>& sortedByY);
+  Indexes         getIndexesOfHealthManaBars(const QImage& fullscreen, const QVector<QRect>& listOfImportantRectangles);
+  QVector<QPoint> getStartOfPossibleFrames(const QImage& fullScreen, int minVal, int maxVal);
+  QVector<QRect>  getAreasInsideFrames(const QImage& fullScreen, const QVector<QPoint>& startOfFrames, const int MIN_DIM);
+  QVector<QRect>  filterAreasCoveredByFrameFromBottomRight(const QImage& fullScreen, const QVector<QRect>& areas);
+  QVector<QRect>  getOutsideFramesOfOpenEntitiesOnSideBars(const QImage& wholeScreen);
 };
