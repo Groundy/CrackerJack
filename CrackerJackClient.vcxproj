@@ -230,6 +230,7 @@ xcopy /y /d ".\dependencies\32-bit\libcrypto-1_1.dll" "$(OutDir)"
     <ResourceCompile Include="CrackerJackClient.rc" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="CJ_Image.cpp" />
     <ClCompile Include="sources\AutoHuntConfigurator.cpp" />
     <ClCompile Include="sources\AutoHunting.cpp" />
     <ClCompile Include="sources\GameConnecter.cpp" />
@@ -263,6 +264,7 @@ xcopy /y /d ".\dependencies\32-bit\libcrypto-1_1.dll" "$(OutDir)"
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AutoHuntData.hpp" />
+    <ClInclude Include="CJ_Image.h" />
     <ClInclude Include="old_code.hpp" />
     <ClInclude Include="sources\BattleList.hpp" />
     <ClInclude Include="sources\GameConnecter.h" />
