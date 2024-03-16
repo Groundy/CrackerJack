@@ -231,14 +231,14 @@ QImage ImgEditor::getColorImageFromCode(const QString& codeOfImg) {
   return imgToCreate;
 }
 
-QList<QPoint> ImgEditor::findStartPositionInImg_mulitpeImgs(QList<QImage*> imgsToFind, QImage& imgToShareWithin) {
+QVector<QPoint> ImgEditor::findStartPositionInImg_mulitpeImgs(QList<QImage*> imgsToFind, QImage& imgToShareWithin) {
   // this fun return starting points from imgToSharePoints than consist pixels from one of imgsToFind
 
   QImage::Format formatBig = imgToShareWithin.format();
   for each (QImage* var in imgsToFind) {
     if (formatBig != var->format()) {
       ////Logger::logPotenialBug("Not all imgs have the same format!", "Calibrator", "findStartPositionInImg_mulitpeImgs");
-      return QList<QPoint>();  //[TO DO zamienic ta funkcje zeby zwracala error code]
+      return QVector<QPoint>();  //[TO DO zamienic ta funkcje zeby zwracala error code]
     }
   }
 
@@ -250,14 +250,14 @@ QList<QPoint> ImgEditor::findStartPositionInImg_mulitpeImgs(QList<QImage*> imgsT
     bool isAllRight   = widthIsGood && heightIsGood;
     if (!isAllRight) {
       //Logger::logPotenialBug("Not all imgs have the same size!", "Calibrator", "findStartPositionInImg_mulitpeImgs");
-      return QList<QPoint>();  //[TO DO zamienic ta funkcje zeby zwracala error code]
+      return QVector<QPoint>();  //[TO DO zamienic ta funkcje zeby zwracala error code]
     }
   }
 
   const int MAX_WIDTH_VAL_TO_SHEARCH  = imgToShareWithin.width() - WIDTH_OF_FIRST_IMG;
   const int MAX_HEIGHT_VAL_TO_SHEARCH = imgToShareWithin.height() - HEIGHT_OF_FIRST_IMG;
 
-  QList<QPoint> startPointsListToRet;
+  QVector<QPoint> startPointsListToRet;
   for (int x = 0; x <= MAX_WIDTH_VAL_TO_SHEARCH; x++) {
     for (int y = 0; y <= MAX_HEIGHT_VAL_TO_SHEARCH; y++) {
       bool atLeastOnePixIsMatched = false;
@@ -295,7 +295,7 @@ QList<QPoint> ImgEditor::findStartPositionInImg_mulitpeImgs(QList<QImage*> imgsT
   }
   return startPointsListToRet;
 }
-void ImgEditor::saveMultipleImgs(const QImage& fullImg, QList<QRect> frames, QString pathToFolder, QString fileNameWithoutExtension) {
+void ImgEditor::saveMultipleImgs(const QImage& fullImg, QVector<QRect> frames, QString pathToFolder, QString fileNameWithoutExtension) {
   for (int i = 0; i < frames.size(); i++) {
     QImage  img      = fullImg.copy(frames[i]);
     QString fullPath = QString("%1\\%2_%3.png").arg(pathToFolder, QString::number(i), fileNameWithoutExtension);
@@ -308,7 +308,7 @@ void ImgEditor::saveMultipleImgs(const QList<QImage>& imgs, QString pathToFolder
     imgs[i].save(fullPath);
   }
 }
-QList<QPoint> ImgEditor::findStartPositionInImg(const QImage& imgToFind, const QImage& imgToSearchWithin, QRect frameInBigWindow) {
+QVector<QPoint> ImgEditor::findStartPositionInImg(const QImage& imgToFind, const QImage& imgToSearchWithin, QRect frameInBigWindow) {
   const int WIDTH_SMALL_PIC  = imgToFind.width();
   const int HEIGHT_SMALL_PIC = imgToFind.height();
   const int WIDTH_BIG_PIC    = imgToSearchWithin.width();
@@ -316,27 +316,27 @@ QList<QPoint> ImgEditor::findStartPositionInImg(const QImage& imgToFind, const Q
 
   if (imgToFind.isNull() || imgToSearchWithin.isNull()) {
     qWarning() << "Cant find postion, one of imgs is null";
-    return QList<QPoint>();
+    return QVector<QPoint>();
   }
   if (WIDTH_SMALL_PIC > WIDTH_BIG_PIC) {
     qWarning() << "Cant find postion, Wrong imgs size";
-    return QList<QPoint>();
+    return QVector<QPoint>();
   }
   if (HEIGHT_SMALL_PIC > HEIGHT_BIG_PIC) {
     qWarning() << "Cant find postion, Wrong imgs size";
-    return QList<QPoint>();
+    return QVector<QPoint>();
   }
   if (imgToFind.format() != imgToSearchWithin.format()) {
     qWarning() << "Cant find postion, wrong formats";
-    return QList<QPoint>();
+    return QVector<QPoint>();
   }
   if (frameInBigWindow.right() > WIDTH_BIG_PIC) {
     qWarning() << "Cant find postion, Wrong frame size";
-    return QList<QPoint>();
+    return QVector<QPoint>();
   }
   if (frameInBigWindow.bottom() > HEIGHT_BIG_PIC) {
     qWarning() << "Cant find postion, Wrong frame size";
-    return QList<QPoint>();
+    return QVector<QPoint>();
   }
 
   const int maxIndexToCheckX = frameInBigWindow.isEmpty() ? WIDTH_BIG_PIC - WIDTH_SMALL_PIC : frameInBigWindow.right();
@@ -344,7 +344,7 @@ QList<QPoint> ImgEditor::findStartPositionInImg(const QImage& imgToFind, const Q
   const int minIndexToCheckX = frameInBigWindow.isEmpty() ? 0 : frameInBigWindow.left();
   const int minIndexToCheckY = frameInBigWindow.isEmpty() ? 0 : frameInBigWindow.top();
 
-  QList<QPoint> startPointsListToRet;
+  QVector<QPoint> startPointsListToRet;
   for (int x = minIndexToCheckX; x <= maxIndexToCheckX; x++) {
     for (int y = minIndexToCheckY; y <= maxIndexToCheckY; y++) {
       uint pixSmallImg = imgToFind.pixel(0, 0);
@@ -407,7 +407,7 @@ QPoint ImgEditor::findExactStartPositionInImg(const QImage& imgToFind, const QIm
   const int minIndexToCheckX = frameInBigWindow.isEmpty() ? 0 : frameInBigWindow.left();
   const int minIndexToCheckY = frameInBigWindow.isEmpty() ? 0 : frameInBigWindow.top();
 
-  QList<QPoint> startPoints;
+  QVector<QPoint> startPoints;
   for (int x = minIndexToCheckX; x <= maxIndexToCheckX; x++) {
     for (int y = minIndexToCheckY; y <= maxIndexToCheckY; y++) {
       if (startPoints.size() > 1) {

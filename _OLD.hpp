@@ -1,5 +1,5 @@
 /*
-bool Calibrator::getRectsFromProfile(QList<QRect>& importRectsFromProf) {
+bool Calibrator::getRectsFromProfile(QVector<QRect>& importRectsFromProf) {
         importRectsFromProf.clear();
         //they have to be;
         bool isEmpty_gameFram = var->frames.gameFrame.isEmpty();
@@ -43,7 +43,7 @@ QDir::Files); for (int i = 0; i < listOfFIles.size(); i++) { QString nameOfFile
 = listOfFIles[i]; qDebug() << QString::number(i); QString pathToPng =
 pathToFolderWithDiffrentPositionsStylesScreen + "\\" + nameOfFile; QImage img;
                 img.load(pathToPng);
-                QList<QRect> importantRects;
+                QVector<QRect> importantRects;
                 findWindowsOnScreen(img, importantRects);
                 int indCombined;
                 int indHealth;
@@ -179,7 +179,7 @@ name_code_light, QMap<QString, QString>& name_code_dark) {
 "17_2_#41#2#0_#15#1#0_#51#2#0_#32#2#0_#59#1#0_#61#1#0_#68#1#0_#66#1#0_#74#10#12_#72#1#0_#72#31#38_#73#10#12_#70#26#31_#65#17#20_#47#2#0_#49#11#12_#55#1#0_#48#1#0_#51#1#0_#59#2#0_#43#2#0_#48#2#0_#44#2#0_#37#3#0_#44#2#0_#41#2#0_#45#1#0_#42#2#0_#44#1#0_#44#1#0_#35#1#0_#32#1#0_#35#1#0_#30#1#0_");
 }*/
 /*bool Calibrator::fillRectWithPotsInVarClass(QImage& fullscreen, QStringList
-nameOfPotionsToLookFor) { QStringList foundPotions; QList<QRect>
+nameOfPotionsToLookFor) { QStringList foundPotions; QVector<QRect>
 rectsWithPotions; findPotionsOnBottomBar(nameOfPotionsToLookFor, foundPotions,
 rectsWithPotions, fullscreen);
 
@@ -202,7 +202,7 @@ rectToAdd;//[CHANGE]
         return true;
 }*/
 /*bool Calibrator::findPotionsOnBottomBar(QStringList namesOfPotionsToFind,
-QStringList& namesOfPotionosFound, QList<QRect>& rectsWithFoundPots, QImage&
+QStringList& namesOfPotionosFound, QVector<QRect>& rectsWithFoundPots, QImage&
 bottomBarImg) { bool wrongInput = namesOfPotionsToFind.size() == 0 ||
 bottomBarImg.width() <= 0 || bottomBarImg.height() <= 0; if (wrongInput) {
                 //Logger::logPotenialBug("Wrong(empty) input", "Calibrator",
@@ -233,12 +233,12 @@ bottomBarImg.width() <= 0 || bottomBarImg.height() <= 0; if (wrongInput) {
         }
 
         QStringList namesOfFoundPotions;
-        QList<QPoint> potionsOfStartingPotions;
+        QVector<QPoint> potionsOfStartingPotions;
         for (size_t i = 0; i < map_dark.size(); i++) {
                 QList<QImage*> potionToLookFor;
                 potionToLookFor.push_back(&potionsImg_light[i]);
                 potionToLookFor.push_back(&potionsImg_dark[i]);
-                QList<QPoint> pointsOfStart =
+                QVector<QPoint> pointsOfStart =
 ImgEditor::findStartPositionInImg_mulitpeImgs(potionToLookFor, bottomBarImg); if
 (pointsOfStart.size() == 1) {
                         potionsOfStartingPotions.push_back(pointsOfStart.first());
@@ -254,7 +254,7 @@ Potion in Image", "Calibrator", "findPotionsOnBottomBar");
         const RGBstruct PIX_ABOVE_COLOUR(112, 113, 113);
         const int WIDTH = bottomBarImg.width();
         const int HEIGHT = bottomBarImg.height();
-        QList<QRect> rectToRet;
+        QVector<QRect> rectToRet;
         for (size_t i = 0; i < potionsOfStartingPotions.size(); i++) {
                 QPoint& someWhereInPic = potionsOfStartingPotions[i];
                 int curr_x = someWhereInPic.x();
@@ -353,7 +353,7 @@ int ManaHealthStateAnalyzer::getNumberFromBottomBar(QImage& imgToShearchWithin) 
     listWithLightAndDarkLetterImg.push_back(&lightLetter);
 
     int           digit                = lightMap[lightCodes[i]];
-    QList<QPoint> listOfStartingPoints = ImgEditor::findStartPositionInImg_mulitpeImgs(
+    QVector<QPoint> listOfStartingPoints = ImgEditor::findStartPositionInImg_mulitpeImgs(
         listWithLightAndDarkLetterImg, imgToShearchWithin);  // (listWithLightAndDarkLetterImg, imgToShearchWithin);
     for each (QPoint var in listOfStartingPoints) anotherMap.insert(var.x(), digit);
   }
@@ -394,7 +394,7 @@ void getAmountsOfPotions() {
 QPoint MinimapAnalyzer::findPlayerPosition(const QImage& miniMap, const QImage* wholeMap) {
 	try{
 		const QList<QImage> miniMapParts = splitMiniMap(miniMap);
-		QList<QPoint> pointsFromThreads;
+		QVector<QPoint> pointsFromThreads;
 		for (size_t i = 0; i < miniMapParts.size(); i++)
 			pointsFromThreads.push_back(QPoint());
 

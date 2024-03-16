@@ -28,10 +28,10 @@ class ImgEditor {
                                           bool requireSameValuesOfRGB);
   static QImage        getColorImageFromCode(const QString& codeOfImg);
   static QList<QImage> cutImgWithLettersToSingleLettersImgList(QImage& img);
-  static QList<QPoint> findStartPositionInImg_mulitpeImgs(QList<QImage*> imgsToFind, QImage& imgToShareWithin);
-  static QList<QPoint> findStartPositionInImg(const QImage& imgToFind, const QImage& imgToShareWithin, QRect frameInBigWindow = QRect());
+  static QVector<QPoint> findStartPositionInImg_mulitpeImgs(QList<QImage*> imgsToFind, QImage& imgToShareWithin);
+  static QVector<QPoint> findStartPositionInImg(const QImage& imgToFind, const QImage& imgToShareWithin, QRect frameInBigWindow = QRect());
   static QPoint findExactStartPositionInImg(const QImage& imgToFind, const QImage& imgToShareWithin, QRect frameInBigWindow = QRect());
-  static void   saveMultipleImgs(const QImage& fullImg, QList<QRect> frames, QString pathToFolder, QString fileNameWithoutExtension);
+  static void   saveMultipleImgs(const QImage& fullImg, QVector<QRect> frames, QString pathToFolder, QString fileNameWithoutExtension);
   static void   saveMultipleImgs(const QList<QImage>& fullImg, QString pathToFolder, QString fileNameWithoutExtension);
   static void   saveImgWitinLoop(const QImage& img) {
     img.save(QString("C:\\Users\\szczy\\Desktop\\tmps\\%1.png").arg(QString::number(QDateTime::currentMSecsSinceEpoch())));

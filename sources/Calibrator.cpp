@@ -4,8 +4,8 @@ Calibrator::~Calibrator() {}
 
 // public
 bool Calibrator::calibrateBasicAreas(const QImage& fullscreen) {
-  QList<QRect> importantRectangles;
-  bool         windowsFound = findWindowsOnScreen(fullscreen, importantRectangles);
+  QVector<QRect> importantRectangles;
+  bool           windowsFound = findWindowsOnScreen(fullscreen, importantRectangles);
   if (!windowsFound) return false;
 
   bool windowsCategorized = categorizeWindows(fullscreen, importantRectangles);
@@ -73,7 +73,7 @@ void Calibrator::test(QString pathToFilesWithScreens) {
 }
 
 // private
-Calibrator::SlashesIndexes Calibrator::getIndexesOfImgsWithSlashes(const QImage& fullScreen, const QList<QRect>& importantFrames) {
+Calibrator::SlashesIndexes Calibrator::getIndexesOfImgsWithSlashes(const QImage& fullScreen, const QVector<QRect>& importantFrames) {
   const QImage   slashYImg = var->getImgEditorObj().fromCharToImg(QChar(47));
   const QImage   slashXImg = var->getImgEditorObj().fromCharToImg(QChar(92));
   SlashesIndexes indexes;
@@ -81,7 +81,7 @@ Calibrator::SlashesIndexes Calibrator::getIndexesOfImgsWithSlashes(const QImage&
     QImage imgTmp = fullScreen.copy(importantFrames[i]);
     ImgEditor::imgToBlackAndWhiteAllColors(imgTmp, 250);
 
-    QList<QPoint> pointsX = ImgEditor::findStartPositionInImg(slashXImg, imgTmp);
+    QVector<QPoint> pointsX = ImgEditor::findStartPositionInImg(slashXImg, imgTmp);
     if (pointsX.size() == 1)
       indexes.slashesX.push_back(i);
     else if (pointsX.size() == 2) {
@@ -90,7 +90,7 @@ Calibrator::SlashesIndexes Calibrator::getIndexesOfImgsWithSlashes(const QImage&
     }
     if (indexes.isValid()) break;
 
-    QList<QPoint> pointsY = ImgEditor::findStartPositionInImg(slashYImg, imgTmp);
+    QVector<QPoint> pointsY = ImgEditor::findStartPositionInImg(slashYImg, imgTmp);
     if (pointsY.size() == 1)
       indexes.slashesY.push_back(i);
     else if (pointsY.size() == 2) {
@@ -101,7 +101,7 @@ Calibrator::SlashesIndexes Calibrator::getIndexesOfImgsWithSlashes(const QImage&
   }
   return indexes;
 }
-Calibrator::Indexes Calibrator::getIndexesOfHealthManaBars(const QImage& fullscreen, const QList<QRect>& listOfImportantRectangles) {
+Calibrator::Indexes Calibrator::getIndexesOfHealthManaBars(const QImage& fullscreen, const QVector<QRect>& listOfImportantRectangles) {
   Indexes        indexes;
   SlashesIndexes slashesIndexes = getIndexesOfImgsWithSlashes(fullscreen, listOfImportantRectangles);
   if (!slashesIndexes.isValid()) {
@@ -142,7 +142,7 @@ Calibrator::Indexes Calibrator::getIndexesOfHealthManaBars(const QImage& fullscr
   switch (position) {
     case LEFT: {
       indexes.rotation = 1;
-      QList<QRect> sortedByX, sortedByY, rectangles;
+      QVector<QRect> sortedByX, sortedByY, rectangles;
       for each (int var in slashesIndexes.slashesY) rectangles.push_back(listOfImportantRectangles[var]);
       sortByXY(rectangles, sortedByX, sortedByY);
       switch (shieldType) {
@@ -179,7 +179,7 @@ Calibrator::Indexes Calibrator::getIndexesOfHealthManaBars(const QImage& fullscr
     }
     case RIGHT: {
       indexes.rotation = -1;
-      QList<QRect> sortedByX, sortedByY, rectangles;
+      QVector<QRect> sortedByX, sortedByY, rectangles;
       for each (int var in slashesIndexes.slashesY) rectangles.push_back(listOfImportantRectangles[var]);
       sortByXY(rectangles, sortedByX, sortedByY);
       switch (shieldType) {
@@ -215,7 +215,7 @@ Calibrator::Indexes Calibrator::getIndexesOfHealthManaBars(const QImage& fullscr
     case DOWN:
     case TOP: {
       indexes.rotation = 0;
-      QList<QRect> sortedByX, sortedByY, rectangles;
+      QVector<QRect> sortedByX, sortedByY, rectangles;
       for each (int var in slashesIndexes.slashesX) rectangles.push_back(listOfImportantRectangles[var]);
       sortByXY(rectangles, sortedByX, sortedByY);
       switch (shieldType) {
@@ -260,7 +260,7 @@ Calibrator::Indexes Calibrator::getIndexesOfHealthManaBars(const QImage& fullscr
   }
   return indexes;
 }
-bool Calibrator::categorizeWindows(const QImage& fullscreen, QList<QRect>& importantRectangles) {
+bool Calibrator::categorizeWindows(const QImage& fullscreen, QVector<QRect>& importantRectangles) {
   // 4 cause 1-minimap 2-gameScreen 3-health 4-mana, those 4 have to be found
   if (importantRectangles.size() < 4) return false;
 
@@ -313,7 +313,7 @@ bool Calibrator::categorizeWindows(const QImage& fullscreen, QList<QRect>& impor
 
   // miniMap Frame
   {
-    QList<QRect> sortedX, sortedY;
+    QVector<QRect> sortedX, sortedY;
     sortByXY(importantRectangles, sortedX, sortedY);
     var->getMiniMap().setFrameMiniMap(sortedX.last());
     importantRectangles.removeOne(sortedX.last());
@@ -321,44 +321,44 @@ bool Calibrator::categorizeWindows(const QImage& fullscreen, QList<QRect>& impor
 
   return true;
 }
-bool Calibrator::findWindowsOnScreen(const QImage& fullScreen, QList<QRect>& importantRectangles) {
+bool Calibrator::findWindowsOnScreen(const QImage& fullScreen, QVector<QRect>& importantRectangles) {
   const int  WIDTH              = fullScreen.width();
   const int  HEIGHT             = fullScreen.height();
   const uint MIN_ACCEPTABLE_VAL = 17;
   const uint MAX_ACCEPTABLE_VAL = 29;
 
-  QList<QPoint> startOfFrames         = getStartOfPossibleFrames(fullScreen, MIN_ACCEPTABLE_VAL, MAX_ACCEPTABLE_VAL);
-  QList<QRect>  areasWithoutFrames    = getAreasInsideFrames(fullScreen, startOfFrames, 10);
-  QList<QRect>  areasWithinFullFrames = filterAreasCoveredByFrameFromBottomRight(fullScreen, areasWithoutFrames);
-  importantRectangles                 = areasWithinFullFrames;
+  QVector<QPoint> startOfFrames         = getStartOfPossibleFrames(fullScreen, MIN_ACCEPTABLE_VAL, MAX_ACCEPTABLE_VAL);
+  QVector<QRect>  areasWithoutFrames    = getAreasInsideFrames(fullScreen, startOfFrames, 10);
+  QVector<QRect>  areasWithinFullFrames = filterAreasCoveredByFrameFromBottomRight(fullScreen, areasWithoutFrames);
+  importantRectangles                   = areasWithinFullFrames;
   return areasWithoutFrames.size() >= 4;
 }
-void Calibrator::sortByXY(QList<QPoint>& points, QList<QPoint>& sortedByX, QList<QPoint>& sortedByY) {
+void Calibrator::sortByXY(QVector<QPoint>& points, QVector<QPoint>& sortedByX, QVector<QPoint>& sortedByY) {
   QMultiMap<int, QPoint> mapX;
   QMultiMap<int, QPoint> mapY;
   for each (QPoint point in points) {
     mapX.insert(point.x(), point);
     mapY.insert(point.y(), point);
   }
-  sortedByX = mapX.values();
-  sortedByY = mapY.values();
+  sortedByX = mapX.values().toVector();
+  sortedByY = mapY.values().toVector();
 }
-void Calibrator::sortByXY(QList<QRect>& inputRects, QList<QRect>& sortedByX, QList<QRect>& sortedByY) {
+void Calibrator::sortByXY(QVector<QRect>& inputRects, QVector<QRect>& sortedByX, QVector<QRect>& sortedByY) {
   QMultiMap<int, QRect> mapX;
   QMultiMap<int, QRect> mapY;
   for each (QRect rect in inputRects) {
     mapX.insert(rect.x(), rect);
     mapY.insert(rect.y(), rect);
   }
-  sortedByX = mapX.values();
-  sortedByY = mapY.values();
+  sortedByX = mapX.values().toVector();
+  sortedByY = mapY.values().toVector();
 }
-QList<QPoint> Calibrator::getStartOfPossibleFrames(const QImage& fullScreen, int minVal, int maxVal) {
-  const int     WIDTH              = fullScreen.width();
-  const int     HEIGHT             = fullScreen.height();
-  const uint    MIN_ACCEPTABLE_VAL = 17;
-  const uint    MAX_ACCEPTABLE_VAL = 29;
-  QList<QPoint> topLeftCorners;
+QVector<QPoint> Calibrator::getStartOfPossibleFrames(const QImage& fullScreen, int minVal, int maxVal) {
+  const int       WIDTH              = fullScreen.width();
+  const int       HEIGHT             = fullScreen.height();
+  const uint      MIN_ACCEPTABLE_VAL = 17;
+  const uint      MAX_ACCEPTABLE_VAL = 29;
+  QVector<QPoint> topLeftCorners;
   for (size_t x = 1; x < WIDTH - 2; x++) {
     for (size_t y = 1; y < HEIGHT - 2; y++) {
       bool isPixelOfFrame = ImgEditor::isItPixelFromFrame(fullScreen.pixel(x, y), MIN_ACCEPTABLE_VAL, MAX_ACCEPTABLE_VAL, true);
@@ -396,12 +396,12 @@ QList<QPoint> Calibrator::getStartOfPossibleFrames(const QImage& fullScreen, int
   }
   return topLeftCorners;
 }
-QList<QRect> Calibrator::getAreasInsideFrames(const QImage& fullScreen, const QList<QPoint>& startOfFrames, const int MIN_DIM) {
-  const int    WIDTH              = fullScreen.width();
-  const int    HEIGHT             = fullScreen.height();
-  const uint   MIN_ACCEPTABLE_VAL = 17;
-  const uint   MAX_ACCEPTABLE_VAL = 29;
-  QList<QRect> frameToRet;
+QVector<QRect> Calibrator::getAreasInsideFrames(const QImage& fullScreen, const QVector<QPoint>& startOfFrames, const int MIN_DIM) {
+  const int      WIDTH              = fullScreen.width();
+  const int      HEIGHT             = fullScreen.height();
+  const uint     MIN_ACCEPTABLE_VAL = 17;
+  const uint     MAX_ACCEPTABLE_VAL = 29;
+  QVector<QRect> frameToRet;
   for each (QPoint startPoint in startOfFrames) {
     int currentWidth = 0;
     for (size_t x = startPoint.x(); x < WIDTH; x++) {
@@ -433,12 +433,12 @@ QList<QRect> Calibrator::getAreasInsideFrames(const QImage& fullScreen, const QL
   }
   return frameToRet;
 }
-QList<QRect> Calibrator::filterAreasCoveredByFrameFromBottomRight(const QImage& fullScreen, const QList<QRect>& areas) {
-  const int    WIDTH              = fullScreen.width();
-  const int    HEIGHT             = fullScreen.height();
-  const uint   MIN_ACCEPTABLE_VAL = 100;
-  const uint   MAX_ACCEPTABLE_VAL = 130;
-  QList<QRect> toRet;
+QVector<QRect> Calibrator::filterAreasCoveredByFrameFromBottomRight(const QImage& fullScreen, const QVector<QRect>& areas) {
+  const int      WIDTH              = fullScreen.width();
+  const int      HEIGHT             = fullScreen.height();
+  const uint     MIN_ACCEPTABLE_VAL = 100;
+  const uint     MAX_ACCEPTABLE_VAL = 130;
+  QVector<QRect> toRet;
   for each (QRect area in areas) {
     if (area.bottom() + 1 >= fullScreen.height()) {
       qWarning() << "????";
@@ -479,18 +479,18 @@ QList<QRect> Calibrator::filterAreasCoveredByFrameFromBottomRight(const QImage& 
   }
   return toRet;
 }
-QList<QRect> Calibrator::getOutsideFramesOfOpenEntitiesOnSideBars(const QImage& wholeScreen) {
+QVector<QRect> Calibrator::getOutsideFramesOfOpenEntitiesOnSideBars(const QImage& wholeScreen) {
   const QImage startOfSideBarEntity(PathResource::getPathToSideBarEntityStart());
   if (startOfSideBarEntity.isNull()) return {};
 
-  QList<QRect>  outerFramesOfSideBarsEntity = {};
-  QList<QPoint> startPoints                 = ImgEditor::findStartPositionInImg(startOfSideBarEntity, wholeScreen);
-  const QImage  endOfSideBarEntity(PathResource::getPathToSideBarEntityEnd());
+  QVector<QRect>  outerFramesOfSideBarsEntity = {};
+  QVector<QPoint> startPoints                 = ImgEditor::findStartPositionInImg(startOfSideBarEntity, wholeScreen);
+  const QImage    endOfSideBarEntity(PathResource::getPathToSideBarEntityEnd());
   for each (QPoint currPt in startPoints) {
     QRect rectToSheachWithIn(currPt, QSize(wholeScreen.width() - currPt.x(), wholeScreen.height() - currPt.y()));
     auto  endsOfFrame = ImgEditor::findStartPositionInImg(endOfSideBarEntity, wholeScreen, rectToSheachWithIn);
     if (endsOfFrame.size() == 0) continue;
-    QList<QPoint> sortedByX, sortedByY;
+    QVector<QPoint> sortedByX, sortedByY;
     sortByXY(endsOfFrame, sortedByX, sortedByY);
     QPoint pt = sortedByY[0];
     QSize  size(pt.x() + endOfSideBarEntity.width() - currPt.x(), pt.y() + endOfSideBarEntity.height() - currPt.y());
@@ -500,4 +500,3 @@ QList<QRect> Calibrator::getOutsideFramesOfOpenEntitiesOnSideBars(const QImage& 
   }
   return outerFramesOfSideBarsEntity;
 }
-

@@ -43,7 +43,7 @@ QImage MinimapAnalyzer::setSliderImg() {
   return img;
 }
 int MinimapAnalyzer::getCurrentLayer(const QImage& layerImg) {
-  QList<QPoint> startPostions = ImgEditor::findStartPositionInImg(LAYER_SLIDER_IMG, layerImg);
+  QVector<QPoint> startPostions = ImgEditor::findStartPositionInImg(LAYER_SLIDER_IMG, layerImg);
   if (startPostions.size() != 1) return -100;
 
   const int HIGHEST_LAYER_Y_POS       = 2;
@@ -93,7 +93,7 @@ QPoint MinimapAnalyzer::findPlayerPosition(const QImage& miniMap, const QImage* 
   }
   return QPoint();
 }
-QList<QPoint> MinimapAnalyzer::findStartPosOfImgMap(const QImage& imgToFind, const QImage& imgToSearchWithin, QRect frameInBigWindow) {
+QVector<QPoint> MinimapAnalyzer::findStartPosOfImgMap(const QImage& imgToFind, const QImage& imgToSearchWithin, QRect frameInBigWindow) {
   const int WIDTH_SMALL_PIC  = imgToFind.width();
   const int HEIGHT_SMALL_PIC = imgToFind.height();
   const int WIDTH_BIG_PIC    = imgToSearchWithin.width();
@@ -101,27 +101,27 @@ QList<QPoint> MinimapAnalyzer::findStartPosOfImgMap(const QImage& imgToFind, con
 
   if (imgToFind.isNull() || imgToSearchWithin.isNull()) {
     qWarning() << "Cant find postion, one of imgs is null";
-    return QList<QPoint>();
+    return QVector<QPoint>();
   }
   if (WIDTH_SMALL_PIC > WIDTH_BIG_PIC) {
     qWarning() << "Cant find postion, Wrong imgs size";
-    return QList<QPoint>();
+    return QVector<QPoint>();
   }
   if (HEIGHT_SMALL_PIC > HEIGHT_BIG_PIC) {
     qWarning() << "Cant find postion, Wrong imgs size";
-    return QList<QPoint>();
+    return QVector<QPoint>();
   }
   if (imgToFind.format() != imgToSearchWithin.format()) {
     qWarning() << "Cant find postion, wrong formats";
-    return QList<QPoint>();
+    return QVector<QPoint>();
   }
   if (frameInBigWindow.right() > WIDTH_BIG_PIC) {
     qWarning() << "Cant find postion, Wrong frame size";
-    return QList<QPoint>();
+    return QVector<QPoint>();
   }
   if (frameInBigWindow.bottom() > HEIGHT_BIG_PIC) {
     qWarning() << "Cant find postion, Wrong frame size";
-    return QList<QPoint>();
+    return QVector<QPoint>();
   }
 
   const int maxIndexToCheckX = frameInBigWindow.isEmpty() ? WIDTH_BIG_PIC - WIDTH_SMALL_PIC : frameInBigWindow.right();
@@ -129,7 +129,7 @@ QList<QPoint> MinimapAnalyzer::findStartPosOfImgMap(const QImage& imgToFind, con
   const int minIndexToCheckX = frameInBigWindow.isEmpty() ? 0 : frameInBigWindow.left();
   const int minIndexToCheckY = frameInBigWindow.isEmpty() ? 0 : frameInBigWindow.top();
 
-  QList<QPoint> startPointsListToRet;
+  QVector<QPoint> startPointsListToRet;
   for (int x = minIndexToCheckX; x <= maxIndexToCheckX; x++) {
     for (int y = minIndexToCheckY; y <= maxIndexToCheckY; y++) {
       uint pixSmallImg = imgToFind.pixel(0, 0);

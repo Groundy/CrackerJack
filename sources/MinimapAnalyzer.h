@@ -41,7 +41,7 @@ class MinimapAnalyzer : public QThread {
   QVector<QRect> getMiniMapPartsPostions();
   QList<QImage>  splitMiniMap(const QImage& wholeMiniMap);
   QPoint         findPlayerPosition(const QImage& miniMap, const QImage* wholeMap);
-  QList<QPoint>  findStartPosOfImgMap(const QImage& imgToFind, const QImage& imgToSearchWithin, QRect frameInBigWindow);
+  QVector<QPoint>  findStartPosOfImgMap(const QImage& imgToFind, const QImage& imgToSearchWithin, QRect frameInBigWindow);
   QRect          getFrameToLookByPreviousPos();
   QPoint         getVectorToPlayerFromImgPieceIndex(int index);
 };
