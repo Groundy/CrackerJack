@@ -81,27 +81,37 @@ int ScreenAnalyzer::cutHealthManaImgs(const QImage& fullscreen) {
   bool combinedBoxFound = !var->getVitalitty().getCombinedArea().isEmpty();
 
   bool notEnoughFramesFound = !((manaFrameFound || combinedBoxFound) && healthFrameFound);
-  if (notEnoughFramesFound) return false;
+  if (notEnoughFramesFound) {
+    return false;
+  }
 
   const int ROTATION = var->getVitalitty().getRotation();
   if (healthFrameFound) {
-    QImage healthValueImg = fullscreen.copy(var->getVitalitty().getHealthArea());
-    if (ROTATION != 0) ImgEditor::rotateImgToRight(healthValueImg, ROTATION);
+    CJ_Image healthValueImg = fullscreen.copy(var->getVitalitty().getHealthArea());
+    if (ROTATION != 0) {
+      healthValueImg.rotateImgToRight(ROTATION);
+    }
     var->getVitalitty().setImageHealth(healthValueImg);
   }
   if (manaFrameFound) {
-    QImage manaValueImg = fullscreen.copy(var->getVitalitty().getManaArea());
-    if (ROTATION != 0) ImgEditor::rotateImgToRight(manaValueImg, ROTATION);
+    CJ_Image manaValueImg = fullscreen.copy(var->getVitalitty().getManaArea());
+    if (ROTATION != 0) {
+      manaValueImg.rotateImgToRight(ROTATION);
+    }
     var->getVitalitty().setImageMana(manaValueImg);
   }
   if (manaShieldFound) {
-    QImage manaShieldValueImg = fullscreen.copy(var->getVitalitty().getMSArea());
-    if (ROTATION != 0) ImgEditor::rotateImgToRight(manaShieldValueImg, ROTATION);
+    CJ_Image manaShieldValueImg = fullscreen.copy(var->getVitalitty().getMSArea());
+    if (ROTATION != 0) {
+      manaShieldValueImg.rotateImgToRight(ROTATION);
+    }
     var->getVitalitty().setImageMS(manaShieldValueImg);
   }
   if (combinedBoxFound) {
-    QImage combinedValueImg = fullscreen.copy(var->getVitalitty().getCombinedArea());
-    if (ROTATION != 0) ImgEditor::rotateImgToRight(combinedValueImg, ROTATION);
+    CJ_Image combinedValueImg = fullscreen.copy(var->getVitalitty().getCombinedArea());
+    if (ROTATION != 0) {
+      combinedValueImg.rotateImgToRight(ROTATION);
+    }
     var->getVitalitty().setImageCombined(combinedValueImg);
   }
   return true;

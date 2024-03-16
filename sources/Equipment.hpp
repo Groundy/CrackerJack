@@ -19,28 +19,33 @@ class Equipment {
   }
 
   QVector<STATES> getCurrentStates(bool clearImg = true) {
-    QImage stateBar = statesBarImg.getImgCopy();
+    CJ_Image stateBar = statesBarImg.getImgCopy();
     if (stateBar.isNull()) {
       return {};
     }
-    if (clearImg) statesBarImg.clear();
-    ImgEditor::imgToBlackAndWhiteOneColor(stateBar, toBlackAndWhiteThreshold);
-    QList<QImage>   imgs  = ImgEditor::cutImgWithLettersToSingleLettersImgList(stateBar);
+    if (clearImg) {
+      statesBarImg.clear();
+    }
+    stateBar.toBlackAndWhiteOneColor(toBlackAndWhiteThreshold);
+    QList<CJ_Image> imgs  = stateBar.toImageListWithSingleLetters();
     QVector<STATES> toRet = {};
-    for each (QImage img in imgs) {
-      ImgEditor::cutBlackBordersOfImg(img);
-      QString code = ImgEditor::binaryLetterImgToCode(img);
-      if (!codeStateMap.contains(code)) continue;
+    for each (CJ_Image img in imgs) {
+      img.cutBlackBorders();
+      QString code = img.binaryLetterImgToCode();
+      if (!codeStateMap.contains(code)) {
+        continue;
+      }
       toRet.append(codeStateMap.value(code));
     }
     return toRet;
   }
   QString getEqRectBottomText(EqRect eqRect) {
-    QImage bottomStrImg = getImg(eqRect);
-    if (bottomStrImg.isNull()) return QString();
-    ImgEditor::imgToBlackAndWhiteExactColor(bottomStrImg, GREY_COL_OF_EQ_STRINGS);
-    QString str = imgEditor.imgWithStrToStr(bottomStrImg);
-    return str;
+    CJ_Image bottomStrImg = getImg(eqRect);
+    if (bottomStrImg.isNull()) {
+      return QString();
+    }
+    bottomStrImg.toBlackAndWhiteExactColor(GREY_COL_OF_EQ_STRINGS);
+    return bottomStrImg.toString();
   }
   QRect getRect(EqRect eqRect) {
     const QPoint EQ_FRAME_TOPLEFT = storeRect.getRect().topLeft() - QPoint(74, 0);
@@ -206,10 +211,10 @@ class Equipment {
     return toRect;
   }
   QString getStateCode(QString fileName) {
-    QImage img(":/statesIcons/" + fileName);
-    ImgEditor::imgToBlackAndWhiteOneColor(img, toBlackAndWhiteThreshold);
-    ImgEditor::cutBlackBordersOfImg(img);
-    QString code = ImgEditor::binaryLetterImgToCode(img);
+    CJ_Image img(QImage(":/statesIcons/" + fileName));
+    img.toBlackAndWhite(toBlackAndWhiteThreshold);
+    img.cutBlackBorders();
+    QString code = img.binaryLetterImgToCode();
     return code;
   }
 };

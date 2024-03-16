@@ -18,7 +18,7 @@ struct FoundFlags {
   }
 };
 struct ImageValues {
-  QImage health, mana, manaShield, combined;
+  CJ_Image health, mana, manaShield, combined;
   bool   isValid() {
     if (health.isNull()) return false;
     if (mana.isNull() && combined.isNull()) return false;

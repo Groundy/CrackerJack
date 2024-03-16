@@ -3,7 +3,7 @@ Calibrator::Calibrator(QSharedPointer<VariablesClass> var) : var(var) {}
 Calibrator::~Calibrator() {}
 
 // public
-bool Calibrator::calibrateBasicAreas(const QImage& fullscreen) {
+bool Calibrator::calibrateBasicAreas(const CJ_Image& fullscreen) {
   QVector<QRect> importantRectangles;
   bool           windowsFound = findWindowsOnScreen(fullscreen, importantRectangles);
   if (!windowsFound) return false;
@@ -13,7 +13,7 @@ bool Calibrator::calibrateBasicAreas(const QImage& fullscreen) {
 
   return true;
 }
-bool Calibrator::calibrateBattleArea(const QImage& fullscreen) {
+bool Calibrator::calibrateBattleArea(const CJ_Image& fullscreen) {
   auto rectangles = getOutsideFramesOfOpenEntitiesOnSideBars(fullscreen);
   if (rectangles.size() == 0) return false;
 
@@ -21,7 +21,7 @@ bool Calibrator::calibrateBattleArea(const QImage& fullscreen) {
   if (battleListMark.isNull()) return false;
 
   for each (QRect rect in rectangles) {
-    auto battleMarksPos = ImgEditor::findStartPositionInImg(battleListMark, fullscreen, rect);
+    auto battleMarksPos = fullscreen.findStartPositionInImg(battleListMark, rect);
     if (battleMarksPos.size() != 1) continue;
 
     var->getBattleList().setFrame(rect);
@@ -31,12 +31,14 @@ bool Calibrator::calibrateBattleArea(const QImage& fullscreen) {
   var->getBattleList().setFrame(QRect());
   return false;
 }
-bool Calibrator::calibrateStoreButton(const QImage& fullImage) {
+bool Calibrator::calibrateStoreButton(const CJ_Image& fullImage) {
   QImage img(PathResource::getPathToStoreButton());
   QRect  rect = fullImage.rect();
   rect.setLeft(rect.width() * 0.75);  // shearch only witing last 25% of fulll screen, on right side
-  QPoint storeButtonPosition = ImgEditor::findExactStartPositionInImg(img, fullImage, rect);
-  if (storeButtonPosition.isNull()) return false;
+  QPoint storeButtonPosition = fullImage.findExactStartPositionInImg(img, rect);
+  if (storeButtonPosition.isNull()) {
+    return false;
+  }
   QRect storeButtonRect(storeButtonPosition, img.size());
   var->getEquipment().setStoreRect(storeButtonRect);
   return true;
@@ -73,15 +75,15 @@ void Calibrator::test(QString pathToFilesWithScreens) {
 }
 
 // private
-Calibrator::SlashesIndexes Calibrator::getIndexesOfImgsWithSlashes(const QImage& fullScreen, const QVector<QRect>& importantFrames) {
-  const QImage   slashYImg = imgEditor.fromCharToImg(QChar(47));
-  const QImage   slashXImg = imgEditor.fromCharToImg(QChar(92));
+Calibrator::SlashesIndexes Calibrator::getIndexesOfImgsWithSlashes(const CJ_Image& fullScreen, const QVector<QRect>& importantFrames) {
+  const QImage   slashYImg = CJ_Image::fromCharToImg(QChar(47));
+  const QImage   slashXImg = CJ_Image::fromCharToImg(QChar(92));
   SlashesIndexes indexes;
   for (size_t i = 0; i < importantFrames.size(); i++) {
-    QImage imgTmp = fullScreen.copy(importantFrames[i]);
-    ImgEditor::imgToBlackAndWhiteAllColors(imgTmp, 250);
+    CJ_Image imgTmp = fullScreen.copy(importantFrames[i]);
+    imgTmp.toBlackAndWhiteAllColors(250);
 
-    QVector<QPoint> pointsX = ImgEditor::findStartPositionInImg(slashXImg, imgTmp);
+    QVector<QPoint> pointsX = imgTmp.findStartPositionInImg(slashXImg);
     if (pointsX.size() == 1) {
       indexes.slashesX.push_back(i);
     } else if (pointsX.size() == 2) {
@@ -92,7 +94,7 @@ Calibrator::SlashesIndexes Calibrator::getIndexesOfImgsWithSlashes(const QImage&
       break;
     }
 
-    QVector<QPoint> pointsY = ImgEditor::findStartPositionInImg(slashYImg, imgTmp);
+    QVector<QPoint> pointsY = imgTmp.findStartPositionInImg(slashYImg);
     if (pointsY.size() == 1) {
       indexes.slashesY.push_back(i);
     } else if (pointsY.size() == 2) {
@@ -105,7 +107,7 @@ Calibrator::SlashesIndexes Calibrator::getIndexesOfImgsWithSlashes(const QImage&
   }
   return indexes;
 }
-Calibrator::Indexes Calibrator::getIndexesOfHealthManaBars(const QImage& fullscreen, const QVector<QRect>& listOfImportantRectangles) {
+Calibrator::Indexes Calibrator::getIndexesOfHealthManaBars(const CJ_Image& fullscreen, const QVector<QRect>& listOfImportantRectangles) {
   Indexes        indexes;
   SlashesIndexes slashesIndexes = getIndexesOfImgsWithSlashes(fullscreen, listOfImportantRectangles);
   if (!slashesIndexes.isValid()) {
@@ -267,7 +269,7 @@ Calibrator::Indexes Calibrator::getIndexesOfHealthManaBars(const QImage& fullscr
   }
   return indexes;
 }
-bool Calibrator::categorizeWindows(const QImage& fullscreen, QVector<QRect>& importantRectangles) {
+bool Calibrator::categorizeWindows(const CJ_Image& fullscreen, QVector<QRect>& importantRectangles) {
   // 4 cause 1-minimap 2-gameScreen 3-health 4-mana, those 4 have to be found
   if (importantRectangles.size() < 4) return false;
 
@@ -327,7 +329,7 @@ bool Calibrator::categorizeWindows(const QImage& fullscreen, QVector<QRect>& imp
 
   return true;
 }
-bool Calibrator::findWindowsOnScreen(const QImage& fullScreen, QVector<QRect>& importantRectangles) {
+bool Calibrator::findWindowsOnScreen(const CJ_Image& fullScreen, QVector<QRect>& importantRectangles) {
   const int  WIDTH              = fullScreen.width();
   const int  HEIGHT             = fullScreen.height();
   const uint MIN_ACCEPTABLE_VAL = 17;
@@ -357,7 +359,7 @@ std::tuple<QVector<QRect>, QVector<QRect>> Calibrator::sortByXY(const QVector<QR
   }
   return {mapX.values().toVector(), mapY.values().toVector()};
 }
-QVector<QPoint> Calibrator::getStartOfPossibleFrames(const QImage& fullScreen, int minVal, int maxVal) {
+QVector<QPoint> Calibrator::getStartOfPossibleFrames(const CJ_Image& fullScreen, int minVal, int maxVal) {
   const int       WIDTH              = fullScreen.width();
   const int       HEIGHT             = fullScreen.height();
   constexpr uint  MIN_ACCEPTABLE_VAL = 17;
@@ -365,34 +367,34 @@ QVector<QPoint> Calibrator::getStartOfPossibleFrames(const QImage& fullScreen, i
   QVector<QPoint> topLeftCorners;
   for (size_t x = 1; x < WIDTH - 2; x++) {
     for (size_t y = 1; y < HEIGHT - 2; y++) {
-      bool isPixelOfFrame = ImgEditor::isItPixelFromFrame(fullScreen.pixel(x, y), MIN_ACCEPTABLE_VAL, MAX_ACCEPTABLE_VAL, true);
+      bool isPixelOfFrame = CJ_Image::isItPixelFromFrame(fullScreen.pixel(x, y), MIN_ACCEPTABLE_VAL, MAX_ACCEPTABLE_VAL, true);
       if (!isPixelOfFrame) continue;
 
-      isPixelOfFrame = ImgEditor::isItPixelFromFrame(fullScreen.pixel(x - 1, y - 1), MIN_ACCEPTABLE_VAL, MAX_ACCEPTABLE_VAL, false);
+      isPixelOfFrame = CJ_Image::isItPixelFromFrame(fullScreen.pixel(x - 1, y - 1), MIN_ACCEPTABLE_VAL, MAX_ACCEPTABLE_VAL, false);
       if (isPixelOfFrame) continue;
 
-      isPixelOfFrame = ImgEditor::isItPixelFromFrame(fullScreen.pixel(x + 1, y + 1), MIN_ACCEPTABLE_VAL, MAX_ACCEPTABLE_VAL, false);
+      isPixelOfFrame = CJ_Image::isItPixelFromFrame(fullScreen.pixel(x + 1, y + 1), MIN_ACCEPTABLE_VAL, MAX_ACCEPTABLE_VAL, false);
       if (isPixelOfFrame) continue;
 
-      isPixelOfFrame = ImgEditor::isItPixelFromFrame(fullScreen.pixel(x + 1, y + 2), MIN_ACCEPTABLE_VAL, MAX_ACCEPTABLE_VAL, false);
+      isPixelOfFrame = CJ_Image::isItPixelFromFrame(fullScreen.pixel(x + 1, y + 2), MIN_ACCEPTABLE_VAL, MAX_ACCEPTABLE_VAL, false);
       if (isPixelOfFrame) continue;
 
-      isPixelOfFrame = ImgEditor::isItPixelFromFrame(fullScreen.pixel(x + 2, y + 1), MIN_ACCEPTABLE_VAL, MAX_ACCEPTABLE_VAL, false);
+      isPixelOfFrame = CJ_Image::isItPixelFromFrame(fullScreen.pixel(x + 2, y + 1), MIN_ACCEPTABLE_VAL, MAX_ACCEPTABLE_VAL, false);
       if (isPixelOfFrame) continue;
 
-      isPixelOfFrame = ImgEditor::isItPixelFromFrame(fullScreen.pixel(x + 2, y + 2), MIN_ACCEPTABLE_VAL, MAX_ACCEPTABLE_VAL, false);
+      isPixelOfFrame = CJ_Image::isItPixelFromFrame(fullScreen.pixel(x + 2, y + 2), MIN_ACCEPTABLE_VAL, MAX_ACCEPTABLE_VAL, false);
       if (isPixelOfFrame) continue;
 
-      isPixelOfFrame = ImgEditor::isItPixelFromFrame(fullScreen.pixel(x + 1, y), MIN_ACCEPTABLE_VAL, MAX_ACCEPTABLE_VAL, true);
+      isPixelOfFrame = CJ_Image::isItPixelFromFrame(fullScreen.pixel(x + 1, y), MIN_ACCEPTABLE_VAL, MAX_ACCEPTABLE_VAL, true);
       if (!isPixelOfFrame) continue;
 
-      isPixelOfFrame = ImgEditor::isItPixelFromFrame(fullScreen.pixel(x + 2, y), MIN_ACCEPTABLE_VAL, MAX_ACCEPTABLE_VAL, true);
+      isPixelOfFrame = CJ_Image::isItPixelFromFrame(fullScreen.pixel(x + 2, y), MIN_ACCEPTABLE_VAL, MAX_ACCEPTABLE_VAL, true);
       if (!isPixelOfFrame) continue;
 
-      isPixelOfFrame = ImgEditor::isItPixelFromFrame(fullScreen.pixel(x, y + 1), MIN_ACCEPTABLE_VAL, MAX_ACCEPTABLE_VAL, true);
+      isPixelOfFrame = CJ_Image::isItPixelFromFrame(fullScreen.pixel(x, y + 1), MIN_ACCEPTABLE_VAL, MAX_ACCEPTABLE_VAL, true);
       if (!isPixelOfFrame) continue;
 
-      isPixelOfFrame = ImgEditor::isItPixelFromFrame(fullScreen.pixel(x, y + 2), MIN_ACCEPTABLE_VAL, MAX_ACCEPTABLE_VAL, true);
+      isPixelOfFrame = CJ_Image::isItPixelFromFrame(fullScreen.pixel(x, y + 2), MIN_ACCEPTABLE_VAL, MAX_ACCEPTABLE_VAL, true);
       if (!isPixelOfFrame) continue;
 
       topLeftCorners.push_back(QPoint(x, y));
@@ -400,7 +402,7 @@ QVector<QPoint> Calibrator::getStartOfPossibleFrames(const QImage& fullScreen, i
   }
   return topLeftCorners;
 }
-QVector<QRect> Calibrator::getAreasInsideFrames(const QImage& fullScreen, const QVector<QPoint>& startOfFrames, const int MIN_DIM) {
+QVector<QRect> Calibrator::getAreasInsideFrames(const CJ_Image& fullScreen, const QVector<QPoint>& startOfFrames, const int MIN_DIM) {
   const int      WIDTH              = fullScreen.width();
   const int      HEIGHT             = fullScreen.height();
   const uint     MIN_ACCEPTABLE_VAL = 17;
@@ -410,7 +412,7 @@ QVector<QRect> Calibrator::getAreasInsideFrames(const QImage& fullScreen, const 
     int currentWidth = 0;
     for (size_t x = startPoint.x(); x < WIDTH; x++) {
       uint color        = fullScreen.pixel(x, startPoint.y());
-      bool isPixOfFrame = ImgEditor::isItPixelFromFrame(color, MIN_ACCEPTABLE_VAL, MAX_ACCEPTABLE_VAL, true);
+      bool isPixOfFrame = CJ_Image::isItPixelFromFrame(color, MIN_ACCEPTABLE_VAL, MAX_ACCEPTABLE_VAL, true);
       if (isPixOfFrame)
         currentWidth++;
       else
@@ -421,7 +423,7 @@ QVector<QRect> Calibrator::getAreasInsideFrames(const QImage& fullScreen, const 
     int currentHeight = 0;
     for (size_t y = startPoint.y(); y < HEIGHT; y++) {
       uint color        = fullScreen.pixel(startPoint.x(), y);
-      bool isPixOfFrame = ImgEditor::isItPixelFromFrame(color, MIN_ACCEPTABLE_VAL, MAX_ACCEPTABLE_VAL, true);
+      bool isPixOfFrame = CJ_Image::isItPixelFromFrame(color, MIN_ACCEPTABLE_VAL, MAX_ACCEPTABLE_VAL, true);
       if (isPixOfFrame)
         currentHeight++;
       else
@@ -437,7 +439,7 @@ QVector<QRect> Calibrator::getAreasInsideFrames(const QImage& fullScreen, const 
   }
   return frameToRet;
 }
-QVector<QRect> Calibrator::filterAreasCoveredByFrameFromBottomRight(const QImage& fullScreen, const QVector<QRect>& areas) {
+QVector<QRect> Calibrator::filterAreasCoveredByFrameFromBottomRight(const CJ_Image& fullScreen, const QVector<QRect>& areas) {
   const int      WIDTH              = fullScreen.width();
   const int      HEIGHT             = fullScreen.height();
   const uint     MIN_ACCEPTABLE_VAL = 100;
@@ -457,7 +459,7 @@ QVector<QRect> Calibrator::filterAreasCoveredByFrameFromBottomRight(const QImage
     bool skip = false;
     for (size_t x = 0; x < area.width(); x++) {
       uint color   = fullScreen.pixel(area.left() + x, area.bottom() + 1);
-      bool framPix = ImgEditor::isItPixelFromFrame(color, MIN_ACCEPTABLE_VAL, MAX_ACCEPTABLE_VAL, true);
+      bool framPix = CJ_Image::isItPixelFromFrame(color, MIN_ACCEPTABLE_VAL, MAX_ACCEPTABLE_VAL, true);
       if (!framPix) {
         skip = true;
         break;
@@ -470,7 +472,7 @@ QVector<QRect> Calibrator::filterAreasCoveredByFrameFromBottomRight(const QImage
     // right
     for (size_t y = 0; y < area.height(); y++) {
       uint color   = fullScreen.pixel(area.right() + 1, area.top() + y);
-      bool framPix = ImgEditor::isItPixelFromFrame(color, MIN_ACCEPTABLE_VAL, MAX_ACCEPTABLE_VAL, true);
+      bool framPix = CJ_Image::isItPixelFromFrame(color, MIN_ACCEPTABLE_VAL, MAX_ACCEPTABLE_VAL, true);
       if (!framPix) {
         skip = true;
         break;
@@ -483,16 +485,16 @@ QVector<QRect> Calibrator::filterAreasCoveredByFrameFromBottomRight(const QImage
   }
   return toRet;
 }
-QVector<QRect> Calibrator::getOutsideFramesOfOpenEntitiesOnSideBars(const QImage& wholeScreen) {
+QVector<QRect> Calibrator::getOutsideFramesOfOpenEntitiesOnSideBars(const CJ_Image& wholeScreen) {
   const QImage startOfSideBarEntity(PathResource::getPathToSideBarEntityStart());
   if (startOfSideBarEntity.isNull()) return {};
 
   QVector<QRect>  outerFramesOfSideBarsEntity = {};
-  QVector<QPoint> startPoints                 = ImgEditor::findStartPositionInImg(startOfSideBarEntity, wholeScreen);
+  QVector<QPoint> startPoints                 = wholeScreen.findStartPositionInImg(startOfSideBarEntity);
   const QImage    endOfSideBarEntity(PathResource::getPathToSideBarEntityEnd());
   for each (QPoint currPt in startPoints) {
     QRect rectToSheachWithIn(currPt, QSize(wholeScreen.width() - currPt.x(), wholeScreen.height() - currPt.y()));
-    auto  endsOfFrame = ImgEditor::findStartPositionInImg(endOfSideBarEntity, wholeScreen, rectToSheachWithIn);
+    auto  endsOfFrame = wholeScreen.findStartPositionInImg(endOfSideBarEntity, rectToSheachWithIn);
     if (endsOfFrame.size() == 0) {
       continue;
     }

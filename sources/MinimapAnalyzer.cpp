@@ -14,14 +14,16 @@ void MinimapAnalyzer::run() {
     QImage miniMap, miniMapLayer;
     var->getMiniMap().getImgMiniMap(miniMap);
     var->getMiniMap().getImgMiniMapLayer(miniMapLayer);
-    if (miniMap.isNull() || miniMapLayer.isNull()) continue;
+    if (miniMap.isNull() || miniMapLayer.isNull()) {
+      continue;
+    }
 
     int currentLayer = getCurrentLayer(miniMapLayer);
     if (!floorsMaps.contains(currentLayer)) {
       QString path = PathResource::getPathToMap(currentLayer);
       floorsMaps.insert(currentLayer, new QImage(path));
     }
-    auto currentPosition = findPlayerPosition(miniMap, floorsMaps[currentLayer]);
+    auto currentPosition = findPlayerPosition(miniMap, *floorsMaps[currentLayer]);
     previousPosition     = currentPosition;
 
     if (!currentPosition.isNull())
@@ -42,8 +44,8 @@ QImage MinimapAnalyzer::setSliderImg() {
   img.load(path);
   return img;
 }
-int MinimapAnalyzer::getCurrentLayer(const QImage& layerImg) {
-  QVector<QPoint> startPostions = ImgEditor::findStartPositionInImg(LAYER_SLIDER_IMG, layerImg);
+int MinimapAnalyzer::getCurrentLayer(const CJ_Image& layerImg) {
+  QVector<QPoint> startPostions = layerImg.findStartPositionInImg(LAYER_SLIDER_IMG);
   if (startPostions.size() != 1) return -100;
 
   const int HIGHEST_LAYER_Y_POS       = 2;
@@ -80,10 +82,10 @@ QList<QImage> MinimapAnalyzer::splitMiniMap(const QImage& wholeMiniMap) {
   }
   return toRet;
 }
-QPoint MinimapAnalyzer::findPlayerPosition(const QImage& miniMap, const QImage* wholeMap) {
+QPoint MinimapAnalyzer::findPlayerPosition(const CJ_Image& miniMap, const CJ_Image& wholeMap) {
   const QList<QImage> miniMapParts = splitMiniMap(miniMap);
   for (size_t i = 0; i < miniMapParts.size(); i++) {
-    QPoint startPositionOfImgPiece = ImgEditor::findExactStartPositionInImg(miniMapParts[i], *wholeMap, getFrameToLookByPreviousPos());
+    QPoint startPositionOfImgPiece = wholeMap.findExactStartPositionInImg(miniMapParts[i], getFrameToLookByPreviousPos());
     if (startPositionOfImgPiece.isNull()) {
       continue;
     }
