@@ -8,9 +8,7 @@
 #include "Utilities.hpp"
 class BattleList {
  public:
-  BattleList(ImgEditor* imgEditor) {
-    this->imgEditor = imgEditor;
-  };
+  BattleList()  = default;
   ~BattleList() = default;
   void setFrame(QRect battleListAreaToSet) {
     battleListArea.setRect(battleListAreaToSet);
@@ -81,7 +79,7 @@ class BattleList {
     QStringList    toRet    = {};
     for (int i = 0; i < nameRect.size(); i++) {
       QImage  singleMonsterNameImg = innerList.copy(nameRect[i]);
-      QString monsterName          = imgEditor->imgWithStrToStr(singleMonsterNameImg, 180);
+      QString monsterName          = imgEditor.imgWithStrToStr(singleMonsterNameImg, 180);
       if (monsterName.isEmpty()) break;
       toRet.append(monsterName);
     }
@@ -90,8 +88,8 @@ class BattleList {
   }
 
  private:
-  Logger&          logger = Logger::instance();
-  ImgEditor*       imgEditor;
+  Logger&          logger    = Logger::instance();
+  ImgEditor        imgEditor = ImgEditor();
   MutexRect        battleListArea;
   MutexImg         battleListImg;
   std::atomic<int> enemiesOnBattleList = 0;

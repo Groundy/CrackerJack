@@ -8,7 +8,7 @@ class Equipment {
  public:
   enum STATES { HASTE, BATTLE, PROTECTOR_ZONE, POISONED, PARALYZED, UPGRADED, HUNGER, DRUNKEN };
   enum class EqRect { StateBar, SoulPoints, Capacity, Helmet, Armor, Legs, Boots, Ring, Amulet, Weapon, Shield, Backpack, Torch };
-  Equipment(ImgEditor* imgEditor) : imgEditor(imgEditor){};
+  Equipment()  = default;
   ~Equipment() = default;
   void setStoreRect(const QRect& storeRectToSet) {
     storeRect.setRect(storeRectToSet);
@@ -39,7 +39,7 @@ class Equipment {
     QImage bottomStrImg = getImg(eqRect);
     if (bottomStrImg.isNull()) return QString();
     ImgEditor::imgToBlackAndWhiteExactColor(bottomStrImg, GREY_COL_OF_EQ_STRINGS);
-    QString str = imgEditor->imgWithStrToStr(bottomStrImg);
+    QString str = imgEditor.imgWithStrToStr(bottomStrImg);
     return str;
   }
   QRect getRect(EqRect eqRect) {
@@ -188,7 +188,7 @@ class Equipment {
   MutexImg statesBarImg, soulPtsImg, capImg, helmetCap, armorImg, legsImg, bootsImg, ringImg, amuletImg, weaponImg, shieldImg, backpackImg,
       torchImg;
   MutexRect   storeRect;
-  ImgEditor*  imgEditor;
+  ImgEditor   imgEditor                = ImgEditor();
   const int   toBlackAndWhiteThreshold = 100;
   const QRgb  GREY_COL_OF_EQ_STRINGS   = qRgb(191, 191, 191);
   const QSize EQ_FIELD_SIZE            = QSize(32, 32);

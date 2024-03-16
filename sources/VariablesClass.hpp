@@ -44,9 +44,6 @@ class VariablesClass {
   Equipment& getEquipment() {
     return eq;
   }
-  ImgEditor& getImgEditorObj() {
-    return imgEditor;
-  }
   QSharedPointer<Profile> getProf() {
     return prof;
   }
@@ -55,13 +52,13 @@ class VariablesClass {
   QSharedPointer<Profile> prof;
   GameProcessData         gameProcess;
   GameWindow              gameWindow;
-  BattleList              battleList = BattleList(&imgEditor);
+  BattleList              battleList;
   Settings                settings;
   Timers                  timers;
   Vitallity               vitalitty;
   MiniMap                 minimap;
   PlayerPosition          position;
+  Equipment               eq;
+  ImgEditor               imgEditor;
   // MutexImg fullImage;
-  Equipment eq = Equipment(&imgEditor);
-  ImgEditor imgEditor;
 };

@@ -74,8 +74,8 @@ void Calibrator::test(QString pathToFilesWithScreens) {
 
 // private
 Calibrator::SlashesIndexes Calibrator::getIndexesOfImgsWithSlashes(const QImage& fullScreen, const QVector<QRect>& importantFrames) {
-  const QImage   slashYImg = var->getImgEditorObj().fromCharToImg(QChar(47));
-  const QImage   slashXImg = var->getImgEditorObj().fromCharToImg(QChar(92));
+  const QImage   slashYImg = imgEditor.fromCharToImg(QChar(47));
+  const QImage   slashXImg = imgEditor.fromCharToImg(QChar(92));
   SlashesIndexes indexes;
   for (size_t i = 0; i < importantFrames.size(); i++) {
     QImage imgTmp = fullScreen.copy(importantFrames[i]);

@@ -80,7 +80,7 @@ class ManaHealthStateAnalyzer : public QThread {
  private:
   QSharedPointer<VariablesClass> var;
   QSharedPointer<GameConnecter>  gameConnector;
-  ImgEditor*                     imgEditor;
+  ImgEditor                      imgEditor = ImgEditor();
   QMap<int, RestorationMethode>  healthMap, manaMap;
   const int                      SLEEP_TIME = 50;
 

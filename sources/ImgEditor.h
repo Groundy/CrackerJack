@@ -21,13 +21,13 @@ class ImgEditor {
       }
     }
   }
-  static void          cutBlackBordersOfImg(QImage& img);
-  static QString       binaryLetterImgToCode(QImage& singleLetterImg);
-  static void          rotateImgToRight(QImage& imgToRotate, int timesToRotateRight);
-  static bool          isItPixelFromFrame(const uint& color, const int& minValueAcceptable, const int& maxValueAcceptable,
-                                          bool requireSameValuesOfRGB);
-  static QImage        getColorImageFromCode(const QString& codeOfImg);
-  static QList<QImage> cutImgWithLettersToSingleLettersImgList(QImage& img);
+  static void            cutBlackBordersOfImg(QImage& img);
+  static QString         binaryLetterImgToCode(QImage& singleLetterImg);
+  static void            rotateImgToRight(QImage& imgToRotate, int timesToRotateRight);
+  static bool            isItPixelFromFrame(const uint& color, const int& minValueAcceptable, const int& maxValueAcceptable,
+                                            bool requireSameValuesOfRGB);
+  static QImage          getColorImageFromCode(const QString& codeOfImg);
+  static QList<QImage>   cutImgWithLettersToSingleLettersImgList(QImage& img);
   static QVector<QPoint> findStartPositionInImg_mulitpeImgs(QList<QImage*> imgsToFind, QImage& imgToShareWithin);
   static QVector<QPoint> findStartPositionInImg(const QImage& imgToFind, const QImage& imgToShareWithin, QRect frameInBigWindow = QRect());
   static QPoint findExactStartPositionInImg(const QImage& imgToFind, const QImage& imgToShareWithin, QRect frameInBigWindow = QRect());

@@ -67,12 +67,12 @@ class Calibrator {
     }
   };
 
-  QSharedPointer<VariablesClass> var;
-
+  QSharedPointer<VariablesClass>               var;
+  ImgEditor                                    imgEditor;
   SlashesIndexes                               getIndexesOfImgsWithSlashes(const QImage& fullScreen, const QVector<QRect>& importantFrames);
   bool                                         categorizeWindows(const QImage& fullscreen, QVector<QRect>& importantRectangles);
   bool                                         findWindowsOnScreen(const QImage& fullScreen, QVector<QRect>& importantRectangles);
-  std::tuple<QVector<QPoint>, QVector<QPoint>> sortByXY(const QVector<QPoint>& const points);
+  std::tuple<QVector<QPoint>, QVector<QPoint>> sortByXY(const QVector<QPoint>& points);
   std::tuple<QVector<QRect>, QVector<QRect>>   sortByXY(const QVector<QRect>& inputRects);
   Indexes         getIndexesOfHealthManaBars(const QImage& fullscreen, const QVector<QRect>& listOfImportantRectangles);
   QVector<QPoint> getStartOfPossibleFrames(const QImage& fullScreen, int minVal, int maxVal);
