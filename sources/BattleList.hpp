@@ -3,7 +3,6 @@
 #include <memory.h>
 #include <qrect.h>
 
-#include "ImgEditor.h"
 #include "Logger.hpp"
 #include "PathResource.h"
 #include "Utilities.hpp"
@@ -91,8 +90,7 @@ class BattleList {
   }
 
  private:
-  Logger&          logger    = Logger::instance();
-  ImgEditor        imgEditor = ImgEditor();
+  Logger&          logger = Logger::instance();
   MutexRect        battleListArea;
   MutexImg         battleListImg;
   std::atomic<int> enemiesOnBattleList = 0;

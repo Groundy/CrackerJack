@@ -1,6 +1,8 @@
 #pragma once
-#include <RGBstruct.h>
 #include <qimage.h>
+
+#include "PathResource.h"
+#include "RGBstruct.h"
 class CJ_Image : public QImage {
  public:
   CJ_Image(const QImage& img) : QImage(img){};
@@ -475,6 +477,30 @@ class CJ_Image : public QImage {
       }
     }
     return startPointsListToRet;
+  }
+
+  void saveWithCurrentTimeStamp() {
+    const QString timestamp = QString::number(QDateTime::currentMSecsSinceEpoch());
+    const QString path      = PathResource::getPathToTmpSavingImgsDir();
+    const QString abs_path  = QString("%1%2.png").arg(path, timestamp);
+    this->save(abs_path);
+  }
+
+  static void saveListOfImgs(const QList<QImage>& imgs, const QString& fileNameWithoutExtension) {
+    const QString tmp_path = PathResource::getPathToTmpSavingImgsDir();
+    for (int i = 0; i < imgs.size(); i++) {
+      QString fullPath = QString("%1%2_%3.png").arg(tmp_path, QString::number(i), fileNameWithoutExtension);
+      imgs[i].save(fullPath);
+    }
+  }
+
+  void saveFrames(const QImage& fullImg, const QVector<QRect>& frames, const QString& fileNameWithoutExtension) {
+    const QString tmp_path = PathResource::getPathToTmpSavingImgsDir();
+    for (int i = 0; i < frames.size(); i++) {
+      QImage  img      = fullImg.copy(frames[i]);
+      QString fullPath = QString("%1%2_%3.png").arg(tmp_path, QString::number(i), fileNameWithoutExtension);
+      img.save(fullPath);
+    }
   }
 
  private:

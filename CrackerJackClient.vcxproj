@@ -234,7 +234,6 @@ xcopy /y /d ".\dependencies\32-bit\libcrypto-1_1.dll" "$(OutDir)"
     <ClCompile Include="sources\AutoHuntConfigurator.cpp" />
     <ClCompile Include="sources\AutoHunting.cpp" />
     <ClCompile Include="sources\GameConnecter.cpp" />
-    <ClCompile Include="sources\ImgEditor.cpp" />
     <ClCompile Include="sources\Item.cpp" />
     <ClCompile Include="sources\ActiveGameThread.cpp" />
     <ClCompile Include="sources\Calibrator.cpp" />
@@ -279,7 +278,6 @@ xcopy /y /d ".\dependencies\32-bit\libcrypto-1_1.dll" "$(OutDir)"
     <ClInclude Include="sources\Equipment.hpp" />
     <ClInclude Include="sources\GameProcessData.hpp" />
     <ClInclude Include="sources\GameWindow.hpp" />
-    <ClInclude Include="sources\ImgEditor.h" />
     <ClInclude Include="sources\PlayerPosition.hpp" />
     <ClInclude Include="sources\Profession.hpp" />
     <QtMoc Include="sources\AutoHunting.h" />

@@ -8,7 +8,6 @@
 #include <QObject>
 #include <VariablesClass.hpp>
 
-#include "ImgEditor.h"
 #include "Logger.hpp"
 #include "PathResource.h"
 #include "Profile.h"
@@ -68,7 +67,6 @@ class Calibrator {
   };
 
   QSharedPointer<VariablesClass> var;
-  ImgEditor                      imgEditor;
   SlashesIndexes                 getIndexesOfImgsWithSlashes(const CJ_Image& fullScreen, const QVector<QRect>& importantFrames);
   bool                           categorizeWindows(const CJ_Image& fullscreen, QVector<QRect>& importantRectangles);
   bool                           findWindowsOnScreen(const CJ_Image& fullScreen, QVector<QRect>& importantRectangles);

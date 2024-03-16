@@ -2,7 +2,6 @@
 #include <qpoint.h>
 #include <qrect.h>
 
-#include "ImgEditor.h"
 #include "Utilities.hpp"
 class Equipment {
  public:
@@ -193,7 +192,6 @@ class Equipment {
   MutexImg statesBarImg, soulPtsImg, capImg, helmetCap, armorImg, legsImg, bootsImg, ringImg, amuletImg, weaponImg, shieldImg, backpackImg,
       torchImg;
   MutexRect   storeRect;
-  ImgEditor   imgEditor                = ImgEditor();
   const int   toBlackAndWhiteThreshold = 100;
   const QRgb  GREY_COL_OF_EQ_STRINGS   = qRgb(191, 191, 191);
   const QSize EQ_FIELD_SIZE            = QSize(32, 32);

@@ -59,6 +59,5 @@ class VariablesClass {
   MiniMap                 minimap;
   PlayerPosition          position;
   Equipment               eq;
-  ImgEditor               imgEditor;
   // MutexImg fullImage;
 };

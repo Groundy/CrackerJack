@@ -1,4 +1,5 @@
 #pragma once
+#include <qdebug.h>
 #include <qdir.h>
 #include <qstring.h>
 
@@ -49,6 +50,12 @@ class PathResource {
 
   static QString getPathToRouteFile(const QString routeNameWithoutExtension) {
     return getRouteFolder().absoluteFilePath(routeNameWithoutExtension + ".json");
+  }
+
+  static QString getPathToTmpSavingImgsDir() {
+    QDir dir = QDir::current();
+    dir.cd("tmp_screens");
+    return dir.absolutePath() + "\\";
   }
 
   //jsons
