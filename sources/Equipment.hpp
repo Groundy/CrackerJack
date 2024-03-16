@@ -2,13 +2,12 @@
 #include <qpoint.h>
 #include <qrect.h>
 
-#include "ImgEditor.h"
 #include "Utilities.hpp"
 class Equipment {
  public:
   enum STATES { HASTE, BATTLE, PROTECTOR_ZONE, POISONED, PARALYZED, UPGRADED, HUNGER, DRUNKEN };
   enum class EqRect { StateBar, SoulPoints, Capacity, Helmet, Armor, Legs, Boots, Ring, Amulet, Weapon, Shield, Backpack, Torch };
-  Equipment(ImgEditor* imgEditor) : imgEditor(imgEditor){};
+  Equipment()  = default;
   ~Equipment() = default;
   void setStoreRect(const QRect& storeRectToSet) {
     storeRect.setRect(storeRectToSet);
@@ -19,28 +18,33 @@ class Equipment {
   }
 
   QVector<STATES> getCurrentStates(bool clearImg = true) {
-    QImage stateBar = statesBarImg.getImgCopy();
+    CJ_Image stateBar = statesBarImg.getImgCopy();
     if (stateBar.isNull()) {
       return {};
     }
-    if (clearImg) statesBarImg.clear();
-    ImgEditor::imgToBlackAndWhiteOneColor(stateBar, toBlackAndWhiteThreshold);
-    QList<QImage>   imgs  = ImgEditor::cutImgWithLettersToSingleLettersImgList(stateBar);
+    if (clearImg) {
+      statesBarImg.clear();
+    }
+    stateBar.toBlackAndWhiteOneColor(toBlackAndWhiteThreshold);
+    QList<CJ_Image> imgs  = stateBar.toImageListWithSingleLetters();
     QVector<STATES> toRet = {};
-    for each (QImage img in imgs) {
-      ImgEditor::cutBlackBordersOfImg(img);
-      QString code = ImgEditor::binaryLetterImgToCode(img);
-      if (!codeStateMap.contains(code)) continue;
+    for each (CJ_Image img in imgs) {
+      img.cutBlackBorders();
+      QString code = img.binaryLetterImgToCode();
+      if (!codeStateMap.contains(code)) {
+        continue;
+      }
       toRet.append(codeStateMap.value(code));
     }
     return toRet;
   }
   QString getEqRectBottomText(EqRect eqRect) {
-    QImage bottomStrImg = getImg(eqRect);
-    if (bottomStrImg.isNull()) return QString();
-    ImgEditor::imgToBlackAndWhiteExactColor(bottomStrImg, GREY_COL_OF_EQ_STRINGS);
-    QString str = imgEditor->imgWithStrToStr(bottomStrImg);
-    return str;
+    CJ_Image bottomStrImg = getImg(eqRect);
+    if (bottomStrImg.isNull()) {
+      return QString();
+    }
+    bottomStrImg.toBlackAndWhiteExactColor(GREY_COL_OF_EQ_STRINGS);
+    return bottomStrImg.toString();
   }
   QRect getRect(EqRect eqRect) {
     const QPoint EQ_FRAME_TOPLEFT = storeRect.getRect().topLeft() - QPoint(74, 0);
@@ -188,7 +192,6 @@ class Equipment {
   MutexImg statesBarImg, soulPtsImg, capImg, helmetCap, armorImg, legsImg, bootsImg, ringImg, amuletImg, weaponImg, shieldImg, backpackImg,
       torchImg;
   MutexRect   storeRect;
-  ImgEditor*  imgEditor;
   const int   toBlackAndWhiteThreshold = 100;
   const QRgb  GREY_COL_OF_EQ_STRINGS   = qRgb(191, 191, 191);
   const QSize EQ_FIELD_SIZE            = QSize(32, 32);
@@ -206,10 +209,10 @@ class Equipment {
     return toRect;
   }
   QString getStateCode(QString fileName) {
-    QImage img(":/statesIcons/" + fileName);
-    ImgEditor::imgToBlackAndWhiteOneColor(img, toBlackAndWhiteThreshold);
-    ImgEditor::cutBlackBordersOfImg(img);
-    QString code = ImgEditor::binaryLetterImgToCode(img);
+    CJ_Image img(QImage(":/statesIcons/" + fileName));
+    img.toBlackAndWhite(toBlackAndWhiteThreshold);
+    img.cutBlackBorders();
+    QString code = img.binaryLetterImgToCode();
     return code;
   }
 };

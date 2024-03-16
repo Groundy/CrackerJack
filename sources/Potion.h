@@ -80,7 +80,7 @@ class Potion {
   };
 
  private:
-  int                 manaReg, healthReg;
+  int                 manaReg = 0, healthReg = 0;
   QVector<Profession> userProfessions;
   QString             name;
 };

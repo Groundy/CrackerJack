@@ -27,8 +27,8 @@ class ActiveGameThread : public QThread {
   QSharedPointer<VariablesClass> var_;
   HWND                           previousGameHandler_ = 0;
 
-  uint                        getGamePid(const QMap<QString, unsigned int>& processes);
-  QString                     getGameWindowTitile();
+  uint                        getGamePid(const QMap<QString, unsigned int>& processes) const;
+  QString                     getGameWindowTitile() const;
   int                         checkGameState();
   QMap<QString, unsigned int> getListOfRunningProcess();
   int                         windowIsAccessible(const uint PID, const QString& windowTitle);

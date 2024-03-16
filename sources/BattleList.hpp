@@ -1,16 +1,14 @@
 #pragma once
+#include <CJ_Image.h>
 #include <memory.h>
 #include <qrect.h>
 
-#include "ImgEditor.h"
 #include "Logger.hpp"
 #include "PathResource.h"
 #include "Utilities.hpp"
 class BattleList {
  public:
-  BattleList(ImgEditor* imgEditor) {
-    this->imgEditor = imgEditor;
-  };
+  BattleList()  = default;
   ~BattleList() = default;
   void setFrame(QRect battleListAreaToSet) {
     battleListArea.setRect(battleListAreaToSet);
@@ -65,9 +63,9 @@ class BattleList {
     return redPercentage >= 75;
   }
   bool checkIfBattleListIsOk() {
-    QImage battleMark = QImage(PathResource::getPathToBattleList());
-    QImage battleList = getImg();
-    bool   properImg  = ImgEditor::findStartPositionInImg(battleMark, battleList).size() == 1;
+    CJ_Image battleMark = QImage(PathResource::getPathToBattleList());
+    CJ_Image battleList = getImg();
+    bool     properImg  = battleList.findStartPositionInImg(battleMark).size() == 1;
     if (!properImg) setFrame(QRect());
     return properImg;
   }
@@ -80,9 +78,11 @@ class BattleList {
     QVector<QRect> nameRect = getFramesOfMonstersNames();
     QStringList    toRet    = {};
     for (int i = 0; i < nameRect.size(); i++) {
-      QImage  singleMonsterNameImg = innerList.copy(nameRect[i]);
-      QString monsterName          = imgEditor->imgWithStrToStr(singleMonsterNameImg, 180);
-      if (monsterName.isEmpty()) break;
+      CJ_Image singleMonsterNameImg = innerList.copy(nameRect[i]);
+      QString  monsterName          = singleMonsterNameImg.toString(180);
+      if (monsterName.isEmpty()) {
+        break;
+      }
       toRet.append(monsterName);
     }
     toRet.removeDuplicates();
@@ -91,7 +91,6 @@ class BattleList {
 
  private:
   Logger&          logger = Logger::instance();
-  ImgEditor*       imgEditor;
   MutexRect        battleListArea;
   MutexImg         battleListImg;
   std::atomic<int> enemiesOnBattleList = 0;

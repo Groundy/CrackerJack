@@ -4,7 +4,6 @@ ManaHealthStateAnalyzer::ManaHealthStateAnalyzer(QObject* parent, QSharedPointer
                                                  QSharedPointer<GameConnecter> gameConnector)
     : QThread(parent), var(var), gameConnector(gameConnector) {
   populateHealthManaMaps(var->getProf().get());
-  imgEditor = &var->getImgEditorObj();
 }
 ManaHealthStateAnalyzer::~ManaHealthStateAnalyzer() {
   this->terminate();
@@ -82,25 +81,11 @@ bool ManaHealthStateAnalyzer::populateHealthManaMaps(const Profile* profile) {
 }
 ValuesStrs ManaHealthStateAnalyzer::toStrsValues(FoundFlags foundFlags, ImageValues imgVals) {
   ValuesStrs strVals;
-  if (foundFlags.health)
-    strVals.health = imgEditor->imgWithStrToStr(imgVals.health).remove("\0");
-  else
-    strVals.health = QString();
 
-  if (foundFlags.mana)
-    strVals.mana = imgEditor->imgWithStrToStr(imgVals.mana).remove("\0");
-  else
-    strVals.mana = QString();
-
-  if (foundFlags.shield)
-    strVals.manaShield = imgEditor->imgWithStrToStr(imgVals.manaShield).remove("\0");
-  else
-    strVals.manaShield = QString();
-
-  if (foundFlags.combined)
-    strVals.combined = imgEditor->imgWithStrToStr(imgVals.combined).remove("\0");
-  else
-    strVals.combined = QString();
+  strVals.health     = foundFlags.health ? imgVals.health.toString().remove("\0") : QString();
+  strVals.mana       = foundFlags.mana ? imgVals.mana.toString().remove("\0") : QString();
+  strVals.manaShield = foundFlags.shield ? imgVals.manaShield.toString().remove("\0") : QString();
+  strVals.combined   = foundFlags.combined ? imgVals.combined.toString().remove("\0") : QString();
 
   constexpr int MIN_LENGTH_FOR_CORR_STR = 3;
   if (strVals.health.length() < MIN_LENGTH_FOR_CORR_STR) {

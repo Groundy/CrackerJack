@@ -13,7 +13,7 @@ void ActiveGameThread::run() {
     msleep(SLEEP_TIME_);
   }
 }
-QString ActiveGameThread::getGameWindowTitile() {
+QString ActiveGameThread::getGameWindowTitile() const{
   for (HWND hwnd = GetTopWindow(NULL); hwnd != NULL; hwnd = GetNextWindow(hwnd, GW_HWNDNEXT)) {
     if (!IsWindowVisible(hwnd)) {
       continue;
@@ -46,7 +46,7 @@ QString ActiveGameThread::getGameWindowTitile() {
   }
   return QString();
 }
-uint ActiveGameThread::getGamePid(const QMap<QString, unsigned int>& processes) {
+uint ActiveGameThread::getGamePid(const QMap<QString, unsigned int>& processes) const{
   auto iteratorToProcess = processes.find(GAME_PROCESS_NAME_);
   if (iteratorToProcess == processes.end()) {
     qDebug() << "Can't find Game on running processes list!";
@@ -105,7 +105,7 @@ QMap<QString, unsigned int> ActiveGameThread::getListOfRunningProcess() {
   QMap<QString, unsigned int> toRet;
   HANDLE                      hSnapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
   if (hSnapshot) {
-    PROCESSENTRY32 pe32;
+    PROCESSENTRY32 pe32{};
     pe32.dwSize = sizeof(PROCESSENTRY32);
     if (Process32First(hSnapshot, &pe32)) {
       do {

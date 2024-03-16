@@ -8,7 +8,6 @@
 #include <QObject>
 #include <VariablesClass.hpp>
 
-#include "ImgEditor.h"
 #include "Logger.hpp"
 #include "PathResource.h"
 #include "Profile.h"
@@ -17,9 +16,9 @@ class Calibrator {
  public:
   Calibrator(QSharedPointer<VariablesClass> var);
   ~Calibrator();
-  bool        calibrateBasicAreas(const QImage& fullImage);
-  bool        calibrateBattleArea(const QImage& fullImage);
-  bool        calibrateStoreButton(const QImage& fullImage);
+  bool        calibrateBasicAreas(const CJ_Image& fullImage);
+  bool        calibrateBattleArea(const CJ_Image& fullImage);
+  bool        calibrateStoreButton(const CJ_Image& fullImage);
   static void test(QString pathToFilesWithScreens);
 
  private:
@@ -68,15 +67,14 @@ class Calibrator {
   };
 
   QSharedPointer<VariablesClass> var;
-
-  SlashesIndexes getIndexesOfImgsWithSlashes(const QImage& fullScreen, const QList<QRect>& importantFrames);
-  bool           categorizeWindows(const QImage& fullscreen, QList<QRect>& importantRectangles);
-  bool           findWindowsOnScreen(const QImage& fullScreen, QList<QRect>& importantRectangles);
-  void           sortByXY(QList<QPoint>& points, QList<QPoint>& sortedByX, QList<QPoint>& sortedByY);
-  void           sortByXY(QList<QRect>& inputRects, QList<QRect>& sortedByX, QList<QRect>& sortedByY);
-  Indexes        getIndexesOfHealthManaBars(const QImage& fullscreen, const QList<QRect>& listOfImportantRectangles);
-  QList<QPoint>  getStartOfPossibleFrames(const QImage& fullScreen, int minVal, int maxVal);
-  QList<QRect>   getAreasInsideFrames(const QImage& fullScreen, const QList<QPoint>& startOfFrames, const int MIN_DIM);
-  QList<QRect>   filterAreasCoveredByFrameFromBottomRight(const QImage& fullScreen, const QList<QRect>& areas);
-  QList<QRect>   getOutsideFramesOfOpenEntitiesOnSideBars(const QImage& wholeScreen);
+  SlashesIndexes                 getIndexesOfImgsWithSlashes(const CJ_Image& fullScreen, const QVector<QRect>& importantFrames);
+  bool                           categorizeWindows(const CJ_Image& fullscreen, QVector<QRect>& importantRectangles);
+  bool                           findWindowsOnScreen(const CJ_Image& fullScreen, QVector<QRect>& importantRectangles);
+  std::tuple<QVector<QPoint>, QVector<QPoint>> sortByXY(const QVector<QPoint>& points);
+  std::tuple<QVector<QRect>, QVector<QRect>>   sortByXY(const QVector<QRect>& inputRects);
+  Indexes         getIndexesOfHealthManaBars(const CJ_Image& fullscreen, const QVector<QRect>& listOfImportantRectangles);
+  QVector<QPoint> getStartOfPossibleFrames(const CJ_Image& fullScreen, int minVal, int maxVal);
+  QVector<QRect>  getAreasInsideFrames(const CJ_Image& fullScreen, const QVector<QPoint>& startOfFrames, const int MIN_DIM);
+  QVector<QRect>  filterAreasCoveredByFrameFromBottomRight(const CJ_Image& fullScreen, const QVector<QRect>& areas);
+  QVector<QRect>  getOutsideFramesOfOpenEntitiesOnSideBars(const CJ_Image& wholeScreen);
 };

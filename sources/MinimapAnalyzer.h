@@ -1,4 +1,5 @@
 #pragma once
+#include <QObject.h>
 #include <qdatetime.h>
 #include <qdir.h>
 #include <qimage.h>
@@ -8,10 +9,7 @@
 #include <qstring.h>
 #include <qthread.h>
 
-#include <QObject.h>
-
 #include "Calibrator.h"
-#include "ImgEditor.h"
 #include "PathResource.h"
 #include "VariablesClass.hpp"
 class MinimapAnalyzer : public QThread {
@@ -36,14 +34,14 @@ class MinimapAnalyzer : public QThread {
   const QSize                    PROPER_MINIMAP_IMG_SIZE  = QSize(106, 109);
   QPoint                         previousPosition;
 
-  QImage         setSliderImg();
-  int            getCurrentLayer(const QImage& layerImg);
-  QVector<QRect> getMiniMapPartsPostions();
-  QList<QImage>  splitMiniMap(const QImage& wholeMiniMap);
-  QPoint         findPlayerPosition(const QImage& miniMap, const QImage* wholeMap);
-  QList<QPoint>  findStartPosOfImgMap(const QImage& imgToFind, const QImage& imgToSearchWithin, QRect frameInBigWindow);
-  QRect          getFrameToLookByPreviousPos();
-  QPoint         getVectorToPlayerFromImgPieceIndex(int index);
+  QImage          setSliderImg();
+  int             getCurrentLayer(const CJ_Image& layerImg);
+  QVector<QRect>  getMiniMapPartsPostions();
+  QList<QImage>   splitMiniMap(const QImage& wholeMiniMap);
+  QPoint          findPlayerPosition(const CJ_Image& miniMap, const CJ_Image& wholeMap);
+  QVector<QPoint> findStartPosOfImgMap(const QImage& imgToFind, const QImage& imgToSearchWithin, QRect frameInBigWindow);
+  QRect           getFrameToLookByPreviousPos();
+  QPoint          getVectorToPlayerFromImgPieceIndex(int index);
 };
 
 /*

@@ -12,10 +12,11 @@
 struct MutexImg {
  public:
   QImage getImgCopy() {
-    mutex.lock();
-    QImage returnImg = QImage();
-    if (!img.isNull()) returnImg = img.copy();
-    mutex.unlock();
+    QMutexLocker locker(&mutex);
+    QImage       returnImg = QImage();
+    if (!img.isNull()) {
+      returnImg = img.copy();
+    }
     return returnImg;
   }
   void setImg(const QImage& newImg) {

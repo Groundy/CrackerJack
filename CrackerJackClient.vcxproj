@@ -230,10 +230,10 @@ xcopy /y /d ".\dependencies\32-bit\libcrypto-1_1.dll" "$(OutDir)"
     <ResourceCompile Include="CrackerJackClient.rc" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="CJ_Image.cpp" />
     <ClCompile Include="sources\AutoHuntConfigurator.cpp" />
     <ClCompile Include="sources\AutoHunting.cpp" />
     <ClCompile Include="sources\GameConnecter.cpp" />
-    <ClCompile Include="sources\ImgEditor.cpp" />
     <ClCompile Include="sources\Item.cpp" />
     <ClCompile Include="sources\ActiveGameThread.cpp" />
     <ClCompile Include="sources\Calibrator.cpp" />
@@ -263,6 +263,7 @@ xcopy /y /d ".\dependencies\32-bit\libcrypto-1_1.dll" "$(OutDir)"
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AutoHuntData.hpp" />
+    <ClInclude Include="CJ_Image.h" />
     <ClInclude Include="old_code.hpp" />
     <ClInclude Include="sources\BattleList.hpp" />
     <ClInclude Include="sources\GameConnecter.h" />
@@ -277,7 +278,6 @@ xcopy /y /d ".\dependencies\32-bit\libcrypto-1_1.dll" "$(OutDir)"
     <ClInclude Include="sources\Equipment.hpp" />
     <ClInclude Include="sources\GameProcessData.hpp" />
     <ClInclude Include="sources\GameWindow.hpp" />
-    <ClInclude Include="sources\ImgEditor.h" />
     <ClInclude Include="sources\PlayerPosition.hpp" />
     <ClInclude Include="sources\Profession.hpp" />
     <QtMoc Include="sources\AutoHunting.h" />
