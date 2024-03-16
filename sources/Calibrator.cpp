@@ -82,22 +82,26 @@ Calibrator::SlashesIndexes Calibrator::getIndexesOfImgsWithSlashes(const QImage&
     ImgEditor::imgToBlackAndWhiteAllColors(imgTmp, 250);
 
     QVector<QPoint> pointsX = ImgEditor::findStartPositionInImg(slashXImg, imgTmp);
-    if (pointsX.size() == 1)
+    if (pointsX.size() == 1) {
       indexes.slashesX.push_back(i);
-    else if (pointsX.size() == 2) {
+    } else if (pointsX.size() == 2) {
       indexes.combinedIndex = i;
       indexes.slashesX.push_back(i);
     }
-    if (indexes.isValid()) break;
+    if (indexes.isValid()) {
+      break;
+    }
 
     QVector<QPoint> pointsY = ImgEditor::findStartPositionInImg(slashYImg, imgTmp);
-    if (pointsY.size() == 1)
+    if (pointsY.size() == 1) {
       indexes.slashesY.push_back(i);
-    else if (pointsY.size() == 2) {
+    } else if (pointsY.size() == 2) {
       indexes.combinedIndex = i;
       indexes.slashesY.push_back(i);
     }
-    if (indexes.isValid()) break;
+    if (indexes.isValid()) {
+      break;
+    }
   }
   return indexes;
 }
@@ -141,10 +145,9 @@ Calibrator::Indexes Calibrator::getIndexesOfHealthManaBars(const QImage& fullscr
 
   switch (position) {
     case LEFT: {
-      indexes.rotation = 1;
-      QVector<QRect> sortedByX, sortedByY, rectangles;
-      for each (int var in slashesIndexes.slashesY) rectangles.push_back(listOfImportantRectangles[var]);
-      sortByXY(rectangles, sortedByX, sortedByY);
+      indexes.rotation            = 1;
+      QVector<QRect> rectangles   = QVector<QRect>(listOfImportantRectangles);
+      auto [sortedByX, sortedByY] = sortByXY(rectangles);
       switch (shieldType) {
         case NO_SHIELD: {
           // 25 is more less width of big bar, smaller is half of its width
@@ -179,9 +182,11 @@ Calibrator::Indexes Calibrator::getIndexesOfHealthManaBars(const QImage& fullscr
     }
     case RIGHT: {
       indexes.rotation = -1;
-      QVector<QRect> sortedByX, sortedByY, rectangles;
-      for each (int var in slashesIndexes.slashesY) rectangles.push_back(listOfImportantRectangles[var]);
-      sortByXY(rectangles, sortedByX, sortedByY);
+      QVector<QRect> rectangles;
+      for each (int var in slashesIndexes.slashesY) {
+        rectangles.push_back(listOfImportantRectangles[var]);
+      }
+      auto [sortedByX, sortedByY] = sortByXY(rectangles);
       switch (shieldType) {
         case NO_SHIELD: {
           bool isParallelStyle = sortedByY[0].y() == sortedByY[1].y();
@@ -215,9 +220,11 @@ Calibrator::Indexes Calibrator::getIndexesOfHealthManaBars(const QImage& fullscr
     case DOWN:
     case TOP: {
       indexes.rotation = 0;
-      QVector<QRect> sortedByX, sortedByY, rectangles;
-      for each (int var in slashesIndexes.slashesX) rectangles.push_back(listOfImportantRectangles[var]);
-      sortByXY(rectangles, sortedByX, sortedByY);
+      QVector<QRect> rectangles;
+      for each (int var in slashesIndexes.slashesX) {
+        rectangles.push_back(listOfImportantRectangles[var]);
+      }
+      auto [sortedByX, sortedByY] = sortByXY(rectangles);
       switch (shieldType) {
         case NO_SHIELD: {
           indexes.combined     = -1;
@@ -248,10 +255,10 @@ Calibrator::Indexes Calibrator::getIndexesOfHealthManaBars(const QImage& fullscr
         case SEPARATE: {
           indexes.health = listOfImportantRectangles.indexOf(sortedByX[0]);
           rectangles.removeOne(sortedByX[0]);
-          sortByXY(rectangles, sortedByX, sortedByY);
-          indexes.mana     = listOfImportantRectangles.indexOf(sortedByY[0]);
-          indexes.shield   = listOfImportantRectangles.indexOf(sortedByY[1]);
-          indexes.combined = -1;
+          auto [sortedByX, sortedByY] = sortByXY(rectangles);
+          indexes.mana                = listOfImportantRectangles.indexOf(sortedByY[0]);
+          indexes.shield              = listOfImportantRectangles.indexOf(sortedByY[1]);
+          indexes.combined            = -1;
           break;
         }
       }
@@ -313,8 +320,7 @@ bool Calibrator::categorizeWindows(const QImage& fullscreen, QVector<QRect>& imp
 
   // miniMap Frame
   {
-    QVector<QRect> sortedX, sortedY;
-    sortByXY(importantRectangles, sortedX, sortedY);
+    auto [sortedX, sortedY] = sortByXY(importantRectangles);
     var->getMiniMap().setFrameMiniMap(sortedX.last());
     importantRectangles.removeOne(sortedX.last());
   }
@@ -333,7 +339,7 @@ bool Calibrator::findWindowsOnScreen(const QImage& fullScreen, QVector<QRect>& i
   importantRectangles                   = areasWithinFullFrames;
   return areasWithoutFrames.size() >= 4;
 }
-std::tuple<QVector<QPoint>, QVector<QPoint>> Calibrator::sortByXY(QVector<QPoint>& const points) {
+std::tuple<QVector<QPoint>, QVector<QPoint>> Calibrator::sortByXY(const QVector<QPoint>& points) {
   QMultiMap<int, QPoint> mapX;
   QMultiMap<int, QPoint> mapY;
   for each (QPoint point in points) {
@@ -342,15 +348,14 @@ std::tuple<QVector<QPoint>, QVector<QPoint>> Calibrator::sortByXY(QVector<QPoint
   }
   return {mapX.values().toVector(), mapY.values().toVector()};
 }
-void Calibrator::sortByXY(QVector<QRect>& inputRects, QVector<QRect>& sortedByX, QVector<QRect>& sortedByY) {
+std::tuple<QVector<QRect>, QVector<QRect>> Calibrator::sortByXY(const QVector<QRect>& inputRects) {
   QMultiMap<int, QRect> mapX;
   QMultiMap<int, QRect> mapY;
   for each (QRect rect in inputRects) {
     mapX.insert(rect.x(), rect);
     mapY.insert(rect.y(), rect);
   }
-  sortedByX = mapX.values().toVector();
-  sortedByY = mapY.values().toVector();
+  return {mapX.values().toVector(), mapY.values().toVector()};
 }
 QVector<QPoint> Calibrator::getStartOfPossibleFrames(const QImage& fullScreen, int minVal, int maxVal) {
   const int       WIDTH              = fullScreen.width();
