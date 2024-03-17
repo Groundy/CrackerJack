@@ -52,56 +52,56 @@ void CJ_Image::toBlackAndWhiteAllColors(const int threshold) {
 
 void CJ_Image::cutBlackBorders() {
   int       linesOfBlackRows_TOP = 0, linesOfBlackRows_DOWN = 0, linesOfBlackRows_RIGHT = 0, linesOfBlackRows_LEFT = 0;
-  const int WIDTH  = this->width();
-  const int HEIGHT = this->height();
-  for (int x = 0; x < WIDTH; x++) {
-    for (int y = 0; y < HEIGHT; y++) {
+  const int WIDTH   = this->width();
+  const int HEIGHT  = this->height();
+  bool      process = true;
+  for (int x = 0; x < WIDTH && process; x++) {
+    for (int y = 0; y < HEIGHT && process; y++) {
       bool isBlack = this->pixel(x, y) == BLACK;
       if (!isBlack) {
         linesOfBlackRows_LEFT = x;
-        x                     = WIDTH;   //endOfLoop
-        y                     = HEIGHT;  //endOfLoop
+        process               = true;
       }
     }
   }
 
-  for (int x = WIDTH - 1; x >= linesOfBlackRows_LEFT; x--) {
-    for (int y = 0; y < HEIGHT; y++) {
+  process = true;
+  for (int x = WIDTH - 1; x >= linesOfBlackRows_LEFT && process; x--) {
+    for (int y = 0; y < HEIGHT && process; y++) {
       bool isBlack = this->pixel(x, y) == BLACK;
       if (!isBlack) {
         linesOfBlackRows_RIGHT = WIDTH - x - 1;
-        x                      = -1;      //endOfLoop
-        y                      = HEIGHT;  //endOfLoop
+        process                = false;
       }
     }
   }
 
-  for (int y = 0; y < HEIGHT; y++) {
-    for (int x = linesOfBlackRows_LEFT; x < WIDTH - linesOfBlackRows_RIGHT; x++) {
+  process = true;
+  for (int y = 0; y < HEIGHT && process; y++) {
+    for (int x = linesOfBlackRows_LEFT; x < WIDTH - linesOfBlackRows_RIGHT && process; x++) {
       bool isBlack = this->pixel(x, y) == BLACK;
       if (!isBlack) {
         linesOfBlackRows_TOP = y;
-        x                    = WIDTH;   //endOfLoop
-        y                    = HEIGHT;  //endOfLoop
+        process              = false;
       }
     }
   }
 
-  for (int y = HEIGHT - 1; y >= linesOfBlackRows_TOP; y--) {
-    for (int x = linesOfBlackRows_LEFT; x < WIDTH - linesOfBlackRows_RIGHT; x++) {
+  process = true;
+  for (int y = HEIGHT - 1; y >= linesOfBlackRows_TOP && process; y--) {
+    for (int x = linesOfBlackRows_LEFT; x < WIDTH - linesOfBlackRows_RIGHT && process; x++) {
       bool isBlack = this->pixel(x, y) == BLACK;
       if (!isBlack) {
         linesOfBlackRows_DOWN = HEIGHT - y - 1;
-        x                     = WIDTH;  //endOfLoop
-        y                     = -1;     //endOfLoop
+        process               = false;
       }
     }
   }
-  int anotherParametr_x = WIDTH - linesOfBlackRows_RIGHT - linesOfBlackRows_LEFT;
-  int anotherParametr_y = HEIGHT - linesOfBlackRows_TOP - linesOfBlackRows_DOWN;
+  const uint anotherParametr_x = WIDTH - linesOfBlackRows_RIGHT - linesOfBlackRows_LEFT;
+  const uint anotherParametr_y = HEIGHT - linesOfBlackRows_TOP - linesOfBlackRows_DOWN;
 
-  int widthToCut  = anotherParametr_x >= 0 ? anotherParametr_x : 0;
-  int heightToCut = anotherParametr_y >= 0 ? anotherParametr_y : 0;
+  const uint widthToCut  = std::clamp(anotherParametr_x, static_cast<uint>(0), anotherParametr_x);
+  const uint heightToCut = std::clamp(anotherParametr_y, static_cast<uint>(0), anotherParametr_y);
 
   *this = this->copy(linesOfBlackRows_LEFT, linesOfBlackRows_TOP, widthToCut, heightToCut);
 }
@@ -290,20 +290,21 @@ QPoint CJ_Image::findExactStartPositionInImg(const QImage& imgToFind, QRect fram
       }
 
       bool foundPosition = true;
-      for (int offsetX = 1; offsetX < WIDTH_SMALL_PIC; offsetX++) {
-        for (int offsetY = 1; offsetY < HEIGHT_SMALL_PIC; offsetY++) {
+      bool process       = true;
+      for (int offsetX = 1; offsetX < WIDTH_SMALL_PIC && process; offsetX++) {
+        for (int offsetY = 1; offsetY < HEIGHT_SMALL_PIC && process; offsetY++) {
           pixSmallImg = imgToFind.pixel(offsetX, offsetY);
           pixBigImg   = this->pixel(x + offsetX, y + offsetY);
           if (pixBigImg == pixSmallImg) {
             continue;
           }
-          //break both loops
-          offsetX       = WIDTH_SMALL_PIC;
-          offsetY       = HEIGHT_SMALL_PIC;
+          process       = false;
           foundPosition = false;
         }
       }
-      if (foundPosition) startPoints.push_back(QPoint(x, y));
+      if (foundPosition) {
+        startPoints.push_back(QPoint(x, y));
+      }
     }
   }
   if (startPoints.size() != 1) {
@@ -462,8 +463,8 @@ CJ_Image CJ_Image::fromCharToImg(QChar CharToImg) {
   int       i = 0;
   for (size_t x = 0; x < WIDTH; x++) {
     for (size_t y = 0; y < HEIGHT; y++) {
-      bool setWhite = code[i] == '1';
-      uint toSet    = setWhite ? WHITE : BLACK;
+      const bool setWhite = code[i] == '1';
+      const uint toSet    = setWhite ? WHITE : BLACK;
       imgToRet.setPixel(x, y, toSet);
       i++;
     }
