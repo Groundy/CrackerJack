@@ -1,7 +1,7 @@
 #pragma once
 #include <QThread>
 
-#include "ActiveGameThread.h"
+#include "GameActivityChecker.h"
 #include "GameConnecter.h"
 #include "Profile.h"
 #include "VariablesClass.hpp"

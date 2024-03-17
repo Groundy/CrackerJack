@@ -14,7 +14,7 @@
 #include "ScreenSaver.h"
 #include "SelectProfileWindow.h"
 #include "VariablesClass.hpp"
-#include "activeGameThread.h"
+#include "GameActivityChecker.h"
 namespace Ui {
 class MainMenu;
 };
@@ -45,7 +45,7 @@ class MainMenu : public QDialog {
   QSharedPointer<Profile>        prof           = QSharedPointer<Profile>(new Profile());
   QSharedPointer<VariablesClass> var            = QSharedPointer<VariablesClass>(new VariablesClass(prof));
   QSharedPointer<GameConnecter>  gameConnector  = QSharedPointer<GameConnecter>(new GameConnecter(var));
-  ActiveGameThread               activityThread = ActiveGameThread(var);  //Change name of this class and variable
+  GameActivityChecker               activityThread = GameActivityChecker(var);  //Change name of this class and variable
 
   ScreenSaver             screenSaverThread{this, var, gameConnector};
   ScreenAnalyzer          screenAnalyzer{this, var};
@@ -53,7 +53,7 @@ class MainMenu : public QDialog {
   ClickDetector           clickDetector{this, gameConnector};
   AutoHunting*            huntAutoThread = nullptr;
 
-  ActiveGameThread::GameActivityStates gameActivitystate;
+  GameActivityChecker::GameActivityStates gameActivitystate;
 
   void threadStarter();
   void startAutoHunting();

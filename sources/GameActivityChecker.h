@@ -9,12 +9,12 @@
 #include <tlhelp32.h>
 
 #include "VariablesClass.hpp"
-class ActiveGameThread : public QObject {
+class GameActivityChecker : public QObject {
   Q_OBJECT
  public:
   enum GameActivityStates { NO_ACTIVE, NO_WINDOW, NO_LOGGED, NO_HANDLER, ACTIVE };
-  ActiveGameThread(QSharedPointer<VariablesClass> var);
-  ~ActiveGameThread();
+  GameActivityChecker(QSharedPointer<VariablesClass> var);
+  ~GameActivityChecker();
 
  signals:
   void gameStateChanged(int i);

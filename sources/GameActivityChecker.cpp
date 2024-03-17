@@ -1,26 +1,27 @@
-#include "ActiveGameThread.h"
+#include "GameActivityChecker.h"
 
-ActiveGameThread::ActiveGameThread(QSharedPointer<VariablesClass> var) : var_(var) {
+GameActivityChecker::GameActivityChecker(QSharedPointer<VariablesClass> var) : var_(var) {
   checkGameStateTimer_.setInterval(TIMER_INTERVAL);
-  if (!QObject::connect(&checkGameStateTimer_, &QTimer::timeout, this, &ActiveGameThread::checkGameState, Qt::UniqueConnection)) {
+  checkGameState();
+  if (!QObject::connect(&checkGameStateTimer_, &QTimer::timeout, this, &GameActivityChecker::checkGameState, Qt::UniqueConnection)) {
     qCritical() << "Failed to connect game activity timer.";
     exit(1);
   }
   checkGameStateTimer_.start();
 }
 
-ActiveGameThread::~ActiveGameThread() {
+GameActivityChecker::~GameActivityChecker() {
   checkGameStateTimer_.stop();
 }
 
-void ActiveGameThread::checkGameState() {
+void GameActivityChecker::checkGameState() {
   GameActivityStates gameStateCode = getGameState();
   if (gameStateCode != previousGameState_) {
     emit gameStateChanged(gameStateCode);
   }
 }
 
-QString ActiveGameThread::getGameWindowTitile() const {
+QString GameActivityChecker::getGameWindowTitile() const {
   for (HWND hwnd = GetTopWindow(NULL); hwnd != NULL; hwnd = GetNextWindow(hwnd, GW_HWNDNEXT)) {
     if (!IsWindowVisible(hwnd)) {
       continue;
@@ -53,7 +54,7 @@ QString ActiveGameThread::getGameWindowTitile() const {
   }
   return QString();
 }
-uint ActiveGameThread::getGamePid(const QMap<QString, unsigned int>& processes) const {
+uint GameActivityChecker::getGamePid(const QMap<QString, unsigned int>& processes) const {
   auto iteratorToProcess = processes.find(GAME_PROCESS_NAME_);
   if (iteratorToProcess == processes.end()) {
     qDebug() << "Can't find Game on running processes list!";
@@ -61,7 +62,7 @@ uint ActiveGameThread::getGamePid(const QMap<QString, unsigned int>& processes) 
   }
   return iteratorToProcess.value();
 }
-int ActiveGameThread::windowIsAccessible(const uint PID, const QString& windowTitle) {
+int GameActivityChecker::windowIsAccessible(const uint PID, const QString& windowTitle) {
   if (PID == 0) {
     return NO_ACTIVE;
   }
@@ -84,7 +85,7 @@ int ActiveGameThread::windowIsAccessible(const uint PID, const QString& windowTi
   return ACTIVE;
 }
 
-ActiveGameThread::GameActivityStates ActiveGameThread::getGameState() {
+GameActivityChecker::GameActivityStates GameActivityChecker::getGameState() {
   auto             processes    = getListOfRunningProcess();
   uint             PID          = getGamePid(processes);
   QString          windowTitle  = getGameWindowTitile();
@@ -112,7 +113,7 @@ ActiveGameThread::GameActivityStates ActiveGameThread::getGameState() {
   }
   return GameActivityStates(gameWinState);
 }
-QMap<QString, unsigned int> ActiveGameThread::getListOfRunningProcess() {
+QMap<QString, unsigned int> GameActivityChecker::getListOfRunningProcess() {
   QMap<QString, unsigned int> toRet;
   HANDLE                      hSnapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
   if (hSnapshot) {
@@ -131,7 +132,7 @@ QMap<QString, unsigned int> ActiveGameThread::getListOfRunningProcess() {
   }
   return toRet;
 }
-HWND ActiveGameThread::getHandlerToGameWindow(unsigned int PID, QString WindowName) {
+HWND GameActivityChecker::getHandlerToGameWindow(unsigned int PID, QString WindowName) {
   LPCWSTR nameOfWindowLPCWSTR = (const wchar_t*)WindowName.utf16();
   HWND    handler             = FindWindow(NULL, nameOfWindowLPCWSTR);
   if (handler == NULL) {

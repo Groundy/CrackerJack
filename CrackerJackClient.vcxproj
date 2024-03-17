@@ -235,7 +235,7 @@ xcopy /y /d ".\dependencies\32-bit\libcrypto-1_1.dll" "$(OutDir)"
     <ClCompile Include="sources\AutoHunting.cpp" />
     <ClCompile Include="sources\GameConnecter.cpp" />
     <ClCompile Include="sources\Item.cpp" />
-    <ClCompile Include="sources\ActiveGameThread.cpp" />
+    <ClCompile Include="sources\GameActivityChecker.cpp" />
     <ClCompile Include="sources\Calibrator.cpp" />
     <ClCompile Include="sources\JsonParser.cpp" />
     <ClCompile Include="sources\MainMenu.cpp" />
@@ -300,7 +300,7 @@ xcopy /y /d ".\dependencies\32-bit\libcrypto-1_1.dll" "$(OutDir)"
     <ClInclude Include="sources\VariablesClass.hpp" />
     <ClInclude Include="sources\ScreenSaver.h" />
     <QtMoc Include="sources\MainMenu.h" />
-    <QtMoc Include="sources\ActiveGameThread.h" />
+    <QtMoc Include="sources\GameActivityChecker.h" />
     <QtMoc Include="sources\ManaHealthStateAnalyzer.h" />
     <QtMoc Include="sources\ScreenAnalyzer.h" />
     <ClInclude Include="sources\RGBstruct.h" />

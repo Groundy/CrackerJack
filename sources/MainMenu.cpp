@@ -54,7 +54,7 @@ void MainMenu::threadStarter() {
     exit(1);
   }
 
-  if (!connect(&activityThread, &ActiveGameThread::gameStateChanged, this, &MainMenu::onGameStateChanged, exec_in_reciver_option)) {
+  if (!connect(&activityThread, &GameActivityChecker::gameStateChanged, this, &MainMenu::onGameStateChanged, exec_in_reciver_option)) {
     qCritical() << "Failed to connect thread signal of game activity";
     exit(1);
   }
@@ -95,7 +95,7 @@ void MainMenu::changeProfileButtonAction() {
 }
 void MainMenu::onGameStateChanged(int state) {
   QString                                      toWrite = tr("Game status: ");
-  typedef ActiveGameThread::GameActivityStates Type;
+  typedef GameActivityChecker::GameActivityStates Type;
   switch (state) {
     case Type::ACTIVE:
       toWrite += tr("Game active, Logged");
