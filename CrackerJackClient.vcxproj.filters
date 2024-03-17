@@ -60,16 +60,10 @@
     <ClCompile Include="sources\MainMenu.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="sources\ActiveGameThread.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="sources\ScreenAnalyzer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="sources\RGBstruct.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="sources\ManaHealthStateAnalyzer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="sources\JsonParser.cpp">
@@ -108,6 +102,12 @@
     <ClCompile Include="sources\CJ_Image.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="sources\GameActivityChecker.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\VitalityAnalyzer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="sources\SelectProfileWindow.h">
@@ -117,9 +117,6 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="sources\MainMenu.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-    <QtMoc Include="sources\ManaHealthStateAnalyzer.h">
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="sources\ScreenAnalyzer.h">
@@ -143,7 +140,10 @@
     <QtMoc Include="sources\AutoHuntConfigurator.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="sources\ActiveGameThread.h">
+    <QtMoc Include="sources\GameActivityChecker.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="sources\VitalityAnalyzer.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>
@@ -261,18 +261,10 @@
     <ClInclude Include="sources\CJ_Image.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="sources\old_code.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <QtTranslation Include="crackerjackclient_pl.ts">
       <Filter>Translation Files</Filter>
     </QtTranslation>
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="_OLD.hpp">
-      <Filter>Header Files</Filter>
-    </Text>
   </ItemGroup>
 </Project>
