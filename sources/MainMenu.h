@@ -42,8 +42,8 @@ class MainMenu : public QDialog {
 
  private:
   Ui::MainMenu*                  ui;
-  QSharedPointer<Profile>        prof;
-  QSharedPointer<VariablesClass> var;
+  QSharedPointer<Profile>        prof           = QSharedPointer<Profile>(new Profile());
+  QSharedPointer<VariablesClass> var            = QSharedPointer<VariablesClass>(new VariablesClass(prof));
   ActiveGameThread               activityThread = ActiveGameThread(var);  //Change name of this class and variable
 
   ScreenSaver*                         screenSaverThread;
