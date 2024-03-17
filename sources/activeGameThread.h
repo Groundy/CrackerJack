@@ -17,7 +17,7 @@ class ActiveGameThread : public QObject {
   ~ActiveGameThread();
 
  signals:
-  void GameStateChanged(int i);
+  void gameStateChanged(int i);
 
  private:
   GameActivityStates             previousGameState_   = NO_ACTIVE;

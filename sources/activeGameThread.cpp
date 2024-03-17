@@ -16,7 +16,7 @@ ActiveGameThread::~ActiveGameThread() {
 void ActiveGameThread::checkGameState() {
   GameActivityStates gameStateCode = getGameState();
   if (gameStateCode != previousGameState_) {
-    emit GameStateChanged(gameStateCode);
+    emit gameStateChanged(gameStateCode);
   }
 }
 

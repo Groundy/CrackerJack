@@ -62,7 +62,7 @@ void MainMenu::threadStarter() {
     exit(0);
   }
 
-  if (!connect(&activityThread, &ActiveGameThread::GameStateChanged, this, &MainMenu::onGameStateChanged, exec_in_reciver_option)) {
+  if (!connect(&activityThread, &ActiveGameThread::gameStateChanged, this, &MainMenu::onGameStateChanged, exec_in_reciver_option)) {
     qCritical() << "Failed to connect thread signal of game activity";
     exit(0);
   }
