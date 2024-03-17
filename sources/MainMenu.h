@@ -44,15 +44,17 @@ class MainMenu : public QDialog {
   Ui::MainMenu*                  ui;
   QSharedPointer<Profile>        prof           = QSharedPointer<Profile>(new Profile());
   QSharedPointer<VariablesClass> var            = QSharedPointer<VariablesClass>(new VariablesClass(prof));
+  QSharedPointer<GameConnecter>  gameConnector  = QSharedPointer<GameConnecter>(new GameConnecter(var));
   ActiveGameThread               activityThread = ActiveGameThread(var);  //Change name of this class and variable
 
-  ScreenSaver*                         screenSaverThread;
-  ScreenAnalyzer*                      screenAnalyzer;
-  ManaHealthStateAnalyzer*             healthManaStateAnalyzer;
-  ClickDetector*                       clickDetector;
-  AutoHunting*                         huntAutoThread = nullptr;
-  QSharedPointer<GameConnecter>        gameConnector;
+  ScreenSaver             screenSaverThread{this, var, gameConnector};
+  ScreenAnalyzer          screenAnalyzer{this, var};
+  ManaHealthStateAnalyzer healthManaStateAnalyzer{this, var, gameConnector};
+  ClickDetector           clickDetector{this, gameConnector};
+  AutoHunting*            huntAutoThread = nullptr;
+
   ActiveGameThread::GameActivityStates gameActivitystate;
-  void                                 threadStarter();
-  void                                 startAutoHunting();
+
+  void threadStarter();
+  void startAutoHunting();
 };

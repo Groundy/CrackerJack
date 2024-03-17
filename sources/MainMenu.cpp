@@ -20,57 +20,49 @@ MainMenu::MainMenu(QSharedPointer<Profile> prof, QWidget* parent) : QDialog(pare
   threadStarter();
 }
 MainMenu::~MainMenu() {
-  QList<QThread*> threads{screenSaverThread, screenAnalyzer, healthManaStateAnalyzer, huntAutoThread, clickDetector};
+  QList<QThread*> threads{&screenSaverThread, &screenAnalyzer, &healthManaStateAnalyzer, huntAutoThread, &clickDetector};
   for each (QThread* thread in threads) {
     if (thread == nullptr) {
       continue;
     }
     thread->terminate();
-    delete thread;
   }
   delete ui;
 }
 
 //funcs
 void MainMenu::threadStarter() {
-  screenSaverThread = new ScreenSaver(this, var, gameConnector);
-  screenSaverThread->start();
-
-  screenAnalyzer = new ScreenAnalyzer(this, var);
-  screenAnalyzer->start();
-
-  healthManaStateAnalyzer = new ManaHealthStateAnalyzer(this, var, gameConnector);
-
-  clickDetector = new ClickDetector(this, gameConnector);
-  clickDetector->start();
+  screenSaverThread.start();
+  screenAnalyzer.start();
+  clickDetector.start();
 
   const auto exec_in_reciver_option = static_cast<Qt::ConnectionType>(Qt::QueuedConnection | Qt::UniqueConnection);
 
   if (!connect(&Logger::instance(), &Logger::sendMsgToUserConsol, this, &MainMenu::printToUserConsol, exec_in_reciver_option)) {
     qCritical() << "Connection failed. Logger";
-    exit(0);
+    exit(1);
   }
 
   if (!connect(&Logger::instance(), &Logger::sendMsgToUserConsolRed, this, &MainMenu::printToUserConsolRed, exec_in_reciver_option)) {
     qCritical() << "Connection failed. Logger";
-    exit(0);
+    exit(1);
   }
 
-  if (!connect(healthManaStateAnalyzer, &ManaHealthStateAnalyzer::sendValueToMainThread, this, &MainMenu::changedValueOfCharHealthOrMana,
+  if (!connect(&healthManaStateAnalyzer, &ManaHealthStateAnalyzer::sendValueToMainThread, this, &MainMenu::changedValueOfCharHealthOrMana,
                exec_in_reciver_option)) {
     qCritical() << "Connection failed. Health & Mana analyzer";
-    exit(0);
+    exit(1);
   }
 
   if (!connect(&activityThread, &ActiveGameThread::gameStateChanged, this, &MainMenu::onGameStateChanged, exec_in_reciver_option)) {
     qCritical() << "Failed to connect thread signal of game activity";
-    exit(0);
+    exit(1);
   }
 
-  if (!connect(screenAnalyzer, &ScreenAnalyzer::vitalityBarsCut, healthManaStateAnalyzer, &ManaHealthStateAnalyzer::execute,
+  if (!connect(&screenAnalyzer, &ScreenAnalyzer::vitalityBarsCut, &healthManaStateAnalyzer, &ManaHealthStateAnalyzer::execute,
                exec_in_reciver_option)) {
     qCritical() << "Failed to connect execute vitalityBarsAnalyzer";
-    exit(0);
+    exit(1);
   }
 }
 void MainMenu::startAutoHunting() {
