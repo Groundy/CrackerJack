@@ -20,6 +20,9 @@ class ScreenAnalyzer : public QThread {
   ~ScreenAnalyzer();
   void run();
 
+ signals:
+  void vitalityBarsCut();
+
  private:
   const int                      SLEEP_TIME = 50;
   QSharedPointer<VariablesClass> var;

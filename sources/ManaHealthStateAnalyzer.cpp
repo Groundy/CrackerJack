@@ -8,27 +8,26 @@ ManaHealthStateAnalyzer::ManaHealthStateAnalyzer(QObject* parent, QSharedPointer
 ManaHealthStateAnalyzer::~ManaHealthStateAnalyzer() {
   this->terminate();
 }
-void ManaHealthStateAnalyzer::run() {
-  while (true) {
-    msleep(SLEEP_TIME);
-    ValuesDoubles percentages = getCurrentPercentage();
-    if (!percentages.isValid()) continue;
-    sendDataToGui(percentages);
 
-    auto healthMetodes = findRestorationToUse(percentages.health, healthMap);
-    for each (auto methode in healthMetodes) {
-      gameConnector->useRestorationMethode(methode);
-      //var->getVitalitty().clearHealth();
-    }
-    auto manahMetodes = findRestorationToUse(percentages.mana, manaMap);
-    for each (auto methode in manahMetodes) {
-      int additionalManaBreak = calcTimeBetweenManaPots(percentages.mana);
-      gameConnector->useRestorationMethode(methode, additionalManaBreak);
-      //var->getVitalitty().clearMana();
-    }
-
-    handleStates();
+void ManaHealthStateAnalyzer::execute() {
+  ValuesDoubles percentages = getCurrentPercentage();
+  if (!percentages.isValid()) {
+    return;
   }
+  sendDataToGui(percentages);
+
+  auto healthMetodes = findRestorationToUse(percentages.health, healthMap);
+  foreach (auto methode, healthMetodes) {
+    gameConnector->useRestorationMethode(methode);
+  }
+
+  auto manahMetodes = findRestorationToUse(percentages.mana, manaMap);
+  foreach (auto methode, manahMetodes) {
+    int additionalManaBreak = calcTimeBetweenManaPots(percentages.mana);
+    gameConnector->useRestorationMethode(methode, additionalManaBreak);
+  }
+
+  handleStates();
 }
 
 ValuesDoubles ManaHealthStateAnalyzer::toDoubles(ValuesInts currentValues) {

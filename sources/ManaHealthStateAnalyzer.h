@@ -80,17 +80,19 @@ class ManaHealthStateAnalyzer : public QThread {
   ManaHealthStateAnalyzer(QObject* parent, QSharedPointer<VariablesClass> var, QSharedPointer<GameConnecter> gameConnector);
   ~ManaHealthStateAnalyzer();
 
-  void run();
+  void run(){};
 
  signals:
   void demandReCalibration();
   void sendValueToMainThread(double, double, double);
 
+ public slots:
+  void execute();
+
  private:
   QSharedPointer<VariablesClass> var;
   QSharedPointer<GameConnecter>  gameConnector;
   QMap<int, RestorationMethode>  healthMap, manaMap;
-  const int                      SLEEP_TIME = 50;
 
   const int MAX_POSSIBLE_VALUE = 100000;
 

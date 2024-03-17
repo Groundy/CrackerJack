@@ -43,29 +43,37 @@ void MainMenu::threadStarter() {
   screenAnalyzer->start();
 
   healthManaStateAnalyzer = new ManaHealthStateAnalyzer(this, var, gameConnector);
-  healthManaStateAnalyzer->start();
+  //healthManaStateAnalyzer->start();
 
   clickDetector = new ClickDetector(this, gameConnector);
   clickDetector->start();
 
-  if (!connect(&Logger::instance(), &Logger::sendMsgToUserConsol, this, &MainMenu::printToUserConsol, Qt::UniqueConnection)) {
+  const auto exec_in_reciver_option = static_cast<Qt::ConnectionType>(Qt::QueuedConnection | Qt::UniqueConnection);
+
+  if (!connect(&Logger::instance(), &Logger::sendMsgToUserConsol, this, &MainMenu::printToUserConsol, exec_in_reciver_option)) {
     qCritical() << "Connection failed. Logger";
     exit(0);
   }
 
-  if (!connect(&Logger::instance(), &Logger::sendMsgToUserConsolRed, this, &MainMenu::printToUserConsolRed, Qt::UniqueConnection)) {
+  if (!connect(&Logger::instance(), &Logger::sendMsgToUserConsolRed, this, &MainMenu::printToUserConsolRed, exec_in_reciver_option)) {
     qCritical() << "Connection failed. Logger";
     exit(0);
   }
 
   if (!connect(healthManaStateAnalyzer, &ManaHealthStateAnalyzer::sendValueToMainThread, this, &MainMenu::changedValueOfCharHealthOrMana,
-               Qt::UniqueConnection)) {
+               exec_in_reciver_option)) {
     qCritical() << "Connection failed. Health & Mana analyzer";
     exit(0);
   }
 
-  if (!connect(activityThread, &ActiveGameThread::GameStateChanged, this, &MainMenu::onGameStateChanged, Qt::UniqueConnection)) {
+  if (!connect(activityThread, &ActiveGameThread::GameStateChanged, this, &MainMenu::onGameStateChanged, exec_in_reciver_option)) {
     qCritical() << "Failed to connect thread signal of game activity";
+    exit(0);
+  }
+
+  if (!connect(screenAnalyzer, &ScreenAnalyzer::vitalityBarsCut, healthManaStateAnalyzer, &ManaHealthStateAnalyzer::execute,
+               exec_in_reciver_option)) {
+    qCritical() << "Failed to connect execute vitalityBarsAnalyzer";
     exit(0);
   }
 }
