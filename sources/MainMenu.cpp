@@ -74,17 +74,22 @@ void MainMenu::startAutoHunting() {
   huntAutoThread->start();
   ui->playerPosGroup->setVisible(true);
 
+  if (!connect(&screenAnalyzer, &ScreenAnalyzer::miniMapReady, &miniMapAnalyzer, &MinimapAnalyzer::execute, exec_in_reciver_option)) {
+    qCritical() << "Failed to connect execute mini map ready";
+    exit(1);
+  }
+  /*
   if (!connect(huntAutoThread, &AutoHunting::updateHeadingPointInGUI, this, &MainMenu::updateHeadingPoint, Qt::UniqueConnection)) {
     qCritical() << "Failed to connect thread signal. Auto hunt heading point";
-    exit(0);
+    exit(1);
   }
   if (!connect(huntAutoThread, &AutoHunting::updateEnemiesAmountInGUI, this, &MainMenu::updateEnemiesAmount, Qt::UniqueConnection)) {
     qCritical() << "Failed to connect thread signal. Auto hunt enemies amount";
-    exit(0);
+    exit(1);
   }
-  if (!connect(&huntAutoThread->getMiniMapAnalyzer(), &MinimapAnalyzer::sendPostitionsToGUI, this, &MainMenu::updatePlayerPosition,
-               Qt::UniqueConnection)) {
-    qCritical() << "Failed to connect thread signal. Auto hunt enemies amount";
+  */
+  if (!connect(&miniMapAnalyzer, &MinimapAnalyzer::sendPostitionsToGUI, this, &MainMenu::updatePlayerPosition, Qt::UniqueConnection)) {
+    qCritical() << "Failed to connect thread signal. player position";
     exit(0);
   }
 }

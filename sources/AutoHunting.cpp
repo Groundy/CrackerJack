@@ -6,8 +6,6 @@ AutoHunting::AutoHunting(QObject* parent, QSharedPointer<VariablesClass> var, QS
   attackMethodes       = data.getAttacks();
   minEnemiesToStop     = data.getMinMonToStop();
   minEnemiesToContinue = data.getMinMonToContinue();
-  miniMapAnalyzer      = new MinimapAnalyzer(parent, var);
-  miniMapAnalyzer->start();
 }
 
 AutoHunting::~AutoHunting() = default;
@@ -32,9 +30,6 @@ void AutoHunting::run() {
     // clickOnMiddleOfCompass();
   }
 }
-MinimapAnalyzer& AutoHunting::getMiniMapAnalyzer() {
-  return *miniMapAnalyzer;
-};
 QPoint AutoHunting::getDistFromOnePtToAnother(QPoint start, QPoint end) {
   return QPoint(end.x() - start.x(), end.y() - start.y());
 }

@@ -52,7 +52,7 @@ class MainMenu : public QDialog {
   VitalityAnalyzer healthManaStateAnalyzer{this, var, gameConnector};
   ClickDetector    clickDetector{this, gameConnector};
   AutoHunting*     huntAutoThread = nullptr;
-
+  MinimapAnalyzer                         miniMapAnalyzer{this, var};
   GameActivityChecker::GameActivityStates gameActivitystate;
 
   void threadStarter();

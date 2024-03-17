@@ -17,7 +17,6 @@ class AutoHunting : public QThread {
   AutoHunting(QObject* parent, QSharedPointer<VariablesClass> var, QSharedPointer<GameConnecter> gameConnector, Route route);
   ~AutoHunting();
   void             run();
-  MinimapAnalyzer& getMiniMapAnalyzer();
 
  signals:
   void updateHeadingPointInGUI(QString);
@@ -44,9 +43,9 @@ class AutoHunting : public QThread {
   int                            lastAnalyzeEnemiesNumber    = 0;
   int                            minEnemiesToStop            = 2;
   int                            minEnemiesToContinue        = 0;
-  MinimapAnalyzer*               miniMapAnalyzer;
   QStringList                    alloweNamesOnBattleList;
   Logger&                        logger = Logger::instance();
+
 
   QPoint getDistFromOnePtToAnother(QPoint start, QPoint end);
   QPoint addTwoPoints(QPoint start, QPoint end);
