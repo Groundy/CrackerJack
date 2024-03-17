@@ -17,16 +17,18 @@ class MinimapAnalyzer : public QThread {
  public:
   MinimapAnalyzer(QObject* parent, QSharedPointer<VariablesClass> var);
   ~MinimapAnalyzer();
-  void run();
 
  signals:
   void sendPostitionsToGUI(QString, QString, QString);
+
+ public slots:
+  void execute();
 
  private:
   enum class MapType { REGULAR, WAYPOINT };
 
   QSharedPointer<VariablesClass> var;
-  const int                      SLEEP_TIME_BETWEEN_LOOPS = 20, SLEEP_TIME_NO_ACTIVE = 1000;
+  const int                      TIMER_INTERVAL = 20;
   const int                      MIN_LAYER = -8, MAX_LAYER = 7;
   const QImage                   LAYER_SLIDER_IMG = setSliderImg();
   const int                      MIN_X_MAP_INDEX = 124, MAX_X_MAP_INDEX = 134, MIN_Y_MAP_INDEX = 121, MAX_Y_MAP_INDEX = 129;
@@ -43,17 +45,3 @@ class MinimapAnalyzer : public QThread {
   QRect           getFrameToLookByPreviousPos();
   QPoint          getVectorToPlayerFromImgPieceIndex(int index);
 };
-
-/*
-class ImgShearcher : public QThread {
-        Q_OBJECT
-public:
-        ImgShearcher(QObject* parent, const QImage& imgSmall, const QImage&
-imgBig, QPoint& foundStartPostiton, QRect frameToLookFor) : QThread(parent),
-imgSmall(imgSmall), imgBig(imgBig), foundStartPostiton(foundStartPostiton),
-frameToLookFor(frameToLookFor) {}; const QImage& imgSmall, & imgBig; QPoint&
-foundStartPostiton; QRect frameToLookFor; void run() { foundStartPostiton =
-ImgEditor::findExactStartPositionInImg(imgSmall, imgBig, frameToLookFor);
-        }
-};
-*/

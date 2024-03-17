@@ -44,9 +44,13 @@ void ScreenAnalyzer::execute() {
   }
   analyzeBattleList(img);
   deleteScreenShotFolder();
+
   cutHealthManaImgs(img);
-  emit vitalityBarsCut();
+  emit vitalityBarsReady();
+
   analyzeMiniMap(img);
+  emit miniMapReady();
+
   analyzeEquipment(img);
 }
 

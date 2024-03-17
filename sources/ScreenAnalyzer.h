@@ -21,13 +21,15 @@ class ScreenAnalyzer : public QThread {
   ~ScreenAnalyzer();
 
  signals:
-  void vitalityBarsCut();
+  void vitalityBarsReady();
+  void miniMapReady();
 
  private:
   const int                      SLEEP_TIME = 50;
   QSharedPointer<VariablesClass> var;
   QDir                           screenShotFolder;
   Logger&                        logger = Logger::instance();
+  QTimer                         screenAnalyzerTimer;
 
   void    deleteScreenShotFolder();
   QString getNameOfLastTakenScreenShot();
@@ -37,6 +39,5 @@ class ScreenAnalyzer : public QThread {
   void    analyzeBattleList(const QImage& fullscreen);
   void    analyzeMiniMap(const QImage& fullscreen);
   void    analyzeEquipment(const QImage& fullscreen);
-  QTimer  screenAnalyzerTimer;
   void    execute();
 };

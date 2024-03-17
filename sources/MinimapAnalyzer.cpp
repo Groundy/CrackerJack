@@ -3,40 +3,36 @@
 MinimapAnalyzer::MinimapAnalyzer(QObject* parent, QSharedPointer<VariablesClass> var) : QThread(parent), var(var) {}
 MinimapAnalyzer::~MinimapAnalyzer(){};
 
-void MinimapAnalyzer::run() {
+void MinimapAnalyzer::execute() {
   QMap<int, QImage*> floorsMaps;
-  while (true) {
-    msleep(SLEEP_TIME_BETWEEN_LOOPS);
-    if (!var->getSettings().getKeepAnalyzeMiniMap()) {
-      msleep(SLEEP_TIME_BETWEEN_LOOPS);
-      continue;
-    }
-    QImage miniMap, miniMapLayer;
-    var->getMiniMap().getImgMiniMap(miniMap);
-    var->getMiniMap().getImgMiniMapLayer(miniMapLayer);
-    if (miniMap.isNull() || miniMapLayer.isNull()) {
-      continue;
-    }
-
-    int currentLayer = getCurrentLayer(miniMapLayer);
-    if (!floorsMaps.contains(currentLayer)) {
-      QString path = PathResource::getPathToMap(currentLayer);
-      floorsMaps.insert(currentLayer, new QImage(path));
-    }
-    auto currentPosition = findPlayerPosition(miniMap, *floorsMaps[currentLayer]);
-    previousPosition     = currentPosition;
-
-    if (!currentPosition.isNull())
-      sendPostitionsToGUI(QString::number(currentPosition.x()), QString::number(currentPosition.y()), QString::number(currentLayer));
-    else
-      sendPostitionsToGUI("?", "?", QString::number(currentLayer));
-
-    Point3D toSet(currentPosition.x(), currentPosition.y(), currentLayer);
-    if (toSet.isValid())
-      var->getPosition().setPlayerPos(toSet);
-    else
-      var->getPosition().clear();
+  if (!var->getSettings().getKeepAnalyzeMiniMap()) {
+    return;
   }
+  QImage miniMap, miniMapLayer;
+  var->getMiniMap().getImgMiniMap(miniMap);
+  var->getMiniMap().getImgMiniMapLayer(miniMapLayer);
+  if (miniMap.isNull() || miniMapLayer.isNull()) {
+    return;
+  }
+
+  int currentLayer = getCurrentLayer(miniMapLayer);
+  if (!floorsMaps.contains(currentLayer)) {
+    QString path = PathResource::getPathToMap(currentLayer);
+    floorsMaps.insert(currentLayer, new QImage(path));
+  }
+  auto currentPosition = findPlayerPosition(miniMap, *floorsMaps[currentLayer]);
+  previousPosition     = currentPosition;
+
+  if (!currentPosition.isNull())
+    sendPostitionsToGUI(QString::number(currentPosition.x()), QString::number(currentPosition.y()), QString::number(currentLayer));
+  else
+    sendPostitionsToGUI("?", "?", QString::number(currentLayer));
+
+  Point3D toSet(currentPosition.x(), currentPosition.y(), currentLayer);
+  if (toSet.isValid())
+    var->getPosition().setPlayerPos(toSet);
+  else
+    var->getPosition().clear();
 }
 QImage MinimapAnalyzer::setSliderImg() {
   QString path = PathResource::getPathToMiniMapSliderImg();
