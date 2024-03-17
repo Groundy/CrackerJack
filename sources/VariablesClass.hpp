@@ -50,14 +50,14 @@ class VariablesClass {
 
  private:
   QSharedPointer<Profile> prof;
-  GameProcessData         gameProcess;
-  GameWindow              gameWindow;
-  BattleList              battleList;
-  Settings                settings;
-  Timers                  timers;
-  Vitallity               vitalitty;
-  MiniMap                 minimap;
-  PlayerPosition          position;
-  Equipment               eq;
+  GameProcessData         gameProcess{};
+  GameWindow              gameWindow{};
+  BattleList              battleList{};
+  Settings                settings{};
+  Timers                  timers{};
+  Vitallity               vitalitty{};
+  MiniMap                 minimap{};
+  PlayerPosition          position{};
+  Equipment               eq{};
   // MutexImg fullImage;
 };
