@@ -94,7 +94,8 @@ class ManaHealthStateAnalyzer : public QThread {
   QSharedPointer<GameConnecter>  gameConnector;
   QMap<int, RestorationMethode>  healthMap, manaMap;
 
-  const int MAX_POSSIBLE_VALUE = 100000;
+  const int  MAX_POSSIBLE_VALUE = 100000;
+  const uint ONE_SEC            = 1000;
 
   qint64 lastTimeHasted   = now();
   qint64 lastTimeUpgraded = now();

@@ -20,7 +20,7 @@ MainMenu::MainMenu(QSharedPointer<Profile> prof, QWidget* parent) : QDialog(pare
   threadStarter();
 }
 MainMenu::~MainMenu() {
-  QList<QThread*> threads{activityThread, screenSaverThread, screenAnalyzer, healthManaStateAnalyzer, huntAutoThread, clickDetector};
+  QList<QThread*> threads{screenSaverThread, screenAnalyzer, healthManaStateAnalyzer, huntAutoThread, clickDetector};
   for each (QThread* thread in threads) {
     if (thread == nullptr) {
       continue;
@@ -33,9 +33,6 @@ MainMenu::~MainMenu() {
 
 //funcs
 void MainMenu::threadStarter() {
-  activityThread = new ActiveGameThread(this, var);
-  activityThread->start();
-
   screenSaverThread = new ScreenSaver(this, var, gameConnector);
   screenSaverThread->start();
 
@@ -43,7 +40,6 @@ void MainMenu::threadStarter() {
   screenAnalyzer->start();
 
   healthManaStateAnalyzer = new ManaHealthStateAnalyzer(this, var, gameConnector);
-  //healthManaStateAnalyzer->start();
 
   clickDetector = new ClickDetector(this, gameConnector);
   clickDetector->start();
@@ -66,7 +62,7 @@ void MainMenu::threadStarter() {
     exit(0);
   }
 
-  if (!connect(activityThread, &ActiveGameThread::GameStateChanged, this, &MainMenu::onGameStateChanged, exec_in_reciver_option)) {
+  if (!connect(&activityThread, &ActiveGameThread::GameStateChanged, this, &MainMenu::onGameStateChanged, exec_in_reciver_option)) {
     qCritical() << "Failed to connect thread signal of game activity";
     exit(0);
   }

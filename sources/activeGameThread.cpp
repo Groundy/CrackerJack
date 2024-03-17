@@ -1,19 +1,26 @@
 #include "ActiveGameThread.h"
 
-ActiveGameThread::ActiveGameThread(QObject* parent, QSharedPointer<VariablesClass> var) : QThread(parent), var_(var) {}
-ActiveGameThread::~ActiveGameThread() {
-  this->terminate();
+ActiveGameThread::ActiveGameThread(QSharedPointer<VariablesClass> var) : var_(var) {
+  checkGameStateTimer_.setInterval(TIMER_INTERVAL);
+  if (!QObject::connect(&checkGameStateTimer_, &QTimer::timeout, this, &ActiveGameThread::checkGameState, Qt::UniqueConnection)) {
+    qCritical() << "Failed to connect game activity timer.";
+    exit(1);
+  }
+  checkGameStateTimer_.start();
 }
-void ActiveGameThread::run() {
-  while (true) {
-    int gameStateCode = checkGameState();
-    if (gameStateCode != previousGameState_) {
-      emit GameStateChanged(gameStateCode);
-    }
-    msleep(SLEEP_TIME_);
+
+ActiveGameThread::~ActiveGameThread() {
+  checkGameStateTimer_.stop();
+}
+
+void ActiveGameThread::checkGameState() {
+  GameActivityStates gameStateCode = getGameState();
+  if (gameStateCode != previousGameState_) {
+    emit GameStateChanged(gameStateCode);
   }
 }
-QString ActiveGameThread::getGameWindowTitile() const{
+
+QString ActiveGameThread::getGameWindowTitile() const {
   for (HWND hwnd = GetTopWindow(NULL); hwnd != NULL; hwnd = GetNextWindow(hwnd, GW_HWNDNEXT)) {
     if (!IsWindowVisible(hwnd)) {
       continue;
@@ -46,7 +53,7 @@ QString ActiveGameThread::getGameWindowTitile() const{
   }
   return QString();
 }
-uint ActiveGameThread::getGamePid(const QMap<QString, unsigned int>& processes) const{
+uint ActiveGameThread::getGamePid(const QMap<QString, unsigned int>& processes) const {
   auto iteratorToProcess = processes.find(GAME_PROCESS_NAME_);
   if (iteratorToProcess == processes.end()) {
     qDebug() << "Can't find Game on running processes list!";
@@ -76,7 +83,8 @@ int ActiveGameThread::windowIsAccessible(const uint PID, const QString& windowTi
   }
   return ACTIVE;
 }
-int ActiveGameThread::checkGameState() {
+
+ActiveGameThread::GameActivityStates ActiveGameThread::getGameState() {
   auto    processes   = getListOfRunningProcess();
   uint    PID         = getGamePid(processes);
   QString windowTitle = getGameWindowTitile();
@@ -99,7 +107,7 @@ int ActiveGameThread::checkGameState() {
       var_->getGameProcess().setPid(PID);
     }
   }
-  return gameWinState;
+  return GameActivityStates(gameWinState);
 }
 QMap<QString, unsigned int> ActiveGameThread::getListOfRunningProcess() {
   QMap<QString, unsigned int> toRet;

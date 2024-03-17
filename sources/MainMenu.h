@@ -41,15 +41,16 @@ class MainMenu : public QDialog {
   void updateHeadingPoint(QString toDisplay);
 
  private:
-  Ui::MainMenu*                        ui;
-  QSharedPointer<Profile>              prof;
-  ActiveGameThread*                    activityThread;
+  Ui::MainMenu*                  ui;
+  QSharedPointer<Profile>        prof;
+  QSharedPointer<VariablesClass> var;
+  ActiveGameThread               activityThread = ActiveGameThread(var);  //Change name of this class and variable
+
   ScreenSaver*                         screenSaverThread;
   ScreenAnalyzer*                      screenAnalyzer;
   ManaHealthStateAnalyzer*             healthManaStateAnalyzer;
   ClickDetector*                       clickDetector;
   AutoHunting*                         huntAutoThread = nullptr;
-  QSharedPointer<VariablesClass>       var;
   QSharedPointer<GameConnecter>        gameConnector;
   ActiveGameThread::GameActivityStates gameActivitystate;
   void                                 threadStarter();

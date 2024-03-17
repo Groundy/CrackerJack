@@ -7,26 +7,26 @@ class GameProcessData {
   GameProcessData()  = default;
   ~GameProcessData() = default;
   uint getPid() const {
-    return pid;
+    return pid_;
   }
   void setPid(const uint newPid) {
-    pid = newPid;
+    pid_ = newPid;
   }
   QString getNameOfGameWindow() const {
-    return nameOfGameWindow;
+    return nameOfGameWindow_;
   }
   void setNameOfGameWindow(const QString& newNameOfGameWindow) {
-    nameOfGameWindow = newNameOfGameWindow;
+    nameOfGameWindow_ = newNameOfGameWindow;
   }
   HWND getHandlerToGameThread() {
-    return handlerToGameThread;
+    return handlerToGameThread_;
   }
-  void setHandlerToGameThread(const HWND newHandlerToGameThread) {
-    handlerToGameThread = newHandlerToGameThread;
+  void setHandlerToGameThread(const HWND& newHandlerToGameThread) {
+    handlerToGameThread_ = newHandlerToGameThread;
   }
 
  private:
-  std::atomic<uint> pid;
-  std::atomic<HWND> handlerToGameThread;
-  QString           nameOfGameWindow;
+  std::atomic<uint> pid_                 = 0x0;
+  std::atomic<HWND> handlerToGameThread_ = HWND();
+  QString           nameOfGameWindow_    = QString();
 };

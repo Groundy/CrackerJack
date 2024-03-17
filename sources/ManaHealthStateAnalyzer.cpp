@@ -251,10 +251,10 @@ bool ManaHealthStateAnalyzer::restMethodeCanBeUsed(const RestorationMethode& res
   const auto   type   = restMethode.getType();
 
   if (type == RestorationMethode::Type::POTION) {
-    if (now < timers.getTimeLastItemUsageGeneral() + (1000 * restMethode.getCdGroup())) {
+    if (now < timers.getTimeLastItemUsageGeneral() + (ONE_SEC * restMethode.getCdGroup())) {
       return false;
     }
-    if (now < timers.getTimeLastItemUsage(restMethode.getName()) + (1000 * restMethode.getCd())) {
+    if (now < timers.getTimeLastItemUsage(restMethode.getName()) + (ONE_SEC * restMethode.getCd())) {
       return false;
     }
     return true;  // todo later should be added checking if char has proper pot!
@@ -262,10 +262,10 @@ bool ManaHealthStateAnalyzer::restMethodeCanBeUsed(const RestorationMethode& res
     if (var->getVitalitty().getCurrentRawManaVal() < restMethode.getMana()) {
       return false;
     }
-    if (now < timers.getTimeLastSpellUsageHealing() + (1000 * restMethode.getCdGroup())) {
+    if (now < timers.getTimeLastSpellUsageHealing() + (ONE_SEC * restMethode.getCdGroup())) {
       return false;
     }
-    if (now < timers.getTimeLastSpellUsed(restMethode.getName()) + (1000 * restMethode.getCd())) {
+    if (now < timers.getTimeLastSpellUsed(restMethode.getName()) + (ONE_SEC * restMethode.getCd())) {
       return false;
     }
     return true;
@@ -296,7 +296,7 @@ void ManaHealthStateAnalyzer::handleHaste(bool keepHasting, QVector<Equipment::S
     return;
   }
   qint64 currentTime = now();
-  bool   canHaste    = currentTime >= lastTimeHasted + 1333;
+  bool   canHaste    = currentTime >= lastTimeHasted + (1.3 * ONE_SEC);
   if (!canHaste) {
     return;
   }
@@ -312,7 +312,7 @@ void ManaHealthStateAnalyzer::handleUpgrade(bool keepUpgraded, QVector<Equipment
     return;
   }
   qint64 currentTime = now();
-  bool   canUpgrade  = currentTime >= lastTimeUpgraded + 20000;
+  bool   canUpgrade  = currentTime >= lastTimeUpgraded + (20 * ONE_SEC);
   if (!canUpgrade) {
     return;
   }
