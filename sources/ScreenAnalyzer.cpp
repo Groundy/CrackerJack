@@ -2,47 +2,52 @@
 
 ScreenAnalyzer::ScreenAnalyzer(QObject* parent, QSharedPointer<VariablesClass> var) : QThread(parent), var(var) {
   auto screenshotDir = PathResource::getScreenShotFolder();
-  if (!screenshotDir.has_value()) {
+  if (screenshotDir.has_value()) {
+    screenShotFolder = screenshotDir.value();
+  } else {
     qCritical() << "No screenshot directory";
-    exit(0);
+    exit(1);
   }
-  screenShotFolder = screenshotDir.value();
   var->getSettings().setLoadingState(true);
   deleteScreenShotFolder();
+  screenAnalyzerTimer.setInterval(SLEEP_TIME);
+  if (!connect(&screenAnalyzerTimer, &QTimer::timeout, this, &ScreenAnalyzer::execute)) {
+    qCritical() << "Failed to connect ScreenAnalyzer timer";
+    exit(1);
+  }
+  screenAnalyzerTimer.start();
 }
 
 ScreenAnalyzer::~ScreenAnalyzer() {
+  screenAnalyzerTimer.stop();
   deleteScreenShotFolder();
   this->terminate();
 }
 
-void ScreenAnalyzer::run() {
-  while (true) {
-    msleep(SLEEP_TIME);
-    if (!var->getSettings().getLoadingState()) {
-      continue;
-    }
-    QImage img;
-    bool   openCorrectly = loadScreen(img);
-    if (!openCorrectly) {
-      continue;
-    }
-    if (var->getVitalitty().needCalibration()) {
-      bool basicCalibrationOk = Calibrator(var).calibrateBasicAreas(img);
-      if (!basicCalibrationOk) {
-        QString msg = "Problem z kalibracja!";
-        logger.log(msg, true, true, false);
-        deleteScreenShotFolder();
-        continue;
-      }
-    }
-    analyzeBattleList(img);
-    deleteScreenShotFolder();
-    cutHealthManaImgs(img);
-    emit vitalityBarsCut();
-    analyzeMiniMap(img);
-    analyzeEquipment(img);
+void ScreenAnalyzer::execute() {
+  if (!var->getSettings().getLoadingState()) {
+    return;
   }
+  QImage img;
+  bool   openCorrectly = loadScreen(img);
+  if (!openCorrectly) {
+    return;
+  }
+  if (var->getVitalitty().needCalibration()) {
+    bool basicCalibrationOk = Calibrator(var).calibrateBasicAreas(img);
+    if (!basicCalibrationOk) {
+      QString msg = "Problem z kalibracja!";
+      logger.log(msg, true, true, false);
+      deleteScreenShotFolder();
+      return;
+    }
+  }
+  analyzeBattleList(img);
+  deleteScreenShotFolder();
+  cutHealthManaImgs(img);
+  emit vitalityBarsCut();
+  analyzeMiniMap(img);
+  analyzeEquipment(img);
 }
 
 bool ScreenAnalyzer::loadScreen(QImage& img) {
@@ -56,6 +61,7 @@ bool ScreenAnalyzer::loadScreen(QImage& img) {
   }
   return !img.isNull();
 }
+
 QString ScreenAnalyzer::getNameOfLastTakenScreenShot() {
   QStringList filtr = QStringList() << "*_*_*_Hotkey.png";
   screenShotFolder.refresh();
@@ -142,10 +148,10 @@ void ScreenAnalyzer::analyzeMiniMap(const QImage& fullscreen) {
 
   QRect frame = var->getMiniMap().getFrameMiniMap();
   var->getMiniMap().setImgMiniMap(fullscreen.copy(frame));
-  const QPoint DIFF_DIST_SINCE_TOPLEFT_MINIMAP       = QPoint(137, 41);
-  const QPoint TOP_LEFT_START_OF_MINIMAP_LAYER_FRAME = frame.topLeft() + DIFF_DIST_SINCE_TOPLEFT_MINIMAP;
-  const QSize  SIZE_MINIMAP_LAYER_FRAME              = QSize(24, 71);
-  QRect        miniMapLayerFrame(TOP_LEFT_START_OF_MINIMAP_LAYER_FRAME, SIZE_MINIMAP_LAYER_FRAME);
+  constexpr QPoint DIFF_DIST_SINCE_TOPLEFT_MINIMAP       = QPoint(137, 41);
+  const QPoint     TOP_LEFT_START_OF_MINIMAP_LAYER_FRAME = frame.topLeft() + DIFF_DIST_SINCE_TOPLEFT_MINIMAP;
+  constexpr QSize  SIZE_MINIMAP_LAYER_FRAME              = QSize(24, 71);
+  QRect            miniMapLayerFrame(TOP_LEFT_START_OF_MINIMAP_LAYER_FRAME, SIZE_MINIMAP_LAYER_FRAME);
   var->getMiniMap().setImgMiniMapLayer(fullscreen.copy(miniMapLayerFrame));
 }
 void ScreenAnalyzer::analyzeEquipment(const QImage& fullscreen) {

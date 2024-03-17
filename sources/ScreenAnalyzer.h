@@ -5,6 +5,7 @@
 #include <qdir.h>
 #include <qimage.h>
 #include <qmap.h>
+#include <qtimer.h>
 
 #include "Calibrator.h"
 #include "Equipment.hpp"
@@ -18,7 +19,6 @@ class ScreenAnalyzer : public QThread {
  public:
   ScreenAnalyzer(QObject* parent, QSharedPointer<VariablesClass> var);
   ~ScreenAnalyzer();
-  void run();
 
  signals:
   void vitalityBarsCut();
@@ -37,4 +37,6 @@ class ScreenAnalyzer : public QThread {
   void    analyzeBattleList(const QImage& fullscreen);
   void    analyzeMiniMap(const QImage& fullscreen);
   void    analyzeEquipment(const QImage& fullscreen);
+  QTimer  screenAnalyzerTimer;
+  void    execute();
 };

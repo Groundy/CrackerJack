@@ -239,7 +239,7 @@ xcopy /y /d ".\dependencies\32-bit\libcrypto-1_1.dll" "$(OutDir)"
     <ClCompile Include="sources\Calibrator.cpp" />
     <ClCompile Include="sources\JsonParser.cpp" />
     <ClCompile Include="sources\MainMenu.cpp" />
-    <ClCompile Include="sources\ManaHealthStateAnalyzer.cpp" />
+    <ClCompile Include="sources\VitalityAnalyzer.cpp" />
     <ClCompile Include="sources\MinimapAnalyzer.cpp" />
     <ClCompile Include="sources\NewProfileConfiguartor.cpp" />
     <ClCompile Include="sources\Key.cpp" />
@@ -301,7 +301,7 @@ xcopy /y /d ".\dependencies\32-bit\libcrypto-1_1.dll" "$(OutDir)"
     <ClInclude Include="sources\ScreenSaver.h" />
     <QtMoc Include="sources\MainMenu.h" />
     <QtMoc Include="sources\GameActivityChecker.h" />
-    <QtMoc Include="sources\ManaHealthStateAnalyzer.h" />
+    <QtMoc Include="sources\VitalityAnalyzer.h" />
     <QtMoc Include="sources\ScreenAnalyzer.h" />
     <ClInclude Include="sources\RGBstruct.h" />
     <ClInclude Include="sources\JsonParser.h" />

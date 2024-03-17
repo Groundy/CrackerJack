@@ -74,11 +74,11 @@ struct ValuesDoubles {
   double health, mana, manaShield;
 };
 
-class ManaHealthStateAnalyzer : public QThread {
+class VitalityAnalyzer : public QThread {
   Q_OBJECT
  public:
-  ManaHealthStateAnalyzer(QObject* parent, QSharedPointer<VariablesClass> var, QSharedPointer<GameConnecter> gameConnector);
-  ~ManaHealthStateAnalyzer();
+  VitalityAnalyzer(QObject* parent, QSharedPointer<VariablesClass> var, QSharedPointer<GameConnecter> gameConnector);
+  ~VitalityAnalyzer();
 
   void run(){};
 

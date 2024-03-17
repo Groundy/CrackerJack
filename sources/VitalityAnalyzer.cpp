@@ -1,15 +1,14 @@
-#include "ManaHealthStateAnalyzer.h"
+#include "VitalityAnalyzer.h"
 
-ManaHealthStateAnalyzer::ManaHealthStateAnalyzer(QObject* parent, QSharedPointer<VariablesClass> var,
-                                                 QSharedPointer<GameConnecter> gameConnector)
+VitalityAnalyzer::VitalityAnalyzer(QObject* parent, QSharedPointer<VariablesClass> var, QSharedPointer<GameConnecter> gameConnector)
     : QThread(parent), var(var), gameConnector(gameConnector) {
   populateHealthManaMaps(var->getProf().get());
 }
-ManaHealthStateAnalyzer::~ManaHealthStateAnalyzer() {
+VitalityAnalyzer::~VitalityAnalyzer() {
   this->terminate();
 }
 
-void ManaHealthStateAnalyzer::execute() {
+void VitalityAnalyzer::execute() {
   ValuesDoubles percentages = getCurrentPercentage();
   if (!percentages.isValid()) {
     return;
@@ -30,7 +29,7 @@ void ManaHealthStateAnalyzer::execute() {
   handleStates();
 }
 
-ValuesDoubles ManaHealthStateAnalyzer::toDoubles(ValuesInts currentValues) {
+ValuesDoubles VitalityAnalyzer::toDoubles(ValuesInts currentValues) {
   double healthPercentage;
   if (currentValues.isHealthOk())
     healthPercentage = 100.0 * currentValues.health / currentValues.maxHealth;
@@ -51,7 +50,7 @@ ValuesDoubles ManaHealthStateAnalyzer::toDoubles(ValuesInts currentValues) {
   ValuesDoubles toRet(healthPercentage, manaPercentage, manaShieldPercentage);
   return toRet;
 }
-bool ManaHealthStateAnalyzer::populateHealthManaMaps(const Profile* profile) {
+bool VitalityAnalyzer::populateHealthManaMaps(const Profile* profile) {
   auto         healthRestorationsMethode = profile->getRestMethodesHealth();
   QVector<int> healthThresholds;
   for each (auto var in healthRestorationsMethode) healthThresholds.push_back(var.getThreshold());
@@ -78,7 +77,7 @@ bool ManaHealthStateAnalyzer::populateHealthManaMaps(const Profile* profile) {
 
   return true;
 }
-ValuesStrs ManaHealthStateAnalyzer::toStrsValues(FoundFlags foundFlags, ImageValues imgVals) {
+ValuesStrs VitalityAnalyzer::toStrsValues(FoundFlags foundFlags, ImageValues imgVals) {
   ValuesStrs strVals;
 
   strVals.health     = foundFlags.health ? imgVals.health.toString().remove("\0") : QString();
@@ -98,7 +97,7 @@ ValuesStrs ManaHealthStateAnalyzer::toStrsValues(FoundFlags foundFlags, ImageVal
   return strVals;
 }
 
-ValuesInts ManaHealthStateAnalyzer::toIntsValues(FoundFlags foundFlags, ValuesStrs valueStrs) {
+ValuesInts VitalityAnalyzer::toIntsValues(FoundFlags foundFlags, ValuesStrs valueStrs) {
   ValuesInts valuesInts;
   if (foundFlags.health) {
     getValuesFromStringRegularCase(valueStrs.health, valuesInts.health, valuesInts.maxHealth);
@@ -114,7 +113,7 @@ ValuesInts ManaHealthStateAnalyzer::toIntsValues(FoundFlags foundFlags, ValuesSt
   }
   return valuesInts;
 };
-FoundFlags ManaHealthStateAnalyzer::getFoundFlags() {
+FoundFlags VitalityAnalyzer::getFoundFlags() {
   FoundFlags flags;
   flags.health   = !var->getVitalitty().getHealthArea().isEmpty();
   flags.mana     = !var->getVitalitty().getManaArea().isEmpty();
@@ -122,7 +121,7 @@ FoundFlags ManaHealthStateAnalyzer::getFoundFlags() {
   flags.shield   = !var->getVitalitty().getMSArea().isEmpty();
   return flags;
 }
-bool ManaHealthStateAnalyzer::getValuesFromStringRegularCase(QString in, int& current, int& max) {
+bool VitalityAnalyzer::getValuesFromStringRegularCase(QString in, int& current, int& max) {
   const QStringList partOfStr = in.split("\\");  //wanted form of input currentVal/maxVal
   if (partOfStr.size() != 2) {
     qWarning() << "ManaHealthAnalyzer recived wrong input, input = " + in;
@@ -140,8 +139,8 @@ bool ManaHealthStateAnalyzer::getValuesFromStringRegularCase(QString in, int& cu
   max     = maxVal;
   return true;
 }
-bool ManaHealthStateAnalyzer::getValuesFromStringOfCombinedBox(QString in, int& currentMana, int& maxMana, int& currentManaShield,
-                                                               int& maxManaShield) {
+bool VitalityAnalyzer::getValuesFromStringOfCombinedBox(QString in, int& currentMana, int& maxMana, int& currentManaShield,
+                                                        int& maxManaShield) {
   //wanted form of input manaMinVal/maxVal(minShieldValue/maxShieldValue)
   bool inputOk = in.count("\\") == 2 && in.count("(") == 1 && in.count(")") == 1;
   if (!inputOk) {
@@ -173,8 +172,7 @@ bool ManaHealthStateAnalyzer::getValuesFromStringOfCombinedBox(QString in, int& 
   maxManaShield     = maxManaShieldTMP;
   return true;
 }
-QVector<RestorationMethode> ManaHealthStateAnalyzer::findRestorationToUse(double                               currentValue,
-                                                                          const QMap<int, RestorationMethode>& methodes) {
+QVector<RestorationMethode> VitalityAnalyzer::findRestorationToUse(double currentValue, const QMap<int, RestorationMethode>& methodes) {
   QVector<RestorationMethode> toRet = {};
   if (methodes.size() == 0) {
     return toRet;
@@ -208,7 +206,7 @@ QVector<RestorationMethode> ManaHealthStateAnalyzer::findRestorationToUse(double
   }
   return toRet;
 }
-ValuesDoubles ManaHealthStateAnalyzer::getCurrentPercentage() {
+ValuesDoubles VitalityAnalyzer::getCurrentPercentage() {
   if (!var->getSettings().getRestoringState()) return ValuesDoubles();
   ImageValues imgs = getImages();
   if (!imgs.isValid()) return ValuesDoubles();
@@ -226,16 +224,16 @@ ValuesDoubles ManaHealthStateAnalyzer::getCurrentPercentage() {
 
   return percentages;
 }
-void ManaHealthStateAnalyzer::sendDataToGui(ValuesDoubles currentValues) {
+void VitalityAnalyzer::sendDataToGui(ValuesDoubles currentValues) {
   emit sendValueToMainThread(currentValues.health, currentValues.mana, currentValues.manaShield);
 }
-void ManaHealthStateAnalyzer::writeDataToVariableClass(ValuesDoubles values) {
+void VitalityAnalyzer::writeDataToVariableClass(ValuesDoubles values) {
   var->getVitalitty().setCurrentPercentage(values.health, values.mana, values.manaShield);
 }
-void ManaHealthStateAnalyzer::writeDataToVariableClass(ValuesInts values) {
+void VitalityAnalyzer::writeDataToVariableClass(ValuesInts values) {
   var->getVitalitty().setCurrentRawValues(values.health, values.mana, values.shield);
 }
-ImageValues ManaHealthStateAnalyzer::getImages() {
+ImageValues VitalityAnalyzer::getImages() {
   ImageValues toRet;
   bool        clearImgs = var->getSettings().getClearVitalityImgs();
 
@@ -245,7 +243,7 @@ ImageValues ManaHealthStateAnalyzer::getImages() {
   var->getVitalitty().getImageCombined(toRet.combined, clearImgs);
   return toRet;
 }
-bool ManaHealthStateAnalyzer::restMethodeCanBeUsed(const RestorationMethode& restMethode) {
+bool VitalityAnalyzer::restMethodeCanBeUsed(const RestorationMethode& restMethode) {
   const qint64 now    = QDateTime::currentMSecsSinceEpoch();
   Timers&      timers = var->getTimers();
   const auto   type   = restMethode.getType();
@@ -273,10 +271,10 @@ bool ManaHealthStateAnalyzer::restMethodeCanBeUsed(const RestorationMethode& res
     return false;
   }
 }
-int ManaHealthStateAnalyzer::calcTimeBetweenManaPots(int currentManaPercentage) {
+int VitalityAnalyzer::calcTimeBetweenManaPots(int currentManaPercentage) {
   return 1200 * currentManaPercentage / 100.0;
 }
-void ManaHealthStateAnalyzer::handleStates() {
+void VitalityAnalyzer::handleStates() {
   Settings& settings = var->getSettings();
   if (!settings.getKeepHasted()) {
     return;
@@ -288,7 +286,7 @@ void ManaHealthStateAnalyzer::handleStates() {
   handleHaste(settings.getKeepHasted(), states);
   handleUpgrade(settings.getKeepUpraded(), states);
 }
-void ManaHealthStateAnalyzer::handleHaste(bool keepHasting, QVector<Equipment::STATES>& states) {
+void VitalityAnalyzer::handleHaste(bool keepHasting, QVector<Equipment::STATES>& states) {
   if (!keepHasting) {
     return;
   }
@@ -304,7 +302,7 @@ void ManaHealthStateAnalyzer::handleHaste(bool keepHasting, QVector<Equipment::S
   logger.log("Hasted!", false, true, true);
   lastTimeHasted = currentTime;
 }
-void ManaHealthStateAnalyzer::handleUpgrade(bool keepUpgraded, QVector<Equipment::STATES>& states) {
+void VitalityAnalyzer::handleUpgrade(bool keepUpgraded, QVector<Equipment::STATES>& states) {
   if (!keepUpgraded) {
     return;
   }
@@ -320,6 +318,6 @@ void ManaHealthStateAnalyzer::handleUpgrade(bool keepUpgraded, QVector<Equipment
   logger.log("Upgraded!", false, true, true);
   lastTimeUpgraded = currentTime;
 }
-qint64 ManaHealthStateAnalyzer::now() {
+qint64 VitalityAnalyzer::now() {
   return QDateTime::currentMSecsSinceEpoch();
 }

@@ -6,15 +6,15 @@
 #include "AutoHunting.h"
 #include "Calibrator.h"
 #include "ClickDetector.hpp"
+#include "GameActivityChecker.h"
 #include "Key.h"
-#include "ManaHealthStateAnalyzer.h"
 #include "Profile.h"
 #include "RouteCreator.h"
 #include "ScreenAnalyzer.h"
 #include "ScreenSaver.h"
 #include "SelectProfileWindow.h"
 #include "VariablesClass.hpp"
-#include "GameActivityChecker.h"
+#include "VitalityAnalyzer.h"
 namespace Ui {
 class MainMenu;
 };
@@ -45,13 +45,13 @@ class MainMenu : public QDialog {
   QSharedPointer<Profile>        prof           = QSharedPointer<Profile>(new Profile());
   QSharedPointer<VariablesClass> var            = QSharedPointer<VariablesClass>(new VariablesClass(prof));
   QSharedPointer<GameConnecter>  gameConnector  = QSharedPointer<GameConnecter>(new GameConnecter(var));
-  GameActivityChecker               activityThread = GameActivityChecker(var);  //Change name of this class and variable
+  GameActivityChecker            activityThread = GameActivityChecker(var);  //Change name of this class and variable
 
-  ScreenSaver             screenSaverThread{this, var, gameConnector};
-  ScreenAnalyzer          screenAnalyzer{this, var};
-  ManaHealthStateAnalyzer healthManaStateAnalyzer{this, var, gameConnector};
-  ClickDetector           clickDetector{this, gameConnector};
-  AutoHunting*            huntAutoThread = nullptr;
+  ScreenSaver      screenSaverThread{this, var, gameConnector};
+  ScreenAnalyzer   screenAnalyzer{this, var};
+  VitalityAnalyzer healthManaStateAnalyzer{this, var, gameConnector};
+  ClickDetector    clickDetector{this, gameConnector};
+  AutoHunting*     huntAutoThread = nullptr;
 
   GameActivityChecker::GameActivityStates gameActivitystate;
 

@@ -48,7 +48,7 @@ void MainMenu::threadStarter() {
     exit(1);
   }
 
-  if (!connect(&healthManaStateAnalyzer, &ManaHealthStateAnalyzer::sendValueToMainThread, this, &MainMenu::changedValueOfCharHealthOrMana,
+  if (!connect(&healthManaStateAnalyzer, &VitalityAnalyzer::sendValueToMainThread, this, &MainMenu::changedValueOfCharHealthOrMana,
                exec_in_reciver_option)) {
     qCritical() << "Connection failed. Health & Mana analyzer";
     exit(1);
@@ -59,7 +59,7 @@ void MainMenu::threadStarter() {
     exit(1);
   }
 
-  if (!connect(&screenAnalyzer, &ScreenAnalyzer::vitalityBarsCut, &healthManaStateAnalyzer, &ManaHealthStateAnalyzer::execute,
+  if (!connect(&screenAnalyzer, &ScreenAnalyzer::vitalityBarsCut, &healthManaStateAnalyzer, &VitalityAnalyzer::execute,
                exec_in_reciver_option)) {
     qCritical() << "Failed to connect execute vitalityBarsAnalyzer";
     exit(1);
