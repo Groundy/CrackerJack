@@ -20,7 +20,7 @@ MainMenu::MainMenu(QSharedPointer<Profile> prof, QWidget* parent) : QDialog(pare
   threadStarter();
 }
 MainMenu::~MainMenu() {
-  QList<QThread*> threads{&screenSaverThread, &screenAnalyzer, &healthManaStateAnalyzer, huntAutoThread, &clickDetector};
+  QList<QThread*> threads{&screenSaverThread, &screenAnalyzer, &healthManaStateAnalyzer, &clickDetector};  //huntAutoThread
   for each (QThread* thread in threads) {
     if (thread == nullptr) {
       continue;
@@ -59,20 +59,11 @@ void MainMenu::threadStarter() {
     exit(1);
   }
 
-  if (!connect(&screenAnalyzer, &ScreenAnalyzer::vitalityBarsCut, &healthManaStateAnalyzer, &VitalityAnalyzer::execute,
+  if (!connect(&screenAnalyzer, &ScreenAnalyzer::vitalityBarsReady, &healthManaStateAnalyzer, &VitalityAnalyzer::execute,
                exec_in_reciver_option)) {
     qCritical() << "Failed to connect execute vitalityBarsAnalyzer";
     exit(1);
   }
-}
-void MainMenu::startAutoHunting() {
-  var->getSettings().setKeepHuntingAutomaticly(true);
-  var->getSettings().setKeepAnalyzeMiniMap(true);
-  Route route;
-  JsonParser::readRoute(route, "trolls");
-  huntAutoThread = new AutoHunting(this, var, gameConnector, route);
-  huntAutoThread->start();
-  ui->playerPosGroup->setVisible(true);
 
   if (!connect(&screenAnalyzer, &ScreenAnalyzer::miniMapReady, &miniMapAnalyzer, &MinimapAnalyzer::execute, exec_in_reciver_option)) {
     qCritical() << "Failed to connect execute mini map ready";
@@ -83,6 +74,7 @@ void MainMenu::startAutoHunting() {
     qCritical() << "Failed to connect thread signal. Auto hunt heading point";
     exit(1);
   }
+
   if (!connect(huntAutoThread, &AutoHunting::updateEnemiesAmountInGUI, this, &MainMenu::updateEnemiesAmount, Qt::UniqueConnection)) {
     qCritical() << "Failed to connect thread signal. Auto hunt enemies amount";
     exit(1);
@@ -93,13 +85,24 @@ void MainMenu::startAutoHunting() {
     exit(0);
   }
 }
+void MainMenu::startAutoHunting() {
+  /*
+  var->getSettings().setKeepHuntingAutomaticly(true);
+  var->getSettings().setKeepAnalyzeMiniMap(true);
+  Route route;
+  JsonParser::readRoute(route, "trolls");
+  huntAutoThread = new AutoHunting(this, var, gameConnector, route);
+  huntAutoThread->start();
+  ui->playerPosGroup->setVisible(true);
+  */
+}
 
 //slots
 void MainMenu::changeProfileButtonAction() {
   this->accept();
 }
 void MainMenu::onGameStateChanged(int state) {
-  QString                                      toWrite = tr("Game status: ");
+  QString                                         toWrite = tr("Game status: ");
   typedef GameActivityChecker::GameActivityStates Type;
   switch (state) {
     case Type::ACTIVE:
@@ -200,6 +203,7 @@ void MainMenu::testButtonClicked() {
   RouteCreator(this).exec();
 }
 void MainMenu::autoHuntButtonClicked() {
+  /*
   bool threadAlreadyCreated = huntAutoThread != nullptr;
   if (!threadAlreadyCreated)
     startAutoHunting();
@@ -208,4 +212,5 @@ void MainMenu::autoHuntButtonClicked() {
     var->getSettings().setKeepHuntingAutomaticly(enable);
     ui->playerPosGroup->setVisible(enable);
   }
+  */
 }
