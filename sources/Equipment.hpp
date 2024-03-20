@@ -2,6 +2,7 @@
 #include <qpoint.h>
 #include <qrect.h>
 
+#include "CJ_Image.h"
 #include "Utilities.hpp"
 class Equipment {
  public:

@@ -41,19 +41,22 @@ class MainMenu : public QDialog {
   void updateHeadingPoint(QString toDisplay);
 
  private:
-  Ui::MainMenu*                  ui;
-  QSharedPointer<Profile>        prof           = QSharedPointer<Profile>(new Profile());
-  QSharedPointer<VariablesClass> var            = QSharedPointer<VariablesClass>(new VariablesClass(prof));
-  QSharedPointer<GameConnecter>  gameConnector  = QSharedPointer<GameConnecter>(new GameConnecter(var));
-  GameActivityChecker            activityThread = GameActivityChecker(var);  //Change name of this class and variable
+  Ui::MainMenu* ui;
 
-  ScreenSaver      screenSaverThread{this, var, gameConnector};
-  ScreenAnalyzer   screenAnalyzer{this, var};
-  VitalityAnalyzer healthManaStateAnalyzer{this, var, gameConnector};
-  ClickDetector    clickDetector{this, gameConnector};
+  //variables
+  QSharedPointer<Profile>                 prof_           = QSharedPointer<Profile>(new Profile());
+  QSharedPointer<VariablesClass>          var_            = QSharedPointer<VariablesClass>(new VariablesClass(prof_));
+  QSharedPointer<GameConnecter>           game_connector_ = QSharedPointer<GameConnecter>(new GameConnecter(var_));
+  GameActivityChecker::GameActivityStates game_activity_state_;
+
+  //workers
+  GameActivityChecker activity_checker_ = GameActivityChecker(var_);
+  ScreenSaver         screen_saver_{this, var_, game_connector_};
+  ScreenAnalyzer      screen_analyzer_{this, var_};
+  VitalityAnalyzer    vitality_analyzer_{this, var_, game_connector_};
+  ClickDetector       click_detector_{this, game_connector_};
+  MinimapAnalyzer     mini_map_analyzer_{this, var_};
   //AutoHunting                             huntAutoThread{};
-  MinimapAnalyzer                         miniMapAnalyzer{this, var};
-  GameActivityChecker::GameActivityStates gameActivitystate;
 
   void threadStarter();
   void startAutoHunting();

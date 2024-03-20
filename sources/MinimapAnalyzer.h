@@ -9,7 +9,6 @@
 #include <qstring.h>
 #include <qthread.h>
 
-#include "Calibrator.h"
 #include "PathResource.h"
 #include "VariablesClass.hpp"
 class MinimapAnalyzer : public QThread {

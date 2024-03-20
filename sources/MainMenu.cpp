@@ -2,15 +2,15 @@
 
 #include "ui_MainMenu.h"
 
-//const
-MainMenu::MainMenu(QSharedPointer<Profile> prof, QWidget* parent) : QDialog(parent), prof(prof) {
+MainMenu::MainMenu(QSharedPointer<Profile> prof, QWidget* parent) : QDialog(parent) {
   ui = new Ui::MainMenu();
   ui->setupUi(this);
 
-  var           = QSharedPointer<VariablesClass>(new VariablesClass(prof));
-  gameConnector = QSharedPointer<GameConnecter>(new GameConnecter(var));
+  prof_           = prof;
+  var_            = QSharedPointer<VariablesClass>(new VariablesClass(prof));
+  game_connector_ = QSharedPointer<GameConnecter>(new GameConnecter(var_));
 
-  Settings& settings = var->getSettings();
+  Settings& settings = var_->getSettings();
   ui->profileNameLabel->setText(prof->getName());
   ui->playerPosGroup->setVisible(false);
   ui->resourceGroup->setVisible(false);
@@ -20,7 +20,7 @@ MainMenu::MainMenu(QSharedPointer<Profile> prof, QWidget* parent) : QDialog(pare
   threadStarter();
 }
 MainMenu::~MainMenu() {
-  QList<QThread*> threads{&screenSaverThread, &screenAnalyzer, &healthManaStateAnalyzer, &clickDetector};  //huntAutoThread
+  QList<QThread*> threads{&screen_saver_, &screen_analyzer_, &vitality_analyzer_, &click_detector_};  //huntAutoThread
   for each (QThread* thread in threads) {
     if (thread == nullptr) {
       continue;
@@ -32,9 +32,9 @@ MainMenu::~MainMenu() {
 
 //funcs
 void MainMenu::threadStarter() {
-  screenSaverThread.start();
-  screenAnalyzer.start();
-  clickDetector.start();
+  screen_saver_.start();
+  screen_analyzer_.start();
+  click_detector_.start();
 
   const auto exec_in_reciver_option = static_cast<Qt::ConnectionType>(Qt::QueuedConnection | Qt::UniqueConnection);
 
@@ -48,24 +48,24 @@ void MainMenu::threadStarter() {
     exit(1);
   }
 
-  if (!connect(&healthManaStateAnalyzer, &VitalityAnalyzer::sendValueToMainThread, this, &MainMenu::changedValueOfCharHealthOrMana,
+  if (!connect(&vitality_analyzer_, &VitalityAnalyzer::sendValueToMainThread, this, &MainMenu::changedValueOfCharHealthOrMana,
                exec_in_reciver_option)) {
     qCritical() << "Connection failed. Health & Mana analyzer";
     exit(1);
   }
 
-  if (!connect(&activityThread, &GameActivityChecker::gameStateChanged, this, &MainMenu::onGameStateChanged, exec_in_reciver_option)) {
+  if (!connect(&activity_checker_, &GameActivityChecker::gameStateChanged, this, &MainMenu::onGameStateChanged, exec_in_reciver_option)) {
     qCritical() << "Failed to connect thread signal of game activity";
     exit(1);
   }
 
-  if (!connect(&screenAnalyzer, &ScreenAnalyzer::vitalityBarsReady, &healthManaStateAnalyzer, &VitalityAnalyzer::execute,
+  if (!connect(&screen_analyzer_, &ScreenAnalyzer::vitalityBarsReady, &vitality_analyzer_, &VitalityAnalyzer::execute,
                exec_in_reciver_option)) {
     qCritical() << "Failed to connect execute vitalityBarsAnalyzer";
     exit(1);
   }
 
-  if (!connect(&screenAnalyzer, &ScreenAnalyzer::miniMapReady, &miniMapAnalyzer, &MinimapAnalyzer::execute, exec_in_reciver_option)) {
+  if (!connect(&screen_analyzer_, &ScreenAnalyzer::miniMapReady, &mini_map_analyzer_, &MinimapAnalyzer::execute, exec_in_reciver_option)) {
     qCritical() << "Failed to connect execute mini map ready";
     exit(1);
   }
@@ -80,7 +80,7 @@ void MainMenu::threadStarter() {
     exit(1);
   }
   */
-  if (!connect(&miniMapAnalyzer, &MinimapAnalyzer::sendPostitionsToGUI, this, &MainMenu::updatePlayerPosition, Qt::UniqueConnection)) {
+  if (!connect(&mini_map_analyzer_, &MinimapAnalyzer::sendPostitionsToGUI, this, &MainMenu::updatePlayerPosition, Qt::UniqueConnection)) {
     qCritical() << "Failed to connect thread signal. player position";
     exit(0);
   }
@@ -131,11 +131,11 @@ void MainMenu::checkBoxChanged() {
   QObject* senderObj = sender();
   if (senderObj == ui->takeScreenshotCheckBox) {
     bool toSet = ui->takeScreenshotCheckBox->isChecked();
-    var->getSettings().setTakingScreensState(toSet);
+    var_->getSettings().setTakingScreensState(toSet);
   }
   if (senderObj == ui->restoreHealthMana) {
     bool enable = ui->restoreHealthMana->isChecked();
-    var->getSettings().setRestoringState(enable);
+    var_->getSettings().setRestoringState(enable);
     if (enable) {
       ui->healthInfoLabel->clear();
       ui->manaInfoLabel->clear();
@@ -148,11 +148,11 @@ void MainMenu::checkBoxChanged() {
   }
   if (senderObj == ui->keepHastedCheckBox) {
     bool toSet = ui->keepHastedCheckBox->isChecked();
-    var->getSettings().setKeepHasted(toSet);
+    var_->getSettings().setKeepHasted(toSet);
   }
   if (senderObj == ui->keepUpgradedCheckBox) {
     bool toSet = ui->keepUpgradedCheckBox->isChecked();
-    var->getSettings().setKeepUpraded(toSet);
+    var_->getSettings().setKeepUpraded(toSet);
   }
 }
 void MainMenu::changedValueOfCharHealthOrMana(double healthPercentage, double manaPercentage, double manaShieldPercentage) {

@@ -1,5 +1,4 @@
 #include "ScreenAnalyzer.h"
-
 ScreenAnalyzer::ScreenAnalyzer(QObject* parent, QSharedPointer<VariablesClass> var) : QThread(parent), var(var) {
   auto screenshotDir = PathResource::getScreenShotFolder();
   if (screenshotDir.has_value()) {
