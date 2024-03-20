@@ -6,23 +6,33 @@ Calibrator::~Calibrator() {}
 bool Calibrator::calibrateBasicAreas(const CJ_Image& fullscreen) {
   QVector<QRect> importantRectangles;
   bool           windowsFound = findWindowsOnScreen(fullscreen, importantRectangles);
-  if (!windowsFound) return false;
+  if (!windowsFound) {
+    return false;
+  }
 
   bool windowsCategorized = categorizeWindows(fullscreen, importantRectangles);
-  if (!windowsCategorized) return false;
+  if (!windowsCategorized) {
+    return false;
+  }
 
   return true;
 }
 bool Calibrator::calibrateBattleArea(const CJ_Image& fullscreen) {
   auto rectangles = getOutsideFramesOfOpenEntitiesOnSideBars(fullscreen);
-  if (rectangles.size() == 0) return false;
+  if (rectangles.size() == 0) {
+    return false;
+  }
 
   QImage battleListMark(PathResource::getPathToBattleList());
-  if (battleListMark.isNull()) return false;
+  if (battleListMark.isNull()) {
+    return false;
+  }
 
   for each (QRect rect in rectangles) {
     auto battleMarksPos = fullscreen.findStartPositionInImg(battleListMark, rect);
-    if (battleMarksPos.size() != 1) continue;
+    if (battleMarksPos.size() != 1) {
+      continue;
+    }
 
     var->getBattleList().setFrame(rect);
     return true;
@@ -34,7 +44,7 @@ bool Calibrator::calibrateBattleArea(const CJ_Image& fullscreen) {
 bool Calibrator::calibrateStoreButton(const CJ_Image& fullImage) {
   QImage img(PathResource::getPathToStoreButton());
   QRect  rect = fullImage.rect();
-  rect.setLeft(rect.width() * 0.75);  // shearch only witing last 25% of fulll screen, on right side
+  rect.setLeft(rect.width() * 0.75);  // shearch only withing last 25% of fulll screen, on right side
   QPoint storeButtonPosition = fullImage.findExactStartPositionInImg(img, rect);
   if (storeButtonPosition.isNull()) {
     return false;

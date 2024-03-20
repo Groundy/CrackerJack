@@ -20,7 +20,7 @@ class BattleList {
     return battleListArea.getRect();
   }
   QImage getImg() {
-    return battleListImg.getImgCopy();
+    return battleListImg.getImg();
   }
   int getEnemisAmout() {
     if (qrand() % 10 == 0) checkIfBattleListIsOk();
@@ -96,7 +96,7 @@ class BattleList {
   std::atomic<int> enemiesOnBattleList = 0;
   QImage           getInnerBattleList() {
     QRect  innerBattleListRect = getInnerRect(battleListArea.getRect());
-    QImage fullBattleListImg   = battleListImg.getImgCopy();
+    QImage fullBattleListImg   = battleListImg.getImg();
     return fullBattleListImg.copy(innerBattleListRect);
   }
   const QPoint INNER_FRAME_FIST_NAME_START = QPoint(21, 0);

@@ -79,19 +79,19 @@ class Vitallity {
     combinedImg.setImg(img);
   }
   void getImageHealth(QImage& img, bool clear = false) {
-    img = healthImg.getImgCopy();
+    img = healthImg.getImg();
     if (clear) healthImg.clear();
   }
   void getImageMana(QImage& img, bool clear = false) {
-    img = manaImg.getImgCopy();
+    img = manaImg.getImg();
     if (clear) manaImg.clear();
   }
   void getImageMS(QImage& img, bool clear = false) {
-    img = msImg.getImgCopy();
+    img = msImg.getImg();
     if (clear) msImg.clear();
   }
   void getImageCombined(QImage& img, bool clear = false) {
-    img = combinedImg.getImgCopy();
+    img = combinedImg.getImg();
     if (clear) combinedImg.clear();
   }
   bool needCalibration() {
@@ -120,7 +120,7 @@ class MiniMap {
   MiniMap()  = default;
   ~MiniMap() = default;
   void getImgMiniMap(QImage& imgToRet) {
-    imgToRet = this->miniMap.getImgCopy();
+    imgToRet = this->miniMap.getImg();
     this->miniMap.clear();
   }
   void setImgMiniMap(const QImage& miniMapImg) {
@@ -133,7 +133,7 @@ class MiniMap {
     miniMapFrame.setRect(newRect);
   }
   void getImgMiniMapLayer(QImage& imgToRet) {
-    imgToRet = this->minMapLayer.getImgCopy();
+    imgToRet = this->minMapLayer.getImg();
     this->minMapLayer.clear();
   }
   QPoint getCompasMiddlePoint() {

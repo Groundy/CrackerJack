@@ -19,7 +19,7 @@ class Equipment {
   }
 
   QVector<STATES> getCurrentStates(bool clearImg = true) {
-    CJ_Image stateBar = statesBarImg.getImgCopy();
+    CJ_Image stateBar = statesBarImg.getImg();
     if (stateBar.isNull()) {
       return {};
     }
@@ -159,31 +159,31 @@ class Equipment {
   QImage getImg(EqRect eqRect) {
     switch (eqRect) {
       case EqRect::StateBar:
-        return statesBarImg.getImgCopy();
+        return statesBarImg.getImg();
       case EqRect::SoulPoints:
-        return soulPtsImg.getImgCopy();
+        return soulPtsImg.getImg();
       case EqRect::Capacity:
-        return capImg.getImgCopy();
+        return capImg.getImg();
       case EqRect::Helmet:
-        return helmetCap.getImgCopy();
+        return helmetCap.getImg();
       case EqRect::Armor:
-        return armorImg.getImgCopy();
+        return armorImg.getImg();
       case EqRect::Legs:
-        return legsImg.getImgCopy();
+        return legsImg.getImg();
       case EqRect::Boots:
-        return bootsImg.getImgCopy();
+        return bootsImg.getImg();
       case EqRect::Ring:
-        return ringImg.getImgCopy();
+        return ringImg.getImg();
       case EqRect::Amulet:
-        return amuletImg.getImgCopy();
+        return amuletImg.getImg();
       case EqRect::Weapon:
-        return weaponImg.getImgCopy();
+        return weaponImg.getImg();
       case EqRect::Shield:
-        return shieldImg.getImgCopy();
+        return shieldImg.getImg();
       case EqRect::Backpack:
-        return backpackImg.getImgCopy();
+        return backpackImg.getImg();
       case EqRect::Torch:
-        return torchImg.getImgCopy();
+        return torchImg.getImg();
       default:
         return QImage();
     }

@@ -6,56 +6,48 @@
 
 #include <atomic>
 
+#include "CJ_Image.h"
 #include "Key.h"
 #include "RGBstruct.h"
 
 struct MutexImg {
  public:
-  QImage getImgCopy() {
-    QMutexLocker locker(&mutex);
-    QImage       returnImg = QImage();
-    if (!img.isNull()) {
-      returnImg = img.copy();
-    }
-    return returnImg;
+  CJ_Image getImg() {
+    QMutexLocker locker(&mutex_);
+    return img_;
   }
   void setImg(const QImage& newImg) {
-    mutex.lock();
-    img = newImg.copy();
-    mutex.unlock();
+    QMutexLocker locker(&mutex_);
+    img_ = newImg.copy();
   }
   void clear() {
-    mutex.lock();
-    img = QImage();
-    mutex.unlock();
+    QMutexLocker locker(&mutex_);
+    img_ = QImage();
   }
 
  private:
-  QMutex mutex;
-  QImage img;
+  QMutex   mutex_;
+  CJ_Image img_;
 };
+
 struct MutexRect {
  public:
   QRect getRect() {
-    mutex.lock();
-    QRect toRet = rect;
-    mutex.unlock();
-    return toRet;
+    QMutexLocker locker(&mutex_);
+    return rect_;
   }
   void setRect(const QRect& newRect) {
-    mutex.lock();
-    rect = newRect;
-    mutex.unlock();
+    QMutexLocker locker(&mutex_);
+    rect_ = newRect;
   }
   void clear() {
-    mutex.lock();
-    rect = QRect();
-    mutex.unlock();
+    QMutexLocker locker(&mutex_);
+    rect_ = QRect();
   }
 
  private:
-  QMutex mutex;
-  QRect  rect;
+  QMutex mutex_;
+  QRect  rect_;
 };
 
 class Utilities {

@@ -84,6 +84,11 @@ void MainMenu::connectSignals() {
     qCritical() << "Failed to connect thread signal. player position";
     exit(0);
   }
+
+  if (!connect(&mini_map_analyzer_, &MinimapAnalyzer::sendPostitionsToGUI, this, &MainMenu::updatePlayerPosition, Qt::UniqueConnection)) {
+    qCritical() << "Failed to connect thread signal. player position";
+    exit(0);
+  }
 }
 void MainMenu::startAutoHunting() {
   /*

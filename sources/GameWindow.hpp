@@ -8,7 +8,7 @@ class GameWindow {
   GameWindow()  = default;
   ~GameWindow() = default;
   void getImgMainGameWindow(QImage& imgToRet) {
-    imgToRet = this->gameWindow.getImgCopy();
+    imgToRet = this->gameWindow.getImg();
   }
   void setImgMainGameWindow(const QImage& mainGameWindow) {
     this->gameWindow.setImg(mainGameWindow);

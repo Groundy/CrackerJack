@@ -48,6 +48,14 @@ class VariablesClass {
     return prof;
   }
 
+  void setFullImage(const QImage& full_image) {
+    full_image_.setImg(full_image);
+  }
+
+  CJ_Image getFullImage() {
+    return full_image_.getImg();
+  }
+
  private:
   QSharedPointer<Profile> prof;
   GameProcessData         gameProcess{};
@@ -59,5 +67,7 @@ class VariablesClass {
   MiniMap                 minimap{};
   PlayerPosition          position{};
   Equipment               eq{};
-  // MutexImg fullImage;
+
+  //used for calibration
+  MutexImg full_image_;
 };

@@ -7,7 +7,6 @@
 #include <qmap.h>
 #include <qtimer.h>
 
-#include "Calibrator.h"
 #include "Equipment.hpp"
 #include "Profile.h"
 #include "RGBstruct.h"
@@ -26,10 +25,11 @@ class ScreenAnalyzer : public QThread {
 
  private:
   const int                      SLEEP_TIME = 50;
-  QSharedPointer<VariablesClass> var;
+  QSharedPointer<VariablesClass> var_;
   QDir                           screenShotFolder;
   Logger&                        logger = Logger::instance();
   QTimer                         screenAnalyzerTimer;
+  Calibrator                     calibrator_{var_};
 
   void    deleteScreenShotFolder();
   QString getNameOfLastTakenScreenShot();

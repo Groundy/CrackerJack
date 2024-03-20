@@ -9,6 +9,7 @@ ScreenAnalyzer::ScreenAnalyzer(QObject* parent, QSharedPointer<VariablesClass> v
   }
   var->getSettings().setLoadingState(true);
   deleteScreenShotFolder();
+
   screenAnalyzerTimer.setInterval(SLEEP_TIME);
   if (!connect(&screenAnalyzerTimer, &QTimer::timeout, this, &ScreenAnalyzer::execute)) {
     qCritical() << "Failed to connect ScreenAnalyzer timer";
@@ -33,7 +34,7 @@ void ScreenAnalyzer::execute() {
     return;
   }
   if (var->getVitalitty().needCalibration()) {
-    bool basicCalibrationOk = Calibrator(var).calibrateBasicAreas(img);
+    bool basicCalibrationOk = calibrator_.calibrateBasicAreas(img);
     if (!basicCalibrationOk) {
       QString msg = "Problem z kalibracja!";
       logger.log(msg, true, true, false);
@@ -136,7 +137,7 @@ void ScreenAnalyzer::cutBattleList(const QImage& fullscreen) {
 void ScreenAnalyzer::analyzeBattleList(const QImage& fullscreen) {
   if (!var->getSettings().getKeepHuntingAutomaticly()) return;
   if (var->getBattleList().getFrame().isEmpty()) {
-    bool foundBattleArea = Calibrator(var).calibrateBattleArea(fullscreen);
+    bool foundBattleArea = calibrator_.calibrateBattleArea(fullscreen);
     if (!foundBattleArea) {
       QString msg = "Nie mozna otworzy battle listy";
       logger.log(msg, true, true, false);
@@ -160,7 +161,7 @@ void ScreenAnalyzer::analyzeMiniMap(const QImage& fullscreen) {
 void ScreenAnalyzer::analyzeEquipment(const QImage& fullscreen) {
   bool needCalibration = var->getEquipment().getStoreRect().isEmpty();
   if (needCalibration) {
-    Calibrator(var).calibrateStoreButton(fullscreen);
+    calibrator_.calibrateStoreButton(fullscreen);
   }
   if (var->getSettings().getKeepAnalyzeStates()) {
     QRect stateBarRect = var->getEquipment().getRect(Equipment::EqRect::StateBar);
