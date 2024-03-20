@@ -16,10 +16,9 @@ class Calibrator {
  public:
   Calibrator(QSharedPointer<VariablesClass> var);
   ~Calibrator();
-  bool        calibrateBasicAreas(const CJ_Image& fullImage);
-  bool        calibrateBattleArea(const CJ_Image& fullImage);
-  bool        calibrateStoreButton(const CJ_Image& fullImage);
-  static void test(QString pathToFilesWithScreens);
+  bool calibrateBasicAreas(const CJ_Image& fullImage);
+  bool calibrateBattleArea(const CJ_Image& fullImage);
+  bool calibrateStoreButton(const CJ_Image& fullImage);
 
  private:
   enum BarsPostion { LEFT, RIGHT, DOWN, TOP };

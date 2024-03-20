@@ -43,36 +43,6 @@ bool Calibrator::calibrateStoreButton(const CJ_Image& fullImage) {
   var->getEquipment().setStoreRect(storeButtonRect);
   return true;
 }
-void Calibrator::test(QString pathToFilesWithScreens) {
-  auto var       = QSharedPointer<VariablesClass>();
-  int  totalTime = 0;
-
-  QStringList namesOfScreenShots;
-  QDir        screenShotFolder(pathToFilesWithScreens);
-  QStringList listOfFIlesNames = screenShotFolder.entryList(QDir::Files);
-
-  for each (QString fileName in listOfFIlesNames) {
-    QString pathToFile = screenShotFolder.absoluteFilePath(fileName);
-    QImage  fullScreen;
-    bool    loaded = fullScreen.load(pathToFile);
-    if (!loaded) {
-      qDebug() << "cant load img!";
-      return;
-    }
-    auto calibrator  = Calibrator(var);
-    auto start       = QDateTime::currentMSecsSinceEpoch();
-    bool categroized = calibrator.calibrateBasicAreas(fullScreen);
-    auto time        = QDateTime::currentMSecsSinceEpoch() - start;
-    if (categroized) {
-      qDebug() << fileName << "analyzed in : " << time << "ms";
-    } else {
-      qDebug() << "cant sort windows in" << fileName;
-      return;
-    }
-    totalTime += time;
-  }
-  qDebug() << "avg time : " + QString::number(totalTime / listOfFIlesNames.size());
-}
 
 // private
 Calibrator::SlashesIndexes Calibrator::getIndexesOfImgsWithSlashes(const CJ_Image& fullScreen, const QVector<QRect>& importantFrames) {
