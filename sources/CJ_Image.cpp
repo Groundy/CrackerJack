@@ -5,10 +5,9 @@ void CJ_Image::toBlackAndWhite(const int threshold) {
   const int HEIGHT = this->height();
   for (size_t x = 0; x < WIDTH; x++) {
     for (size_t y = 0; y < HEIGHT; y++) {
-      uint      pixelColor = this->pixel(x, y);
-      RGBstruct rgb(pixelColor);
-      bool      setWhite = rgb.allColsEqualOrAboveThreshold(threshold);
-      uint      pixToSet = setWhite ? WHITE : BLACK;
+      const uint pixelColor = this->pixel(x, y);
+      const bool setWhite   = RGBstruct(pixelColor).allColsEqualOrAboveThreshold(threshold);
+      const uint pixToSet   = setWhite ? WHITE : BLACK;
       this->setPixel(x, y, pixToSet);
     }
   }
@@ -19,17 +18,17 @@ void CJ_Image::toBlackAndWhiteOneColor(const int threshold) {
   const int HEIGHT = this->height();
   for (size_t x = 0; x < WIDTH; x++) {
     for (size_t y = 0; y < HEIGHT; y++) {
-      uint pixelColor = this->pixel(x, y);
-      bool setWhite   = RGBstruct(pixelColor).oneColEqualOrAboveThreshold(threshold);
-      uint toSet      = setWhite ? WHITE : BLACK;
+      const uint pixelColor = this->pixel(x, y);
+      const bool setWhite   = RGBstruct(pixelColor).oneColEqualOrAboveThreshold(threshold);
+      const uint toSet      = setWhite ? WHITE : BLACK;
       this->setPixel(x, y, toSet);
     }
   }
 }
 
 void CJ_Image::toBlackAndWhiteExactColor(const QRgb COLOR) {
-  for (int x = 0; x < this->height(); x++) {
-    for (int y = 0; y < this->width(); y++) {
+  for (size_t x = 0; x < this->height(); x++) {
+    for (size_t y = 0; y < this->width(); y++) {
       bool setWhite = this->pixel(x, y) == COLOR;
       this->setPixel(x, y, setWhite ? WHITE : BLACK);
     }
@@ -55,10 +54,9 @@ void CJ_Image::cutBlackBorders() {
   const int WIDTH   = this->width();
   const int HEIGHT  = this->height();
   bool      process = true;
-  for (int x = 0; x < WIDTH && process; x++) {
-    for (int y = 0; y < HEIGHT && process; y++) {
-      bool isBlack = this->pixel(x, y) == BLACK;
-      if (!isBlack) {
+  for (size_t x = 0; x < WIDTH && process; x++) {
+    for (size_t y = 0; y < HEIGHT && process; y++) {
+      if (!(this->pixel(x, y) == BLACK)) {
         linesOfBlackRows_LEFT = x;
         process               = true;
       }
@@ -66,10 +64,9 @@ void CJ_Image::cutBlackBorders() {
   }
 
   process = true;
-  for (int x = WIDTH - 1; x >= linesOfBlackRows_LEFT && process; x--) {
-    for (int y = 0; y < HEIGHT && process; y++) {
-      bool isBlack = this->pixel(x, y) == BLACK;
-      if (!isBlack) {
+  for (size_t x = WIDTH - 1; x >= linesOfBlackRows_LEFT && process; x--) {
+    for (size_t y = 0; y < HEIGHT && process; y++) {
+      if (!(this->pixel(x, y) == BLACK)) {
         linesOfBlackRows_RIGHT = WIDTH - x - 1;
         process                = false;
       }
@@ -77,10 +74,9 @@ void CJ_Image::cutBlackBorders() {
   }
 
   process = true;
-  for (int y = 0; y < HEIGHT && process; y++) {
-    for (int x = linesOfBlackRows_LEFT; x < WIDTH - linesOfBlackRows_RIGHT && process; x++) {
-      bool isBlack = this->pixel(x, y) == BLACK;
-      if (!isBlack) {
+  for (size_t y = 0; y < HEIGHT && process; y++) {
+    for (size_t x = linesOfBlackRows_LEFT; x < WIDTH - linesOfBlackRows_RIGHT && process; x++) {
+      if (!(this->pixel(x, y) == BLACK)) {
         linesOfBlackRows_TOP = y;
         process              = false;
       }
@@ -88,10 +84,9 @@ void CJ_Image::cutBlackBorders() {
   }
 
   process = true;
-  for (int y = HEIGHT - 1; y >= linesOfBlackRows_TOP && process; y--) {
-    for (int x = linesOfBlackRows_LEFT; x < WIDTH - linesOfBlackRows_RIGHT && process; x++) {
-      bool isBlack = this->pixel(x, y) == BLACK;
-      if (!isBlack) {
+  for (size_t y = HEIGHT - 1; y >= linesOfBlackRows_TOP && process; y--) {
+    for (size_t x = linesOfBlackRows_LEFT; x < WIDTH - linesOfBlackRows_RIGHT && process; x++) {
+      if (!(this->pixel(x, y) == BLACK)) {
         linesOfBlackRows_DOWN = HEIGHT - y - 1;
         process               = false;
       }
@@ -111,8 +106,8 @@ QList<CJ_Image> CJ_Image::toImageListWithSingleLetters() const {
   QList<uint>     colThatAreNotBlack;
   const int       WIDTH  = this->width();
   const int       HEIGHT = this->height();
-  for (int x = 0; x < WIDTH; x++) {
-    for (int y = 0; y < HEIGHT; y++) {
+  for (size_t x = 0; x < WIDTH; x++) {
+    for (size_t y = 0; y < HEIGHT; y++) {
       bool isNotEmptyLine = this->pixel(x, y) != BLACK;
       if (isNotEmptyLine) {
         colThatAreNotBlack.push_back(x);
@@ -127,7 +122,7 @@ QList<CJ_Image> CJ_Image::toImageListWithSingleLetters() const {
 
   QList<int> indexesOfStartOfLetter, indexesOfEndsOfLetters;
   indexesOfStartOfLetter.push_back(0);
-  for (int i = 0; i < colThatAreNotBlack.size() - 1; i++) {
+  for (size_t i = 0; i < colThatAreNotBlack.size() - 1; i++) {
     if (colThatAreNotBlack[i + 1] - colThatAreNotBlack[i] > 1) {
       indexesOfEndsOfLetters.push_back(colThatAreNotBlack[i]);
     }
@@ -216,8 +211,8 @@ QVector<QPoint> CJ_Image::findStartPositionInImg(const QImage& imgToFind, QRect 
   const int minIndexToCheckY = frameInBigWindow.isEmpty() ? 0 : frameInBigWindow.top();
 
   QVector<QPoint> startPointsListToRet;
-  for (int x = minIndexToCheckX; x <= maxIndexToCheckX; x++) {
-    for (int y = minIndexToCheckY; y <= maxIndexToCheckY; y++) {
+  for (size_t x = minIndexToCheckX; x <= maxIndexToCheckX; x++) {
+    for (size_t y = minIndexToCheckY; y <= maxIndexToCheckY; y++) {
       uint pixSmallImg = imgToFind.pixel(0, 0);
       uint pixBigImg   = this->pixel(x, y);
       if (pixSmallImg != pixBigImg) {
@@ -276,8 +271,8 @@ QPoint CJ_Image::findExactStartPositionInImg(const QImage& imgToFind, QRect fram
   const int minIndexToCheckY = frameInBigWindow.isEmpty() ? 0 : frameInBigWindow.top();
 
   QVector<QPoint> startPoints;
-  for (int x = minIndexToCheckX; x <= maxIndexToCheckX; x++) {
-    for (int y = minIndexToCheckY; y <= maxIndexToCheckY; y++) {
+  for (size_t x = minIndexToCheckX; x <= maxIndexToCheckX; x++) {
+    for (size_t y = minIndexToCheckY; y <= maxIndexToCheckY; y++) {
       if (startPoints.size() > 1) {
         qDebug() << "more than one point found in findExactStartPoint fun!";
         return QPoint();
@@ -399,7 +394,7 @@ void CJ_Image::saveWithCurrentTimeStamp() const {
 
 void CJ_Image::saveFrames(const QImage& fullImg, const QVector<QRect>& frames, const QString& fileNameWithoutExtension) const {
   const QString tmp_path = PathResource::getPathToTmpSavingImgsDir();
-  for (int i = 0; i < frames.size(); i++) {
+  for (size_t i = 0; i < frames.size(); i++) {
     QImage  img      = fullImg.copy(frames[i]);
     QString fullPath = QString("%1%2_%3.png").arg(tmp_path, QString::number(i), fileNameWithoutExtension);
     img.save(fullPath);
@@ -408,7 +403,7 @@ void CJ_Image::saveFrames(const QImage& fullImg, const QVector<QRect>& frames, c
 
 void CJ_Image::saveListOfImgs(const QList<QImage>& imgs, const QString& fileNameWithoutExtension) {
   const QString tmp_path = PathResource::getPathToTmpSavingImgsDir();
-  for (int i = 0; i < imgs.size(); i++) {
+  for (size_t i = 0; i < imgs.size(); i++) {
     QString fullPath = QString("%1%2_%3.png").arg(tmp_path, QString::number(i), fileNameWithoutExtension);
     imgs[i].save(fullPath);
   }
@@ -456,11 +451,12 @@ CJ_Image CJ_Image::fromCharToImg(QChar CharToImg) {
     return CJ_Image();
   }
 
-  const int WIDTH  = parts[0].toInt();
-  const int HEIGHT = parts[1].toInt();
-  QString   code   = parts[2];
-  QImage    imgToRet(WIDTH, HEIGHT, QImage::Format::Format_ARGB32);
-  int       i = 0;
+  const int     WIDTH  = parts[0].toInt();
+  const int     HEIGHT = parts[1].toInt();
+  const QString code   = parts[2];
+  QImage        imgToRet(WIDTH, HEIGHT, QImage::Format::Format_ARGB32);
+
+  int i = 0;
   for (size_t x = 0; x < WIDTH; x++) {
     for (size_t y = 0; y < HEIGHT; y++) {
       const bool setWhite = code[i] == '1';
