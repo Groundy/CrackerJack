@@ -58,6 +58,6 @@ class MainMenu : public QDialog {
   MinimapAnalyzer     mini_map_analyzer_{this, var_};
   //AutoHunting                             huntAutoThread{};
 
-  void threadStarter();
+  void connectSignals();
   void startAutoHunting();
 };

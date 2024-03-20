@@ -17,7 +17,11 @@ MainMenu::MainMenu(QSharedPointer<Profile> prof, QWidget* parent) : QDialog(pare
   ui->keepHastedCheckBox->setChecked(settings.getKeepHasted());
   ui->keepUpgradedCheckBox->setChecked(settings.getKeepUpraded());
 
-  threadStarter();
+  screen_saver_.start();
+  screen_analyzer_.start();
+  click_detector_.start();
+
+  connectSignals();
 }
 MainMenu::~MainMenu() {
   QList<QThread*> threads{&screen_saver_, &screen_analyzer_, &vitality_analyzer_, &click_detector_};  //huntAutoThread
@@ -31,11 +35,7 @@ MainMenu::~MainMenu() {
 }
 
 //funcs
-void MainMenu::threadStarter() {
-  screen_saver_.start();
-  screen_analyzer_.start();
-  click_detector_.start();
-
+void MainMenu::connectSignals() {
   const auto exec_in_reciver_option = static_cast<Qt::ConnectionType>(Qt::QueuedConnection | Qt::UniqueConnection);
 
   if (!connect(&Logger::instance(), &Logger::sendMsgToUserConsol, this, &MainMenu::printToUserConsol, exec_in_reciver_option)) {
