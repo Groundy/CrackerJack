@@ -5,7 +5,7 @@ AutoHunting::AutoHunting(QObject* parent, QSharedPointer<VariablesClass> var, QS
   auto data            = var->getProf()->getAutoHuntData();
   attackMethodes       = data.getAttacks();
   minEnemiesToStop     = data.getMinMonToStop();
-  minEnemiesToContinue = data.getMinMonToContinue();
+  min_enemies_to_continue_ = data.getMinMonToContinue();
 }
 
 AutoHunting::~AutoHunting() = default;

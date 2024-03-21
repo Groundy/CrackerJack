@@ -10,38 +10,40 @@ class AutoHuntData : JsonClass {
   }
   QJsonObject toJson() const {
     QJsonObject obj;
-    obj.insert("minEnemiesToStop", minEnemiesToStop);
-    obj.insert("minEnemiesToContinue", minEnemiesToContinue);
+    obj.insert("minEnemiesToStop", static_cast<int>(min_enemies_to_stop_));
+    obj.insert("min_enemies_to_continue_", static_cast<int>(min_enemies_to_continue_));
     QJsonArray attackMethodesArr;
-    for each (auto methode in attackMethodes) {
+    foreach (const auto& methode, attack_methodes_) {
       attackMethodesArr.append(methode.toJson());
     }
     obj.insert("attackMethodes", attackMethodesArr);
     return obj;
   }
   AutoHuntData(QJsonObject obj) {
-    minEnemiesToContinue         = obj["minEnemiesToContinue"].toInt();
-    minEnemiesToStop             = obj["minEnemiesToStop"].toInt();
+    min_enemies_to_continue_     = obj["min_enemies_to_continue_"].toInt();
+    min_enemies_to_stop_         = obj["minEnemiesToStop"].toInt();
     QJsonArray attackMethodesArr = obj["attackMethodes"].toArray();
-    for each (auto methode in attackMethodesArr) this->attackMethodes.append(AttackMethode(methode.toObject()));
+    foreach (const QJsonValue& methode, attackMethodesArr) {
+      this->attack_methodes_.append(AttackMethode(methode.toObject()));
+    }
   }
   int getMinMonToContinue() const {
-    return minEnemiesToContinue;
+    return min_enemies_to_continue_;
   }
   int getMinMonToStop() const {
-    return minEnemiesToStop;
+    return min_enemies_to_stop_;
   }
   QVector<AttackMethode> getAttacks() const {
-    return attackMethodes;
+    return attack_methodes_;
   }
   void setMinMonToContinue(int toSet) {
-    this->minEnemiesToContinue = toSet;
+    this->min_enemies_to_continue_ = toSet;
   }
   void setMinMonToStop(int toSet) {
-    this->minEnemiesToStop = toSet;
+    this->min_enemies_to_stop_ = toSet;
   }
   void setAttacks(QVector<AttackMethode> toSet) {
-    this->attackMethodes = toSet;
+    this->attack_methodes_ = toSet;
   }
   AutoHuntData& operator=(const AutoHuntData& data) {
     this->setMinMonToContinue(data.getMinMonToContinue());
@@ -51,6 +53,7 @@ class AutoHuntData : JsonClass {
   }
 
  private:
-  int                    minEnemiesToStop = 0, minEnemiesToContinue = 0;
-  QVector<AttackMethode> attackMethodes = {};
+  uint                   min_enemies_to_stop_     = 0;
+  uint                   min_enemies_to_continue_ = 0;
+  QVector<AttackMethode> attack_methodes_         = {};
 };

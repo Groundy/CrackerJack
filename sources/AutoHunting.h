@@ -42,7 +42,7 @@ class AutoHunting : public QThread {
   QVector<AttackMethode>         attackMethodes              = {};
   int                            lastAnalyzeEnemiesNumber    = 0;
   int                            minEnemiesToStop            = 2;
-  int                            minEnemiesToContinue        = 0;
+  int                            min_enemies_to_continue_        = 0;
 
   QStringList alloweNamesOnBattleList;
   Logger&     logger = Logger::instance();
