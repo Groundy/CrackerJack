@@ -30,20 +30,19 @@ class AutoHuntConfigurator : public QDialog {
   QStringList getNamesOfAttacksMethodes(Profession profession);
   void        getDataFromGUI();
 
-  Profile*                       prof;
+  Profile*                       prof_;
   Ui::AutoHuntConfiguratorClass* ui;
-  QVector<QCheckBox*>            checkBoxes_{                             //
-                                  ui->actvieAtackCheckBox_1,   //
-                                  ui->actvieAtackCheckBox_2,   //
-                                  ui->actvieAtackCheckBox_3,   //
-                                  ui->actvieAtackCheckBox_4};  //
-  QVector<QComboBox*>            attackKeysBoxes_     = {ui->atakKeyBox_1, ui->atakKeyBox_2, ui->atakKeyBox_3, ui->atakKeyBox_4};
-  QVector<QComboBox*>            attackNamesBoxes_    = {ui->atakNameBox_1, ui->atakNameBox_2, ui->atakNameBox_3, ui->atakNameBox_4};
-  QVector<QSpinBox*>             attackMonstersBoxes_ = {                         //
-                                             ui->attackMinMonsers_1,  //
-                                             ui->attackMinMonsers_2,  //
-                                             ui->attackMinMonsers_3,  //
-                                             ui->attackMinMonsers_4};
-  AutoHuntData                   autoHuntData         = AutoHuntData();
-  QString                        lastSelectedRoute_;
+
+  QVector<QComboBox*> attack_keys_boxes_  = {ui->atakKeyBox_1, ui->atakKeyBox_2, ui->atakKeyBox_3, ui->atakKeyBox_4};
+  QVector<QComboBox*> attack_names_boxes_ = {ui->atakNameBox_1, ui->atakNameBox_2, ui->atakNameBox_3, ui->atakNameBox_4};
+  AutoHuntData        auto_hunt_data_{};
+  QString             last_selected_route_;
+  QVector<QSpinBox*>  attack_monsters_boxes_{ui->attackMinMonsers_1,  //
+                                            ui->attackMinMonsers_2,  //
+                                            ui->attackMinMonsers_3,  //
+                                            ui->attackMinMonsers_4};
+  QVector<QCheckBox*> check_boxes_{ui->actvieAtackCheckBox_1,   //
+                                   ui->actvieAtackCheckBox_2,   //
+                                   ui->actvieAtackCheckBox_3,   //
+                                   ui->actvieAtackCheckBox_4};  //
 };

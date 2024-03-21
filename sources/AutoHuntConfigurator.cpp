@@ -1,7 +1,7 @@
 #include "AutoHuntConfigurator.h"
 
 AutoHuntConfigurator::AutoHuntConfigurator(QWidget* parent, Profile* profile)
-    : QDialog(parent), prof(profile), ui(new Ui::AutoHuntConfiguratorClass()) {
+    : QDialog(parent), prof_(profile), ui(new Ui::AutoHuntConfiguratorClass()) {
   ui->setupUi(this);
   fillGuiFromProfileData(profile);
 }
@@ -20,23 +20,23 @@ void AutoHuntConfigurator::selectRoute() {
 
   QString name = Route(obj).getName();
   ui->routeLabel->setText(name);
-  lastSelectedRoute_ = name;
+  last_selected_route_ = name;
 };
 
 void AutoHuntConfigurator::editRoute() {
-  if (lastSelectedRoute_.isEmpty()) {
+  if (last_selected_route_.isEmpty()) {
     return;
   }
 
   Route route;
-  JsonParser::readRoute(route, lastSelectedRoute_);
+  JsonParser::readRoute(route, last_selected_route_);
   RouteCreator routeCreator(this, &route);
   routeCreator.exec();
 };
 
 void AutoHuntConfigurator::saveButtonClicked() {
   getDataFromGUI();
-  prof->setAutoHuntData(autoHuntData);
+  prof_->setAutoHuntData(auto_hunt_data_);
   this->accept();
 };
 
@@ -46,20 +46,20 @@ void AutoHuntConfigurator::cancelButtonClicked() {
 
 void AutoHuntConfigurator::checkBoxChanged() {
   int lastActiveCheckboxIndex = -1;
-  for each (auto checkBox in checkBoxes_) {
+  for each (auto checkBox in check_boxes_) {
     if (checkBox->isChecked()) {
       lastActiveCheckboxIndex++;
     }
   }
 
-  for (int i = 0; i < checkBoxes_.size(); i++) {
-    bool setEnable = checkBoxes_[i]->isChecked();
-    attackKeysBoxes_[i]->setEnabled(setEnable);
-    attackMonstersBoxes_[i]->setEnabled(setEnable);
-    attackNamesBoxes_[i]->setEnabled(setEnable);
-    bool isLast = i == checkBoxes_.size() - 1;
+  for (int i = 0; i < check_boxes_.size(); i++) {
+    bool setEnable = check_boxes_[i]->isChecked();
+    attack_keys_boxes_[i]->setEnabled(setEnable);
+    attack_monsters_boxes_[i]->setEnabled(setEnable);
+    attack_names_boxes_[i]->setEnabled(setEnable);
+    bool isLast = i == check_boxes_.size() - 1;
     if (!isLast && setEnable && i <= lastActiveCheckboxIndex) {
-      checkBoxes_[i + 1]->setEnabled(true);
+      check_boxes_[i + 1]->setEnabled(true);
     }
   }
 }
@@ -79,42 +79,42 @@ void AutoHuntConfigurator::fillKeyComboBoxes() {
 }
 
 void AutoHuntConfigurator::fillGuiFromProfileData(Profile* prof) {
-  auto data    = prof->getAutoHuntData();
-  autoHuntData = data;
+  auto data       = prof->getAutoHuntData();
+  auto_hunt_data_ = data;
   ui->minMonContinueSpiner->setValue(data.getMinMonToContinue());
   ui->minMonStopSpiner->setValue(data.getMinMonToStop());
   auto attacks = data.getAttacks();
   for (int i = 0; i < attacks.size(); i++) {
-    checkBoxes_[i]->setEnabled(true);
-    checkBoxes_[i]->setChecked(true);
-    attackKeysBoxes_[i]->setCurrentIndex(attackKeysBoxes_[i]->findText(attacks[i].getKey().getKeyName()));
+    check_boxes_[i]->setEnabled(true);
+    check_boxes_[i]->setChecked(true);
+    attack_keys_boxes_[i]->setCurrentIndex(attack_keys_boxes_[i]->findText(attacks[i].getKey().getKeyName()));
   }
 
   QStringList namesToFill = getNamesOfAttacksMethodes(prof->getProfession());
-  for each (auto var in attackNamesBoxes_) {
+  foreach (auto var, attack_names_boxes_) {
     var->insertItems(0, namesToFill);
     var->setCurrentIndex(-1);
   }
   for (int i = 0; i < attacks.size(); i++) {
-    attackNamesBoxes_[i]->setCurrentIndex(attackNamesBoxes_[i]->findText(attacks[i].getName()));
+    attack_names_boxes_[i]->setCurrentIndex(attack_names_boxes_[i]->findText(attacks[i].getName()));
   }
 
   auto allPossibleKeyNames = Key::getListOfAllPossibleKeys();
-  for each (auto box in attackKeysBoxes_) {
+  foreach (auto box, attack_keys_boxes_) {
     box->addItems(allPossibleKeyNames);
     box->setCurrentIndex(-1);
   }
 
   int i = 0;
   for each (AttackMethode obj in prof->getAutoHuntData().getAttacks()) {
-    attackNamesBoxes_[i]->setEnabled(true);
-    attackKeysBoxes_[i]->setEnabled(true);
-    attackMonstersBoxes_[i]->setEnabled(true);
-    checkBoxes_[i]->setEnabled(true);
-    attackNamesBoxes_[i]->setCurrentIndex(attackNamesBoxes_[i]->findText(obj.getName()));
-    attackKeysBoxes_[i]->setCurrentIndex(attackKeysBoxes_[i]->findText(obj.getKey().getKeyName()));
-    attackMonstersBoxes_[i]->setValue(obj.getMinMonsters());
-    checkBoxes_[i]->setChecked(true);
+    attack_names_boxes_[i]->setEnabled(true);
+    attack_keys_boxes_[i]->setEnabled(true);
+    attack_monsters_boxes_[i]->setEnabled(true);
+    check_boxes_[i]->setEnabled(true);
+    attack_names_boxes_[i]->setCurrentIndex(attack_names_boxes_[i]->findText(obj.getName()));
+    attack_keys_boxes_[i]->setCurrentIndex(attack_keys_boxes_[i]->findText(obj.getKey().getKeyName()));
+    attack_monsters_boxes_[i]->setValue(obj.getMinMonsters());
+    check_boxes_[i]->setChecked(true);
     i++;
   }
 }
@@ -131,20 +131,20 @@ QStringList AutoHuntConfigurator::getNamesOfAttacksMethodes(Profession professio
 };
 
 void AutoHuntConfigurator::getDataFromGUI() {
-  autoHuntData.setMinMonToContinue(ui->minMonContinueSpiner->value());
-  autoHuntData.setMinMonToStop(ui->minMonStopSpiner->value());
+  auto_hunt_data_.setMinMonToContinue(ui->minMonContinueSpiner->value());
+  auto_hunt_data_.setMinMonToStop(ui->minMonStopSpiner->value());
 
   QList<Spell> spells;
   auto         filterType = Spell::SpellType::Attack;
-  JsonParser::readSpellsJson(spells, &filterType, &prof->getProfession());
+  JsonParser::readSpellsJson(spells, &filterType, &prof_->getProfession());
   QStringList runesNames = JsonParser::readRunesNames();
 
   QVector<AttackMethode> attacks = {};
-  for (int i = 0; i < checkBoxes_.size(); i++) {
-    if (!checkBoxes_[i]->isChecked()) continue;
-    QString name = attackNamesBoxes_[i]->currentText();
-    Key     key(attackKeysBoxes_[i]->currentText());
-    int     monstersAmount = attackMonstersBoxes_[i]->value();
+  for (int i = 0; i < check_boxes_.size(); i++) {
+    if (!check_boxes_[i]->isChecked()) continue;
+    QString name = attack_names_boxes_[i]->currentText();
+    Key     key(attack_keys_boxes_[i]->currentText());
+    int     monstersAmount = attack_monsters_boxes_[i]->value();
     for each (Spell spell in spells) {
       if (spell.getIncantation() != name) continue;
       AttackMethode toAdd(spell, key, monstersAmount);
@@ -156,5 +156,5 @@ void AutoHuntConfigurator::getDataFromGUI() {
       attacks.push_back(toAdd);
     }
   }
-  autoHuntData.setAttacks(attacks);
+  auto_hunt_data_.setAttacks(attacks);
 }
