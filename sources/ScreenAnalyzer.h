@@ -7,10 +7,12 @@
 #include <qmap.h>
 #include <qtimer.h>
 
+#include "Calibrator.h"
 #include "Equipment.hpp"
 #include "Profile.h"
 #include "RGBstruct.h"
 #include "ScreenAnalyzer.h"
+#include "Settings.hpp"
 #include "VariablesClass.hpp"
 class ScreenAnalyzer : public QThread {
   Q_OBJECT
@@ -24,12 +26,12 @@ class ScreenAnalyzer : public QThread {
   void miniMapReady();
 
  private:
-  const int                      SLEEP_TIME = 50;
+  const int                      SLEEP_TIME_ = 50;
   QSharedPointer<VariablesClass> var_;
-  QDir                           screenShotFolder;
-  Logger&                        logger = Logger::instance();
-  QTimer                         screenAnalyzerTimer;
-  Calibrator                     calibrator_{var_};
+  QDir                           screenShotFolder_;
+  Logger&                        logger_ = Logger::instance();
+  QTimer                         screenAnalyzerTimer_;
+  Calibrator                     calibrator_;
 
   void    deleteScreenShotFolder();
   QString getNameOfLastTakenScreenShot();
