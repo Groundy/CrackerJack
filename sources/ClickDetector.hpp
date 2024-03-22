@@ -1,33 +1,42 @@
 #pragma once
-#include <qdatetime.h>
-#include <qdebug.h>
 #include <qobject.h>
 #include <qthread.h>
+#include <qtimer.h>
 #include <windows.h>
 
 #include "GameConnecter.h"
 class ClickDetector : public QThread {
   Q_OBJECT
  public:
-  ClickDetector(QObject* parent, QSharedPointer<GameConnecter> gameConnetorPtr) : gameConnetorPtr(gameConnetorPtr), QThread(parent){};
-  ~ClickDetector() = default;
-  void run() {
-    while (true) {
-      if (middleButtonPressed()) {
-        gameConnetorPtr->autoLootAroundPlayer();
-        msleep(1000);
-      }
-      msleep(minMSecBetweenClicks);
+  ClickDetector(QObject* parent, QSharedPointer<GameConnecter> gameConnetor) : QThread(parent), game_connetor_(gameConnetor) {
+    if (!connect(&timer_, &QTimer::timeout, this, &ClickDetector::execute)) {
+      qCritical() << "Connection failed. Click detector timer";
+      exit(1);
     }
-  }
+    timer_.setSingleShot(true);
+    timer_.start();
+  };
+  ~ClickDetector() = default;
 
  private:
-  QSharedPointer<GameConnecter> gameConnetorPtr;
-  const int                     minMSecBetweenClicks = 6;
-  bool                          keyPressed(int key) {
-    return (GetAsyncKeyState(key) & 0x8000 != 0) != 0;
+  QSharedPointer<GameConnecter> game_connetor_;
+  const uint                    ms_between_clicks_         = 1000;
+  const uint                    ms_between_trigger_checks_ = 6;
+  QTimer                        timer_;
+
+  void execute() {
+    if (middleButtonPressed()) {
+      game_connetor_->autoLootAroundPlayer();
+      msleep(ms_between_clicks_);
+    }
+    timer_.start();
   }
-  bool middleButtonPressed() {
-    return (GetAsyncKeyState(VK_MBUTTON) & 0x8000 != 0) != 0;
+
+  bool keyPressed(const int key) const {
+    return (GetAsyncKeyState(key) & 0x8000 != 0) != 0;  //[TODO] move to separate windows funcs class
+  }
+
+  bool middleButtonPressed() const {
+    return keyPressed(VK_MBUTTON);  //[TODO] move to separate windows funcs class
   }
 };
