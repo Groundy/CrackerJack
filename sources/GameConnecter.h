@@ -2,12 +2,14 @@
 #include <comdef.h>
 #include <qmutex.h>
 #include <qsharedpointer.h>
+#include <qthread.h>
 
 #include "Key.h"
 #include "Profile.h"
 #include "RestorationMethode.hpp"
 #include "VariablesClass.hpp"
-class GameConnecter {
+class GameConnecter : QThread {
+  Q_OBJECT
  public:
   GameConnecter(QSharedPointer<VariablesClass> var);
   ~GameConnecter();
@@ -25,9 +27,9 @@ class GameConnecter {
   void clickRightWithShift(QVector<QPoint> pts, int SLEEP_TIME_BETWEEN_LOOT_CLICK);
   void setShiftPressed(const bool pressed);
 
-  QMutex                         senderMutex;
-  Profile::AutoLoot              autoLootSetting;
-  QSharedPointer<VariablesClass> var;
-  Logger&                        logger                = Logger::instance();
-  bool                           playingOnSmallMonitor = false;
+  QMutex                         sender_mutex_;
+  const Profile::AutoLoot        auto_loot_setting_;
+  QSharedPointer<VariablesClass> var_;
+  Logger&                        logger_                   = Logger::instance();
+  const bool                     playing_on_small_monitor_ = false;  //[TODO] move that!
 };

@@ -1,82 +1,79 @@
 #include "GameConnecter.h"
 
-GameConnecter::GameConnecter(QSharedPointer<VariablesClass> var) : var(var) {
-  autoLootSetting       = var->getProf()->getAutoLoot();
-  playingOnSmallMonitor = var->getSettings().getPlayingOnSmallMonitor();
-}
+GameConnecter::GameConnecter(QSharedPointer<VariablesClass> var)
+    : var_(var),
+      playing_on_small_monitor_(var->getSettings().getPlayingOnSmallMonitor()),
+      auto_loot_setting_(var->getProf()->getAutoLoot()) {}
+
 GameConnecter::~GameConnecter() {
   setShiftPressed(false);
 }
 
 void GameConnecter::clickLeft(QPoint pt) {
-  if (playingOnSmallMonitor) {
+  if (playing_on_small_monitor_) {
     pt = QPoint(pt.x() / 0.8, pt.y() / 0.8);
   }
-  HWND   gameThreadHandler = var->getGameProcess().getHandlerToGameThread();
-  LPARAM lParam            = (pt.y() << 16) + pt.x();
-  senderMutex.lock();
+  HWND         gameThreadHandler = var_->getGameProcess().getHandlerToGameThread();
+  LPARAM       lParam            = (pt.y() << 16) + pt.x();
+  QMutexLocker locker(&sender_mutex_);
   PostMessage(gameThreadHandler, WM_LBUTTONDOWN, 1, lParam);
   PostMessage(gameThreadHandler, WM_LBUTTONUP, 1, lParam);
-  senderMutex.unlock();
 }
 void GameConnecter::clickRight(QPoint pt) {
-  if (playingOnSmallMonitor) pt = QPoint(pt.x() / 0.8, pt.y() / 0.8);
-  HWND   gameThreadHandler = var->getGameProcess().getHandlerToGameThread();
-  LPARAM lParam            = (pt.y() << 16) + pt.x();
-  senderMutex.lock();
+  if (playing_on_small_monitor_) {
+    pt = QPoint(pt.x() / 0.8, pt.y() / 0.8);
+  }
+  HWND         gameThreadHandler = var_->getGameProcess().getHandlerToGameThread();
+  LPARAM       lParam            = (pt.y() << 16) + pt.x();
+  QMutexLocker locker(&sender_mutex_);
   PostMessage(gameThreadHandler, WM_RBUTTONDOWN, 0, lParam);
   PostMessage(gameThreadHandler, WM_RBUTTONUP, 0, lParam);
-  senderMutex.unlock();
 }
 void GameConnecter::clickRightWithShift(QVector<QPoint> pts, int SLEEP_TIME_BETWEEN_LOOT_CLICK) {
-  HWND gameThreadHandler = var->getGameProcess().getHandlerToGameThread();
+  HWND gameThreadHandler = var_->getGameProcess().getHandlerToGameThread();
 
-  senderMutex.lock();
+  QMutexLocker locker(&sender_mutex_);
   setShiftPressed(true);
-  SLEEP_TIME_BETWEEN_LOOT_CLICK /= 3;
-  for each (auto pt in pts) {
-    if (playingOnSmallMonitor) {
+  foreach (auto pt, pts) {
+    if (playing_on_small_monitor_) {
       pt = QPoint(pt.x() / 0.8, pt.y() / 0.8);
     }
     LPARAM lParam = (pt.y() << 16) + pt.x();
-    Sleep(SLEEP_TIME_BETWEEN_LOOT_CLICK);
+    msleep(SLEEP_TIME_BETWEEN_LOOT_CLICK);
     PostMessage(gameThreadHandler, WM_RBUTTONDOWN, 0, lParam);
-    Sleep(SLEEP_TIME_BETWEEN_LOOT_CLICK);
+    msleep(SLEEP_TIME_BETWEEN_LOOT_CLICK);
     PostMessage(gameThreadHandler, WM_RBUTTONUP, 0, lParam);
-    Sleep(SLEEP_TIME_BETWEEN_LOOT_CLICK);
+    msleep(SLEEP_TIME_BETWEEN_LOOT_CLICK);
   }
   setShiftPressed(false);
-  senderMutex.unlock();
 }
 bool GameConnecter::sendKeyStrokeToProcess(Key key, int sleepTime) {
-  const int weirdConst        = 0x1470001;
-  HWND      gameThreadHandler = var->getGameProcess().getHandlerToGameThread();
-  senderMutex.lock();
+  const int    weirdConst        = 0x1470001;
+  HWND         gameThreadHandler = var_->getGameProcess().getHandlerToGameThread();
+  QMutexLocker locker(&sender_mutex_);
   PostMessage(gameThreadHandler, WM_KEYDOWN, key.getKeyVal(), weirdConst);
-  Sleep(sleepTime);
+  msleep(sleepTime);
   PostMessage(gameThreadHandler, WM_KEYUP, key.getKeyVal(), weirdConst);
-  senderMutex.unlock();
   return true;
 }
 bool GameConnecter::sendKeyStrokeToProcess(int virtualKey, int sleepTime) {
-  const int weirdConst        = 0x1470001;
-  HWND      gameThreadHandler = var->getGameProcess().getHandlerToGameThread();
-  senderMutex.lock();
+  const int    weirdConst        = 0x1470001;
+  HWND         gameThreadHandler = var_->getGameProcess().getHandlerToGameThread();
+  QMutexLocker locker(&sender_mutex_);
   PostMessage(gameThreadHandler, WM_KEYDOWN, virtualKey, weirdConst);
-  Sleep(sleepTime);
+  msleep(sleepTime);
   PostMessage(gameThreadHandler, WM_KEYUP, virtualKey, weirdConst);
-  senderMutex.unlock();
   return true;
 }
 void GameConnecter::sendStringToGame(QString str) {
-  HWND gameThreadHandler = var->getGameProcess().getHandlerToGameThread();
+  HWND gameThreadHandler = var_->getGameProcess().getHandlerToGameThread();
   for each (QChar charToSend in str) {
     sendCharToGame(charToSend, gameThreadHandler);
-    Sleep(2);
+    msleep(2);
   }
 }
 void GameConnecter::useRestorationMethode(const RestorationMethode& methode, int additionalTime) {
-  Timers& timers = var->getTimers();
+  Timers& timers = var_->getTimers();
   if (methode.isSpell()) {
     timers.setTimeLastSpellUsageHealing();
     timers.setTimeLastSpellUsed(methode.getName());
@@ -87,10 +84,10 @@ void GameConnecter::useRestorationMethode(const RestorationMethode& methode, int
 
   Key key = methode.getKey();
   sendKeyStrokeToProcess(key);
-  logger.log(methode.getName(), false, true, true);
+  logger_.log(methode.getName(), false, true, true);
 }
 void GameConnecter::sendCharToGame(const QChar charToSend, const HWND& gameThreadHandler) {
-  senderMutex.lock();
+  QMutexLocker locker(&sender_mutex_);
   if (charToSend.isLetter()) {
     WPARAM wParam = charToSend.toUpper().unicode();
     PostMessage(gameThreadHandler, WM_KEYDOWN, wParam, 1);
@@ -113,32 +110,27 @@ void GameConnecter::sendCharToGame(const QChar charToSend, const HWND& gameThrea
     LPARAM lParam = 0x000C001;
     PostMessage(gameThreadHandler, WM_KEYDOWN, wParam, lParam);
   }
-  senderMutex.unlock();
 }
 void GameConnecter::autoLootAroundPlayer() {
-  auto      potinsToClick                 = var->getGameWindow().getPointsOfFieldsAroundPlayer();
-  const int SLEEP_TIME_BETWEEN_LOOT_CLICK = 111;
-  switch (autoLootSetting) {
-    case Profile::RIGHT_MOUSE_BUTTON:
-      for each (const QPoint& pt in potinsToClick) {
-        clickRight(pt);
-        Sleep(SLEEP_TIME_BETWEEN_LOOT_CLICK);
-      }
-      break;
-    case Profile::SHIFT_RIGHT:
-      clickRightWithShift(potinsToClick, SLEEP_TIME_BETWEEN_LOOT_CLICK);
-      setShiftPressed(false);
-      break;
-    case Profile::LEFT_MOUSE_BUTTON:
-      for each (auto pt in potinsToClick) {
-        clickLeft(pt);
-        Sleep(SLEEP_TIME_BETWEEN_LOOT_CLICK);
-      }
-      break;
-    default:
-      break;
+  auto           potinsToClick             = var_->getGameWindow().getPointsOfFieldsAroundPlayer();
+  constexpr uint sleep_time_between_clicks = 111;
+
+  if (auto_loot_setting_ == Profile::RIGHT_MOUSE_BUTTON) {
+    foreach (const QPoint& pt, potinsToClick) {
+      clickRight(pt);
+      msleep(sleep_time_between_clicks);
+    }
+  } else if (auto_loot_setting_ == Profile::SHIFT_RIGHT) {
+    clickRightWithShift(potinsToClick, sleep_time_between_clicks * 0.33);
+    setShiftPressed(false);
+  } else if (auto_loot_setting_ == Profile::LEFT_MOUSE_BUTTON) {
+    foreach (const QPoint& pt, potinsToClick) {
+      clickLeft(pt);
+      msleep(sleep_time_between_clicks);
+    }
   }
-  logger.log("auto loot.", false, true, true);
+
+  logger_.log("auto loot.", false, true, true);
 }
 void GameConnecter::setShiftPressed(const bool pressed) {
   INPUT ip{};
