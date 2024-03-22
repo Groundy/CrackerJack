@@ -14,7 +14,7 @@ class Tools {
     QDir        directory(inputFolderPath);
     QStringList litOfFIles = directory.entryList(QStringList() << "*.png", QDir::Files);
     QJsonArray  arr;
-    for each (QString fileName in litOfFIles) {
+    foreach (QString fileName, litOfFIles) {
       QString   pathToFile = QString("%1\\%2").arg(inputFolderPath, fileName);
       QImage    img(pathToFile);
       const int WIDTH       = img.width();
@@ -44,7 +44,7 @@ class Tools {
     QDir        directory(inputFolderPath);
     QStringList litOfFIles = directory.entryList(QStringList() << "*.png", QDir::Files);
     QJsonArray  arr;
-    for each (QString fileName in litOfFIles) {
+    foreach (QString fileName, litOfFIles) {
       QString   pathToFile = QString("%1\\%2").arg(inputFolderPath, fileName);
       QImage    img(pathToFile);
       const int THRESHOLD = 200;
@@ -68,7 +68,7 @@ class Tools {
     const int   WHOLE_IMG_HEIGHT = 256 * (MAX_Y_MAP_INDEX - MIN_Y_MAP_INDEX);
     QStringList types            = QStringList() << "Color"
                                       << "WaypointCost";
-    for each (QString type in types) {
+    foreach (QString type, types) {
       for (size_t floorImgName = 0; floorImgName <= 15; floorImgName++) {
         QImage* wholeImg = new QImage(WHOLE_IMG_WIDTH, WHOLE_IMG_HEIGHT, QImage::Format::Format_ARGB32);
         for (size_t xIndex = MIN_X_MAP_INDEX; xIndex <= MAX_X_MAP_INDEX; xIndex++) {
@@ -104,7 +104,7 @@ class Tools {
     QDir               directory(inputPath);
     QStringList        litOfFIles = directory.entryList(QStringList() << "*_Color*.png", QDir::Files);
     QVector<RGBstruct> colorSet;
-    for each (QString fileName in litOfFIles) {
+    foreach (QString fileName, litOfFIles) {
       QString pathToFile = inputPath + "\\" + fileName;
       QImage  img        = QImage(pathToFile);
       for (size_t x = 0; x < img.width(); x++) {
@@ -115,7 +115,7 @@ class Tools {
       }
     }
     QJsonArray arr;
-    for each (RGBstruct var in colorSet) {
+    foreach (RGBstruct var, colorSet) {
       arr.push_back(var.toJson());
     }
     QJsonObject objToSave;
@@ -143,7 +143,7 @@ class Tools {
 
     QDir        directory(inputPath);
     QStringList litOfFIles = directory.entryList(QStringList() << "*_Color*.png", QDir::Files);
-    for each (QString fileName in litOfFIles) {
+    foreach (QString fileName, litOfFIles) {
       QString    pathToFile = inputPath + "\\" + fileName;
       QString    floorName  = fileName.split("_").first();
       QImage     img        = QImage(pathToFile);

@@ -58,7 +58,9 @@ ValuesDoubles VitalityAnalyzer::toDoubles(ValuesInts currentValues) {
 bool VitalityAnalyzer::populateHealthManaMaps(const Profile* profile) {
   auto         healthRestorationsMethode = profile->getRestMethodesHealth();
   QVector<int> healthThresholds;
-  for each (auto var in healthRestorationsMethode) healthThresholds.push_back(var.getThreshold());
+  foreach (auto var, healthRestorationsMethode) {
+    healthThresholds.push_back(var.getThreshold());
+  }
   if (healthThresholds.size() != healthRestorationsMethode.size()) {
     qWarning() << "wrong sizes of health restoration methodes passed to ManaHealthAnalyzer!";
     return false;
@@ -69,7 +71,7 @@ bool VitalityAnalyzer::populateHealthManaMaps(const Profile* profile) {
 
   auto         manaRestorationsMethode = profile->getRestMethodesMana();
   QVector<int> manaThresholds;
-  for each (auto var in manaRestorationsMethode) {
+  foreach (auto var, manaRestorationsMethode) {
     manaThresholds.push_back(var.getThreshold());
   }
   if (manaThresholds.size() != manaRestorationsMethode.size()) {
@@ -198,7 +200,7 @@ QVector<RestorationMethode> VitalityAnalyzer::findRestorationToUse(double curren
     }
     auto currentMethode          = methodes[thresholds[i]];
     bool suchTypeIsAlreadyOnList = false;
-    for each (auto var in toRet) {
+    foreach (auto var, toRet) {
       if (var.isType(currentMethode.getType())) {
         suchTypeIsAlreadyOnList = true;
         break;

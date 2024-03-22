@@ -66,7 +66,7 @@ void SelectProfileWindow::refreshProfilesOnList() {
   const int EXTENSION_SIZE = QString(".json").size();
   ui->listOfProfs->clear();
   QStringList list = JsonParser::readNamesOfAllSavedProfiles();
-  for each (QString fileName in list) {
+  foreach (QString fileName, list) {
     bool tooShortName = fileName.size() < (EXTENSION_SIZE + 1);
     if (tooShortName) {
       QString msg = "Too short profile json file name";

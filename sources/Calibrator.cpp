@@ -34,7 +34,7 @@ bool Calibrator::calibrateBattleArea(const CJ_Image& fullscreen) {
     return false;
   }
 
-  for each (QRect rect in rectangles) {
+  foreach (QRect rect, rectangles) {
     auto battleMarksPos = fullscreen.findStartPositionInImg(battleListMark, rect);
     if (battleMarksPos.size() != 1) {
       continue;
@@ -171,7 +171,7 @@ Calibrator::Indexes Calibrator::getIndexesOfHealthManaBars(const CJ_Image& fulls
     case RIGHT: {
       indexes.rotation = -1;
       QVector<QRect> rectangles;
-      for each (int var in slashesIndexes.slashesY) {
+      foreach (int var, slashesIndexes.slashesY) {
         rectangles.push_back(listOfImportantRectangles[var]);
       }
       auto [sortedByX, sortedByY] = sortByXY(rectangles);
@@ -209,7 +209,7 @@ Calibrator::Indexes Calibrator::getIndexesOfHealthManaBars(const CJ_Image& fulls
     case TOP: {
       indexes.rotation = 0;
       QVector<QRect> rectangles;
-      for each (int var in slashesIndexes.slashesX) {
+      foreach (int var, slashesIndexes.slashesX) {
         rectangles.push_back(listOfImportantRectangles[var]);
       }
       auto [sortedByX, sortedByY] = sortByXY(rectangles);
@@ -303,7 +303,7 @@ bool Calibrator::categorizeWindows(const CJ_Image& fullscreen, QVector<QRect>& i
       rectsToDelete.push_back(importantRectangles[indexes.combined]);
     }
 
-    for each (QRect var in rectsToDelete) importantRectangles.removeOne(var);
+    foreach (QRect var, rectsToDelete) importantRectangles.removeOne(var);
   }
 
   // miniMap Frame
@@ -330,7 +330,7 @@ bool Calibrator::findWindowsOnScreen(const CJ_Image& fullScreen, QVector<QRect>&
 std::tuple<QVector<QPoint>, QVector<QPoint>> Calibrator::sortByXY(const QVector<QPoint>& points) {
   QMultiMap<int, QPoint> mapX;
   QMultiMap<int, QPoint> mapY;
-  for each (QPoint point in points) {
+  foreach (QPoint point, points) {
     mapX.insert(point.x(), point);
     mapY.insert(point.y(), point);
   }
@@ -339,7 +339,7 @@ std::tuple<QVector<QPoint>, QVector<QPoint>> Calibrator::sortByXY(const QVector<
 std::tuple<QVector<QRect>, QVector<QRect>> Calibrator::sortByXY(const QVector<QRect>& inputRects) {
   QMultiMap<int, QRect> mapX;
   QMultiMap<int, QRect> mapY;
-  for each (QRect rect in inputRects) {
+  foreach (QRect rect, inputRects) {
     mapX.insert(rect.x(), rect);
     mapY.insert(rect.y(), rect);
   }
@@ -394,7 +394,7 @@ QVector<QRect> Calibrator::getAreasInsideFrames(const CJ_Image& fullScreen, cons
   const uint     MIN_ACCEPTABLE_VAL = 17;
   const uint     MAX_ACCEPTABLE_VAL = 29;
   QVector<QRect> frameToRet;
-  for each (QPoint startPoint in startOfFrames) {
+  foreach (QPoint startPoint, startOfFrames) {
     int currentWidth = 0;
     for (size_t x = startPoint.x(); x < WIDTH; x++) {
       uint color        = fullScreen.pixel(x, startPoint.y());
@@ -431,7 +431,7 @@ QVector<QRect> Calibrator::filterAreasCoveredByFrameFromBottomRight(const CJ_Ima
   const uint     MIN_ACCEPTABLE_VAL = 100;
   const uint     MAX_ACCEPTABLE_VAL = 130;
   QVector<QRect> toRet;
-  for each (QRect area in areas) {
+  foreach (QRect area, areas) {
     if (area.bottom() + 1 >= fullScreen.height()) {
       qWarning() << "????";
       return toRet;
@@ -480,7 +480,7 @@ QVector<QRect> Calibrator::getOutsideFramesOfOpenEntitiesOnSideBars(const CJ_Ima
   QVector<QRect>  outerFramesOfSideBarsEntity = {};
   QVector<QPoint> startPoints                 = wholeScreen.findStartPositionInImg(startOfSideBarEntity);
   const QImage    endOfSideBarEntity(PathResource::getPathToSideBarEntityEnd());
-  for each (QPoint currPt in startPoints) {
+  foreach (QPoint currPt, startPoints) {
     QRect rectToSheachWithIn(currPt, QSize(wholeScreen.width() - currPt.x(), wholeScreen.height() - currPt.y()));
     auto  endsOfFrame = wholeScreen.findStartPositionInImg(endOfSideBarEntity, rectToSheachWithIn);
     if (endsOfFrame.size() == 0) {

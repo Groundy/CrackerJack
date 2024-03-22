@@ -65,7 +65,7 @@ bool GameConnecter::sendKeyStrokeToProcess(const int virtualKey, const uint slee
 
 void GameConnecter::sendStringToGame(const QString& str) {
   const HWND gameThreadHandler = game_process_data_->getHandlerToGameThread();
-  for each (QChar charToSend in str) {
+  foreach (QChar charToSend, str) {
     sendCharToGame(charToSend, gameThreadHandler);
     msleep(2);
   }

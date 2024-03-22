@@ -26,7 +26,7 @@ Profile::Profile(QJsonObject obj) {
     return;
   }
   auto healRestorationArr = value.toArray();
-  for each (auto var in healRestorationArr) {
+  foreach (auto var, healRestorationArr) {
     RestorationMethode resStr(var.toObject());
     this->healthRestorations.push_back(resStr);
   }
@@ -38,7 +38,7 @@ Profile::Profile(QJsonObject obj) {
     return;
   }
   auto manaRestorationArr = value.toArray();
-  for each (auto var in manaRestorationArr) {
+  foreach (auto var, manaRestorationArr) {
     RestorationMethode resStr(var.toObject());
     this->manaRestorations.push_back(resStr);
   }
@@ -129,8 +129,12 @@ Profile::Profile(const Profile& profile) {
 
 QJsonObject Profile::toJson() const {
   QJsonArray healthArray, manaArray;
-  for each (auto var in healthRestorations) healthArray.push_back(var.toJson());
-  for each (auto var in manaRestorations) manaArray.push_back(var.toJson());
+  foreach (auto var, healthRestorations) {
+    healthArray.push_back(var.toJson());
+  }
+  foreach (auto var, manaRestorations) {
+    manaArray.push_back(var.toJson());
+  }
 
   QJsonObject mainObj;
   mainObj.insert("profileName", profileName);
@@ -157,12 +161,16 @@ void Profile::clearProfile() {
 }
 QStringList Profile::getHealthRestorationNames() {
   QStringList toRet;
-  for each (auto var in healthRestorations) toRet.push_back(var.getName());
+  foreach (auto var, healthRestorations) {
+    toRet.push_back(var.getName());
+  }
   return toRet;
 }
 QStringList Profile::getManaRestorationNames() {
   QStringList toRet;
-  for each (auto var in manaRestorations) toRet.push_back(var.getName());
+  foreach (auto var, manaRestorations) {
+    toRet.push_back(var.getName());
+  }
   return toRet;
 }
 bool Profile::isValid() const {

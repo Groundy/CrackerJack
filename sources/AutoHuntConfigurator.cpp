@@ -46,7 +46,7 @@ void AutoHuntConfigurator::cancelButtonClicked() {
 
 void AutoHuntConfigurator::checkBoxChanged() {
   int lastActiveCheckboxIndex = -1;
-  for each (auto checkBox in check_boxes_) {
+  foreach (auto checkBox, check_boxes_) {
     if (checkBox->isChecked()) {
       lastActiveCheckboxIndex++;
     }
@@ -72,7 +72,7 @@ void AutoHuntConfigurator::fillKeyComboBoxes() {
       ui->atakKeyBox_3,
       ui->atakKeyBox_4,
   };
-  for each (auto keyBox in attackKeysBoxes) {
+  foreach (auto keyBox, attackKeysBoxes) {
     keyBox->insertItems(0, allPosibleKeyNames);
     keyBox->setCurrentIndex(-1);
   }
@@ -106,7 +106,7 @@ void AutoHuntConfigurator::fillGuiFromProfileData(Profile* prof) {
   }
 
   int i = 0;
-  for each (AttackMethode obj in prof->getAutoHuntData().getAttacks()) {
+  foreach (AttackMethode obj, prof->getAutoHuntData().getAttacks()) {
     attack_names_boxes_[i]->setEnabled(true);
     attack_keys_boxes_[i]->setEnabled(true);
     attack_monsters_boxes_[i]->setEnabled(true);
@@ -125,7 +125,7 @@ QStringList AutoHuntConfigurator::getNamesOfAttacksMethodes(Profession professio
   JsonParser::readSpellsJson(spells, &filterType, &profession);
   QStringList namesToFill;
   namesToFill.append(JsonParser::readRunesNames());
-  for each (Spell spell in spells) namesToFill.append(spell.getIncantation());
+  foreach (Spell spell, spells) namesToFill.append(spell.getIncantation());
   namesToFill.sort();
   return namesToFill;
 };
@@ -145,12 +145,12 @@ void AutoHuntConfigurator::getDataFromGUI() {
     QString name = attack_names_boxes_[i]->currentText();
     Key     key(attack_keys_boxes_[i]->currentText());
     int     monstersAmount = attack_monsters_boxes_[i]->value();
-    for each (Spell spell in spells) {
+    foreach (Spell spell, spells) {
       if (spell.getIncantation() != name) continue;
       AttackMethode toAdd(spell, key, monstersAmount);
       attacks.push_back(toAdd);
     }
-    for each (QString runeName in runesNames) {
+    foreach (QString runeName, runesNames) {
       if (runeName != name) continue;
       AttackMethode toAdd(runeName, key, monstersAmount);
       attacks.push_back(toAdd);

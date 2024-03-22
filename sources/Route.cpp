@@ -3,12 +3,12 @@
 Route::Route(QJsonObject obj) {
   QJsonArray pointsArray = obj["points"].toArray();
   if (pointsArray.isEmpty()) {
-    qWarning() << "No points fields in route file";
+    qWarning() << "No points fields, route file";
     return;
   }
 
   QList<RoutePoint> tmpRoute;
-  for each (QJsonValue val in pointsArray) {
+  foreach (QJsonValue val, pointsArray) {
     RoutePoint toAdd(val.toObject());
     tmpRoute.append(toAdd);
   }
@@ -71,7 +71,7 @@ void Route::clear() {
 }
 QJsonObject Route::toJson() const {
   QJsonArray arr;
-  for each (RoutePoint pt in route_) {
+  foreach (RoutePoint pt, route_) {
     arr.append(pt.toJson());
   }
   QJsonObject mainObj;

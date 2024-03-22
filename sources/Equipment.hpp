@@ -29,7 +29,7 @@ class Equipment {
     stateBar.toBlackAndWhiteOneColor(toBlackAndWhiteThreshold);
     QList<CJ_Image> imgs  = stateBar.toImageListWithSingleLetters();
     QVector<STATES> toRet = {};
-    for each (CJ_Image img in imgs) {
+    foreach (CJ_Image img, imgs) {
       img.cutBlackBorders();
       QString code = img.binaryLetterImgToCode();
       if (!codeStateMap.contains(code)) {

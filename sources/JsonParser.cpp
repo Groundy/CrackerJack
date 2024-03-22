@@ -71,7 +71,7 @@ QStringList JsonParser::readRunesNames() {
   openJsonFile(obj, path);
   QJsonArray  arr = obj.value("runes").toArray();
   QStringList toRet;
-  for each (auto arrObj in arr) {
+  foreach (auto arrObj, arr) {
     toRet.append(arrObj.toObject().value("name").toString());
   }
   return toRet;
@@ -96,7 +96,7 @@ bool JsonParser::readPotions(QList<Potion>& potions, Profession* prof, Potion::T
     return false;
   }
   QJsonArray arr = obj["potions"].toArray();
-  for each (QJsonValue potionJsonVal in arr) {
+  foreach (QJsonValue potionJsonVal, arr) {
     Potion potionToAdd(potionJsonVal.toObject());
     if (prof != NULL) {
       if (!potionToAdd.isForProf(*prof)) {
@@ -122,9 +122,9 @@ bool JsonParser::readItemJson(QList<Item>& items) {
   }
 
   QStringList listOfCategoryNames = Item::getListOfCategories();
-  for each (QString nameOfJsonObj in listOfCategoryNames) {
+  foreach (QString nameOfJsonObj, listOfCategoryNames) {
     QJsonArray itemsOfOneCategory = obj[nameOfJsonObj].toArray();
-    for each (QJsonValue itemAsJsonObj in itemsOfOneCategory) items.push_back(Item(itemAsJsonObj));
+    foreach (QJsonValue itemAsJsonObj, itemsOfOneCategory) items.push_back(Item(itemAsJsonObj));
   }
 
   if (items.size() == 0) {
@@ -143,8 +143,8 @@ bool JsonParser::getManaRestoreMethodes(QStringList potionNameToBeFound, QList<P
 		return false;
 
 	QList<Item> foundPotions;
-	for each (QString nameOfMethodes in potionNameToBeFound) {
-		for each (Item item in allExistingPotions) {
+	foreach (QString nameOfMethodes, potionNameToBeFound) {
+		foreach (Item item, allExistingPotions) {
 			bool isProperPotionToReturn = item.name == nameOfMethodes;
 			if (isProperPotionToReturn) {
 				foundPotions.push_back(item);
@@ -165,7 +165,7 @@ bool JsonParser::getItemsFromCategory(QList<Item>& itemsToRet, Item::TYPE_OF_ITE
     return false;
   }
 
-  for each (Item var in readItems) {
+  foreach (Item var, readItems) {
     bool isProperCategory = type == var.type;
     if (isProperCategory) itemsTmp.push_back(var);
   }
@@ -184,7 +184,7 @@ bool JsonParser::saveJsonFile(const QString& pathToFolder, const QString& fileNa
   QFileInfo folderInfo = QFileInfo(pathToFolder);
   bool      isWritable = folderInfo.isWritable();
   if (!isWritable) {
-    qWarning() << "Error in saving json file, given folder is not writtable!";
+    qWarning() << "Error, saving json file, given folder is not writtable!";
     return false;
   }
   QString filePath;
@@ -195,7 +195,7 @@ bool JsonParser::saveJsonFile(const QString& pathToFolder, const QString& fileNa
   QFile file(filePath);
   bool  ok = file.open(QIODevice::OpenModeFlag::WriteOnly);
   if (!ok) {
-    qWarning() << "Error in saving json file";
+    qWarning() << "Error, saving json file";
     return false;
   }
   file.write(QJsonDocument(jsonObj).toJson());
@@ -206,7 +206,7 @@ QMap<QString, int> JsonParser::readAvaibleKeys() {
   QJsonObject        obj;
   bool               openCorrectly = openJsonFile(obj, PathResource::getPathToKeysJsonFile());
   QMap<QString, int> keys;
-  for each (auto var in obj.value("keys").toArray()) {
+  foreach (auto var, obj.value("keys").toArray()) {
     QString keyName = var.toObject().keys().first();
     int     keyVal  = var.toObject().value(keyName).toInt();
     keys.insert(keyName, keyVal);
@@ -239,7 +239,9 @@ QStringList JsonParser::getNamesOManaPotsForProf(Profession profession) {
   readPotions(potions, &profession, &typeFilter);
 
   QStringList namesOfAvaibleManaRestoreMethodes;
-  for each (auto var in potions) namesOfAvaibleManaRestoreMethodes.push_back(var.getName());
+  foreach (auto var, potions) {
+    namesOfAvaibleManaRestoreMethodes.push_back(var.getName());
+  }
 
   return namesOfAvaibleManaRestoreMethodes;
 }
@@ -253,8 +255,12 @@ QStringList JsonParser::getNamesOfHealingPotsAndSpellsForProf(Profession profess
   readPotions(potions, &profession, &typeFilters);
 
   QStringList avaiableHealthRestoreMethodesNames;
-  for each (auto spell in spells) avaiableHealthRestoreMethodesNames.push_back(spell.getIncantation());
-  for each (auto var in potions) avaiableHealthRestoreMethodesNames.push_back(var.getName());
+  foreach (auto spell, spells) {
+    avaiableHealthRestoreMethodesNames.push_back(spell.getIncantation());
+  }
+  foreach (auto var, potions) {
+    avaiableHealthRestoreMethodesNames.push_back(var.getName());
+  }
 
   return avaiableHealthRestoreMethodesNames;
 }

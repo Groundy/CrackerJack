@@ -76,7 +76,7 @@ QList<QImage> MinimapAnalyzer::splitMiniMap(const QImage& wholeMiniMap) {
   if (wholeMiniMap.size() != PROPER_MINIMAP_IMG_SIZE) return QList<QImage>();
 
   QList<QImage> toRet = {};
-  for each (QRect rect in MINI_MAP_PARTS_POSITIONS) {
+  foreach (QRect rect, MINI_MAP_PARTS_POSITIONS) {
     toRet.push_back(wholeMiniMap.copy(rect));
   }
   return toRet;

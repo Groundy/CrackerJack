@@ -43,7 +43,7 @@ bool Item::filrItemList(QList<Item>& items, SELLER* sellerToFiltr, TYPE_OF_ITEM*
   bool        filtrByType   = itemCategoryToFiltr != NULL;
   QList<Item> itemsToCopy   = items;
   items.clear();
-  for each (Item var in itemsToCopy) {
+  foreach (Item var, itemsToCopy) {
     if (filtrBySeller) {
       bool isProperSeller = (var.seller == *sellerToFiltr);
       if (!isProperSeller) continue;

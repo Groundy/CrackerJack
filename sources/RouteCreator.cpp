@@ -12,7 +12,7 @@ RouteCreator::RouteCreator(QDialog* parent, Route* route) : QDialog(parent) {
   loadFromRoute(route);
 }
 RouteCreator::~RouteCreator() {
-  for each (QImage* map in floorMaps.values()) {
+  foreach (QImage* map, floorMaps.values()) {
     delete map;
   }
   delete ui;
@@ -234,7 +234,7 @@ void RouteCreator::repaintList() {
   QListWidget* list = ui->pointsList;
   list->clear();
   QStringList textOfAllPoints = route.toStringList();
-  for each (QString var in textOfAllPoints) {
+  foreach (QString var, textOfAllPoints) {
     list->addItem(var);
   }
   list->repaint();

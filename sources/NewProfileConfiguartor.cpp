@@ -8,7 +8,7 @@ NewProfileConfiguartor::NewProfileConfiguartor(Profile* prof, QWidget* parent) :
 
   auto                allPossibleKeyNames = Key::getListOfAllPossibleKeys();
   QVector<QComboBox*> comboBoxesToFill    = {ui->autoAttackBox, ui->shovelBox, ui->ropeBox, ui->screenShotBox};
-  for each (auto box in comboBoxesToFill) {
+  foreach (auto box, comboBoxesToFill) {
     box->insertItems(0, allPossibleKeyNames);
     box->setCurrentIndex(-1);
   }
@@ -36,7 +36,7 @@ bool NewProfileConfiguartor::checkNameGroup() {
     return false;
   }
 
-  for each (auto character in nameOfProf) {
+  foreach (auto character, nameOfProf) {
     bool allowed = character.isLetterOrNumber() || character.isSpace();
     if (!allowed) {
       const QString msg = "Profile name can't have any special characters, please use only letters, numbers or spaces.";
@@ -148,7 +148,7 @@ bool NewProfileConfiguartor::checkAllKeyBoxes() {
   keyBoxes.append(manaPtrs.keyShortCuts);
   keyBoxes.append(ui->screenShotBox);
   QStringList keysName;
-  for each (auto keyBox in keyBoxes) {
+  foreach (auto keyBox, keyBoxes) {
     if (!keyBox->isEnabled()) continue;
     if (keyBox->currentIndex() == -1) {
       Utilities::showMessageBox_INFO("Found one key box without value!");
@@ -438,7 +438,7 @@ void NewProfileConfiguartor::fillRestorationMethodesDetails(QVector<RestorationM
   for (size_t i = 0; i < restorationMethodes.size(); i++) {
     QString name       = restorationMethodes[i].getName();
     bool    alreadySet = false;
-    for each (auto spell in spells) {
+    foreach (auto spell, spells) {
       if (spell.getIncantation() == name) {
         restorationMethodes[i].fillDataDetails(spell);
         alreadySet = true;
@@ -449,7 +449,7 @@ void NewProfileConfiguartor::fillRestorationMethodesDetails(QVector<RestorationM
       continue;
     }
 
-    for each (auto potion in potions) {
+    foreach (auto potion, potions) {
       if (potion.getName() == name) {
         restorationMethodes[i].fillDataDetails(potion);
         alreadySet = true;

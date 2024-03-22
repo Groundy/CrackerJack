@@ -116,7 +116,7 @@ bool AutoHunting::canUseMethode(const AttackMethode& methode) {
   return true;
 }
 void AutoHunting::useSpecialAttackIfNeeded() {
-  for each (auto methode in attackMethodes) {
+  foreach (auto methode, attackMethodes) {
     if (!canUseMethode(methode)) continue;
     useAttackMethode(methode);
   }
@@ -163,7 +163,7 @@ void AutoHunting::keepAtackingTargetOnBattleList() {
 bool AutoHunting::playerFoundOnBattleList() {
   QStringList enemiesNamesOnBattleList = battle_list_->getUniqueMonstersNames();
   bool        playerFound              = false;
-  for each (QString name in enemiesNamesOnBattleList) {
+  foreach (QString name, enemiesNamesOnBattleList) {
     bool nameIsAllowed = alloweNamesOnBattleList.contains(name);
     if (nameIsAllowed) {
       continue;
