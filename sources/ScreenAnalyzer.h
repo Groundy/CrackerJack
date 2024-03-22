@@ -26,12 +26,17 @@ class ScreenAnalyzer : public QThread {
   void miniMapReady();
 
  private:
-  const int                      SLEEP_TIME_ = 50;
-  QSharedPointer<VariablesClass> var_;
-  QDir                           screenShotFolder_;
-  Logger&                        logger_ = Logger::instance();
-  QTimer                         screenAnalyzerTimer_;
-  Calibrator                     calibrator_;
+  const int  sleep_time_ = 50;
+  QDir       screenshot_dir_;
+  Logger&    logger_ = Logger::instance();
+  QTimer     screenAnalyzerTimer_;
+  Calibrator calibrator_;
+
+  QSharedPointer<Settings>   settings_;
+  QSharedPointer<BattleList> battle_list_;
+  QSharedPointer<Equipment>  equipment_;
+  QSharedPointer<Vitallity>  vitalitty_;
+  QSharedPointer<MiniMap>    minimap_;
 
   void    deleteScreenShotFolder();
   QString getNameOfLastTakenScreenShot();

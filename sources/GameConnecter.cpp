@@ -1,38 +1,38 @@
 #include "GameConnecter.h"
 
 GameConnecter::GameConnecter(QSharedPointer<VariablesClass> var)
-    : var_(var),
-      playing_on_small_monitor_(var->getSettings().getPlayingOnSmallMonitor()),
-      auto_loot_setting_(var->getProf()->getAutoLoot()) {}
+    : playing_on_small_monitor_(var->getSettings()->getPlayingOnSmallMonitor()), auto_loot_setting_(var->getProf()->getAutoLoot()) {
+  game_process_data_ = var->getGameProcess();
+  timers_            = var->getTimers();
+  game_window_       = var->getGameWindow();
+}
 
 GameConnecter::~GameConnecter() {
   setShiftPressed(false);
 }
 
-void GameConnecter::clickLeft(QPoint pt) {
-  if (playing_on_small_monitor_) {
-    pt = QPoint(pt.x() / 0.8, pt.y() / 0.8);
-  }
-  HWND         gameThreadHandler = var_->getGameProcess().getHandlerToGameThread();
-  LPARAM       lParam            = (pt.y() << 16) + pt.x();
+void GameConnecter::clickLeft(const QPoint pt) {
+  const QPoint to_click          = (playing_on_small_monitor_) ? QPoint(pt.x() / 0.8, pt.y() / 0.8) : pt;
+  const HWND   gameThreadHandler = game_process_data_->getHandlerToGameThread();
+  const LPARAM lParam            = (to_click.y() << 16) + to_click.x();
   QMutexLocker locker(&sender_mutex_);
   PostMessage(gameThreadHandler, WM_LBUTTONDOWN, 1, lParam);
   PostMessage(gameThreadHandler, WM_LBUTTONUP, 1, lParam);
 }
 void GameConnecter::clickRight(const QPoint pt) {
   const QPoint to_click          = (playing_on_small_monitor_) ? QPoint(pt.x() / 0.8, pt.y() / 0.8) : pt;
-  const HWND   gameThreadHandler = var_->getGameProcess().getHandlerToGameThread();
+  const HWND   gameThreadHandler = game_process_data_->getHandlerToGameThread();
   const LPARAM lParam            = (to_click.y() << 16) + to_click.x();
   QMutexLocker locker(&sender_mutex_);
   PostMessage(gameThreadHandler, WM_RBUTTONDOWN, 0, lParam);
   PostMessage(gameThreadHandler, WM_RBUTTONUP, 0, lParam);
 }
 void GameConnecter::clickRightWithShift(const QVector<QPoint>& pts, const uint sleepTimeBetweenClicks) {
-  HWND gameThreadHandler = var_->getGameProcess().getHandlerToGameThread();
+  HWND gameThreadHandler = game_process_data_->getHandlerToGameThread();
 
   QMutexLocker locker(&sender_mutex_);
   setShiftPressed(true);
-  foreach (auto pt, pts) {
+  foreach (QPoint pt, pts) {
     if (playing_on_small_monitor_) {
       pt = QPoint(pt.x() / 0.8, pt.y() / 0.8);
     }
@@ -46,7 +46,7 @@ void GameConnecter::clickRightWithShift(const QVector<QPoint>& pts, const uint s
   setShiftPressed(false);
 }
 bool GameConnecter::sendKeyStrokeToProcess(const Key key, const uint sleepTime) {
-  const HWND   gameThreadHandler = var_->getGameProcess().getHandlerToGameThread();
+  const HWND   gameThreadHandler = game_process_data_->getHandlerToGameThread();
   QMutexLocker locker(&sender_mutex_);
   PostMessage(gameThreadHandler, WM_KEYDOWN, key.getKeyVal(), windows_post_param_);
   msleep(sleepTime);
@@ -55,7 +55,7 @@ bool GameConnecter::sendKeyStrokeToProcess(const Key key, const uint sleepTime) 
 }
 
 bool GameConnecter::sendKeyStrokeToProcess(const int virtualKey, const uint sleepTime) {
-  const HWND   gameThreadHandler = var_->getGameProcess().getHandlerToGameThread();
+  const HWND   gameThreadHandler = game_process_data_->getHandlerToGameThread();
   QMutexLocker locker(&sender_mutex_);
   PostMessage(gameThreadHandler, WM_KEYDOWN, virtualKey, windows_post_param_);
   msleep(sleepTime);
@@ -64,7 +64,7 @@ bool GameConnecter::sendKeyStrokeToProcess(const int virtualKey, const uint slee
 }
 
 void GameConnecter::sendStringToGame(const QString& str) {
-  HWND gameThreadHandler = var_->getGameProcess().getHandlerToGameThread();
+  const HWND gameThreadHandler = game_process_data_->getHandlerToGameThread();
   for each (QChar charToSend in str) {
     sendCharToGame(charToSend, gameThreadHandler);
     msleep(2);
@@ -72,13 +72,12 @@ void GameConnecter::sendStringToGame(const QString& str) {
 }
 
 void GameConnecter::useRestorationMethode(const RestorationMethode& methode, const uint additionalTime) {
-  Timers& timers = var_->getTimers();
   if (methode.isSpell()) {
-    timers.setTimeLastSpellUsageHealing();
-    timers.setTimeLastSpellUsed(methode.getName());
+    timers_->setTimeLastSpellUsageHealing();
+    timers_->setTimeLastSpellUsed(methode.getName());
   } else if (methode.isPotion()) {
-    timers.setTimeLastItemUsageGeneral();
-    timers.setTimeLastItemUsed(methode.getName(), additionalTime);
+    timers_->setTimeLastItemUsageGeneral();
+    timers_->setTimeLastItemUsed(methode.getName(), additionalTime);
   }
 
   sendKeyStrokeToProcess(methode.getKey());
@@ -111,8 +110,8 @@ void GameConnecter::sendCharToGame(const QChar charToSend, const HWND& gameThrea
   }
 }
 void GameConnecter::autoLootAroundPlayer() {
-  const auto     potinsToClick             = var_->getGameWindow().getPointsOfFieldsAroundPlayer();
-  constexpr uint sleep_time_between_clicks = 120;
+  const QVector<QPoint> potinsToClick             = game_window_->getPointsOfFieldsAroundPlayer();
+  constexpr uint        sleep_time_between_clicks = 120;
 
   if (auto_loot_setting_ == Profile::RIGHT_MOUSE_BUTTON) {
     foreach (const QPoint& pt, potinsToClick) {

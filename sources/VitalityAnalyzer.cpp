@@ -1,9 +1,14 @@
 #include "VitalityAnalyzer.h"
 
 VitalityAnalyzer::VitalityAnalyzer(QObject* parent, QSharedPointer<VariablesClass> var, QSharedPointer<GameConnecter> gameConnector)
-    : QThread(parent), var(var), gameConnector(gameConnector) {
+    : QThread(parent), gameConnector(gameConnector) {
   populateHealthManaMaps(var->getProf().get());
+  vitality_  = var->getVitalitty();
+  settings_  = var->getSettings();
+  timers_    = var->getTimers();
+  equipment_ = var->getEquipment();
 }
+
 VitalityAnalyzer::~VitalityAnalyzer() {
   this->terminate();
 }
@@ -115,10 +120,10 @@ ValuesInts VitalityAnalyzer::toIntsValues(FoundFlags foundFlags, ValuesStrs valu
 };
 FoundFlags VitalityAnalyzer::getFoundFlags() {
   FoundFlags flags;
-  flags.health   = !var->getVitalitty().getHealthArea().isEmpty();
-  flags.mana     = !var->getVitalitty().getManaArea().isEmpty();
-  flags.combined = !var->getVitalitty().getCombinedArea().isEmpty();
-  flags.shield   = !var->getVitalitty().getMSArea().isEmpty();
+  flags.health   = !vitality_->getHealthArea().isEmpty();
+  flags.mana     = !vitality_->getManaArea().isEmpty();
+  flags.combined = !vitality_->getCombinedArea().isEmpty();
+  flags.shield   = !vitality_->getMSArea().isEmpty();
   return flags;
 }
 bool VitalityAnalyzer::getValuesFromStringRegularCase(QString in, int& current, int& max) {
@@ -207,17 +212,29 @@ QVector<RestorationMethode> VitalityAnalyzer::findRestorationToUse(double curren
   return toRet;
 }
 ValuesDoubles VitalityAnalyzer::getCurrentPercentage() {
-  if (!var->getSettings().getRestoringState()) return ValuesDoubles();
+  if (!settings_->getRestoringState()) {
+    return ValuesDoubles();
+  }
   ImageValues imgs = getImages();
-  if (!imgs.isValid()) return ValuesDoubles();
+  if (!imgs.isValid()) {
+    return ValuesDoubles();
+  }
   FoundFlags flags = getFoundFlags();
-  if (!flags.isValid()) return ValuesDoubles();
+  if (!flags.isValid()) {
+    return ValuesDoubles();
+  }
   ValuesStrs strsValues = toStrsValues(flags, imgs);
-  if (!strsValues.isValid()) return ValuesDoubles();
+  if (!strsValues.isValid()) {
+    return ValuesDoubles();
+  }
   ValuesInts intsValues = toIntsValues(flags, strsValues);
-  if (!intsValues.isValid()) return ValuesDoubles();
+  if (!intsValues.isValid()) {
+    return ValuesDoubles();
+  }
   ValuesDoubles percentages = toDoubles(intsValues);
-  if (!percentages.isValid()) return ValuesDoubles();
+  if (!percentages.isValid()) {
+    return ValuesDoubles();
+  }
 
   writeDataToVariableClass(percentages);
   writeDataToVariableClass(intsValues);
@@ -228,42 +245,40 @@ void VitalityAnalyzer::sendDataToGui(ValuesDoubles currentValues) {
   emit sendValueToMainThread(currentValues.health, currentValues.mana, currentValues.manaShield);
 }
 void VitalityAnalyzer::writeDataToVariableClass(ValuesDoubles values) {
-  var->getVitalitty().setCurrentPercentage(values.health, values.mana, values.manaShield);
+  vitality_->setCurrentPercentage(values.health, values.mana, values.manaShield);
 }
 void VitalityAnalyzer::writeDataToVariableClass(ValuesInts values) {
-  var->getVitalitty().setCurrentRawValues(values.health, values.mana, values.shield);
+  vitality_->setCurrentRawValues(values.health, values.mana, values.shield);
 }
 ImageValues VitalityAnalyzer::getImages() {
   ImageValues toRet;
-  bool        clearImgs = var->getSettings().getClearVitalityImgs();
-
-  var->getVitalitty().getImageHealth(toRet.health, clearImgs);
-  var->getVitalitty().getImageMana(toRet.mana, clearImgs);
-  var->getVitalitty().getImageMS(toRet.manaShield, clearImgs);
-  var->getVitalitty().getImageCombined(toRet.combined, clearImgs);
+  const bool  clearImgs = settings_->getClearVitalityImgs();
+  vitality_->getImageHealth(toRet.health, clearImgs);
+  vitality_->getImageMana(toRet.mana, clearImgs);
+  vitality_->getImageMS(toRet.manaShield, clearImgs);
+  vitality_->getImageCombined(toRet.combined, clearImgs);
   return toRet;
 }
 bool VitalityAnalyzer::restMethodeCanBeUsed(const RestorationMethode& restMethode) {
-  const qint64 now    = QDateTime::currentMSecsSinceEpoch();
-  Timers&      timers = var->getTimers();
-  const auto   type   = restMethode.getType();
+  const qint64 now  = QDateTime::currentMSecsSinceEpoch();
+  const auto   type = restMethode.getType();
 
   if (type == RestorationMethode::Type::POTION) {
-    if (now < timers.getTimeLastItemUsageGeneral() + (ONE_SEC * restMethode.getCdGroup())) {
+    if (now < timers_->getTimeLastItemUsageGeneral() + (ONE_SEC * restMethode.getCdGroup())) {
       return false;
     }
-    if (now < timers.getTimeLastItemUsage(restMethode.getName()) + (ONE_SEC * restMethode.getCd())) {
+    if (now < timers_->getTimeLastItemUsage(restMethode.getName()) + (ONE_SEC * restMethode.getCd())) {
       return false;
     }
     return true;  // todo later should be added checking if char has proper pot!
   } else if (type == RestorationMethode::Type::SPELL) {
-    if (var->getVitalitty().getCurrentRawManaVal() < restMethode.getMana()) {
+    if (vitality_->getCurrentRawManaVal() < restMethode.getMana()) {
       return false;
     }
-    if (now < timers.getTimeLastSpellUsageHealing() + (ONE_SEC * restMethode.getCdGroup())) {
+    if (now < timers_->getTimeLastSpellUsageHealing() + (ONE_SEC * restMethode.getCdGroup())) {
       return false;
     }
-    if (now < timers.getTimeLastSpellUsed(restMethode.getName()) + (ONE_SEC * restMethode.getCd())) {
+    if (now < timers_->getTimeLastSpellUsed(restMethode.getName()) + (ONE_SEC * restMethode.getCd())) {
       return false;
     }
     return true;
@@ -274,18 +289,19 @@ bool VitalityAnalyzer::restMethodeCanBeUsed(const RestorationMethode& restMethod
 int VitalityAnalyzer::calcTimeBetweenManaPots(int currentManaPercentage) {
   return 1200 * currentManaPercentage / 100.0;
 }
+
 void VitalityAnalyzer::handleStates() {
-  Settings& settings = var->getSettings();
-  if (!settings.getKeepHasted()) {
+  if (!settings_->getKeepHasted()) {
     return;
   }
-  auto states = var->getEquipment().getCurrentStates(true);
+  auto states = equipment_->getCurrentStates(true);
   if (states.isEmpty()) {
     return;
   }
-  handleHaste(settings.getKeepHasted(), states);
-  handleUpgrade(settings.getKeepUpraded(), states);
+  handleHaste(settings_->getKeepHasted(), states);
+  handleUpgrade(settings_->getKeepUpraded(), states);
 }
+
 void VitalityAnalyzer::handleHaste(bool keepHasting, QVector<Equipment::STATES>& states) {
   if (!keepHasting) {
     return;
@@ -302,6 +318,7 @@ void VitalityAnalyzer::handleHaste(bool keepHasting, QVector<Equipment::STATES>&
   logger.log("Hasted!", false, true, true);
   lastTimeHasted = currentTime;
 }
+
 void VitalityAnalyzer::handleUpgrade(bool keepUpgraded, QVector<Equipment::STATES>& states) {
   if (!keepUpgraded) {
     return;

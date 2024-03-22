@@ -23,26 +23,32 @@ class AutoHunting : public QThread {
   void updateEnemiesAmountInGUI(int);
 
  private:
-  qint64                         lastTimeMovedToNextNode       = now();
-  qint64                         lastTimePressedAttack         = now();
-  qint64                         lastTimeSpecialAttackUsed     = now();
-  qint64                         lastTimeAlarmRang             = now();
-  const int                      minPeriodBetweenAttackingMob  = 1700;
-  const int                      minPeriodBetweenMovingToNodes = 2000;
-  const int                      breakBetweenAlarms            = 3000;
-  QMap<QString, qint64>          attacksMethodesTimers;
-  QSharedPointer<VariablesClass> var;
-  QSharedPointer<GameConnecter>  gameConnector;
-  Point3D                        currentPos;
-  int                            lastAchivedPoint = -1;
-  Route                          route;
-  const int                      SLEEP_TIME = 20;
-  QQueue<QPoint>                 lastPositions;
-  bool                           atLastLoopPlayerWasFighting = false;
-  QVector<AttackMethode>         attackMethodes              = {};
-  int                            lastAnalyzeEnemiesNumber    = 0;
-  int                            minEnemiesToStop            = 2;
-  int                            min_enemies_to_continue_        = 0;
+  qint64                        lastTimeMovedToNextNode       = now();
+  qint64                        lastTimePressedAttack         = now();
+  qint64                        lastTimeSpecialAttackUsed     = now();
+  qint64                        lastTimeAlarmRang             = now();
+  const int                     minPeriodBetweenAttackingMob  = 1700;
+  const int                     minPeriodBetweenMovingToNodes = 2000;
+  const int                     breakBetweenAlarms            = 3000;
+  QMap<QString, qint64>         attacksMethodesTimers;
+  QSharedPointer<GameConnecter> gameConnector;
+  Point3D                       currentPos;
+  int                           lastAchivedPoint = -1;
+  Route                         route;
+  const int                     SLEEP_TIME = 20;
+  QQueue<QPoint>                lastPositions;
+  bool                          atLastLoopPlayerWasFighting = false;
+  QVector<AttackMethode>        attackMethodes              = {};
+  int                           lastAnalyzeEnemiesNumber    = 0;
+  int                           minEnemiesToStop            = 2;
+  int                           min_enemies_to_continue_    = 0;
+
+  QSharedPointer<MiniMap>        minimap_;
+  QSharedPointer<Settings>       settings_;
+  QSharedPointer<PlayerPosition> positions_;
+  QSharedPointer<BattleList>     battle_list_;
+
+  const Key attack_next_target_key_;
 
   QStringList alloweNamesOnBattleList;
   Logger&     logger = Logger::instance();

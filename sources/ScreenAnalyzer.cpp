@@ -1,17 +1,16 @@
 #include "ScreenAnalyzer.h"
-ScreenAnalyzer::ScreenAnalyzer(QObject* parent, QSharedPointer<VariablesClass> var)
-    : QThread(parent), var_(var), calibrator_(Calibrator(var)) {
-  auto screenshotDir = PathResource::getScreenShotFolder();
-  if (screenshotDir.has_value()) {
-    screenShotFolder_ = screenshotDir.value();
-  } else {
-    qCritical() << "No screenshot directory";
-    exit(1);
-  }
-  var_->getSettings().setLoadingState(true);
+ScreenAnalyzer::ScreenAnalyzer(QObject* parent, QSharedPointer<VariablesClass> var) : QThread(parent), calibrator_(Calibrator(var)) {
+  settings_    = var->getSettings();
+  battle_list_ = var->getBattleList();
+  equipment_   = var->getEquipment();
+  vitalitty_   = var->getVitalitty();
+  minimap_     = var->getMiniMap();
+
+  screenshot_dir_ = PathResource::getScreenShotFolder();
+  settings_->setLoadingState(true);
   deleteScreenShotFolder();
 
-  screenAnalyzerTimer_.setInterval(SLEEP_TIME_);
+  screenAnalyzerTimer_.setInterval(sleep_time_);
   if (!connect(&screenAnalyzerTimer_, &QTimer::timeout, this, &ScreenAnalyzer::execute)) {
     qCritical() << "Failed to connect ScreenAnalyzer timer";
     exit(1);
@@ -26,7 +25,7 @@ ScreenAnalyzer::~ScreenAnalyzer() {
 }
 
 void ScreenAnalyzer::execute() {
-  if (!var_->getSettings().getLoadingState()) {
+  if (!settings_->getLoadingState()) {
     return;
   }
   QImage img;
@@ -34,7 +33,7 @@ void ScreenAnalyzer::execute() {
   if (!openCorrectly) {
     return;
   }
-  if (var_->getVitalitty().needCalibration()) {
+  if (vitalitty_->needCalibration()) {
     bool basicCalibrationOk = calibrator_.calibrateBasicAreas(img);
     if (!basicCalibrationOk) {
       QString msg = "Problem z kalibracja!";
@@ -60,7 +59,7 @@ bool ScreenAnalyzer::loadScreen(QImage& img) {
   if (nameOfImgToCapture.isEmpty()) {
     return false;
   }
-  QString pathToImg = screenShotFolder_.absoluteFilePath(nameOfImgToCapture);
+  QString pathToImg = screenshot_dir_.absoluteFilePath(nameOfImgToCapture);
   if (!img.load(pathToImg)) {
     return false;
   }
@@ -69,8 +68,8 @@ bool ScreenAnalyzer::loadScreen(QImage& img) {
 
 QString ScreenAnalyzer::getNameOfLastTakenScreenShot() {
   QStringList filtr = QStringList() << "*_*_*_Hotkey.png";
-  screenShotFolder_.refresh();
-  QStringList listOfFIlesNames = screenShotFolder_.entryList(filtr, QDir::Files);
+  screenshot_dir_.refresh();
+  QStringList listOfFIlesNames = screenshot_dir_.entryList(filtr, QDir::Files);
   if (listOfFIlesNames.isEmpty()) {
     return QString();
   }
@@ -80,71 +79,72 @@ QString ScreenAnalyzer::getNameOfLastTakenScreenShot() {
 
 void ScreenAnalyzer::deleteScreenShotFolder() {
   QStringList filterPatter("*_*_*_Hotkey.png");  //yyyy-MM-dd_hhmmsszzzz_CharNick_Methode.png
-  screenShotFolder_.setNameFilters(filterPatter);
-  screenShotFolder_.setFilter(QDir::Files);
+  screenshot_dir_.setNameFilters(filterPatter);
+  screenshot_dir_.setFilter(QDir::Files);
 
-  QStringList namesOfFoundFiles = screenShotFolder_.entryList();
+  QStringList namesOfFoundFiles = screenshot_dir_.entryList();
   foreach (QString dirFile, namesOfFoundFiles) {
-    screenShotFolder_.remove(dirFile);
+    screenshot_dir_.remove(dirFile);
   }
 }
 int ScreenAnalyzer::cutHealthManaImgs(const QImage& fullscreen) {
-  Vitallity& vitality         = var_->getVitalitty();
-  bool       healthFrameFound = !vitality.getHealthArea().isEmpty();
-  bool       manaFrameFound   = !vitality.getManaArea().isEmpty();
-  bool       manaShieldFound  = !vitality.getMSArea().isEmpty();
-  bool       combinedBoxFound = !vitality.getCombinedArea().isEmpty();
+  const bool healthFrameFound = !vitalitty_->getHealthArea().isEmpty();
+  const bool manaFrameFound   = !vitalitty_->getManaArea().isEmpty();
+  const bool manaShieldFound  = !vitalitty_->getMSArea().isEmpty();
+  const bool combinedBoxFound = !vitalitty_->getCombinedArea().isEmpty();
 
   bool notEnoughFramesFound = !((manaFrameFound || combinedBoxFound) && healthFrameFound);
   if (notEnoughFramesFound) {
     return false;
   }
 
-  const int ROTATION = vitality.getRotation();
+  const int ROTATION = vitalitty_->getRotation();
   if (healthFrameFound) {
-    CJ_Image healthValueImg = fullscreen.copy(vitality.getHealthArea());
+    CJ_Image healthValueImg = fullscreen.copy(vitalitty_->getHealthArea());
     if (ROTATION != 0) {
       healthValueImg.rotateImgToRight(ROTATION);
     }
-    vitality.setImageHealth(healthValueImg);
+    vitalitty_->setImageHealth(healthValueImg);
   }
   if (manaFrameFound) {
-    CJ_Image manaValueImg = fullscreen.copy(vitality.getManaArea());
+    CJ_Image manaValueImg = fullscreen.copy(vitalitty_->getManaArea());
     if (ROTATION != 0) {
       manaValueImg.rotateImgToRight(ROTATION);
     }
-    vitality.setImageMana(manaValueImg);
+    vitalitty_->setImageMana(manaValueImg);
   }
   if (manaShieldFound) {
-    CJ_Image manaShieldValueImg = fullscreen.copy(vitality.getMSArea());
+    CJ_Image manaShieldValueImg = fullscreen.copy(vitalitty_->getMSArea());
     if (ROTATION != 0) {
       manaShieldValueImg.rotateImgToRight(ROTATION);
     }
-    vitality.setImageMS(manaShieldValueImg);
+    vitalitty_->setImageMS(manaShieldValueImg);
   }
   if (combinedBoxFound) {
-    CJ_Image combinedValueImg = fullscreen.copy(vitality.getCombinedArea());
+    CJ_Image combinedValueImg = fullscreen.copy(vitalitty_->getCombinedArea());
     if (ROTATION != 0) {
       combinedValueImg.rotateImgToRight(ROTATION);
     }
-    vitality.setImageCombined(combinedValueImg);
+    vitalitty_->setImageCombined(combinedValueImg);
   }
   return true;
 }
 void ScreenAnalyzer::cutBattleList(const QImage& fullscreen) {
-  if (var_->getSettings().getKeepAnalyzeMainGameWindow()) {
+  if (settings_->getKeepAnalyzeMainGameWindow()) {
     return;
   }
-  if (var_->getBattleList().getFrame().isEmpty()) {
+  if (battle_list_->getFrame().isEmpty()) {
     return;
   }
 
-  QRect frame = var_->getBattleList().getFrame();
-  var_->getBattleList().setImg(fullscreen.copy(frame));
+  QRect frame = battle_list_->getFrame();
+  battle_list_->setImg(fullscreen.copy(frame));
 }
 void ScreenAnalyzer::analyzeBattleList(const QImage& fullscreen) {
-  if (!var_->getSettings().getKeepHuntingAutomaticly()) return;
-  if (var_->getBattleList().getFrame().isEmpty()) {
+  if (!settings_->getKeepHuntingAutomaticly()) {
+    return;
+  }
+  if (battle_list_->getFrame().isEmpty()) {
     bool foundBattleArea = calibrator_.calibrateBattleArea(fullscreen);
     if (!foundBattleArea) {
       QString msg = "Nie mozna otworzy battle listy";
@@ -154,25 +154,26 @@ void ScreenAnalyzer::analyzeBattleList(const QImage& fullscreen) {
   cutBattleList(fullscreen);
 }
 void ScreenAnalyzer::analyzeMiniMap(const QImage& fullscreen) {
-  if (!var_->getSettings().getKeepAnalyzeMiniMap()) {
+  if (!settings_->getKeepAnalyzeMiniMap()) {
     return;
   }
 
-  QRect frame = var_->getMiniMap().getFrameMiniMap();
-  var_->getMiniMap().setImgMiniMap(fullscreen.copy(frame));
+  QRect frame = minimap_->getFrameMiniMap();
+  minimap_->setImgMiniMap(fullscreen.copy(frame));
   constexpr QPoint DIFF_DIST_SINCE_TOPLEFT_MINIMAP       = QPoint(137, 41);
   const QPoint     TOP_LEFT_START_OF_MINIMAP_LAYER_FRAME = frame.topLeft() + DIFF_DIST_SINCE_TOPLEFT_MINIMAP;
   constexpr QSize  SIZE_MINIMAP_LAYER_FRAME              = QSize(24, 71);
-  QRect            miniMapLayerFrame(TOP_LEFT_START_OF_MINIMAP_LAYER_FRAME, SIZE_MINIMAP_LAYER_FRAME);
-  var_->getMiniMap().setImgMiniMapLayer(fullscreen.copy(miniMapLayerFrame));
+  const QRect      miniMapLayerFrame(TOP_LEFT_START_OF_MINIMAP_LAYER_FRAME, SIZE_MINIMAP_LAYER_FRAME);
+  minimap_->setImgMiniMapLayer(fullscreen.copy(miniMapLayerFrame));
 }
+
 void ScreenAnalyzer::analyzeEquipment(const QImage& fullscreen) {
-  bool needCalibration = var_->getEquipment().getStoreRect().isEmpty();
+  bool needCalibration = equipment_->getStoreRect().isEmpty();
   if (needCalibration) {
     calibrator_.calibrateStoreButton(fullscreen);
   }
-  if (var_->getSettings().getKeepAnalyzeStates()) {
-    QRect stateBarRect = var_->getEquipment().getRect(Equipment::EqRect::StateBar);
-    var_->getEquipment().setImg(Equipment::EqRect::StateBar, fullscreen.copy(stateBarRect));
+  if (settings_->getKeepAnalyzeStates()) {
+    QRect stateBarRect = equipment_->getRect(Equipment::EqRect::StateBar);
+    equipment_->setImg(Equipment::EqRect::StateBar, fullscreen.copy(stateBarRect));
   }
 }

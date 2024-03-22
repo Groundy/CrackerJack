@@ -28,10 +28,13 @@ class GameConnecter : public QThread {
   void clickRightWithShift(const QVector<QPoint>& pts, const uint sleepTimeBetweenClicks);
   void setShiftPressed(const bool pressed);
 
-  QMutex                         sender_mutex_;
-  const Profile::AutoLoot        auto_loot_setting_;
-  QSharedPointer<VariablesClass> var_;
-  Logger&                        logger_                   = Logger::instance();
-  const bool                     playing_on_small_monitor_ = false;  //[TODO] move that!
-  const int                      windows_post_param_       = 0x1470001;
+  QMutex                  sender_mutex_;
+  const Profile::AutoLoot auto_loot_setting_;
+  Logger&                 logger_                   = Logger::instance();
+  const bool              playing_on_small_monitor_ = false;  //[TODO] move that!
+  const int               windows_post_param_       = 0x1470001;
+
+  QSharedPointer<GameProcessData> game_process_data_;
+  QSharedPointer<Timers>          timers_;
+  QSharedPointer<GameWindow>      game_window_;
 };

@@ -20,13 +20,14 @@ class GameActivityChecker : public QObject {
   void gameStateChanged(int i);
 
  private:
-  GameActivityStates             previousGameState_   = NO_ACTIVE;
-  const QString                  GAME_PROCESS_NAME_   = "client.exe";
-  const QString                  GAME_BROWESER_TITLE_ = "Tibia - Free Multiplayer Online Role Playing Game";
-  const uint                     TIMER_INTERVAL       = 2000;
-  QSharedPointer<VariablesClass> var_;
-  HWND                           previousGameHandler_ = 0;
-  QTimer                         checkGameStateTimer_;
+  GameActivityStates previousGameState_   = NO_ACTIVE;
+  const QString      GAME_PROCESS_NAME_   = "client.exe";
+  const QString      GAME_BROWESER_TITLE_ = "Tibia - Free Multiplayer Online Role Playing Game";
+  const uint         TIMER_INTERVAL       = 2000;
+  HWND               previousGameHandler_ = 0;
+  QTimer             checkGameStateTimer_;
+
+  QSharedPointer<GameProcessData> game_process_data_;
 
   uint                        getGamePid(const QMap<QString, unsigned int>& processes) const;
   QString                     getGameWindowTitile() const;

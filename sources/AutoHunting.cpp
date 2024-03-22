@@ -1,10 +1,15 @@
 #include "AutoHunting.h"
 
 AutoHunting::AutoHunting(QObject* parent, QSharedPointer<VariablesClass> var, QSharedPointer<GameConnecter> gameConnector, Route route)
-    : QThread(parent), var(var), route(route), gameConnector(gameConnector) {
-  auto data            = var->getProf()->getAutoHuntData();
-  attackMethodes       = data.getAttacks();
-  minEnemiesToStop     = data.getMinMonToStop();
+    : QThread(parent), route(route), gameConnector(gameConnector), attack_next_target_key_(var->getProf()->getAutoAttackKey()) {
+  minimap_     = var->getMiniMap();
+  settings_    = var->getSettings();
+  positions_   = var->getPosition();
+  battle_list_ = var->getBattleList();
+
+  auto data                = var->getProf()->getAutoHuntData();
+  attackMethodes           = data.getAttacks();
+  minEnemiesToStop         = data.getMinMonToStop();
   min_enemies_to_continue_ = data.getMinMonToContinue();
 }
 
@@ -13,7 +18,7 @@ AutoHunting::~AutoHunting() = default;
 void AutoHunting::run() {
   while (true) {
     msleep(SLEEP_TIME);
-    if (!var->getSettings().getKeepHuntingAutomaticly() || !var->getSettings().getKeepAnalyzeMiniMap()) {
+    if (!settings_->getKeepHuntingAutomaticly() || !settings_->getKeepAnalyzeMiniMap()) {
       msleep(SLEEP_TIME * 30);
       continue;
     }
@@ -65,7 +70,7 @@ void AutoHunting::moveToNextNode() {
   lastTimeMovedToNextNode                = nowTime;
   QPoint  nextNodePosOnWholeMap          = route.getPoint(lastAchivedPoint + 1).getPosition().getXY();
   QPoint  fromPlayerToTargetOnWholeMap   = getDistFromOnePtToAnother(currentPos.getXY(), nextNodePosOnWholeMap);
-  QPoint  miniMapFrameStartOnWholeScreen = var->getMiniMap().getFrameMiniMap().topLeft();
+  QPoint  miniMapFrameStartOnWholeScreen = minimap_->getFrameMiniMap().topLeft();
   QPoint  playerPosOnWholeScreen         = addTwoPoints(miniMapFrameStartOnWholeScreen, QPoint(53, 54));
   QPoint  whereToClick                   = addTwoPoints(playerPosOnWholeScreen, fromPlayerToTargetOnWholeMap);
   QString msgToDisplayToUser             = QString("Zmierzam do : %1").arg(QString::number(lastAchivedPoint + 1));
@@ -77,12 +82,12 @@ void AutoHunting::moveToNextNode() {
   gameConnector->clickLeft(whereToClick);
 }
 bool AutoHunting::updatePlayerCurrentPos() {
-  var->getPosition().clear();
+  positions_->clear();
   int     triesLeft = 50;
   Point3D currentPosTmp;
   do {
     msleep(SLEEP_TIME);
-    currentPosTmp = var->getPosition().getPlayerPos();
+    currentPosTmp = positions_->getPlayerPos();
     triesLeft--;
   } while (!currentPosTmp.isValid() && triesLeft > 0);
   if (!currentPosTmp.isValid()) return false;
@@ -117,7 +122,7 @@ void AutoHunting::useSpecialAttackIfNeeded() {
   }
 }
 bool AutoHunting::playerIsFighting() {
-  int  enemiesOnScreen = var->getBattleList().getEnemisAmout();
+  int  enemiesOnScreen = battle_list_->getEnemisAmout();
   emit updateEnemiesAmountInGUI(enemiesOnScreen);
   bool isFighting = enemiesOnScreen >= minEnemiesToStop;
   if (isFighting) {
@@ -144,7 +149,7 @@ qint64 AutoHunting::now() {
 }
 void AutoHunting::keepAtackingTargetOnBattleList() {
   qint64 nowTime = now();
-  if (var->getBattleList().firstEnemieIsInRedFrame()) {
+  if (battle_list_->firstEnemieIsInRedFrame()) {
     return;
   }
   if (nowTime < minPeriodBetweenAttackingMob + lastTimePressedAttack) {
@@ -152,11 +157,11 @@ void AutoHunting::keepAtackingTargetOnBattleList() {
   }
   gameConnector->sendKeyStrokeToProcess(VK_ESCAPE);
   msleep(50);
-  gameConnector->sendKeyStrokeToProcess(var->getProf()->getAutoAttackKey());
+  gameConnector->sendKeyStrokeToProcess(attack_next_target_key_);
   lastTimePressedAttack = nowTime;
 }
 bool AutoHunting::playerFoundOnBattleList() {
-  QStringList enemiesNamesOnBattleList = var->getBattleList().getUniqueMonstersNames();
+  QStringList enemiesNamesOnBattleList = battle_list_->getUniqueMonstersNames();
   bool        playerFound              = false;
   for each (QString name in enemiesNamesOnBattleList) {
     bool nameIsAllowed = alloweNamesOnBattleList.contains(name);
@@ -171,7 +176,7 @@ bool AutoHunting::playerFoundOnBattleList() {
 
 void AutoHunting::clickOnMiddleOfCompass() {
   // doing it prevents losing focus after click on minimap!
-  QPoint pt = var->getMiniMap().getCompasMiddlePoint();
+  QPoint pt = minimap_->getCompasMiddlePoint();
   if (pt.isNull()) {
     return;
   }

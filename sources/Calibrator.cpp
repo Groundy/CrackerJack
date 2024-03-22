@@ -1,5 +1,11 @@
 #include "Calibrator.h"
-Calibrator::Calibrator(QSharedPointer<VariablesClass> var) : var(var) {}
+Calibrator::Calibrator(QSharedPointer<VariablesClass> var) {
+  battle_list_ = var->getBattleList();
+  equipment_   = var->getEquipment();
+  game_window_ = var->getGameWindow();
+  vitalitty_   = var->getVitalitty();
+  minimap_     = var->getMiniMap();
+}
 Calibrator::~Calibrator() {}
 
 // public
@@ -34,11 +40,11 @@ bool Calibrator::calibrateBattleArea(const CJ_Image& fullscreen) {
       continue;
     }
 
-    var->getBattleList().setFrame(rect);
+    battle_list_->setFrame(rect);
     return true;
   }
 
-  var->getBattleList().setFrame(QRect());
+  battle_list_->setFrame(QRect());
   return false;
 }
 bool Calibrator::calibrateStoreButton(const CJ_Image& fullImage) {
@@ -50,7 +56,7 @@ bool Calibrator::calibrateStoreButton(const CJ_Image& fullImage) {
     return false;
   }
   QRect storeButtonRect(storeButtonPosition, img.size());
-  var->getEquipment().setStoreRect(storeButtonRect);
+  equipment_->setStoreRect(storeButtonRect);
   return true;
 }
 
@@ -264,7 +270,7 @@ bool Calibrator::categorizeWindows(const CJ_Image& fullscreen, QVector<QRect>& i
         biggestRect    = importantRectangles[i];
       }
     }
-    var->getGameWindow().setFrameMainGameWindow(biggestRect);
+    game_window_->setFrameMainGameWindow(biggestRect);
     importantRectangles.removeOne(biggestRect);
   }
 
@@ -275,25 +281,25 @@ bool Calibrator::categorizeWindows(const CJ_Image& fullscreen, QVector<QRect>& i
     int     size    = importantRectangles.size();
     if (!indexes.isValid(size)) return false;
 
-    var->getVitalitty().setRotation(indexes.rotation);
+    vitalitty_->setRotation(indexes.rotation);
     QVector<QRect> rectsToDelete;
     if (indexes.healthFound(size)) {
-      var->getVitalitty().setHealthArea(importantRectangles[indexes.health]);
+      vitalitty_->setHealthArea(importantRectangles[indexes.health]);
       rectsToDelete.push_back(importantRectangles[indexes.health]);
     }
 
     if (indexes.manaFound(size)) {
-      var->getVitalitty().setManaArea(importantRectangles[indexes.mana]);
+      vitalitty_->setManaArea(importantRectangles[indexes.mana]);
       rectsToDelete.push_back(importantRectangles[indexes.mana]);
     }
 
     if (indexes.shieldFound(size)) {
-      var->getVitalitty().setMSArea(importantRectangles[indexes.shield]);
+      vitalitty_->setMSArea(importantRectangles[indexes.shield]);
       rectsToDelete.push_back(importantRectangles[indexes.shield]);
     }
 
     if (indexes.combinedFound(size)) {
-      var->getVitalitty().setCombinedArea(importantRectangles[indexes.combined]);
+      vitalitty_->setCombinedArea(importantRectangles[indexes.combined]);
       rectsToDelete.push_back(importantRectangles[indexes.combined]);
     }
 
@@ -303,7 +309,7 @@ bool Calibrator::categorizeWindows(const CJ_Image& fullscreen, QVector<QRect>& i
   // miniMap Frame
   {
     auto [sortedX, sortedY] = sortByXY(importantRectangles);
-    var->getMiniMap().setFrameMiniMap(sortedX.last());
+    minimap_->setFrameMiniMap(sortedX.last());
     importantRectangles.removeOne(sortedX.last());
   }
 
@@ -467,7 +473,9 @@ QVector<QRect> Calibrator::filterAreasCoveredByFrameFromBottomRight(const CJ_Ima
 }
 QVector<QRect> Calibrator::getOutsideFramesOfOpenEntitiesOnSideBars(const CJ_Image& wholeScreen) {
   const QImage startOfSideBarEntity(PathResource::getPathToSideBarEntityStart());
-  if (startOfSideBarEntity.isNull()) return {};
+  if (startOfSideBarEntity.isNull()) {
+    return {};
+  }
 
   QVector<QRect>  outerFramesOfSideBarsEntity = {};
   QVector<QPoint> startPoints                 = wholeScreen.findStartPositionInImg(startOfSideBarEntity);

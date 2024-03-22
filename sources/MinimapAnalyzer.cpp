@@ -1,16 +1,19 @@
 #include "MinimapAnalyzer.h"
 
-MinimapAnalyzer::MinimapAnalyzer(QObject* parent, QSharedPointer<VariablesClass> var) : QThread(parent), var(var) {}
-MinimapAnalyzer::~MinimapAnalyzer(){};
+MinimapAnalyzer::MinimapAnalyzer(QObject* parent, QSharedPointer<VariablesClass> var) : QThread(parent) {
+  minimap_   = var->getMiniMap();
+  settings_  = var->getSettings();
+  positions_ = var->getPosition();
+}
 
 void MinimapAnalyzer::execute() {
   QMap<int, QImage*> floorsMaps;
-  if (!var->getSettings().getKeepAnalyzeMiniMap()) {
+  if (!settings_->getKeepAnalyzeMiniMap()) {
     return;
   }
   QImage miniMap, miniMapLayer;
-  var->getMiniMap().getImgMiniMap(miniMap);
-  var->getMiniMap().getImgMiniMapLayer(miniMapLayer);
+  minimap_->getImgMiniMap(miniMap);
+  minimap_->getImgMiniMapLayer(miniMapLayer);
   if (miniMap.isNull() || miniMapLayer.isNull()) {
     return;
   }
@@ -30,9 +33,9 @@ void MinimapAnalyzer::execute() {
 
   Point3D toSet(currentPosition.x(), currentPosition.y(), currentLayer);
   if (toSet.isValid())
-    var->getPosition().setPlayerPos(toSet);
+    positions_->setPlayerPos(toSet);
   else
-    var->getPosition().clear();
+    positions_->clear();
 }
 QImage MinimapAnalyzer::setSliderImg() {
   QString path = PathResource::getPathToMiniMapSliderImg();

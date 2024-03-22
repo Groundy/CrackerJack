@@ -1,6 +1,8 @@
 #include "GameActivityChecker.h"
 
-GameActivityChecker::GameActivityChecker(QSharedPointer<VariablesClass> var) : var_(var) {
+GameActivityChecker::GameActivityChecker(QSharedPointer<VariablesClass> var) {
+  game_process_data_ = var->getGameProcess();
+
   checkGameStateTimer_.setInterval(TIMER_INTERVAL);
   checkGameState();
   if (!QObject::connect(&checkGameStateTimer_, &QTimer::timeout, this, &GameActivityChecker::checkGameState, Qt::UniqueConnection)) {
@@ -86,29 +88,28 @@ int GameActivityChecker::windowIsAccessible(const uint PID, const QString& windo
 }
 
 GameActivityChecker::GameActivityStates GameActivityChecker::getGameState() {
-  auto             processes    = getListOfRunningProcess();
-  uint             PID          = getGamePid(processes);
-  QString          windowTitle  = getGameWindowTitile();
-  GameProcessData& process_data = var_->getGameProcess();
+  auto    processes   = getListOfRunningProcess();
+  uint    PID         = getGamePid(processes);
+  QString windowTitle = getGameWindowTitile();
 
   if (windowTitle.isEmpty()) {
     qWarning() << "Can't get game window title.";
-    process_data.setNameOfGameWindow("");
-    process_data.setPid(0);
+    game_process_data_->setNameOfGameWindow("");
+    game_process_data_->setPid(0);
     return NO_WINDOW;
   }
   int gameWinState = windowIsAccessible(PID, windowTitle);
   if (gameWinState == ACTIVE) {
     HWND handlerToGameThread = getHandlerToGameWindow(PID, windowTitle);
 
-    if (process_data.getNameOfGameWindow() != windowTitle) {
-      process_data.setNameOfGameWindow(windowTitle);
+    if (game_process_data_->getNameOfGameWindow() != windowTitle) {
+      game_process_data_->setNameOfGameWindow(windowTitle);
     }
     if (handlerToGameThread != previousGameHandler_) {
-      process_data.setHandlerToGameThread(handlerToGameThread);
+      game_process_data_->setHandlerToGameThread(handlerToGameThread);
     }
-    if (process_data.getPid() != PID) {
-      process_data.setPid(PID);
+    if (game_process_data_->getPid() != PID) {
+      game_process_data_->setPid(PID);
     }
   }
   return GameActivityStates(gameWinState);

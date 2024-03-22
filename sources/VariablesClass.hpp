@@ -17,31 +17,31 @@ class VariablesClass {
   VariablesClass(QSharedPointer<Profile> prof) : prof(prof){};
   ~VariablesClass() = default;
 
-  Timers& getTimers() {
+  QSharedPointer<Timers> getTimers() {
     return timers;
   }
-  BattleList& getBattleList() {
+  QSharedPointer<BattleList> getBattleList() {
     return battleList;
   }
-  Settings& getSettings() {
+  QSharedPointer<Settings> getSettings() {
     return settings;
   }
-  Vitallity& getVitalitty() {
+  QSharedPointer<Vitallity> getVitalitty() {
     return vitalitty;
   }
-  MiniMap& getMiniMap() {
+  QSharedPointer<MiniMap> getMiniMap() {
     return minimap;
   }
-  GameWindow& getGameWindow() {
+  QSharedPointer<GameWindow> getGameWindow() {
     return gameWindow;
   }
-  GameProcessData& getGameProcess() {
+  QSharedPointer<GameProcessData> getGameProcess() {
     return gameProcess;
   }
-  PlayerPosition& getPosition() {
+  QSharedPointer<PlayerPosition> getPosition() {
     return position;
   }
-  Equipment& getEquipment() {
+  QSharedPointer<Equipment> getEquipment() {
     return eq;
   }
   QSharedPointer<Profile> getProf() {
@@ -57,16 +57,16 @@ class VariablesClass {
   }
 
  private:
-  QSharedPointer<Profile> prof;
-  GameProcessData         gameProcess{};
-  GameWindow              gameWindow{};
-  BattleList              battleList{};
-  Settings                settings{};
-  Timers                  timers{};
-  Vitallity               vitalitty{};
-  MiniMap                 minimap{};
-  PlayerPosition          position{};
-  Equipment               eq{};
+  QSharedPointer<Profile>         prof;
+  QSharedPointer<GameProcessData> gameProcess = QSharedPointer<GameProcessData>(new GameProcessData());
+  QSharedPointer<GameWindow>      gameWindow  = QSharedPointer<GameWindow>(new GameWindow());
+  QSharedPointer<BattleList>      battleList  = QSharedPointer<BattleList>(new BattleList());
+  QSharedPointer<Settings>        settings    = QSharedPointer<Settings>(new Settings());
+  QSharedPointer<Timers>          timers      = QSharedPointer<Timers>(new Timers());
+  QSharedPointer<Vitallity>       vitalitty   = QSharedPointer<Vitallity>(new Vitallity());
+  QSharedPointer<MiniMap>         minimap     = QSharedPointer<MiniMap>(new MiniMap());
+  QSharedPointer<PlayerPosition>  position    = QSharedPointer<PlayerPosition>(new PlayerPosition());
+  QSharedPointer<Equipment>       eq          = QSharedPointer<Equipment>(new Equipment());
 
   //used for calibration
   MutexImg full_image_;

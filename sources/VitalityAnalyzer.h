@@ -90,9 +90,13 @@ class VitalityAnalyzer : public QThread {
   void execute();
 
  private:
-  QSharedPointer<VariablesClass> var;
-  QSharedPointer<GameConnecter>  gameConnector;
-  QMap<int, RestorationMethode>  healthMap, manaMap;
+  QSharedPointer<Vitallity> vitality_;
+  QSharedPointer<Settings>  settings_;
+  QSharedPointer<Timers>    timers_;
+  QSharedPointer<Equipment> equipment_;
+
+  QSharedPointer<GameConnecter> gameConnector;
+  QMap<int, RestorationMethode> healthMap, manaMap;
 
   const int  MAX_POSSIBLE_VALUE = 100000;
   const uint ONE_SEC            = 1000;

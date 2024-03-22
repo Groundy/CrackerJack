@@ -12,9 +12,12 @@ class ScreenSaver : public QThread {
   ~ScreenSaver();
 
  private:
-  const uint                     SLEEP_TIME = 985;
-  QSharedPointer<VariablesClass> var;
-  QSharedPointer<GameConnecter>  gameConnecter;
+  const uint                    SLEEP_TIME = 985;
+  const Key                     screenshot_key_;
+  QSharedPointer<GameConnecter> gameConnecter;
+
+  QSharedPointer<Settings>        settings_;
+  QSharedPointer<GameProcessData> game_process_data_;
 
   void sendScreenRequestToGame();
 };

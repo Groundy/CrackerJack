@@ -65,10 +65,9 @@ class Calibrator {
     }
   };
 
-  QSharedPointer<VariablesClass> var;
-  SlashesIndexes                 getIndexesOfImgsWithSlashes(const CJ_Image& fullScreen, const QVector<QRect>& importantFrames);
-  bool                           categorizeWindows(const CJ_Image& fullscreen, QVector<QRect>& importantRectangles);
-  bool                           findWindowsOnScreen(const CJ_Image& fullScreen, QVector<QRect>& importantRectangles);
+  SlashesIndexes getIndexesOfImgsWithSlashes(const CJ_Image& fullScreen, const QVector<QRect>& importantFrames);
+  bool           categorizeWindows(const CJ_Image& fullscreen, QVector<QRect>& importantRectangles);
+  bool           findWindowsOnScreen(const CJ_Image& fullScreen, QVector<QRect>& importantRectangles);
   std::tuple<QVector<QPoint>, QVector<QPoint>> sortByXY(const QVector<QPoint>& points);
   std::tuple<QVector<QRect>, QVector<QRect>>   sortByXY(const QVector<QRect>& inputRects);
   Indexes         getIndexesOfHealthManaBars(const CJ_Image& fullscreen, const QVector<QRect>& listOfImportantRectangles);
@@ -76,4 +75,10 @@ class Calibrator {
   QVector<QRect>  getAreasInsideFrames(const CJ_Image& fullScreen, const QVector<QPoint>& startOfFrames, const int MIN_DIM);
   QVector<QRect>  filterAreasCoveredByFrameFromBottomRight(const CJ_Image& fullScreen, const QVector<QRect>& areas);
   QVector<QRect>  getOutsideFramesOfOpenEntitiesOnSideBars(const CJ_Image& wholeScreen);
+
+  QSharedPointer<BattleList> battle_list_;
+  QSharedPointer<Equipment>  equipment_;
+  QSharedPointer<GameWindow> game_window_;
+  QSharedPointer<Vitallity>  vitalitty_;
+  QSharedPointer<MiniMap>    minimap_;
 };

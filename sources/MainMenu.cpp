@@ -10,12 +10,12 @@ MainMenu::MainMenu(QSharedPointer<Profile> prof, QWidget* parent) : QDialog(pare
   var_            = QSharedPointer<VariablesClass>(new VariablesClass(prof));
   game_connector_ = QSharedPointer<GameConnecter>(new GameConnecter(var_));
 
-  Settings& settings = var_->getSettings();
   ui->profileNameLabel->setText(prof->getName());
   ui->playerPosGroup->setVisible(false);
   ui->resourceGroup->setVisible(false);
-  ui->keepHastedCheckBox->setChecked(settings.getKeepHasted());
-  ui->keepUpgradedCheckBox->setChecked(settings.getKeepUpraded());
+  auto settings = var_->getSettings();
+  ui->keepHastedCheckBox->setChecked(settings->getKeepHasted());
+  ui->keepUpgradedCheckBox->setChecked(settings->getKeepUpraded());
 
   screen_saver_.start();
   screen_analyzer_.start();
@@ -132,15 +132,17 @@ void MainMenu::onGameStateChanged(int state) {
   ui->gameActiveLabel->setText(toWrite);
   ui->gameActiveLabel->repaint();
 }
+
 void MainMenu::checkBoxChanged() {
+  auto     settings  = var_->getSettings();
   QObject* senderObj = sender();
   if (senderObj == ui->takeScreenshotCheckBox) {
     bool toSet = ui->takeScreenshotCheckBox->isChecked();
-    var_->getSettings().setTakingScreensState(toSet);
+    settings->setTakingScreensState(toSet);
   }
   if (senderObj == ui->restoreHealthMana) {
     bool enable = ui->restoreHealthMana->isChecked();
-    var_->getSettings().setRestoringState(enable);
+    settings->setRestoringState(enable);
     if (enable) {
       ui->healthInfoLabel->clear();
       ui->manaInfoLabel->clear();
@@ -153,11 +155,11 @@ void MainMenu::checkBoxChanged() {
   }
   if (senderObj == ui->keepHastedCheckBox) {
     bool toSet = ui->keepHastedCheckBox->isChecked();
-    var_->getSettings().setKeepHasted(toSet);
+    settings->setKeepHasted(toSet);
   }
   if (senderObj == ui->keepUpgradedCheckBox) {
     bool toSet = ui->keepUpgradedCheckBox->isChecked();
-    var_->getSettings().setKeepUpraded(toSet);
+    settings->setKeepUpraded(toSet);
   }
 }
 void MainMenu::changedValueOfCharHealthOrMana(double healthPercentage, double manaPercentage, double manaShieldPercentage) {

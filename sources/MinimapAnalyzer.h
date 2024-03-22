@@ -15,7 +15,7 @@ class MinimapAnalyzer : public QThread {
   Q_OBJECT
  public:
   MinimapAnalyzer(QObject* parent, QSharedPointer<VariablesClass> var);
-  ~MinimapAnalyzer();
+  ~MinimapAnalyzer() = default;
 
  signals:
   void sendPostitionsToGUI(QString, QString, QString);
@@ -26,14 +26,17 @@ class MinimapAnalyzer : public QThread {
  private:
   enum class MapType { REGULAR, WAYPOINT };
 
-  QSharedPointer<VariablesClass> var;
-  const int                      TIMER_INTERVAL = 20;
-  const int                      MIN_LAYER = -8, MAX_LAYER = 7;
-  const QImage                   LAYER_SLIDER_IMG = setSliderImg();
-  const int                      MIN_X_MAP_INDEX = 124, MAX_X_MAP_INDEX = 134, MIN_Y_MAP_INDEX = 121, MAX_Y_MAP_INDEX = 129;
-  const QVector<QRect>           MINI_MAP_PARTS_POSITIONS = getMiniMapPartsPostions();
-  const QSize                    PROPER_MINIMAP_IMG_SIZE  = QSize(106, 109);
-  QPoint                         previousPosition;
+  QSharedPointer<MiniMap>        minimap_;
+  QSharedPointer<Settings>       settings_;
+  QSharedPointer<PlayerPosition> positions_;
+
+  const int            TIMER_INTERVAL = 20;
+  const int            MIN_LAYER = -8, MAX_LAYER = 7;
+  const QImage         LAYER_SLIDER_IMG = setSliderImg();
+  const int            MIN_X_MAP_INDEX = 124, MAX_X_MAP_INDEX = 134, MIN_Y_MAP_INDEX = 121, MAX_Y_MAP_INDEX = 129;
+  const QVector<QRect> MINI_MAP_PARTS_POSITIONS = getMiniMapPartsPostions();
+  const QSize          PROPER_MINIMAP_IMG_SIZE  = QSize(106, 109);
+  QPoint               previousPosition;
 
   QImage          setSliderImg();
   int             getCurrentLayer(const CJ_Image& layerImg);
