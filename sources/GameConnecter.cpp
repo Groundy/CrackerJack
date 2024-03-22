@@ -19,17 +19,15 @@ void GameConnecter::clickLeft(QPoint pt) {
   PostMessage(gameThreadHandler, WM_LBUTTONDOWN, 1, lParam);
   PostMessage(gameThreadHandler, WM_LBUTTONUP, 1, lParam);
 }
-void GameConnecter::clickRight(QPoint pt) {
-  if (playing_on_small_monitor_) {
-    pt = QPoint(pt.x() / 0.8, pt.y() / 0.8);
-  }
-  HWND         gameThreadHandler = var_->getGameProcess().getHandlerToGameThread();
-  LPARAM       lParam            = (pt.y() << 16) + pt.x();
+void GameConnecter::clickRight(const QPoint pt) {
+  const QPoint to_click          = (playing_on_small_monitor_) ? QPoint(pt.x() / 0.8, pt.y() / 0.8) : pt;
+  const HWND   gameThreadHandler = var_->getGameProcess().getHandlerToGameThread();
+  const LPARAM lParam            = (to_click.y() << 16) + to_click.x();
   QMutexLocker locker(&sender_mutex_);
   PostMessage(gameThreadHandler, WM_RBUTTONDOWN, 0, lParam);
   PostMessage(gameThreadHandler, WM_RBUTTONUP, 0, lParam);
 }
-void GameConnecter::clickRightWithShift(QVector<QPoint> pts, int SLEEP_TIME_BETWEEN_LOOT_CLICK) {
+void GameConnecter::clickRightWithShift(const QVector<QPoint>& pts, const uint sleepTimeBetweenClicks) {
   HWND gameThreadHandler = var_->getGameProcess().getHandlerToGameThread();
 
   QMutexLocker locker(&sender_mutex_);
@@ -39,40 +37,41 @@ void GameConnecter::clickRightWithShift(QVector<QPoint> pts, int SLEEP_TIME_BETW
       pt = QPoint(pt.x() / 0.8, pt.y() / 0.8);
     }
     LPARAM lParam = (pt.y() << 16) + pt.x();
-    msleep(SLEEP_TIME_BETWEEN_LOOT_CLICK);
+    msleep(sleepTimeBetweenClicks);
     PostMessage(gameThreadHandler, WM_RBUTTONDOWN, 0, lParam);
-    msleep(SLEEP_TIME_BETWEEN_LOOT_CLICK);
+    msleep(sleepTimeBetweenClicks);
     PostMessage(gameThreadHandler, WM_RBUTTONUP, 0, lParam);
-    msleep(SLEEP_TIME_BETWEEN_LOOT_CLICK);
+    msleep(sleepTimeBetweenClicks);
   }
   setShiftPressed(false);
 }
-bool GameConnecter::sendKeyStrokeToProcess(Key key, int sleepTime) {
-  const int    weirdConst        = 0x1470001;
-  HWND         gameThreadHandler = var_->getGameProcess().getHandlerToGameThread();
+bool GameConnecter::sendKeyStrokeToProcess(const Key key, const uint sleepTime) {
+  const HWND   gameThreadHandler = var_->getGameProcess().getHandlerToGameThread();
   QMutexLocker locker(&sender_mutex_);
-  PostMessage(gameThreadHandler, WM_KEYDOWN, key.getKeyVal(), weirdConst);
+  PostMessage(gameThreadHandler, WM_KEYDOWN, key.getKeyVal(), windows_post_param_);
   msleep(sleepTime);
-  PostMessage(gameThreadHandler, WM_KEYUP, key.getKeyVal(), weirdConst);
+  PostMessage(gameThreadHandler, WM_KEYUP, key.getKeyVal(), windows_post_param_);
   return true;
 }
-bool GameConnecter::sendKeyStrokeToProcess(int virtualKey, int sleepTime) {
-  const int    weirdConst        = 0x1470001;
-  HWND         gameThreadHandler = var_->getGameProcess().getHandlerToGameThread();
+
+bool GameConnecter::sendKeyStrokeToProcess(const int virtualKey, const uint sleepTime) {
+  const HWND   gameThreadHandler = var_->getGameProcess().getHandlerToGameThread();
   QMutexLocker locker(&sender_mutex_);
-  PostMessage(gameThreadHandler, WM_KEYDOWN, virtualKey, weirdConst);
+  PostMessage(gameThreadHandler, WM_KEYDOWN, virtualKey, windows_post_param_);
   msleep(sleepTime);
-  PostMessage(gameThreadHandler, WM_KEYUP, virtualKey, weirdConst);
+  PostMessage(gameThreadHandler, WM_KEYUP, virtualKey, windows_post_param_);
   return true;
 }
-void GameConnecter::sendStringToGame(QString str) {
+
+void GameConnecter::sendStringToGame(const QString& str) {
   HWND gameThreadHandler = var_->getGameProcess().getHandlerToGameThread();
   for each (QChar charToSend in str) {
     sendCharToGame(charToSend, gameThreadHandler);
     msleep(2);
   }
 }
-void GameConnecter::useRestorationMethode(const RestorationMethode& methode, int additionalTime) {
+
+void GameConnecter::useRestorationMethode(const RestorationMethode& methode, const uint additionalTime) {
   Timers& timers = var_->getTimers();
   if (methode.isSpell()) {
     timers.setTimeLastSpellUsageHealing();
@@ -82,37 +81,37 @@ void GameConnecter::useRestorationMethode(const RestorationMethode& methode, int
     timers.setTimeLastItemUsed(methode.getName(), additionalTime);
   }
 
-  Key key = methode.getKey();
-  sendKeyStrokeToProcess(key);
+  sendKeyStrokeToProcess(methode.getKey());
   logger_.log(methode.getName(), false, true, true);
 }
+
 void GameConnecter::sendCharToGame(const QChar charToSend, const HWND& gameThreadHandler) {
   QMutexLocker locker(&sender_mutex_);
   if (charToSend.isLetter()) {
-    WPARAM wParam = charToSend.toUpper().unicode();
+    const WPARAM wParam = charToSend.toUpper().unicode();
     PostMessage(gameThreadHandler, WM_KEYDOWN, wParam, 1);
   } else if (charToSend.isSpace()) {
-    WPARAM wParam = 0x20;
+    const WPARAM wParam = 0x20;
     PostMessage(gameThreadHandler, WM_KEYDOWN, wParam, 1);
   } else if (charToSend.isDigit()) {
-    uint   value  = charToSend.unicode() - 48;
-    WPARAM wParam = charToSend.unicode();
-    LPARAM lParam = ((value + 1) << 16) + 1;
+    uint         value  = charToSend.unicode() - 48;
+    const WPARAM wParam = charToSend.unicode();
+    const LPARAM lParam = ((value + 1) << 16) + 1;
     PostMessage(gameThreadHandler, WM_KEYDOWN, wParam, lParam);
   } else if (charToSend.unicode() == 39) {
     // apostrophe mark
-    WPARAM wParam = 0xDE;
-    LPARAM lParam = 0x00280001;
+    const WPARAM wParam = 0xDE;
+    const LPARAM lParam = 0x00280001;
     PostMessage(gameThreadHandler, WM_KEYDOWN, wParam, lParam);
   } else if (charToSend.unicode() == 45) {
     // dash mark
-    WPARAM wParam = 0xBD;
-    LPARAM lParam = 0x000C001;
+    const WPARAM wParam = 0xBD;
+    const LPARAM lParam = 0x000C001;
     PostMessage(gameThreadHandler, WM_KEYDOWN, wParam, lParam);
   }
 }
 void GameConnecter::autoLootAroundPlayer() {
-  auto           potinsToClick             = var_->getGameWindow().getPointsOfFieldsAroundPlayer();
+  const auto     potinsToClick             = var_->getGameWindow().getPointsOfFieldsAroundPlayer();
   constexpr uint sleep_time_between_clicks = 120;
 
   if (auto_loot_setting_ == Profile::RIGHT_MOUSE_BUTTON) {

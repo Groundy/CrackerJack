@@ -15,17 +15,17 @@ class GameConnecter : public QThread {
   ~GameConnecter();
   void run(){};
 
-  void clickLeft(QPoint pt);
-  void clickRight(QPoint pt);
-  void sendStringToGame(QString str);
-  bool sendKeyStrokeToProcess(Key key, int sleepTime = 20);
-  bool sendKeyStrokeToProcess(int virtualKey, int sleepTime = 20);
-  void useRestorationMethode(const RestorationMethode& methode, int additionalTime = 0);
+  void clickLeft(const QPoint pt);
+  void clickRight(const QPoint pt);
+  void sendStringToGame(const QString& str);
+  bool sendKeyStrokeToProcess(const Key key, const uint sleepTime = 20);
+  bool sendKeyStrokeToProcess(const int virtualKey, const uint sleepTime = 20);
+  void useRestorationMethode(const RestorationMethode& methode, const uint additionalTime = 0);
   void autoLootAroundPlayer();
 
  private:
   void sendCharToGame(const QChar charToSend, const HWND& gameThreadHandler);
-  void clickRightWithShift(QVector<QPoint> pts, int SLEEP_TIME_BETWEEN_LOOT_CLICK);
+  void clickRightWithShift(const QVector<QPoint>& pts, const uint sleepTimeBetweenClicks);
   void setShiftPressed(const bool pressed);
 
   QMutex                         sender_mutex_;
@@ -33,4 +33,5 @@ class GameConnecter : public QThread {
   QSharedPointer<VariablesClass> var_;
   Logger&                        logger_                   = Logger::instance();
   const bool                     playing_on_small_monitor_ = false;  //[TODO] move that!
+  const int                      windows_post_param_       = 0x1470001;
 };
