@@ -25,7 +25,7 @@ MainMenu::MainMenu(QSharedPointer<Profile> prof, QWidget* parent) : QDialog(pare
 }
 MainMenu::~MainMenu() {
   QList<QThread*> threads{&screen_saver_, &screen_analyzer_, &vitality_analyzer_, &click_detector_};  //huntAutoThread
-  for each (QThread* thread in threads) {
+  foreach (QThread* thread, threads) {
     if (thread == nullptr) {
       continue;
     }

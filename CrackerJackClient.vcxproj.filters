@@ -146,6 +146,9 @@
     <QtMoc Include="sources\VitalityAnalyzer.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <QtMoc Include="sources\GameConnecter.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="sources\SelectProfileWindow.ui">
@@ -223,9 +226,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="sources\Equipment.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="sources\GameConnecter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="sources\Profession.hpp">

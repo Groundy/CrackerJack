@@ -113,7 +113,7 @@ void GameConnecter::sendCharToGame(const QChar charToSend, const HWND& gameThrea
 }
 void GameConnecter::autoLootAroundPlayer() {
   auto           potinsToClick             = var_->getGameWindow().getPointsOfFieldsAroundPlayer();
-  constexpr uint sleep_time_between_clicks = 111;
+  constexpr uint sleep_time_between_clicks = 120;
 
   if (auto_loot_setting_ == Profile::RIGHT_MOUSE_BUTTON) {
     foreach (const QPoint& pt, potinsToClick) {

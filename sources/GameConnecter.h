@@ -8,11 +8,12 @@
 #include "Profile.h"
 #include "RestorationMethode.hpp"
 #include "VariablesClass.hpp"
-class GameConnecter : QThread {
+class GameConnecter : public QThread {
   Q_OBJECT
  public:
   GameConnecter(QSharedPointer<VariablesClass> var);
   ~GameConnecter();
+  void run(){};
 
   void clickLeft(QPoint pt);
   void clickRight(QPoint pt);
