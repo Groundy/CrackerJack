@@ -4,8 +4,8 @@ GameActivityChecker::GameActivityChecker(QSharedPointer<VariablesClass> var) {
   game_process_data_ = var->getGameProcess();
 
   checkGameStateTimer_.setInterval(check_interval_);
-  checkGameState();
-  if (!QObject::connect(&checkGameStateTimer_, &QTimer::timeout, this, &GameActivityChecker::checkGameState, Qt::UniqueConnection)) {
+  execute();
+  if (!QObject::connect(&checkGameStateTimer_, &QTimer::timeout, this, &GameActivityChecker::execute, Qt::UniqueConnection)) {
     qCritical() << "Failed to connect game activity timer.";
     exit(1);
   }
@@ -16,7 +16,7 @@ GameActivityChecker::~GameActivityChecker() {
   checkGameStateTimer_.stop();
 }
 
-void GameActivityChecker::checkGameState() {
+void GameActivityChecker::execute() {
   GameActivityStates gameStateCode = getGameState();
   if (gameStateCode != previousGameState_) {
     emit gameStateChanged(gameStateCode);
@@ -56,8 +56,10 @@ QString GameActivityChecker::getGameWindowTitile() const {
   }
   return QString();
 }
-uint GameActivityChecker::getGamePid(const QMap<QString, unsigned int>& processes) const {
-  auto iteratorToProcess = processes.find(game_process_name_);
+
+uint GameActivityChecker::getGamePid() const {
+  const QMap<QString, uint> processes         = getListOfRunningProcess();
+  auto                      iteratorToProcess = processes.find(game_process_name_);
   if (iteratorToProcess == processes.end()) {
     qDebug() << "Can't find Game on running processes list!";
     return 0;
@@ -89,9 +91,8 @@ GameActivityStates GameActivityChecker::windowIsAccessible(const uint PID, const
 }
 
 GameActivityStates GameActivityChecker::getGameState() {
-  auto    processes   = getListOfRunningProcess();
-  uint    PID         = getGamePid(processes);
-  QString windowTitle = getGameWindowTitile();
+  const uint    PID         = getGamePid();
+  const QString windowTitle = getGameWindowTitile();
 
   if (windowTitle.isEmpty()) {
     qWarning() << "Can't get game window title.";
@@ -115,27 +116,32 @@ GameActivityStates GameActivityChecker::getGameState() {
   }
   return GameActivityStates(gameWinState);
 }
-QMap<QString, unsigned int> GameActivityChecker::getListOfRunningProcess() {
-  QMap<QString, unsigned int> toRet;
-  HANDLE                      hSnapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
-  if (hSnapshot) {
-    PROCESSENTRY32 pe32{};
-    pe32.dwSize = sizeof(PROCESSENTRY32);
-    if (Process32First(hSnapshot, &pe32)) {
-      do {
-        unsigned int ID   = (unsigned int)pe32.th32ProcessID;
-        WCHAR*       name = pe32.szExeFile;
-        _bstr_t      b(name);
-        const char*  nameCC = b;
-        toRet.insert(QString(nameCC), ID);
-      } while (Process32Next(hSnapshot, &pe32));
-    }
-    CloseHandle(hSnapshot);
+QMap<QString, uint> GameActivityChecker::getListOfRunningProcess() const {
+  HANDLE hSnapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
+  if (!hSnapshot) {
+    return QMap<QString, uint>();
   }
+
+  PROCESSENTRY32 pe32{};
+  pe32.dwSize = sizeof(PROCESSENTRY32);
+  if (!Process32First(hSnapshot, &pe32)) {
+    CloseHandle(hSnapshot);
+    return QMap<QString, uint>();
+  }
+
+  QMap<QString, uint> toRet;
+  do {
+    unsigned int ID   = (unsigned int)pe32.th32ProcessID;
+    WCHAR*       name = pe32.szExeFile;
+    _bstr_t      b(name);
+    const char*  nameCC = b;
+    toRet.insert(QString(nameCC), ID);
+  } while (Process32Next(hSnapshot, &pe32));
+  CloseHandle(hSnapshot);
   return toRet;
 }
-HWND GameActivityChecker::getHandlerToGameWindow(unsigned int PID, QString WindowName) {
-  LPCWSTR nameOfWindowLPCWSTR = (const wchar_t*)WindowName.utf16();
+HWND GameActivityChecker::getHandlerToGameWindow(const uint PID, const QString& windowName) {
+  LPCWSTR nameOfWindowLPCWSTR = (const wchar_t*)windowName.utf16();
   HWND    handler             = FindWindow(NULL, nameOfWindowLPCWSTR);
   if (handler == NULL) {
     // Logger::logPotenialBug("Can't get handler to window: " + WindowName,
@@ -145,13 +151,12 @@ HWND GameActivityChecker::getHandlerToGameWindow(unsigned int PID, QString Windo
   DWORD tmp     = PID;
   DWORD hThread = GetWindowThreadProcessId(handler, &tmp);
 
-  if (hThread != NULL) {
-    return handler;
-  } else {
+  if (hThread == NULL) {
     // Logger::logPotenialBug("Can't get thread PID for used handler",
     // "Utilities", "clickRight");
     return HWND();
   }
-}
 
+  return handler;
+}
 }  // namespace CJ

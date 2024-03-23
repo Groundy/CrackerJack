@@ -19,7 +19,7 @@ class GameActivityChecker : public QObject {
   ~GameActivityChecker();
 
  signals:
-  void gameStateChanged(GameActivityStates i);
+  void gameStateChanged(GameActivityStates state);
 
  private:
   GameActivityStates previousGameState_         = GameActivityStates::NO_ACTIVE;
@@ -31,12 +31,12 @@ class GameActivityChecker : public QObject {
 
   QSharedPointer<GameProcessData> game_process_data_;
 
-  uint                        getGamePid(const QMap<QString, unsigned int>& processes) const;
-  QString                     getGameWindowTitile() const;
-  GameActivityStates          getGameState();
-  void                        checkGameState();
-  QMap<QString, unsigned int> getListOfRunningProcess();
-  GameActivityStates          windowIsAccessible(const uint PID, const QString& windowTitle);
-  HWND                        getHandlerToGameWindow(unsigned int PID, QString WindowName);
+  uint                getGamePid() const;
+  QString             getGameWindowTitile() const;
+  GameActivityStates  getGameState();
+  void                execute();
+  QMap<QString, uint> getListOfRunningProcess() const;
+  GameActivityStates  windowIsAccessible(const uint PID, const QString& windowTitle);
+  HWND                getHandlerToGameWindow(const uint PID, const QString& WindowName);
 };
 }  // namespace CJ
