@@ -36,14 +36,17 @@ void RouteCreator::mapMoved() {
   repaintMap();
 }
 void RouteCreator::floorChanged() {
-  int currentF = currentPosition.getFloor();
+  int currentF = currentPosition.f_;
   if (sender() == ui->upFloor) {
-    if (currentF == 7) return;
-    currentPosition.setFloor(currentF + 1);
-
+    if (currentF == 7) {
+      return;
+    }
+    currentPosition.f_ = currentF + 1;
   } else if (sender() == ui->lowerFloor) {
-    if (currentF == -8) return;
-    currentPosition.setFloor(currentF - 1);
+    if (currentF == -8) {
+      return;
+    }
+    currentPosition.f_ = currentF - 1;
   }
   repaintMap();
 }
@@ -154,48 +157,49 @@ void RouteCreator::fillNamesOfFieldTypesToList() {
   strList->push_back("Log out point");
 };
 void RouteCreator::changePlayerPos(int x, int y) {
-  const auto mapSize = floorMaps.value(currentPosition.getFloor());
+  const auto mapSize = floorMaps.value(currentPosition.f_);
   if (y > 0) {
     const int maxY          = mapSize->height() - 1;
-    int       tmpCordinateY = currentPosition.getY() + y;
+    int       tmpCordinateY = currentPosition.y_ + y;
     bool      ptOutOfRange  = tmpCordinateY > maxY;
     int       toSet         = ptOutOfRange ? maxY : tmpCordinateY;
-    currentPosition.setY(toSet);
+    currentPosition.y_      = toSet;
   }
   if (y < 0) {
-    int  tmpCordinateY = currentPosition.getY() + y;
+    int  tmpCordinateY = currentPosition.y_ + y;
     bool ptOutOfRange  = tmpCordinateY < 0;
     int  toSet         = ptOutOfRange ? 0 : tmpCordinateY;
-    currentPosition.setY(toSet);
+    currentPosition.y_ = toSet;
   }
   if (x > 0) {
     const int maxX          = mapSize->width() - 1;
-    int       tmpCordinateX = currentPosition.getX() + x;
+    int       tmpCordinateX = currentPosition.x_ + x;
     bool      ptOutOfRange  = tmpCordinateX > maxX;
     int       toSet         = ptOutOfRange ? maxX : tmpCordinateX;
-    currentPosition.setX(toSet);
+    currentPosition.x_      = toSet;
   }
   if (x < 0) {
-    int  tmpCordinateX = currentPosition.getX() + x;
+    int  tmpCordinateX = currentPosition.x_ + x;
     bool ptOutOfRange  = tmpCordinateX < 0;
     int  toSet         = ptOutOfRange ? 0 : tmpCordinateX;
-    currentPosition.setX(toSet);
+    currentPosition.x_ = toSet;
   }
 };
 void RouteCreator::repaintMap() {
-  int floor = currentPosition.getFloor();
-  if (!loadMap(floor)) return;
+  if (!loadMap(currentPosition.f_)) {
+    return;
+  }
 
   const int currFrameSize = ORG_SIZE_OF_FRAME / zoom;
   QRect     frameToDisplay =
-      QRect(currentPosition.getX() - (currFrameSize / 2), currentPosition.getY() - (currFrameSize / 2), currFrameSize, currFrameSize);
+      QRect(currentPosition.x_ - (currFrameSize / 2), currentPosition.y_ - (currFrameSize / 2), currFrameSize, currFrameSize);
   QPixmap pixMapToShow = getScaledPixMapToPaint(frameToDisplay);
   ui->imgLabel->setPixmap(pixMapToShow);
   refreshPositionLabel();
 }
 QPixmap RouteCreator::getScaledPixMapToPaint(QRect frameWithinMap) {
   double ratio      = 1.0 * ui->imgLabel->width() / frameWithinMap.width();
-  QImage imgToScale = floorMaps.value(currentPosition.getFloor())->copy(frameWithinMap);
+  QImage imgToScale = floorMaps.value(currentPosition.f_)->copy(frameWithinMap);
   QPoint middlePt(imgToScale.width() / 2, imgToScale.height() / 2);
   imgToScale.setPixel(middlePt, POSITION_MARK_COLOR);
   QImage displayImg(ui->imgLabel->size(), QImage::Format::Format_ARGB32);

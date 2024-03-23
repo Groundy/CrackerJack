@@ -4,7 +4,7 @@
 #include <qmap.h>
 
 #include "PathResource.h"
-#include "Point3D.h"
+#include "Point3D.hpp"
 #include "RoutePoint.h"
 namespace CJ {
 class Route : JsonClass {

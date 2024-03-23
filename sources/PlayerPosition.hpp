@@ -1,44 +1,43 @@
 #pragma once
 #include <qpoint.h>
 
-#include "Point3D.h"
+#include "Point3D.hpp"
 namespace CJ {
+
+//[TODO ] this class is useless!!! replace it with SharedPoiner to Point 3D in Variable class later!
 class PlayerPosition {
  public:
   void setPlayerPos(const QPoint position, int floorToSet) {
-    x_     = position.x();
-    y_     = position.y();
-    floor_ = floorToSet;
+    QMutexLocker locker(&mutex);
+    pos_ = Point3D(position.x(), position.y(), floorToSet);
   }
   void setPlayerPos(const Point3D position) {
-    x_     = position.getX();
-    y_     = position.getY();
-    floor_ = position.getFloor();
+    QMutexLocker locker(&mutex);
+    pos_ = position;
   }
   void setPlayerPos(const int x, const int y, const int f) {
-    x_     = x;
-    y_     = y;
-    floor_ = f;
+    QMutexLocker locker(&mutex);
+    pos_ = Point3D(x, y, f);
   }
   Point3D getPlayerPos() {
-    Point3D toRet = Point3D(x_, y_, floor_);
-    return toRet;
+    QMutexLocker locker(&mutex);
+    return pos_;
   }
   void clear() {
-    x_     = -1;
-    y_     = -1;
-    floor_ = -20;
+    QMutexLocker locker(&mutex);
+    pos_ = Point3D{};
   }
   int getFloor() {
-    return floor_;
+    QMutexLocker locker(&mutex);
+    return pos_.f_;
   }
   QPoint getXY() {
-    return QPoint(x_, y_);
+    QMutexLocker locker(&mutex);
+    return pos_.getXY();
   }
 
  private:
-  std::atomic<int> floor_ = 0;
-  std::atomic<int> x_;
-  std::atomic<int> y_;
+  QMutex  mutex;
+  Point3D pos_{};
 };
 }  // namespace CJ

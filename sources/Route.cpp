@@ -104,16 +104,14 @@ bool Route::checkRouteCorectness(QString& errorTextToDisplay) {
     Point3D   next        = route_[i + 1].getPosition();
     FieldType currentType = route_[i].getFieldType();
 
-    bool      canGoToNextPoint;
-    const int currentF = current.getFloor();
-    const int nextF    = next.getFloor();
-    if (currentF < nextF) {
+    bool canGoToNextPoint;
+    if (current.f_ < next.f_) {
       canGoToNextPoint = typesGoingUp.contains(currentType);
       flChange         = FLOOR_CHANGE::UP;
-    } else if (currentF == nextF) {
+    } else if (current.f_ == next.f_) {
       canGoToNextPoint = typesGoingSame.contains(currentType);
       flChange         = FLOOR_CHANGE::SAME;
-    } else if (currentF > nextF) {
+    } else if (current.f_ > next.f_) {
       canGoToNextPoint = typesGoingDown.contains(currentType);
       flChange         = FLOOR_CHANGE::DOWN;
     }
@@ -144,14 +142,14 @@ bool Route::checkIfPositionIsOnListOnIndex(Point3D toCheck, int index) {
     return false;
   }
 
-  int  currentX = toCheck.getX();
-  int  currentY = toCheck.getY();
-  int  x        = route_[index].getPosition().getX();
+  int  currentX = toCheck.x_;
+  int  currentY = toCheck.y_;
+  int  x        = route_[index].getPosition().x_;
   bool properX  = currentX >= x - 1 && currentX <= x + 1;
   if (!properX) {
     return false;
   }
-  int  y       = route_[index].getPosition().getY();
+  int  y       = route_[index].getPosition().y_;
   bool properY = currentY >= y - 1 && currentY <= y + 1;
   if (!properY) {
     return false;

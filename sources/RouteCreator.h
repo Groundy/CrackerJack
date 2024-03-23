@@ -6,7 +6,7 @@
 #include <qsize.h>
 
 #include "JsonParser.h"
-#include "Point3D.h"
+#include "Point3D.hpp"
 #include "RGBstruct.h"
 #include "Route.h"
 #include "RoutePoint.h"

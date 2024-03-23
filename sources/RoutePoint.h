@@ -2,7 +2,7 @@
 #include <qjsonobject.h>
 
 #include "JsonClass.hpp"
-#include "Point3D.h"
+#include "Point3D.hpp"
 namespace CJ {
 class RoutePoint : JsonClass {
  public:

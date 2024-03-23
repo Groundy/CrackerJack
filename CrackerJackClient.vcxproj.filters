@@ -81,9 +81,6 @@
     <ClCompile Include="sources\Route.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="sources\Point3D.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="sources\Item.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -183,7 +180,7 @@
     <ClInclude Include="sources\Route.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="sources\Point3D.h">
+    <ClInclude Include="sources\Point3D.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="sources\Calibrator.h">

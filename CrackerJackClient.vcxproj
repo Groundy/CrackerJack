@@ -244,7 +244,6 @@ xcopy /y /d ".\dependencies\32-bit\libcrypto-1_1.dll" "$(OutDir)"
     <ClCompile Include="sources\MinimapAnalyzer.cpp" />
     <ClCompile Include="sources\NewProfileConfiguartor.cpp" />
     <ClCompile Include="sources\Key.cpp" />
-    <ClCompile Include="sources\Point3D.cpp" />
     <ClCompile Include="sources\main.cpp" />
     <ClCompile Include="sources\Profile.cpp" />
     <ClCompile Include="sources\RGBstruct.cpp" />
@@ -289,7 +288,7 @@ xcopy /y /d ".\dependencies\32-bit\libcrypto-1_1.dll" "$(OutDir)"
     <ClInclude Include="sources\Potion.h" />
     <ClInclude Include="sources\RestorationMethode.hpp" />
     <ClInclude Include="sources\Route.h" />
-    <ClInclude Include="sources\Point3D.h" />
+    <ClInclude Include="sources\Point3D.hpp" />
     <ClInclude Include="sources\RoutePoint.h" />
     <ClInclude Include="sources\Settings.hpp" />
     <ClInclude Include="sources\Spell.h" />
