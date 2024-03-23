@@ -5,44 +5,40 @@
 namespace CJ {
 class PlayerPosition {
  public:
-  void setPlayerPos(const QPoint xyToSet, int floorToSet) {
-    QMutexLocker locker(&positionMutex);
-    xy    = xyToSet;
-    floor = floorToSet;
+  void setPlayerPos(const QPoint position, int floorToSet) {
+    x_     = position.x();
+    y_     = position.y();
+    floor_ = floorToSet;
   }
-  void setPlayerPos(const Point3D toSet) {
-    QMutexLocker locker(&positionMutex);
-    xy    = QPoint(toSet.getX(), toSet.getY());
-    floor = toSet.getFloor();
+  void setPlayerPos(const Point3D position) {
+    x_     = position.getX();
+    y_     = position.getY();
+    floor_ = position.getFloor();
   }
   void setPlayerPos(const int x, const int y, const int f) {
-    QMutexLocker locker(&positionMutex);
-    xy    = QPoint(x, y);
-    floor = f;
+    x_     = x;
+    y_     = y;
+    floor_ = f;
   }
   Point3D getPlayerPos() {
-    QMutexLocker locker(&positionMutex);
-    Point3D      toRet = Point3D(xy.x(), xy.y(), floor);
+    Point3D toRet = Point3D(x_, y_, floor_);
     return toRet;
   }
   void clear() {
-    QMutexLocker locker(&positionMutex);
-    xy    = QPoint(-1, -1);
-    floor = -20;
+    x_     = -1;
+    y_     = -1;
+    floor_ = -20;
   }
   int getFloor() {
-    QMutexLocker locker(&positionMutex);
-    return floor;
+    return floor_;
   }
   QPoint getXY() {
-    QMutexLocker locker(&positionMutex);
-    QPoint       toRet = xy;
-    return xy;
+    return QPoint(x_, y_);
   }
 
  private:
-  QMutex           positionMutex;
-  std::atomic<int> floor = 0;
-  QPoint           xy;
+  std::atomic<int> floor_ = 0;
+  std::atomic<int> x_;
+  std::atomic<int> y_;
 };
 }  // namespace CJ
