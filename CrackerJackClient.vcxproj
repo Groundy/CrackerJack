@@ -293,8 +293,8 @@ xcopy /y /d ".\dependencies\32-bit\libcrypto-1_1.dll" "$(OutDir)"
     <ClInclude Include="sources\Settings.hpp" />
     <ClInclude Include="sources\Spell.h" />
     <ClInclude Include="sources\Timers.hpp" />
-    <ClInclude Include="sources\Tools.hpp" />
     <ClInclude Include="sources\Vitallity.hpp" />
+    <ClInclude Include="sources\_OLD.hpp" />
     <ClInclude Include="version.h" />
     <ClInclude Include="sources\VariablesClass.hpp" />
     <ClInclude Include="sources\ScreenSaver.h" />

@@ -213,9 +213,6 @@
     <ClInclude Include="sources\Potion.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="sources\Tools.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="sources\PathResource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -259,6 +256,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="sources\CJ_Image.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\_OLD.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
