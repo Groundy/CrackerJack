@@ -7,6 +7,7 @@
 #include <qstring.h>
 
 #include "JsonParser.h"
+namespace CJ {
 class Tools {
  public:
   static void saveJsonFileWithCodesOfImgsInFolderColor(QString inputFolderPath, QString outputFolderPath) {
@@ -163,3 +164,4 @@ class Tools {
     }
   }
 };
+}  // namespace CJ

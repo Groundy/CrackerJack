@@ -1,5 +1,6 @@
 #pragma once
 #include <atomic>
+namespace CJ {
 class Settings {
  public:
   Settings()  = default;
@@ -82,3 +83,4 @@ class Settings {
   std::atomic<bool> clearVitalityImgs      = false;
   bool              playingOnSmallMonitor  = false;
 };
+}  // namespace CJ

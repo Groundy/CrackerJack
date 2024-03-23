@@ -3,6 +3,7 @@
 #include "JsonClass.hpp"
 #include "Key.h"
 #include "Spell.h"
+namespace CJ {
 class AttackMethode : JsonClass {
  public:
   AttackMethode(int cd, int cdGroup, int requiredMana, QString name, Key key, int monsersToUse)
@@ -67,3 +68,4 @@ class AttackMethode : JsonClass {
   Key     key_;
   int     minMonstersToUse_ = 0;
 };
+}  // namespace CJ

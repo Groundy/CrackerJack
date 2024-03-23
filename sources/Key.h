@@ -7,6 +7,7 @@
 #include "JsonClass.hpp"
 #include "qmap.h"
 #include "qsplitter.h"
+namespace CJ {
 class Key : JsonClass {
  public:
   static QMap<QString, int> KeysAndCodesMap;
@@ -32,3 +33,4 @@ class Key : JsonClass {
   int     keyVal;
   QString keyName;
 };
+}  // namespace CJ

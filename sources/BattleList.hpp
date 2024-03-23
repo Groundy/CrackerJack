@@ -6,6 +6,7 @@
 #include "Logger.hpp"
 #include "PathResource.h"
 #include "Utilities.hpp"
+namespace CJ {
 class BattleList {
  public:
   BattleList()  = default;
@@ -117,3 +118,4 @@ class BattleList {
     return toRet;
   };
 };
+}  // namespace CJ

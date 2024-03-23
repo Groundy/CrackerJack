@@ -1,5 +1,5 @@
 #include "Key.h"
-
+namespace CJ {
 QStringList Key::getListOfAllPossibleKeys() {
   return KeysAndCodesMap.keys();
 }
@@ -54,3 +54,4 @@ QMap<QString, int> Key::KeysAndCodesMap = {
     {"4", 52},      {"5", 53},     {"6", 54},     {"7", 55},      {"8", 56},        {"9", 57},          {"ESC", 27},        {"INSERT", 45},
     {"DELETE", 46}, {"HOME", 36},  {"END", 35},   {"PAGEUP", 33}, {"PAGEDOWN", 34}, {"ScrollLock", 91}, {"PauseBreak", 19}, {"/", 111},
     {"*", 106},     {"-", 100},    {"+", 107},    {"`", 0xC0}};
+}  // namespace CJ

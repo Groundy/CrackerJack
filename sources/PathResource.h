@@ -4,6 +4,7 @@
 #include <qstring.h>
 
 #include <optional>
+namespace CJ {
 class PathResource {
  public:
   static QDir getProfileFolder() {
@@ -118,3 +119,4 @@ class PathResource {
     return tmpDir;
   }
 };
+}  // namespace CJ

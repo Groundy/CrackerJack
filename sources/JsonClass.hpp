@@ -1,5 +1,6 @@
 #pragma once
 #include <qjsonobject.h>
+namespace CJ {
 class JsonClass {
  public:
   virtual QJsonObject toJson() const  = 0;
@@ -7,3 +8,4 @@ class JsonClass {
 
  private:
 };
+}  // namespace CJ

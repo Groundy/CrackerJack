@@ -3,7 +3,7 @@
 
 #include "JsonClass.hpp"
 #include "Profession.hpp"
-
+namespace CJ {
 class Spell {
  public:
   Spell() = default;
@@ -94,3 +94,4 @@ inline Spell::Spell(QJsonObject obj) {
     // Utilities::showMessageBox_INFO(e.what());
   }
 };
+}  // namespace CJ

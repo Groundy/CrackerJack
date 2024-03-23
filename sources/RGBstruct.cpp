@@ -1,4 +1,5 @@
 #include "RGBstruct.h"
+namespace CJ {
 RGBstruct::RGBstruct(uint rgb) {
   r = (rgb >> 16) & 0xff;
   g = (rgb >> 8) & 0xff;
@@ -57,3 +58,4 @@ bool RGBstruct::oneColEqualOrAboveThreshold(uint threshold) const {
 bool RGBstruct::isValid() const {
   return r >= 0 && g >= 0 && b >= 0 && r <= 255 && g <= 55 && b <= 255;
 };
+}  // namespace CJ

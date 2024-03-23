@@ -1,6 +1,7 @@
 #include "AttackMethode.hpp"
 #include "JsonClass.hpp"
 #include "qjsonarray.h"
+namespace CJ {
 class AutoHuntData : JsonClass {
  public:
   AutoHuntData()  = default;
@@ -57,3 +58,4 @@ class AutoHuntData : JsonClass {
   uint                   min_enemies_to_continue_ = 0;
   QVector<AttackMethode> attack_methodes_         = {};
 };
+}  // namespace CJ

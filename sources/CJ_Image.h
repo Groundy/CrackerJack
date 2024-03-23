@@ -3,6 +3,7 @@
 
 #include "PathResource.h"
 #include "RGBstruct.h"
+namespace CJ {
 class CJ_Image : public QImage {
  public:
   CJ_Image(const QImage& img) : QImage(img){};
@@ -130,3 +131,4 @@ class CJ_Image : public QImage {
       {"7_10_0111111000111111110010000001001000000110100000011111111111010111111001", "Q"},
       {"2_3_111111", "'"}};
 };
+}  // namespace CJ

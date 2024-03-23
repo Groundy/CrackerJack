@@ -9,7 +9,7 @@
 #include "CJ_Image.h"
 #include "Key.h"
 #include "RGBstruct.h"
-
+namespace CJ {
 struct MutexImg {
  public:
   CJ_Image getImg() {
@@ -86,3 +86,4 @@ class Utilities {
     return pathToFile;
   }
 };
+}  // namespace CJ

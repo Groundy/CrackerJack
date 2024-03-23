@@ -1,5 +1,5 @@
 #include "CJ_Image.h"
-
+namespace CJ {
 void CJ_Image::toBlackAndWhite(const int threshold) {
   const int WIDTH  = this->width();
   const int HEIGHT = this->height();
@@ -490,3 +490,4 @@ bool CJ_Image::isItPixelFromFrame(const uint& color, const int& minValueAcceptab
 
   return true;
 }
+}  // namespace CJ

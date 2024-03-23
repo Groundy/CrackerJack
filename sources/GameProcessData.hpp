@@ -2,6 +2,7 @@
 #include <Windows.h>
 #include <basetsd.h>
 #include <qstring.h>
+namespace CJ {
 class GameProcessData {
  public:
   GameProcessData()  = default;
@@ -30,3 +31,4 @@ class GameProcessData {
   std::atomic<HWND> handlerToGameThread_ = HWND();
   QString           nameOfGameWindow_    = QString();
 };
+}  // namespace CJ

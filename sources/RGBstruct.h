@@ -4,6 +4,7 @@
 
 #include "JsonClass.hpp"
 #include "qjsonobject.h"
+namespace CJ {
 class RGBstruct : JsonClass {
  public:
   RGBstruct(uint rgb);
@@ -27,3 +28,4 @@ class RGBstruct : JsonClass {
  private:
   uint r, g, b;
 };
+}  // namespace CJ

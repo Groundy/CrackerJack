@@ -3,6 +3,7 @@
 #include <qmap.h>
 
 #include <QString>
+namespace CJ {
 class Timers {
  public:
   Timers()  = default;
@@ -72,3 +73,4 @@ class Timers {
     return QDateTime::currentMSecsSinceEpoch();
   };
 };
+}  // namespace CJ

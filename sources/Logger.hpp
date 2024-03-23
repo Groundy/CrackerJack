@@ -7,7 +7,7 @@
 #include <QObject>
 #include <atomic>
 #include <qfile>
-
+namespace CJ {
 class Logger : public QObject {
   Q_OBJECT
 
@@ -52,3 +52,4 @@ class Logger : public QObject {
     return QString::number(timeDifference) + "  ";
   }
 };
+}  // namespace CJ

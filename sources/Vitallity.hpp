@@ -3,6 +3,7 @@
 #include <qrect.h>
 
 #include "Utilities.hpp"
+namespace CJ {
 struct HealthManaFrames {
   QRect healthFrame;
   QRect manaFrame;
@@ -151,3 +152,4 @@ class MiniMap {
   MutexRect    miniMapFrame;
   const QPoint vectorToCompassMiddle = QPoint(144, 22);
 };
+}  // namespace CJ

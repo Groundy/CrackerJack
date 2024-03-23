@@ -1,5 +1,6 @@
 #pragma once
 #include <qstring.h>
+namespace CJ {
 class Profession {
  public:
   enum class Type { RP, EK, ED, MS, UNDEFINED };
@@ -57,3 +58,4 @@ class Profession {
  private:
   Type type;
 };
+}  // namespace CJ
