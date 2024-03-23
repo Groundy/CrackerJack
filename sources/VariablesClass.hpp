@@ -49,14 +49,6 @@ class VariablesClass {
     return prof;
   }
 
-  void setFullImage(const QImage& full_image) {
-    full_image_.setImg(full_image);
-  }
-
-  CJ_Image getFullImage() {
-    return full_image_.getImg();
-  }
-
  private:
   QSharedPointer<Profile>         prof;
   QSharedPointer<GameProcessData> gameProcess = QSharedPointer<GameProcessData>(new GameProcessData());
@@ -68,8 +60,5 @@ class VariablesClass {
   QSharedPointer<MiniMap>         minimap     = QSharedPointer<MiniMap>(new MiniMap());
   QSharedPointer<PlayerPosition>  position    = QSharedPointer<PlayerPosition>(new PlayerPosition());
   QSharedPointer<Equipment>       eq          = QSharedPointer<Equipment>(new Equipment());
-
-  //used for calibration
-  MutexImg full_image_;
 };
 }  // namespace CJ
