@@ -48,9 +48,6 @@
     <ClCompile Include="sources\Profile.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="sources\Key.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="sources\NewProfileConfiguartor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

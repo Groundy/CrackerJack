@@ -243,7 +243,6 @@ xcopy /y /d ".\dependencies\32-bit\libcrypto-1_1.dll" "$(OutDir)"
     <ClCompile Include="sources\VitalityAnalyzer.cpp" />
     <ClCompile Include="sources\MinimapAnalyzer.cpp" />
     <ClCompile Include="sources\NewProfileConfiguartor.cpp" />
-    <ClCompile Include="sources\Key.cpp" />
     <ClCompile Include="sources\main.cpp" />
     <ClCompile Include="sources\Profile.cpp" />
     <ClCompile Include="sources\RGBstruct.cpp" />
