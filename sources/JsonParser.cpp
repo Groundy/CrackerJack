@@ -158,7 +158,7 @@ bool JsonParser::getManaRestoreMethodes(QStringList potionNameToBeFound, QList<P
 	*/
   return true;
 }
-bool JsonParser::getItemsFromCategory(QList<Item>& itemsToRet, Item::TYPE_OF_ITEM type) {
+bool JsonParser::getItemsFromCategory(QList<Item>& itemsToRet, ItemType type) {
   QList<Item> readItems, itemsTmp;
   bool        sucess = readItemJson(readItems);
   if (!sucess) {
@@ -166,7 +166,7 @@ bool JsonParser::getItemsFromCategory(QList<Item>& itemsToRet, Item::TYPE_OF_ITE
   }
 
   foreach (Item var, readItems) {
-    bool isProperCategory = type == var.type;
+    bool isProperCategory = type == var.type_;
     if (isProperCategory) itemsTmp.push_back(var);
   }
 

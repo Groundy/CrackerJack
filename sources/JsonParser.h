@@ -22,7 +22,7 @@ class JsonParser {
   static bool               openJsonFile(QJsonObject& jsonDoc, QString pathToFile);
   static bool               readItemJson(QList<Item>& items);
   static bool               getManaRestoreMethodes(QStringList potionNameList, QList<Potion>& potionToReturn);
-  static bool               getItemsFromCategory(QList<Item>& readItems, Item::TYPE_OF_ITEM type);
+  static bool               getItemsFromCategory(QList<Item>& readItems, ItemType type);
   static QMap<QString, int> readAvaibleKeys();
   static QStringList        readNamesOfAllSavedProfiles();
   static bool               readSpellsJson(QList<Spell>& spells, Spell::SpellType* type, Profession* profession);

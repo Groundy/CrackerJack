@@ -1,6 +1,7 @@
 #include "Item.h"
-
+namespace CJ {
 Item::Item(const QJsonValue& jsonValue) {
+  //[TODO]
   /*
 	name = jsonValue["name"].toString();
 	price = jsonValue["price"].toInt();
@@ -30,47 +31,19 @@ QStringList Item::getListOfCategories() {
   return descriptionMap.values();
 }
 
-bool Item::filrItemList(QList<Item>& items, SELLER* sellerToFiltr, TYPE_OF_ITEM* itemCategoryToFiltr) {
-  if (sellerToFiltr == NULL && itemCategoryToFiltr == NULL || items.size() == 0) {
-    items = QList<Item>();
-    return false;
-  }
-
-  typedef Item::SELLER       Seller;
-  typedef Item::TYPE_OF_ITEM Type;
-
-  bool        filtrBySeller = sellerToFiltr != NULL;
-  bool        filtrByType   = itemCategoryToFiltr != NULL;
-  QList<Item> itemsToCopy   = items;
-  items.clear();
-  foreach (Item var, itemsToCopy) {
-    if (filtrBySeller) {
-      bool isProperSeller = (var.seller == *sellerToFiltr);
-      if (!isProperSeller) continue;
-    }
-    if (filtrByType) {
-      bool isProperType = var.type == *itemCategoryToFiltr;
-      if (!isProperType) continue;
-    }
-    items.push_back(var);
-  }
-  return true;
+void Item::filrItemList(QVector<Item>& items, ItemSeller&& sellerToFiltr) {
+  std::vector<Item> itemsToCopy = items.toStdVector();
+  std::vector<Item> to_ret;
+  auto              filtr_lamda = [sellerToFiltr](const Item& item) { return item.seller_ == sellerToFiltr; };
+  std::copy_if(begin(itemsToCopy), end(itemsToCopy), std::back_inserter(to_ret), filtr_lamda);
+  items = QVector<Item>(begin(to_ret), end(to_ret));
 }
 
-QMap<Item::TYPE_OF_ITEM, QString> Item::descriptionMap{
-    {Item::TYPE_OF_ITEM::ARMOR, "armors"},      {Item::TYPE_OF_ITEM::AMULETS, "amulets"},     {Item::TYPE_OF_ITEM::BOOTS, "boots"},
-    {Item::TYPE_OF_ITEM::CREATURE, "creature"}, {Item::TYPE_OF_ITEM::HELMETS, "helmets"},     {Item::TYPE_OF_ITEM::LEGS, "legs"},
-    {Item::TYPE_OF_ITEM::OTHER, "other"},       {Item::TYPE_OF_ITEM::POTIONS, "potions"},     {Item::TYPE_OF_ITEM::RINGS, "rings"},
-    {Item::TYPE_OF_ITEM::RUNES, "runes"},       {Item::TYPE_OF_ITEM::SHIELDS, "shields"},     {Item::TYPE_OF_ITEM::VALUABLES, "valuables"},
-    {Item::TYPE_OF_ITEM::AMMO, "ammo"},         {Item::TYPE_OF_ITEM::AXES, "axes"},           {Item::TYPE_OF_ITEM::SWORDS, "swords"},
-    {Item::TYPE_OF_ITEM::CLUBS, "clubs"},       {Item::TYPE_OF_ITEM::DISTANCES, "distances"}, {Item::TYPE_OF_ITEM::ROD, "rod"},
-    {Item::TYPE_OF_ITEM::WANDS, "wands"}};
-
-QMap<Item::SELLER, QString> Item::buyerMap{
-    {Item::SELLER::BLUE_DJIN, "Blue dijnn"},
-    {Item::SELLER::GREEN_DJIN, "Green dijnn"},
-    {Item::SELLER::OTHER_SELLER, "Other"},
-    {Item::SELLER::RASHID, "Rashid"},
-    {Item::SELLER::ZAO, "Esrik"},
-    {Item::SELLER::ORAMOND, "Flint"},
-};
+void Item::filrItemList(QVector<Item>& items, ItemType&& itemCategoryToFiltr) {
+  std::vector<Item> itemsToCopy = items.toStdVector();
+  std::vector<Item> to_ret;
+  auto              filtr_lamda = [itemCategoryToFiltr](const Item& item) { return item.type_ == itemCategoryToFiltr; };
+  std::copy_if(begin(itemsToCopy), end(itemsToCopy), std::back_inserter(to_ret), filtr_lamda);
+  items = QVector<Item>(begin(to_ret), end(to_ret));
+}
+}  // namespace CJ
