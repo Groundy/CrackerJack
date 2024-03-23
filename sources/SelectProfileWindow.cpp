@@ -6,7 +6,7 @@ namespace CJ {
 SelectProfileWindow::SelectProfileWindow(QSharedPointer<Profile> profileToBeChoosen, QWidget* parent) : QDialog(parent) {
   ui = new Ui::SelectProfileWindow();
   ui->setupUi(this);
-  this->profileToBeChoosen = profileToBeChoosen;
+  this->profile_to_be_choosen_ = profileToBeChoosen;
   setFixedSize(this->size());
   setUpGui();
   refreshProfilesOnList();
@@ -55,8 +55,8 @@ void SelectProfileWindow::selectListAction() {
   ui->editProfileButton->setEnabled(oneItemIsSelected);
 }
 void SelectProfileWindow::profSelected() {
-  QString profName    = getSelectedProfName();
-  *profileToBeChoosen = JsonParser::loadProfileFromJson(profName);
+  QString profName        = getSelectedProfName();
+  *profile_to_be_choosen_ = JsonParser::loadProfileFromJson(profName);
   this->accept();
 }
 
