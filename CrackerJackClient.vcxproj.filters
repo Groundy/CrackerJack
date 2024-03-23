@@ -210,7 +210,7 @@
     <ClInclude Include="sources\JsonClass.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="sources\Potion.h">
+    <ClInclude Include="sources\Potion.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="sources\Tools.hpp">

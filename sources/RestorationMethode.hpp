@@ -3,9 +3,9 @@
 
 #include "JsonClass.hpp"
 #include "Key.h"
-#include "Potion.h"
+#include "Potion.hpp"
 #include "Spell.h"
-
+namespace CJ {
 class RestorationMethode : JsonClass {
  public:
   enum class Type { POTION, SPELL };
@@ -174,3 +174,4 @@ class RestorationMethode : JsonClass {
   int     manaNeeded = 0, cd = 0, cdGroup = 0;
   Type    type = Type::POTION;
 };
+}  // namespace CJ

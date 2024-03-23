@@ -10,7 +10,6 @@
 
 #include "Item.h"
 #include "PathResource.h"
-#include "Potion.h"
 #include "Profession.hpp"
 #include "Profile.h"
 #include "Route.h"

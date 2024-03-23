@@ -285,7 +285,7 @@ xcopy /y /d ".\dependencies\32-bit\libcrypto-1_1.dll" "$(OutDir)"
     <QtMoc Include="sources\MinimapAnalyzer.h" />
     <QtMoc Include="sources\RouteCreator.h" />
     <ClInclude Include="sources\PathResource.h" />
-    <ClInclude Include="sources\Potion.h" />
+    <ClInclude Include="sources\Potion.hpp" />
     <ClInclude Include="sources\RestorationMethode.hpp" />
     <ClInclude Include="sources\Route.h" />
     <ClInclude Include="sources\Point3D.hpp" />

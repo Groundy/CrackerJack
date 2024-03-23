@@ -4,6 +4,7 @@
 #include <QtWidgets/QApplication>
 
 #include "MainMenu.h"
+
 void setStyle(QApplication& app) {
   app.setQuitOnLastWindowClosed(true);
   app.setStyle("fusion");
@@ -21,8 +22,8 @@ int main(int argc, char* argv[]) {
   setTranslation(app);
   setStyle(app);
 
-  QSharedPointer<Profile> profile(new Profile());
-  CJ::SelectProfileWindow win(profile);
+  QSharedPointer<CJ::Profile> profile(new CJ::Profile());
+  CJ::SelectProfileWindow     win(profile);
   if (!(win.exec() == QDialog::Accepted)) {
     exit(0);
   }

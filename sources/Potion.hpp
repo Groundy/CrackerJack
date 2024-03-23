@@ -3,6 +3,7 @@
 #include <qobject.h>
 
 #include "Profession.hpp"
+namespace CJ {
 class Potion {
  public:
   enum class TypeOfPotion { HEALTH, MANA };
@@ -12,21 +13,21 @@ class Potion {
       qWarning() << "Error in parsing potion obj, invalid field:" << field;
       return;
     }
-    this->name = obj["name"].toString();
+    name_ = obj["name"].toString();
 
     field = "health";
     if (!obj.contains(field) || !obj[field].isDouble()) {
       qWarning() << "Error in parsing potion obj, invalid field:" << field;
       return;
     }
-    this->healthReg = obj[field].toInt();
+    health_reg_ = obj[field].toInt();
 
     field = "mana";
     if (!obj.contains(field) || !obj[field].isDouble()) {
       qWarning() << "Error in parsing potion obj, invalid field:" << field;
       return;
     }
-    this->manaReg = obj[field].toInt();
+    mana_reg_ = obj[field].toInt();
 
     QVector<Profession> profsToSet;
     field = "for_mage";
@@ -54,33 +55,35 @@ class Potion {
       profsToSet.push_back(Profession::Type::EK);
     }
 
-    this->userProfessions = profsToSet;
+    user_professions_ = profsToSet;
   };
 
   bool isForProf(const Profession& prof) const {
-    return userProfessions.contains(prof);
+    return user_professions_.contains(prof);
   }
   bool isType(const TypeOfPotion& type) const {
     if (type == TypeOfPotion::HEALTH) {
-      return healthReg > 0;
+      return health_reg_ > 0;
     } else if (type == TypeOfPotion::MANA) {
-      return manaReg > 0;
+      return mana_reg_ > 0;
     }
     qDebug() << "Error Potion::isType";
     return false;
   }
   bool isHealing() const {
-    return healthReg > 0;
+    return health_reg_ > 0;
   };
   bool isMana() const {
-    return manaReg > 0;
+    return mana_reg_ > 0;
   };
   QString getName() const {
-    return name;
+    return name_;
   };
 
  private:
-  int                 manaReg = 0, healthReg = 0;
-  QVector<Profession> userProfessions;
-  QString             name;
+  uint                mana_reg_   = 0;
+  uint                health_reg_ = 0;
+  QVector<Profession> user_professions_;
+  QString             name_;
 };
+}  // namespace CJ

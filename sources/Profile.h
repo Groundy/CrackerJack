@@ -17,6 +17,7 @@
 #include "Profession.hpp"
 #include "RestorationMethode.hpp"
 #include "Utilities.hpp"
+namespace CJ {
 class Profile : JsonClass {
  public:
   enum AutoLoot { RIGHT_MOUSE_BUTTON, SHIFT_RIGHT, LEFT_MOUSE_BUTTON };  //enable only if controls
@@ -73,3 +74,4 @@ class Profile : JsonClass {
   int                         barsLeft, barsRight;
   AutoHuntData                autoHuntData = AutoHuntData();
 };
+}  // namespace CJ

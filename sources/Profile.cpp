@@ -1,5 +1,5 @@
 #include "Profile.h"
-
+namespace CJ {
 Profile::Profile(QJsonObject obj) {
   const QString base = "Error in reading profile from json file, problem with field";
 
@@ -252,3 +252,4 @@ Key Profile::getShovelKey() const {
 AutoHuntData Profile::getAutoHuntData() const {
   return autoHuntData;
 }
+}  // namespace CJ
