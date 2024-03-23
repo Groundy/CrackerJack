@@ -1,10 +1,16 @@
 #include "ScreenSaver.h"
 namespace CJ {
 ScreenSaver::ScreenSaver(QObject* parent, QSharedPointer<VariablesClass> var, QSharedPointer<GameConnecter> gameConnecter)
-    : QThread(parent), gameConnecter(gameConnecter), screenshot_key_(var->getProf()->getScreenShotKey()) {
+    : QThread(parent), game_connecter_(gameConnecter), screenshot_key_(var->getProf()->getScreenShotKey()) {
   settings_          = var->getSettings();
   game_process_data_ = var->getGameProcess();
   settings_->setTakingScreensState(true);
+  timer_.setInterval(sleep_time_);
+  if (connect(&timer_, &QTimer::timeout, this, &ScreenSaver::execute)) {
+    qCritical() << "Failed to connect. Screen saver timer";
+    return;
+  }
+  timer_.start();
 }
 
 ScreenSaver::~ScreenSaver() {
@@ -22,17 +28,13 @@ void ScreenSaver::sendScreenRequestToGame() {
     qWarning() << "Can't send screenshot key to game, there is no known title ofwindow";
     return;
   }
-  gameConnecter->sendKeyStrokeToProcess(screenshot_key_);
+  game_connecter_->sendKeyStrokeToProcess(screenshot_key_);
 }
 
-void ScreenSaver::run() {
-  setPriority(QThread::Priority::HighestPriority);
-  while (true) {
-    msleep(SLEEP_TIME);
-    if (!settings_->getTakingScreensState()) {
-      continue;
-    }
-    sendScreenRequestToGame();
+void ScreenSaver::execute() {
+  if (!settings_->getTakingScreensState()) {
+    return;
   }
+  sendScreenRequestToGame();
 }
 }  // namespace CJ

@@ -17,9 +17,7 @@ MainMenu::MainMenu(QSharedPointer<Profile> prof, QWidget* parent) : QDialog(pare
   ui->keepHastedCheckBox->setChecked(settings->getKeepHasted());
   ui->keepUpgradedCheckBox->setChecked(settings->getKeepUpraded());
 
-  screen_saver_.start();
   screen_analyzer_.start();
-  click_detector_.start();
 
   connectSignals();
 }
