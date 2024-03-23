@@ -8,7 +8,7 @@ QRect Equipment::getStoreRect() {
   return storeRect.getRect();
 }
 
-QVector<Equipment::STATES> Equipment::getCurrentStates(bool clearImg = true) {
+QVector<Equipment::State> Equipment::getCurrentStates(bool clearImg = true) {
   CJ_Image stateBar = statesBarImg_.getImg();
   if (stateBar.isNull()) {
     return {};
@@ -18,7 +18,7 @@ QVector<Equipment::STATES> Equipment::getCurrentStates(bool clearImg = true) {
   }
   stateBar.toBlackAndWhiteOneColor(to_black_white_threshold_);
   QList<CJ_Image> imgs  = stateBar.toImageListWithSingleLetters();
-  QVector<STATES> toRet = {};
+  QVector<State>  toRet = {};
   foreach (CJ_Image img, imgs) {
     img.cutBlackBorders();
     QString code = img.binaryLetterImgToCode();
