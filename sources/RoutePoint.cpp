@@ -1,5 +1,5 @@
 #include "RoutePoint.h"
-
+namespace CJ {
 RoutePoint::RoutePoint(Point3D position, FieldType fieldType) : position(position), fieldType(fieldType) {}
 RoutePoint::RoutePoint(QJsonObject jsonObj) {
   Point3D   position(jsonObj["position"].toObject());
@@ -59,3 +59,4 @@ QJsonObject RoutePoint::toJson() const {
 bool RoutePoint::isValid() const {
   return position.isValid();
 }
+}  // namespace CJ

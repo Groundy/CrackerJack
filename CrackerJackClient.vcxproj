@@ -275,7 +275,7 @@ xcopy /y /d ".\dependencies\32-bit\libcrypto-1_1.dll" "$(OutDir)"
       <QtMocDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">..\$(IntDir)moc\</QtMocDir>
       <QtMocDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">..\$(IntDir)moc\</QtMocDir>
     </QtMoc>
-    <ClInclude Include="sources\Equipment.hpp" />
+    <ClInclude Include="sources\Equipment.h" />
     <ClInclude Include="sources\GameProcessData.hpp" />
     <ClInclude Include="sources\GameWindow.hpp" />
     <ClInclude Include="sources\PlayerPosition.hpp" />

@@ -4,10 +4,12 @@
 #include <qdatetime.h>
 #include <qimage.h>
 
+#include "Equipment.h"
 #include "GameConnecter.h"
 #include "JsonParser.h"
 #include "Profile.h"
 #include "VariablesClass.hpp"
+namespace CJ {
 struct FoundFlags {
   bool health, mana, combined, shield;
   bool isValid() {
@@ -120,8 +122,9 @@ class VitalityAnalyzer : public QThread {
   bool                        restMethodeCanBeUsed(const RestorationMethode& restMethode);
   int                         calcTimeBetweenManaPots(int currentManaPercentage);
   void                        handleStates();
-  void                        handleHaste(bool keepHasting, QVector<Equipment::STATES>& states);
-  void                        handleUpgrade(bool keepUpgraded, QVector<Equipment::STATES>& states);
+  void                        handleHaste(bool keepHasting, QVector<CharState>& states);
+  void                        handleUpgrade(bool keepUpgraded, QVector<CharState>& states);
   static qint64               now();
   Logger&                     logger = Logger::instance();
 };
+}  // namespace CJ

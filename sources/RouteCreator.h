@@ -13,7 +13,7 @@
 namespace Ui {
 class RouteCreator;
 };
-
+namespace CJ {
 class RouteCreator : public QDialog {
   Q_OBJECT
  public:
@@ -53,3 +53,4 @@ class RouteCreator : public QDialog {
   bool                  checkRouteButtonPressed();
   void                  loadFromRoute(Route* route);
 };
+}  // namespace CJ

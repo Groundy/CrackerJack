@@ -11,6 +11,7 @@
 #include "Profile.h"
 #include "Route.h"
 #include "VariablesClass.hpp"
+namespace CJ {
 class AutoHunting : public QThread {
   Q_OBJECT
  public:
@@ -70,3 +71,4 @@ class AutoHunting : public QThread {
   void   clickOnMiddleOfCompass();
   void   playSound();
 };
+}  // namespace CJ

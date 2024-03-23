@@ -1,4 +1,5 @@
 #include "Equipment.h"
+namespace CJ {
 void Equipment::setStoreRect(const QRect& storeRectToSet) {
   storeRect.setRect(storeRectToSet);
   QPoint storeRectStart = storeRectToSet.topLeft();
@@ -8,7 +9,7 @@ QRect Equipment::getStoreRect() {
   return storeRect.getRect();
 }
 
-QVector<Equipment::State> Equipment::getCurrentStates(bool clearImg = true) {
+QVector<CharState> Equipment::getCurrentStates(const bool clearImg) {
   CJ_Image stateBar = statesBarImg_.getImg();
   if (stateBar.isNull()) {
     return {};
@@ -17,8 +18,8 @@ QVector<Equipment::State> Equipment::getCurrentStates(bool clearImg = true) {
     statesBarImg_.clear();
   }
   stateBar.toBlackAndWhiteOneColor(to_black_white_threshold_);
-  QList<CJ_Image> imgs  = stateBar.toImageListWithSingleLetters();
-  QVector<State>  toRet = {};
+  QList<CJ_Image>    imgs  = stateBar.toImageListWithSingleLetters();
+  QVector<CharState> toRet = {};
   foreach (CJ_Image img, imgs) {
     img.cutBlackBorders();
     QString code = img.binaryLetterImgToCode();
@@ -184,3 +185,4 @@ QString Equipment::getStateCode(const QString& fileName) const {
   img.cutBlackBorders();
   return img.binaryLetterImgToCode();
 }
+}  // namespace CJ

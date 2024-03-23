@@ -1,9 +1,10 @@
 #pragma once
+#include <Equipment.h>
 #include <Profile.h>
 #include <qsharedpointer.h>
 
 #include "BattleList.hpp"
-#include "Equipment.hpp"
+#include "Equipment.h"
 #include "GameProcessData.hpp"
 #include "GameWindow.hpp"
 #include "Logger.hpp"
@@ -11,7 +12,7 @@
 #include "Settings.hpp"
 #include "Timers.hpp"
 #include "Vitallity.hpp"
-
+namespace CJ {
 class VariablesClass {
  public:
   VariablesClass(QSharedPointer<Profile> prof) : prof(prof){};
@@ -71,3 +72,4 @@ class VariablesClass {
   //used for calibration
   MutexImg full_image_;
 };
+}  // namespace CJ

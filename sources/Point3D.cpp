@@ -1,5 +1,5 @@
 #include "Point3D.h"
-
+namespace CJ {
 Point3D::Point3D() : x(625), y(1265), floor(0) /*thias temple*/ {}
 Point3D::~Point3D() {}
 Point3D::Point3D(int x, int y, int floor) : x(x), y(y), floor(floor){};
@@ -57,3 +57,4 @@ QJsonObject Point3D::toJson() const {
   obj.insert("f", floor);
   return obj;
 };
+}  // namespace CJ

@@ -1,5 +1,5 @@
 #include "ScreenSaver.h"
-
+namespace CJ {
 ScreenSaver::ScreenSaver(QObject* parent, QSharedPointer<VariablesClass> var, QSharedPointer<GameConnecter> gameConnecter)
     : QThread(parent), gameConnecter(gameConnecter), screenshot_key_(var->getProf()->getScreenShotKey()) {
   settings_          = var->getSettings();
@@ -35,3 +35,4 @@ void ScreenSaver::run() {
     sendScreenRequestToGame();
   }
 }
+}  // namespace CJ

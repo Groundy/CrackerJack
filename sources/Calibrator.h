@@ -12,6 +12,7 @@
 #include "PathResource.h"
 #include "Profile.h"
 #include "VariablesClass.hpp"
+namespace CJ {
 class Calibrator {
  public:
   Calibrator(QSharedPointer<VariablesClass> var);
@@ -82,3 +83,4 @@ class Calibrator {
   QSharedPointer<Vitallity>  vitalitty_;
   QSharedPointer<MiniMap>    minimap_;
 };
+}  // namespace CJ

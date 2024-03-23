@@ -1,5 +1,5 @@
 #include "AutoHuntConfigurator.h"
-
+namespace CJ {
 AutoHuntConfigurator::AutoHuntConfigurator(QWidget* parent, Profile* profile)
     : QDialog(parent), prof_(profile), ui(new Ui::AutoHuntConfiguratorClass()) {
   ui->setupUi(this);
@@ -158,3 +158,4 @@ void AutoHuntConfigurator::getDataFromGUI() {
   }
   auto_hunt_data_.setAttacks(attacks);
 }
+}  // namespace CJ

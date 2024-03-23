@@ -1,7 +1,7 @@
 #include "RouteCreator.h"
 
 #include "ui_RouteCreator.h"
-
+namespace CJ {
 RouteCreator::RouteCreator(QDialog* parent, Route* route) : QDialog(parent) {
   ui = new Ui::RouteCreator();
   ui->setupUi(this);
@@ -266,9 +266,12 @@ bool RouteCreator::checkRouteButtonPressed() {
   return routeCorrect;
 }
 void RouteCreator::loadFromRoute(Route* route) {
-  if (route == nullptr) return;
+  if (route == nullptr) {
+    return;
+  }
   this->route           = *route;
   this->currentPosition = route->getPoint(0).getPosition();
   repaintList();
   repaintMap();
 }
+}  // namespace CJ

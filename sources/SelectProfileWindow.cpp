@@ -1,7 +1,7 @@
 #include "SelectProfileWindow.h"
 
 #include "ui_SelectProfileWindow.h"
-
+namespace CJ {
 //const
 SelectProfileWindow::SelectProfileWindow(QSharedPointer<Profile> profileToBeChoosen, QWidget* parent) : QDialog(parent) {
   ui = new Ui::SelectProfileWindow();
@@ -99,3 +99,4 @@ QString SelectProfileWindow::getSelectedProfName() {
   QString profileName = ui->listOfProfs->item(row)->text();
   return profileName;
 }
+}  // namespace CJ

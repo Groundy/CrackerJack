@@ -5,7 +5,7 @@
 namespace Ui {
 class SelectProfileWindow;
 };
-
+namespace CJ {
 class SelectProfileWindow : public QDialog {
   Q_OBJECT
 
@@ -27,3 +27,4 @@ class SelectProfileWindow : public QDialog {
   void    setUpGui();
   QString getSelectedProfName();
 };
+}  // namespace CJ

@@ -5,6 +5,7 @@
 #include "GameConnecter.h"
 #include "Profile.h"
 #include "VariablesClass.hpp"
+namespace CJ {
 class ScreenSaver : public QThread {
  public:
   void run();
@@ -21,3 +22,4 @@ class ScreenSaver : public QThread {
 
   void sendScreenRequestToGame();
 };
+}  // namespace CJ

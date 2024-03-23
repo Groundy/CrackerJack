@@ -16,6 +16,7 @@
 #include "Route.h"
 #include "Spell.h"
 #include "Utilities.hpp"
+namespace CJ {
 class JsonParser {
  public:
   static bool               openJsonFile(QJsonObject& jsonDoc, QString pathToFile);
@@ -38,3 +39,4 @@ class JsonParser {
  private:
   JsonParser() = default;
 };
+}  // namespace CJ

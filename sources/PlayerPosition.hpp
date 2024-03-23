@@ -2,6 +2,7 @@
 #include <qpoint.h>
 
 #include "Point3D.h"
+namespace CJ {
 class PlayerPosition {
  public:
   void setPlayerPos(const QPoint xyToSet, int floorToSet) {
@@ -44,3 +45,4 @@ class PlayerPosition {
   std::atomic<int> floor = 0;
   QPoint           xy;
 };
+}  // namespace CJ

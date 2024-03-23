@@ -11,6 +11,7 @@
 
 #include "PathResource.h"
 #include "VariablesClass.hpp"
+namespace CJ {
 class MinimapAnalyzer : public QThread {
   Q_OBJECT
  public:
@@ -47,3 +48,4 @@ class MinimapAnalyzer : public QThread {
   QRect           getFrameToLookByPreviousPos();
   QPoint          getVectorToPlayerFromImgPieceIndex(int index);
 };
+}  // namespace CJ

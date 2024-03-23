@@ -1,9 +1,9 @@
 #include "GameActivityChecker.h"
-
+namespace CJ {
 GameActivityChecker::GameActivityChecker(QSharedPointer<VariablesClass> var) {
   game_process_data_ = var->getGameProcess();
 
-  checkGameStateTimer_.setInterval(TIMER_INTERVAL);
+  checkGameStateTimer_.setInterval(check_interval_);
   checkGameState();
   if (!QObject::connect(&checkGameStateTimer_, &QTimer::timeout, this, &GameActivityChecker::checkGameState, Qt::UniqueConnection)) {
     qCritical() << "Failed to connect game activity timer.";
@@ -42,7 +42,7 @@ QString GameActivityChecker::getGameWindowTitile() const {
       continue;
     }
 
-    if (title.contains(GAME_BROWESER_TITLE_)) {
+    if (title.contains(game_browser_process_name_)) {
       continue;
     }
 
@@ -57,37 +57,38 @@ QString GameActivityChecker::getGameWindowTitile() const {
   return QString();
 }
 uint GameActivityChecker::getGamePid(const QMap<QString, unsigned int>& processes) const {
-  auto iteratorToProcess = processes.find(GAME_PROCESS_NAME_);
+  auto iteratorToProcess = processes.find(game_process_name_);
   if (iteratorToProcess == processes.end()) {
     qDebug() << "Can't find Game on running processes list!";
     return 0;
   }
   return iteratorToProcess.value();
 }
-int GameActivityChecker::windowIsAccessible(const uint PID, const QString& windowTitle) {
+
+GameActivityStates GameActivityChecker::windowIsAccessible(const uint PID, const QString& windowTitle) {
   if (PID == 0) {
-    return NO_ACTIVE;
+    return GameActivityStates::NO_ACTIVE;
   }
   if (windowTitle.isEmpty()) {
-    return NO_WINDOW;
+    return GameActivityStates::NO_WINDOW;
   } else if (windowTitle == "Tibia") {
-    return NO_LOGGED;
+    return GameActivityStates::NO_LOGGED;
   }
 
   LPCWSTR nameOfWindowLPCWSTR = (const wchar_t*)windowTitle.utf16();
   HWND    handler             = FindWindow(NULL, nameOfWindowLPCWSTR);
   if (handler == NULL) {
-    return NO_HANDLER;
+    return GameActivityStates::NO_HANDLER;
   }
   DWORD tmp     = PID;
   DWORD hThread = GetWindowThreadProcessId(handler, &tmp);
   if (hThread == NULL) {
-    return NO_HANDLER;
+    return GameActivityStates::NO_HANDLER;
   }
-  return ACTIVE;
+  return GameActivityStates::ACTIVE;
 }
 
-GameActivityChecker::GameActivityStates GameActivityChecker::getGameState() {
+GameActivityStates GameActivityChecker::getGameState() {
   auto    processes   = getListOfRunningProcess();
   uint    PID         = getGamePid(processes);
   QString windowTitle = getGameWindowTitile();
@@ -96,10 +97,10 @@ GameActivityChecker::GameActivityStates GameActivityChecker::getGameState() {
     qWarning() << "Can't get game window title.";
     game_process_data_->setNameOfGameWindow("");
     game_process_data_->setPid(0);
-    return NO_WINDOW;
+    return GameActivityStates::NO_WINDOW;
   }
-  int gameWinState = windowIsAccessible(PID, windowTitle);
-  if (gameWinState == ACTIVE) {
+  GameActivityStates gameWinState = windowIsAccessible(PID, windowTitle);
+  if (gameWinState == GameActivityStates::ACTIVE) {
     HWND handlerToGameThread = getHandlerToGameWindow(PID, windowTitle);
 
     if (game_process_data_->getNameOfGameWindow() != windowTitle) {
@@ -152,3 +153,5 @@ HWND GameActivityChecker::getHandlerToGameWindow(unsigned int PID, QString Windo
     return HWND();
   }
 }
+
+}  // namespace CJ

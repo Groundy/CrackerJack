@@ -19,7 +19,7 @@
 namespace Ui {
 class NewProfileConfiguartor;
 };
-
+namespace CJ {
 class NewProfileConfiguartor : public QDialog {
   Q_OBJECT
 
@@ -74,3 +74,4 @@ class NewProfileConfiguartor : public QDialog {
   void                        fillGuiPtrs();
   void                        fillRestorationMethodesDetails(QVector<RestorationMethode>& restorationMethodes);
 };
+}  // namespace CJ

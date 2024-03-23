@@ -3,7 +3,7 @@
 
 #include "JsonClass.hpp"
 #include "Point3D.h"
-
+namespace CJ {
 class RoutePoint : JsonClass {
  public:
   enum FieldType {
@@ -48,3 +48,4 @@ class RoutePoint : JsonClass {
   FieldType fieldType;
   Point3D   position;
 };
+}  // namespace CJ

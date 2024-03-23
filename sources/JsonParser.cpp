@@ -1,5 +1,5 @@
 #include "JsonParser.h"
-
+namespace CJ {
 bool JsonParser::openJsonFile(QJsonObject& jsonDoc, QString pathToFile) {
   QFile file;
   file.setFileName(pathToFile);
@@ -276,3 +276,4 @@ bool JsonParser::readRoute(Route& route, QString routeName) {
   route = routeTmp;
   return true;
 }
+}  // namespace CJ

@@ -5,6 +5,7 @@
 
 #include "JsonClass.hpp"
 #include "Logger.hpp"
+namespace CJ {
 class Point3D : JsonClass {
  public:
   Point3D();
@@ -41,3 +42,4 @@ class Point3D : JsonClass {
  private:
   int x, y, floor;
 };
+}  // namespace CJ

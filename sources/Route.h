@@ -6,6 +6,7 @@
 #include "PathResource.h"
 #include "Point3D.h"
 #include "RoutePoint.h"
+namespace CJ {
 class Route : JsonClass {
  public:
   Route() = default;
@@ -41,3 +42,4 @@ class Route : JsonClass {
   QString                              routeName_;
   QMap<RoutePoint::FieldType, QString> pointTypeNameMap_ = RoutePoint::getPointTypeNameMap();
 };
+}  // namespace CJ

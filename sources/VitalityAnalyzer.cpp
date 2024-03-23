@@ -1,5 +1,5 @@
 #include "VitalityAnalyzer.h"
-
+namespace CJ {
 VitalityAnalyzer::VitalityAnalyzer(QObject* parent, QSharedPointer<VariablesClass> var, QSharedPointer<GameConnecter> gameConnector)
     : QThread(parent), gameConnector(gameConnector) {
   populateHealthManaMaps(var->getProf().get());
@@ -304,11 +304,11 @@ void VitalityAnalyzer::handleStates() {
   handleUpgrade(settings_->getKeepUpraded(), states);
 }
 
-void VitalityAnalyzer::handleHaste(bool keepHasting, QVector<Equipment::STATES>& states) {
+void VitalityAnalyzer::handleHaste(bool keepHasting, QVector<CharState>& states) {
   if (!keepHasting) {
     return;
   }
-  if (states.contains(Equipment::HASTE)) {
+  if (states.contains(CharState::HASTE)) {
     return;
   }
   qint64 currentTime = now();
@@ -321,11 +321,11 @@ void VitalityAnalyzer::handleHaste(bool keepHasting, QVector<Equipment::STATES>&
   lastTimeHasted = currentTime;
 }
 
-void VitalityAnalyzer::handleUpgrade(bool keepUpgraded, QVector<Equipment::STATES>& states) {
+void VitalityAnalyzer::handleUpgrade(bool keepUpgraded, QVector<CharState>& states) {
   if (!keepUpgraded) {
     return;
   }
-  if (states.contains(Equipment::UPGRADED)) {
+  if (states.contains(CharState::UPGRADED)) {
     return;
   }
   qint64 currentTime = now();
@@ -340,3 +340,4 @@ void VitalityAnalyzer::handleUpgrade(bool keepUpgraded, QVector<Equipment::STATE
 qint64 VitalityAnalyzer::now() {
   return QDateTime::currentMSecsSinceEpoch();
 }
+}  // namespace CJ

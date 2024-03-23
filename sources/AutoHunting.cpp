@@ -1,5 +1,5 @@
 #include "AutoHunting.h"
-
+namespace CJ {
 AutoHunting::AutoHunting(QObject* parent, QSharedPointer<VariablesClass> var, QSharedPointer<GameConnecter> gameConnector, Route route)
     : QThread(parent), route(route), gameConnector(gameConnector), attack_next_target_key_(var->getProf()->getAutoAttackKey()) {
   minimap_     = var->getMiniMap();
@@ -182,3 +182,4 @@ void AutoHunting::clickOnMiddleOfCompass() {
   }
   gameConnector->clickLeft(pt);
 }
+}  // namespace CJ

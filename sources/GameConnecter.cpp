@@ -1,5 +1,5 @@
 #include "GameConnecter.h"
-
+namespace CJ {
 GameConnecter::GameConnecter(QSharedPointer<VariablesClass> var)
     : playing_on_small_monitor_(var->getSettings()->getPlayingOnSmallMonitor()), auto_loot_setting_(var->getProf()->getAutoLoot()) {
   game_process_data_ = var->getGameProcess();
@@ -140,3 +140,4 @@ void GameConnecter::setShiftPressed(const bool pressed) {
   ip.ki.dwFlags     = pressed ? 0 : KEYEVENTF_KEYUP;
   SendInput(1, &ip, sizeof(INPUT));
 };
+}  // namespace CJ

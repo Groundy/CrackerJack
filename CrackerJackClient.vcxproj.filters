@@ -228,7 +228,7 @@
     <ClInclude Include="sources\AttackMethode.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="sources\Equipment.hpp">
+    <ClInclude Include="sources\Equipment.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="sources\Profession.hpp">

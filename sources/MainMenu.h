@@ -18,7 +18,7 @@
 namespace Ui {
 class MainMenu;
 };
-
+namespace CJ {
 class MainMenu : public QDialog {
   Q_OBJECT
  public:
@@ -32,7 +32,7 @@ class MainMenu : public QDialog {
   void autoHuntButtonClicked();
 
   //from threads
-  void onGameStateChanged(int state);
+  void onGameStateChanged(GameActivityStates state);
   void changedValueOfCharHealthOrMana(double healthPercentage, double manaPercentage, double manaShieldPercentage);
   void printToUserConsol(QStringList msgs);
   void printToUserConsolRed(QString msg);
@@ -44,10 +44,10 @@ class MainMenu : public QDialog {
   Ui::MainMenu* ui;
 
   //variables
-  QSharedPointer<Profile>                 prof_           = QSharedPointer<Profile>(new Profile());
-  QSharedPointer<VariablesClass>          var_            = QSharedPointer<VariablesClass>(new VariablesClass(prof_));
-  QSharedPointer<GameConnecter>           game_connector_ = QSharedPointer<GameConnecter>(new GameConnecter(var_));
-  GameActivityChecker::GameActivityStates game_activity_state_;
+  QSharedPointer<Profile>        prof_           = QSharedPointer<Profile>(new Profile());
+  QSharedPointer<VariablesClass> var_            = QSharedPointer<VariablesClass>(new VariablesClass(prof_));
+  QSharedPointer<GameConnecter>  game_connector_ = QSharedPointer<GameConnecter>(new GameConnecter(var_));
+  GameActivityStates             game_activity_state_;
 
   //workers
   GameActivityChecker activity_checker_ = GameActivityChecker(var_);
@@ -61,3 +61,4 @@ class MainMenu : public QDialog {
   void connectSignals();
   void startAutoHunting();
 };
+}  // namespace CJ

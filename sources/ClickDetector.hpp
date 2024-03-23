@@ -5,6 +5,7 @@
 #include <windows.h>
 
 #include "GameConnecter.h"
+namespace CJ {
 class ClickDetector : public QThread {
   Q_OBJECT
  public:
@@ -40,3 +41,4 @@ class ClickDetector : public QThread {
     return keyPressed(VK_MBUTTON);  //[TODO] move to separate windows funcs class
   }
 };
+}  // namespace CJ

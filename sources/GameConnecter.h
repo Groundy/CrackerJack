@@ -8,6 +8,7 @@
 #include "Profile.h"
 #include "RestorationMethode.hpp"
 #include "VariablesClass.hpp"
+namespace CJ {
 class GameConnecter : public QThread {
   Q_OBJECT
  public:
@@ -38,3 +39,4 @@ class GameConnecter : public QThread {
   QSharedPointer<Timers>          timers_;
   QSharedPointer<GameWindow>      game_window_;
 };
+}  // namespace CJ

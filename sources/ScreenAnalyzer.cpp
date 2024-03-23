@@ -1,4 +1,5 @@
 #include "ScreenAnalyzer.h"
+namespace CJ {
 ScreenAnalyzer::ScreenAnalyzer(QObject* parent, QSharedPointer<VariablesClass> var) : QThread(parent), calibrator_(Calibrator(var)) {
   settings_    = var->getSettings();
   battle_list_ = var->getBattleList();
@@ -173,7 +174,8 @@ void ScreenAnalyzer::analyzeEquipment(const QImage& fullscreen) {
     calibrator_.calibrateStoreButton(fullscreen);
   }
   if (settings_->getKeepAnalyzeStates()) {
-    QRect stateBarRect = equipment_->getRect(Equipment::EqRect::StateBar);
-    equipment_->setImg(Equipment::EqRect::StateBar, fullscreen.copy(stateBarRect));
+    QRect stateBarRect = equipment_->getRect(EqRect::StateBar);
+    equipment_->setImg(EqRect::StateBar, fullscreen.copy(stateBarRect));
   }
 }
+}  // namespace CJ

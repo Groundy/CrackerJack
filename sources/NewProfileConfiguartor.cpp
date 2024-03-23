@@ -1,5 +1,5 @@
 #include "NewProfileConfiguartor.h"
-
+namespace CJ {
 //const dest
 NewProfileConfiguartor::NewProfileConfiguartor(Profile* prof, QWidget* parent) : QDialog(parent), profToEdit(prof) {
   ui = new Ui::NewProfileConfiguartor();
@@ -461,3 +461,4 @@ void NewProfileConfiguartor::fillRestorationMethodesDetails(QVector<RestorationM
     }
   }
 }
+}  // namespace CJ

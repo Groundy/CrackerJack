@@ -1,5 +1,5 @@
 ﻿#include "Route.h"
-
+namespace CJ {
 Route::Route(QJsonObject obj) {
   QJsonArray pointsArray = obj["points"].toArray();
   if (pointsArray.isEmpty()) {
@@ -158,3 +158,4 @@ bool Route::checkIfPositionIsOnListOnIndex(Point3D toCheck, int index) {
   }
   return true;
 }
+}  // namespace CJ

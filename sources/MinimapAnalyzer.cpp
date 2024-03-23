@@ -1,5 +1,5 @@
 #include "MinimapAnalyzer.h"
-
+namespace CJ {
 MinimapAnalyzer::MinimapAnalyzer(QObject* parent, QSharedPointer<VariablesClass> var) : QThread(parent) {
   minimap_   = var->getMiniMap();
   settings_  = var->getSettings();
@@ -197,3 +197,4 @@ QPoint MinimapAnalyzer::getVectorToPlayerFromImgPieceIndex(int index) {
   }
   return vectorToPlayerPos;
 }
+}  // namespace CJ

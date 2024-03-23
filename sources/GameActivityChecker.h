@@ -9,22 +9,24 @@
 #include <tlhelp32.h>
 
 #include "VariablesClass.hpp"
+namespace CJ {
+enum class GameActivityStates { NO_ACTIVE, NO_WINDOW, NO_LOGGED, NO_HANDLER, ACTIVE };
+
 class GameActivityChecker : public QObject {
   Q_OBJECT
  public:
-  enum GameActivityStates { NO_ACTIVE, NO_WINDOW, NO_LOGGED, NO_HANDLER, ACTIVE };
   GameActivityChecker(QSharedPointer<VariablesClass> var);
   ~GameActivityChecker();
 
  signals:
-  void gameStateChanged(int i);
+  void gameStateChanged(GameActivityStates i);
 
  private:
-  GameActivityStates previousGameState_   = NO_ACTIVE;
-  const QString      GAME_PROCESS_NAME_   = "client.exe";
-  const QString      GAME_BROWESER_TITLE_ = "Tibia - Free Multiplayer Online Role Playing Game";
-  const uint         TIMER_INTERVAL       = 2000;
-  HWND               previousGameHandler_ = 0;
+  GameActivityStates previousGameState_         = GameActivityStates::NO_ACTIVE;
+  const QString      game_process_name_         = "client.exe";
+  const QString      game_browser_process_name_ = "Tibia - Free Multiplayer Online Role Playing Game";
+  const uint         check_interval_            = 2000;
+  HWND               previousGameHandler_       = 0;
   QTimer             checkGameStateTimer_;
 
   QSharedPointer<GameProcessData> game_process_data_;
@@ -34,6 +36,7 @@ class GameActivityChecker : public QObject {
   GameActivityStates          getGameState();
   void                        checkGameState();
   QMap<QString, unsigned int> getListOfRunningProcess();
-  int                         windowIsAccessible(const uint PID, const QString& windowTitle);
+  GameActivityStates          windowIsAccessible(const uint PID, const QString& windowTitle);
   HWND                        getHandlerToGameWindow(unsigned int PID, QString WindowName);
 };
+}  // namespace CJ

@@ -8,12 +8,13 @@
 #include <qtimer.h>
 
 #include "Calibrator.h"
-#include "Equipment.hpp"
+#include "Equipment.h"
 #include "Profile.h"
 #include "RGBstruct.h"
 #include "ScreenAnalyzer.h"
 #include "Settings.hpp"
 #include "VariablesClass.hpp"
+namespace CJ {
 class ScreenAnalyzer : public QThread {
   Q_OBJECT
 
@@ -48,3 +49,4 @@ class ScreenAnalyzer : public QThread {
   void    analyzeEquipment(const QImage& fullscreen);
   void    execute();
 };
+}  // namespace CJ

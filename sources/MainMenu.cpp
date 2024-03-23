@@ -1,7 +1,7 @@
 ﻿#include "MainMenu.h"
 
 #include "ui_MainMenu.h"
-
+namespace CJ {
 MainMenu::MainMenu(QSharedPointer<Profile> prof, QWidget* parent) : QDialog(parent) {
   ui = new Ui::MainMenu();
   ui->setupUi(this);
@@ -106,23 +106,22 @@ void MainMenu::startAutoHunting() {
 void MainMenu::changeProfileButtonAction() {
   this->accept();
 }
-void MainMenu::onGameStateChanged(int state) {
-  QString                                         toWrite = tr("Game status: ");
-  typedef GameActivityChecker::GameActivityStates Type;
+void MainMenu::onGameStateChanged(GameActivityStates state) {
+  QString toWrite = tr("Game status: ");
   switch (state) {
-    case Type::ACTIVE:
+    case GameActivityStates::ACTIVE:
       toWrite += tr("Game active, Logged");
       break;
-    case Type::NO_ACTIVE:
+    case GameActivityStates::NO_ACTIVE:
       toWrite += tr("Game not found");
       break;
-    case Type::NO_HANDLER:
+    case GameActivityStates::NO_HANDLER:
       toWrite += tr("Game found but no access");
       break;
-    case Type::NO_LOGGED:
+    case GameActivityStates::NO_LOGGED:
       toWrite += tr("Game active but no char logged");
       break;
-    case Type::NO_WINDOW:
+    case GameActivityStates::NO_WINDOW:
       toWrite += tr("Game is loading");
       break;
     default:
@@ -221,3 +220,4 @@ void MainMenu::autoHuntButtonClicked() {
   }
   */
 }
+}  // namespace CJ

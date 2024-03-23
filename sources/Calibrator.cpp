@@ -1,4 +1,5 @@
 #include "Calibrator.h"
+namespace CJ {
 Calibrator::Calibrator(QSharedPointer<VariablesClass> var) {
   battle_list_ = var->getBattleList();
   equipment_   = var->getEquipment();
@@ -494,3 +495,4 @@ QVector<QRect> Calibrator::getOutsideFramesOfOpenEntitiesOnSideBars(const CJ_Ima
   }
   return outerFramesOfSideBarsEntity;
 }
+}  // namespace CJ
