@@ -28,7 +28,7 @@ class AutoHuntConfigurator : public QDialog {
  private:
   void        fillKeyComboBoxes();
   void        fillGuiFromProfileData(Profile* prof);
-  QStringList getNamesOfAttacksMethodes(Profession profession);
+  QStringList getNamesOfAttacksMethodes(const Profession&& profession);
   void        getDataFromGUI();
 
   Profile*                       prof_;

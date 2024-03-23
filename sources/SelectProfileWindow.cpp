@@ -24,19 +24,18 @@ void SelectProfileWindow::addNewProfileButtonAction() {
   NewProfileConfiguartor newProfWind(&profile, this);
   int                    result = newProfWind.exec();
   if (result == QDialog::Accepted) {
-    JsonParser::saveProfile(&profile);
-    Sleep(20);
+    JsonParser::saveProfileToJson(profile);
     refreshProfilesOnList();
   }
 }
 void SelectProfileWindow::editProfileButtonAction() {
   QString profName      = getSelectedProfName();
-  Profile profToEdit    = JsonParser::loadProfile(profName);
+  Profile profToEdit    = JsonParser::loadProfileFromJson(profName);
   auto    newProfDialog = std::make_unique<NewProfileConfiguartor>(&profToEdit, this);
   newProfDialog->fillFormsFromDataFromProf(profToEdit);
   bool accepted = newProfDialog->exec() == QDialog::Accepted;
   if (accepted) {
-    JsonParser::saveProfile(&profToEdit);
+    JsonParser::saveProfileToJson(profToEdit);
     refreshProfilesOnList();
   }
 }
@@ -57,7 +56,7 @@ void SelectProfileWindow::selectListAction() {
 }
 void SelectProfileWindow::profSelected() {
   QString profName    = getSelectedProfName();
-  *profileToBeChoosen = JsonParser::loadProfile(profName);
+  *profileToBeChoosen = JsonParser::loadProfileFromJson(profName);
   this->accept();
 }
 

@@ -1,141 +1,172 @@
 #include "JsonParser.h"
 namespace CJ {
-bool JsonParser::openJsonFile(QJsonObject& jsonDoc, QString pathToFile) {
-  QFile file;
-  file.setFileName(pathToFile);
-  bool sucess = file.open(QIODevice::ReadOnly | QIODevice::Text);
+QJsonObject JsonParser::getJsonFileObject(const QString& pathToFile) {
+  QFile      file(pathToFile);
+  const bool sucess = file.open(QIODevice::ReadOnly | QIODevice::Text);
   if (!sucess) {
-    //Logger::logPotenialBug("Can't open that json file, probably it doesnt exist", "JsonParser", "openJsonFile");
-    return false;
+    //Logger::logPotenialBug("Can't open that json file, probably it doesnt exist", "JsonParser", "openJsonFile"); //[TODO]
+    return QJsonObject();
   }
-  QString val = file.readAll();
-  if (val.size() == 0) {
-    //Logger::logPotenialBug("opened but can't be read that json file, probably no rights to read/it's empty/ it not vaild", "JsonParser", "openJsonFile");
-    return false;
+  const QString content = file.readAll();
+  if (content.isEmpty()) {
+    //Logger::logPotenialBug("opened but can't be read that json file, probably no rights to read/it's empty/ it not vaild", "JsonParser", "openJsonFile"); //[TODO]
+    return QJsonObject();
   }
   file.close();
-  QJsonDocument doc = QJsonDocument::fromJson(val.toUtf8());
-  jsonDoc           = doc.object();
-  return true;
+  return QJsonDocument::fromJson(content.toUtf8()).object();
 }
-bool JsonParser::readSpellsJson(QList<Spell>& spells, Spell::SpellType* type, Profession* profession) {
-  QJsonObject obj;
-  bool        openCorrectly = openJsonFile(obj, PathResource::getPathToSpellJsonFile());
-  if (!openCorrectly) {
-    QString msg = "Can't read json file with spells";
-    qWarning() << msg;
-    Utilities::showMessageBox_INFO(msg);
-    return false;
-  }
-  if (!obj.contains("spells")) {
-    QString msg = "No spells field in json file with spells";
-    qWarning() << msg;
-    Utilities::showMessageBox_INFO(msg);
-    return false;
-  }
-  if (!obj["spells"].isArray()) {
-    QString msg = "spell field in json file is not an array";
-    qWarning() << msg;
-    Utilities::showMessageBox_INFO(msg);
-    return false;
-  }
-  QJsonArray arr = obj["spells"].toArray();
-  if (arr.isEmpty()) {
-    QString msg = "spell array in json file is empty!";
-    qWarning() << msg;
-    Utilities::showMessageBox_INFO(msg);
-    return false;
-  }
-
-  for (size_t i = 0; i < arr.size(); i++) {
-    QJsonObject singleSpellJsonObj = arr.at(i).toObject();
-
-    Spell toAdd(singleSpellJsonObj);
-    if (profession != NULL) {  //filtr by prof
-      if (!toAdd.isForProf(*profession)) {
-        continue;
-      }
+QVector<Spell> JsonParser::readSpellsJson(const Spell::SpellType&& type, const Profession&& profession) {
+  const QJsonObject obj         = getJsonFileObject(PathResource::getPathToSpellJsonFile());
+  const QJsonArray  spell_jsons = obj["spells"].toArray();
+  QVector<Spell>    spells;
+  foreach (const QJsonValue& spell_json, spell_jsons) {
+    Spell spell(spell_json.toObject());
+    if (spell.isForProf(profession) && spell.isSpellType(type)) {
+      spells.append(spell);
     }
-    if (type != NULL) {  //filtr by type
-      if (!toAdd.isSpellType(*type)) {
-        continue;
-      }
-    }
-    spells.push_back(toAdd);
   }
-  return true;
+  return spells;
 }
 QStringList JsonParser::readRunesNames() {
-  QString     path = PathResource::getPathToRunesFile();
-  QJsonObject obj;
-  openJsonFile(obj, path);
-  QJsonArray  arr = obj.value("runes").toArray();
-  QStringList toRet;
-  foreach (auto arrObj, arr) {
+  const QJsonArray runes_array = getJsonFileObject(PathResource::getPathToRunesFile()).value("runes").toArray();
+  QStringList      toRet;
+  foreach (const QJsonValue& arrObj, runes_array) {
     toRet.append(arrObj.toObject().value("name").toString());
   }
   return toRet;
 }
-bool JsonParser::readPotions(QList<Potion>& potions, Profession* prof, Potion::TypeOfPotion* filterType) {
-  potions.clear();
-  QJsonObject obj;
-  bool        openCorrectly = openJsonFile(obj, PathResource::getPathToPotionsJsonFile());
-  if (!openCorrectly) {
-    qWarning() << "Can't open items json file";
-    Utilities::showMessageBox_INFO("Can't open items json file");
-    return false;
-  }
+QVector<Potion> JsonParser::readPotions(const Profession&& prof, const Potion::TypeOfPotion&& filterType) {
+  const QJsonObject obj = getJsonFileObject(PathResource::getPathToPotionsJsonFile());
   if (!obj.contains("potions")) {
     qWarning() << "No potions field in items json file!";
     Utilities::showMessageBox_INFO("No potions field in items json file!");
-    return false;
+    return QVector<Potion>();
   }
   if (!obj["potions"].isArray()) {
     qWarning() << "potions field in items json file is not array type!";
     Utilities::showMessageBox_INFO("potions field in items json file is not array type!");
-    return false;
+    return QVector<Potion>();
   }
-  QJsonArray arr = obj["potions"].toArray();
-  foreach (QJsonValue potionJsonVal, arr) {
+
+  QVector<Potion> potions;
+  foreach (QJsonValue potionJsonVal, obj["potions"].toArray()) {
     Potion potionToAdd(potionJsonVal.toObject());
-    if (prof != NULL) {
-      if (!potionToAdd.isForProf(*prof)) {
-        continue;
-      }
+    if (potionToAdd.isForProf(prof) && potionToAdd.isType(filterType)) {
+      potions.push_back(potionToAdd);
     }
-    if (filterType != NULL) {
-      if (!potionToAdd.isType(*filterType)) {
-        continue;
-      }
-    }
-    potions.push_back(potionToAdd);
   }
-  return true;
+  return potions;
 }
-bool JsonParser::readItemJson(QList<Item>& items) {
-  items.clear();
-  QJsonObject obj;
-  bool        res = openJsonFile(obj, PathResource::getPathToItemJsonFile());
-  if (!res) {
-    //Logger::logPotenialBug("Problem with Json reading", "JsonParser", "readSpellsJson");
-    return false;
+QVector<Item> JsonParser::readItemsFromJson() {
+  QJsonObject obj = getJsonFileObject(PathResource::getPathToItemJsonFile());
+  if (!obj.isEmpty()) {
+    //Logger::logPotenialBug("Problem with Json reading", "JsonParser", "readSpellsJson"); //[TODO]
+    return QVector<Item>();
   }
 
-  QStringList listOfCategoryNames = Item::getListOfCategories();
-  foreach (QString nameOfJsonObj, listOfCategoryNames) {
-    QJsonArray itemsOfOneCategory = obj[nameOfJsonObj].toArray();
-    foreach (QJsonValue itemAsJsonObj, itemsOfOneCategory) items.push_back(Item(itemAsJsonObj));
+  QVector<Item> to_ret;
+  foreach (const QString& nameOfJsonObj, Item::getItemCategoriesNames()) {
+    foreach (const QJsonValue& itemAsJsonObj, obj[nameOfJsonObj].toArray()) {
+      to_ret.push_back(Item(itemAsJsonObj));
+    }
   }
 
-  if (items.size() == 0) {
-    //Logger::logPotenialBug("No items in json file", "JsonParser", "readSpellsJson");
-    return false;
-  } else {
-    return true;
+  if (to_ret.isEmpty()) {
+    //Logger::logPotenialBug("No items in json file", "JsonParser", "readSpellsJson"); //[TODO]
   }
+  return to_ret;
 }
-bool JsonParser::getManaRestoreMethodes(QStringList potionNameToBeFound, QList<Potion>& potionToReturn) {
-  /*
+
+QVector<Item> JsonParser::getItemsFromCategory(const ItemType&& type) {
+  QVector<Item> all_items = readItemsFromJson();
+  Item::filrItems(all_items, static_cast<const ItemType&&>(type));
+  return all_items;
+}
+
+void JsonParser::saveJsonFile(const QString& fileNameWithoutExtension, const QJsonObject& jsonObj) {
+  const QString path_to_dir      = PathResource::getPathToTmpJsonDir();
+  const QString abs_path_to_file = path_to_dir + fileNameWithoutExtension + ".json";
+  QFile         file(abs_path_to_file);
+  if (!file.open(QIODevice::OpenModeFlag::WriteOnly)) {
+    qWarning() << "Error, saving json file";
+    return;
+  }
+  file.write(QJsonDocument(jsonObj).toJson());
+  file.close();
+}
+
+QStringList JsonParser::readNamesOfAllSavedProfiles() {
+  QDir        profiles_dir = PathResource::getProfileFolder();
+  QStringList fillters     = QStringList() << "*.json";
+  return profiles_dir.entryList(fillters, QDir::Files);
+}
+
+void JsonParser::saveProfileToJson(const Profile& prof) {
+  const QString abs_path_to_file = PathResource::getProfileFolder().path() + "//" + prof.getName() + ".json";
+  QFile         file(abs_path_to_file);
+  if (!file.open(QIODevice::OpenModeFlag::WriteOnly)) {
+    qWarning() << "Error, saving json file";
+    return;
+  }
+  file.write(QJsonDocument(prof.toJson()).toJson());
+  file.close();
+}
+
+Profile JsonParser::loadProfileFromJson(const QString& profileName) {
+  QJsonObject profJsonObj = getJsonFileObject(PathResource::getPathToProfileFile(profileName));
+  return Profile(profJsonObj);
+}
+void JsonParser::deleteProfileFile(const QString& profileName) {
+  QDir profilesDir = PathResource::getProfileFolder();
+  profilesDir.remove(profileName + ".json");
+};
+QStringList JsonParser::getNamesOManaPotsForProf(const Profession profession) {
+  const QVector<Potion> potions = readPotions(static_cast<const Profession&&>(profession), Potion::TypeOfPotion::MANA);
+
+  QStringList namesOfAvaibleManaRestoreMethodes;
+  foreach (auto var, potions) {
+    namesOfAvaibleManaRestoreMethodes.push_back(var.getName());
+  }
+
+  return namesOfAvaibleManaRestoreMethodes;
+}
+QStringList JsonParser::getNamesOfHealingPotsAndSpellsForProf(const Profession profession) {
+  const QVector<Spell>  spells  = readSpellsJson(Spell::SpellType::Healing, static_cast<const Profession&&>(profession));
+  const QVector<Potion> potions = readPotions(static_cast<const Profession&&>(profession), Potion::TypeOfPotion::HEALTH);
+
+  QStringList avaiableHealthRestoreMethodesNames;
+  foreach (auto spell, spells) {
+    avaiableHealthRestoreMethodesNames.push_back(spell.getIncantation());
+  }
+  foreach (auto var, potions) {
+    avaiableHealthRestoreMethodesNames.push_back(var.getName());
+  }
+
+  return avaiableHealthRestoreMethodesNames;
+}
+
+Route JsonParser::readRoute(const QString& routeName) {
+  const QJsonObject obj = getJsonFileObject(PathResource::getPathToRouteFile(routeName));
+  const Route       route(obj);
+  return route.isValid() ? route : Route();
+}
+
+void JsonParser::saveRouteToJson(const QString& name, const Route& route) {
+  const QString abs_path_to_file = PathResource::getRouteFolder().path() + "//" + name + ".json";
+  QFile         file(abs_path_to_file);
+  if (!file.open(QIODevice::OpenModeFlag::WriteOnly)) {
+    qWarning() << "Error, saving json file";
+    return;
+  }
+  file.write(QJsonDocument(route.toJson()).toJson());
+  file.close();
+}
+
+}  // namespace CJ
+
+/*
+bool JsonParser::getManaRestoreMethodes(QStringList potionNameToBeFound, QVector<Potion>& potionToReturn) {
+  
 	QList<Item> allExistingPotions;
 	getItemsFromCategory(allExistingPotions, Item::TYPE_OF_ITEM::POTIONS);
 
@@ -155,125 +186,21 @@ bool JsonParser::getManaRestoreMethodes(QStringList potionNameToBeFound, QList<P
 	potionToReturn = foundPotions;
 	bool allWentGood = foundPotions.size() == potionNameToBeFound.size();
 	return allWentGood;
-	*/
-  return true;
-}
-bool JsonParser::getItemsFromCategory(QList<Item>& itemsToRet, ItemType type) {
-  QList<Item> readItems, itemsTmp;
-  bool        sucess = readItemJson(readItems);
-  if (!sucess) {
-    return false;
-  }
 
-  foreach (Item var, readItems) {
-    bool isProperCategory = type == var.type_;
-    if (isProperCategory) itemsTmp.push_back(var);
-  }
+  return true;
+}*/
 
-  itemsToRet = itemsTmp;
-  return true;
-}
-bool JsonParser::saveJsonFile(const QString& pathToFolder, const QString& fileNameWithOutExtension, const QJsonObject& jsonObj) {
-  if (!QDir(pathToFolder).exists()) {
-    const bool success = QDir().mkdir(pathToFolder);
-    if (!success) {
-      qWarning() << "folder " << pathToFolder << " doesn't exist and cannot be created";
-      return false;
-    }
-  }
-  QFileInfo folderInfo = QFileInfo(pathToFolder);
-  bool      isWritable = folderInfo.isWritable();
-  if (!isWritable) {
-    qWarning() << "Error, saving json file, given folder is not writtable!";
-    return false;
-  }
-  QString filePath;
-  if (pathToFolder.right(1) == "\\")
-    filePath = QString("%1%2.json").arg(pathToFolder, fileNameWithOutExtension);
-  else
-    filePath = QString("%1\\%2.json").arg(pathToFolder, fileNameWithOutExtension);
-  QFile file(filePath);
-  bool  ok = file.open(QIODevice::OpenModeFlag::WriteOnly);
-  if (!ok) {
-    qWarning() << "Error, saving json file";
-    return false;
-  }
-  file.write(QJsonDocument(jsonObj).toJson());
-  file.close();
-  return true;
-}
-QMap<QString, int> JsonParser::readAvaibleKeys() {
-  QJsonObject        obj;
-  bool               openCorrectly = openJsonFile(obj, PathResource::getPathToKeysJsonFile());
+/*
+QMap<QString, int> JsonParser::readAvailableKeys() {
+  const QJsonArray   keys_from_json = getJsonFileObject(PathResource::getPathToKeysJsonFile()).value("keys").toArray();
   QMap<QString, int> keys;
-  foreach (auto var, obj.value("keys").toArray()) {
-    QString keyName = var.toObject().keys().first();
-    int     keyVal  = var.toObject().value(keyName).toInt();
+  foreach (const QJsonValue& var, keys_from_json) {
+    const QJsonObject obj     = var.toObject();
+    const QString     keyName = obj.keys().first();
+    const int         keyVal  = obj.value(keyName).toInt();
     keys.insert(keyName, keyVal);
   }
 
   return keys;
 }
-QStringList JsonParser::readNamesOfAllSavedProfiles() {
-  QDir        profilesDir = PathResource::getProfileFolder();
-  QStringList fillters    = QStringList() << "*.json";
-  return profilesDir.entryList(fillters, QDir::Files);
-}
-void JsonParser::saveProfile(Profile* prof) {
-  const QString dirPath = PathResource::getProfileFolder().absolutePath();
-  saveJsonFile(dirPath, prof->getName(), prof->toJson());
-}
-Profile JsonParser::loadProfile(QString profileName) {
-  const QString filePath = PathResource::getPathToProfileFile(profileName);
-  QJsonObject   profJsonObj;
-  openJsonFile(profJsonObj, filePath);
-  return Profile(profJsonObj);
-}
-void JsonParser::deleteProfileFile(QString profileName) {
-  QDir profilesDir = PathResource::getProfileFolder();
-  profilesDir.remove(profileName + ".json");
-};
-QStringList JsonParser::getNamesOManaPotsForProf(Profession profession) {
-  QList<Potion> potions;
-  auto          typeFilter = Potion::TypeOfPotion::MANA;
-  readPotions(potions, &profession, &typeFilter);
-
-  QStringList namesOfAvaibleManaRestoreMethodes;
-  foreach (auto var, potions) {
-    namesOfAvaibleManaRestoreMethodes.push_back(var.getName());
-  }
-
-  return namesOfAvaibleManaRestoreMethodes;
-}
-QStringList JsonParser::getNamesOfHealingPotsAndSpellsForProf(Profession profession) {
-  QList<Spell> spells;
-  auto         typeOfSpell = Spell::SpellType::Healing;
-  readSpellsJson(spells, &typeOfSpell, &profession);
-
-  QList<Potion> potions;
-  auto          typeFilters = Potion::TypeOfPotion::HEALTH;
-  readPotions(potions, &profession, &typeFilters);
-
-  QStringList avaiableHealthRestoreMethodesNames;
-  foreach (auto spell, spells) {
-    avaiableHealthRestoreMethodesNames.push_back(spell.getIncantation());
-  }
-  foreach (auto var, potions) {
-    avaiableHealthRestoreMethodesNames.push_back(var.getName());
-  }
-
-  return avaiableHealthRestoreMethodesNames;
-}
-
-bool JsonParser::readRoute(Route& route, QString routeName) {
-  QString     path = PathResource::getPathToRouteFile(routeName);
-  QJsonObject obj;
-  if (!openJsonFile(obj, path)) return false;
-
-  Route routeTmp(obj);
-  if (!routeTmp.isValid()) return false;
-
-  route = routeTmp;
-  return true;
-}
-}  // namespace CJ
+*/

@@ -57,6 +57,11 @@ class PathResource {
     dir.cd("tmp_screens");
     return dir.absolutePath() + "\\";
   }
+  static QString getPathToTmpJsonDir() {
+    QDir dir = QDir::current();
+    dir.cd("tmp_jsons");
+    return dir.absolutePath() + "\\";
+  }
 
   //jsons
   static QString getPathToSpellJsonFile() {

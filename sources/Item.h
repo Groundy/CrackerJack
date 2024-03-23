@@ -71,8 +71,8 @@ class Item {
   Item() = default;
   Item(const QJsonValue& jsonValue);
 
-  static QStringList getListOfCategories();
-  static void        filrItemList(QVector<Item>& items, ItemSeller&& sellerToFiltr);
-  static void        filrItemList(QVector<Item>& items, ItemType&& itemCategoryToFiltr);
+  static QStringList getItemCategoriesNames();
+  static void        filrItems(QVector<Item>& items, const ItemSeller&& sellerToFiltr);
+  static void        filrItems(QVector<Item>& items, const ItemType&& itemCategoryToFiltr);
 };
 }  // namespace CJ

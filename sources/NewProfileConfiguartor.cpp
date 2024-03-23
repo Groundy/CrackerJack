@@ -180,7 +180,7 @@ void NewProfileConfiguartor::finishButtonAction() {
   bool    accepted = Utilities::showMessageBox_NO_YES(text);
   if (accepted) {
     saveDataToProfile();
-    JsonParser::saveProfile(profToEdit);
+    JsonParser::saveProfileToJson(*profToEdit);
     this->accept();
   }
 }
@@ -427,13 +427,10 @@ void NewProfileConfiguartor::fillRestorationMethodesDetails(QVector<RestorationM
   if (restorationMethodes.size() == 0) {
     return;
   }
-
-  QList<Spell>  spells;
-  QList<Potion> potions;
-  Profession    profession = getSelectedProf();
-  auto          spellType  = Spell::SpellType::Healing;
-  JsonParser::readSpellsJson(spells, &spellType, &profession);
-  JsonParser::readPotions(potions, &profession, NULL);
+  auto            prof    = getSelectedProf();
+  QVector<Spell>  spells  = JsonParser::readSpellsJson(Spell::SpellType::Healing, static_cast<Profession&&>(prof));
+  QVector<Potion> potions = JsonParser::readPotions(static_cast<Profession&&>(prof), Potion::TypeOfPotion::HEALTH);
+  potions.append(JsonParser::readPotions(static_cast<Profession&&>(prof), Potion::TypeOfPotion::MANA));
 
   for (size_t i = 0; i < restorationMethodes.size(); i++) {
     QString name       = restorationMethodes[i].getName();

@@ -19,24 +19,25 @@
 namespace CJ {
 class JsonParser {
  public:
-  static bool               openJsonFile(QJsonObject& jsonDoc, QString pathToFile);
-  static bool               readItemJson(QList<Item>& items);
-  static bool               getManaRestoreMethodes(QStringList potionNameList, QList<Potion>& potionToReturn);
-  static bool               getItemsFromCategory(QList<Item>& readItems, ItemType type);
-  static QMap<QString, int> readAvaibleKeys();
-  static QStringList        readNamesOfAllSavedProfiles();
-  static bool               readSpellsJson(QList<Spell>& spells, Spell::SpellType* type, Profession* profession);
-  static QStringList        readRunesNames();
-  static bool               readPotions(QList<Potion>& potions, Profession* prof, Potion::TypeOfPotion* filterType);
-  static void               saveProfile(Profile* prof);
-  static Profile            loadProfile(QString profileName);
-  static void               deleteProfileFile(QString profileName);
-  static QStringList        getNamesOManaPotsForProf(Profession profession);
-  static QStringList        getNamesOfHealingPotsAndSpellsForProf(Profession profession);
-  static bool               saveJsonFile(const QString& pathToFolder, const QString& fileNameWithoutExtension, const QJsonObject& jsonObj);
-  static bool               readRoute(Route& route, QString routeName);
+  static QVector<Item>   getItemsFromCategory(const ItemType&& type);
+  static Route           readRoute(const QString& routeName);
+  static QStringList     readNamesOfAllSavedProfiles();
+  static QVector<Spell>  readSpellsJson(const Spell::SpellType&& type, const Profession&& profession);
+  static QStringList     getNamesOfHealingPotsAndSpellsForProf(const Profession profession);
+  static QVector<Potion> readPotions(const Profession&& prof, const Potion::TypeOfPotion&& filterType);
+  static QStringList     readRunesNames();
+  static void            saveProfileToJson(const Profile& prof);
+  static Profile         loadProfileFromJson(const QString& profileName);
+  static void            deleteProfileFile(const QString& profileName);
+  static QStringList     getNamesOManaPotsForProf(const Profession profession);
+  static void            saveJsonFile(const QString& fileNameWithoutExtension, const QJsonObject& jsonObj);
+  static void            saveRouteToJson(const QString& name, const Route& route);
 
  private:
   JsonParser() = default;
+  static QVector<Item> readItemsFromJson();
+  static QJsonObject   getJsonFileObject(const QString& pathToFile);
+  //static bool               getManaRestoreMethodes(QStringList potionNameList, QVector<Potion>& potionToReturn);
+  //static QMap<QString, int> readAvailableKeys();
 };
 }  // namespace CJ

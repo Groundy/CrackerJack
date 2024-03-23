@@ -27,11 +27,11 @@ Item::Item(const QJsonValue& jsonValue) {
 	*/
 }
 
-QStringList Item::getListOfCategories() {
+QStringList Item::getItemCategoriesNames() {
   return descriptionMap.values();
 }
 
-void Item::filrItemList(QVector<Item>& items, ItemSeller&& sellerToFiltr) {
+void Item::filrItems(QVector<Item>& items, const ItemSeller&& sellerToFiltr) {
   std::vector<Item> itemsToCopy = items.toStdVector();
   std::vector<Item> to_ret;
   auto              filtr_lamda = [sellerToFiltr](const Item& item) { return item.seller_ == sellerToFiltr; };
@@ -39,7 +39,7 @@ void Item::filrItemList(QVector<Item>& items, ItemSeller&& sellerToFiltr) {
   items = QVector<Item>(begin(to_ret), end(to_ret));
 }
 
-void Item::filrItemList(QVector<Item>& items, ItemType&& itemCategoryToFiltr) {
+void Item::filrItems(QVector<Item>& items, const ItemType&& itemCategoryToFiltr) {
   std::vector<Item> itemsToCopy = items.toStdVector();
   std::vector<Item> to_ret;
   auto              filtr_lamda = [itemCategoryToFiltr](const Item& item) { return item.type_ == itemCategoryToFiltr; };

@@ -12,15 +12,10 @@ AutoHuntConfigurator::~AutoHuntConfigurator() {
 
 void AutoHuntConfigurator::selectRoute() {
   const QString dirPath    = PathResource::getProfileFolder().absolutePath();
-  QString       pathToFile = Utilities::getFileByDialog("*.json", dirPath);
-  QJsonObject   obj;
-  if (!JsonParser::openJsonFile(obj, pathToFile)) {
-    return;
-  }  // todo
-
-  QString name = Route(obj).getName();
-  ui->routeLabel->setText(name);
-  last_selected_route_ = name;
+  const QString pathToFile = Utilities::getFileByDialog("*.json", dirPath);
+  const QString routeName  = JsonParser::readRoute(pathToFile).getName();
+  ui->routeLabel->setText(routeName);
+  last_selected_route_ = routeName;
 };
 
 void AutoHuntConfigurator::editRoute() {
@@ -28,8 +23,7 @@ void AutoHuntConfigurator::editRoute() {
     return;
   }
 
-  Route route;
-  JsonParser::readRoute(route, last_selected_route_);
+  Route        route = JsonParser::readRoute(last_selected_route_);
   RouteCreator routeCreator(this, &route);
   routeCreator.exec();
 };
@@ -119,13 +113,13 @@ void AutoHuntConfigurator::fillGuiFromProfileData(Profile* prof) {
   }
 }
 
-QStringList AutoHuntConfigurator::getNamesOfAttacksMethodes(Profession profession) {
-  QList<Spell> spells;
-  auto         filterType = Spell::SpellType::Attack;
-  JsonParser::readSpellsJson(spells, &filterType, &profession);
-  QStringList namesToFill;
+QStringList AutoHuntConfigurator::getNamesOfAttacksMethodes(const Profession&& profession) {
+  QStringList    namesToFill;
+  QVector<Spell> spells = JsonParser::readSpellsJson(Spell::SpellType::Attack, std::move(profession));
   namesToFill.append(JsonParser::readRunesNames());
-  foreach (Spell spell, spells) namesToFill.append(spell.getIncantation());
+  foreach (Spell spell, spells) {
+    namesToFill.append(spell.getIncantation());
+  };
   namesToFill.sort();
   return namesToFill;
 };
@@ -134,10 +128,8 @@ void AutoHuntConfigurator::getDataFromGUI() {
   auto_hunt_data_.setMinMonToContinue(ui->minMonContinueSpiner->value());
   auto_hunt_data_.setMinMonToStop(ui->minMonStopSpiner->value());
 
-  QList<Spell> spells;
-  auto         filterType = Spell::SpellType::Attack;
-  JsonParser::readSpellsJson(spells, &filterType, &prof_->getProfession());
-  QStringList runesNames = JsonParser::readRunesNames();
+  QVector<Spell> spells     = JsonParser::readSpellsJson(Spell::SpellType::Attack, prof_->getProfession());
+  QStringList    runesNames = JsonParser::readRunesNames();
 
   QVector<AttackMethode> attacks = {};
   for (int i = 0; i < check_boxes_.size(); i++) {

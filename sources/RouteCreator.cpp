@@ -112,7 +112,7 @@ void RouteCreator::finishButtonPressed() {
     return;
   }
 
-  JsonParser::saveJsonFile(PathResource::getRouteFolder().absolutePath(), name, route.toJson());
+  JsonParser::saveRouteToJson(name, route);
   Utilities::showMessageBox_INFO("Saved!");
 }
 bool RouteCreator::loadMap(int floor) {
@@ -132,10 +132,8 @@ bool RouteCreator::loadMap(int floor) {
   return true;
 }
 void RouteCreator::loadRouteButtonPressed() {
-  QString     pathToFile = Utilities::getFileByDialog("*.json", PathResource::getRouteFolder().absolutePath());
-  QJsonObject obj;
-  if (!JsonParser::openJsonFile(obj, pathToFile)) return;  //todo
-  route = Route(obj);
+  QString pathToFile = Utilities::getFileByDialog("*.json", PathResource::getRouteFolder().absolutePath());
+  route              = JsonParser::readRoute(pathToFile);
   ui->nameEditField->setText(route.getName());
   repaintList();
   selectedItemOnListChanged();
