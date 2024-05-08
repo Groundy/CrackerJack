@@ -6,7 +6,7 @@
 
 #include <QObject>
 #include <atomic>
-#include <qfile>
+#include <qfile.h>
 namespace CJ {
 class Logger : public QObject {
   Q_OBJECT

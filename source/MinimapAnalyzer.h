@@ -1,5 +1,5 @@
 #pragma once
-#include <QObject.h>
+#include <QObject>
 #include <qdatetime.h>
 #include <qdir.h>
 #include <qimage.h>

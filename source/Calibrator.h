@@ -6,12 +6,11 @@
 
 #include <QMap>
 #include <QObject>
-#include <VariablesClass.hpp>
+#include "VariablesClass.hpp"
 
 #include "Logger.hpp"
 #include "PathResource.h"
 #include "Profile.h"
-#include "VariablesClass.hpp"
 namespace CJ {
 class Calibrator {
  public:

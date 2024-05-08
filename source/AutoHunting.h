@@ -1,7 +1,5 @@
 #include <qqueue.h>
 #include <qrect.h>
-#include <qsound.h>
-
 #include <QStringList>
 #include <QThread>
 

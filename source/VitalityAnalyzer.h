@@ -1,6 +1,6 @@
 #pragma once
-#include <QChar.h>
-#include <QThread.h>
+#include <QChar>
+#include <QThread>
 #include <qdatetime.h>
 #include <qimage.h>
 

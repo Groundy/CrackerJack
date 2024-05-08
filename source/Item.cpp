@@ -32,7 +32,7 @@ QStringList Item::getItemCategoriesNames() {
 }
 
 void Item::filrItems(QVector<Item>& items, const ItemSeller&& sellerToFiltr) {
-  std::vector<Item> itemsToCopy = items.toStdVector();
+  std::vector<Item> itemsToCopy = std::vector<Item>{items.begin(), items.end()};
   std::vector<Item> to_ret;
   auto              filtr_lamda = [sellerToFiltr](const Item& item) { return item.seller_ == sellerToFiltr; };
   std::copy_if(begin(itemsToCopy), end(itemsToCopy), std::back_inserter(to_ret), filtr_lamda);
@@ -40,7 +40,7 @@ void Item::filrItems(QVector<Item>& items, const ItemSeller&& sellerToFiltr) {
 }
 
 void Item::filrItems(QVector<Item>& items, const ItemType&& itemCategoryToFiltr) {
-  std::vector<Item> itemsToCopy = items.toStdVector();
+  std::vector<Item> itemsToCopy = std::vector<Item>{items.begin(), items.end()};
   std::vector<Item> to_ret;
   auto              filtr_lamda = [itemCategoryToFiltr](const Item& item) { return item.type_ == itemCategoryToFiltr; };
   std::copy_if(begin(itemsToCopy), end(itemsToCopy), std::back_inserter(to_ret), filtr_lamda);

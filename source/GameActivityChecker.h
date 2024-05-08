@@ -1,14 +1,20 @@
 #pragma once
-#include <QThread.h>
+#include <QThread>
+#include <qdebug.h>
+#include <qtimer.h>
+
+#include "VariablesClass.hpp"
+#ifdef _WIN64
 #include <Windows.h>
 #include <atlstr.h>
 #include <comdef.h>
 #include <psapi.h>
-#include <qdebug.h>
-#include <qtimer.h>
 #include <tlhelp32.h>
+#endif
 
-#include "VariablesClass.hpp"
+
+
+
 namespace CJ {
 enum class GameActivityStates { NO_ACTIVE, NO_WINDOW, NO_LOGGED, NO_HANDLER, ACTIVE };
 
@@ -35,7 +41,7 @@ class GameActivityChecker : public QObject {
   QString             getGameWindowTitile() const;
   GameActivityStates  getGameState();
   void                execute();
-  QMap<QString, uint> getListOfRunningProcess() const;
+  QMap<QString, uint> getListOfRunningProcess_Windows() const;
   GameActivityStates  windowIsAccessible(const uint PID, const QString& windowTitle);
   HWND                getHandlerToGameWindow(const uint PID, const QString& WindowName);
 };

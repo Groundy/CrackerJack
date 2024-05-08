@@ -47,10 +47,10 @@ bool RGBstruct::allColsEqualOrAboveThreshold(uint threshold) const {
   return r >= threshold && g >= threshold && b >= threshold;
 }
 uint RGBstruct::getMinColVal() const {
-  return min(min(r, g), b);
+  return std::min(std::min(r, g), b);
 }
 uint RGBstruct::getMaxColVal() const {
-  return max(max(r, g), b);
+  return std::max(std::max(r, g), b);
 }
 bool RGBstruct::oneColEqualOrAboveThreshold(uint threshold) const {
   return r >= threshold || g >= threshold || b >= threshold;

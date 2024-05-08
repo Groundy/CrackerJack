@@ -1,5 +1,9 @@
 #pragma once
+
+#ifdef _WIN64
 #include <comdef.h>
+#endif
+
 #include <qmutex.h>
 #include <qsharedpointer.h>
 #include <qthread.h>

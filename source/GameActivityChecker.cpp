@@ -1,4 +1,5 @@
 #include "GameActivityChecker.h"
+#include <QProcess>
 namespace CJ {
 GameActivityChecker::GameActivityChecker(QSharedPointer<VariablesClass> var) {
   game_process_data_ = var->getGameProcess();
@@ -116,7 +117,8 @@ GameActivityStates GameActivityChecker::getGameState() {
   }
   return GameActivityStates(gameWinState);
 }
-QMap<QString, uint> GameActivityChecker::getListOfRunningProcess() const {
+QMap<QString, uint> GameActivityChecker::getListOfRunningProcess_Windows() const {
+  #ifdef _WIN64
   HANDLE hSnapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
   if (!hSnapshot) {
     return QMap<QString, uint>();
@@ -139,7 +141,12 @@ QMap<QString, uint> GameActivityChecker::getListOfRunningProcess() const {
   } while (Process32Next(hSnapshot, &pe32));
   CloseHandle(hSnapshot);
   return toRet;
+  #endif
+
+
+  return QMap<QString, uint>();
 }
+
 HWND GameActivityChecker::getHandlerToGameWindow(const uint PID, const QString& windowName) {
   LPCWSTR nameOfWindowLPCWSTR = (const wchar_t*)windowName.utf16();
   HWND    handler             = FindWindow(NULL, nameOfWindowLPCWSTR);

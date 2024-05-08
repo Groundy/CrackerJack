@@ -5,6 +5,7 @@
 
 #include "JsonClass.hpp"
 #include "Logger.hpp"
+#include "qpoint.h"
 namespace CJ {
 struct Point3D : JsonClass {
  public:

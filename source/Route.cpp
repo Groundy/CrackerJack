@@ -51,7 +51,7 @@ bool Route::movePointUp(int index) {
   if (itFirst) {
     return false;
   }
-  route_.swap(index, index - 1);
+  route_.swapItemsAt(index, index - 1);
   return true;
 }
 bool Route::movePointDown(int index) {
@@ -60,7 +60,7 @@ bool Route::movePointDown(int index) {
     return false;
   }
 
-  route_.swap(index, index + 1);
+  route_.swapItemsAt(index, index + 1);
   return true;
 }
 int Route::size() {

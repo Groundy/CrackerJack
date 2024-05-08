@@ -1,5 +1,5 @@
 #pragma once
-#include <QDialog.h>
+#include <QDialog>
 #include <qdatetime.h>
 
 #include "AttackMethode.hpp"

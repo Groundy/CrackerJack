@@ -1,5 +1,9 @@
 #pragma once
+#ifdef _WIN64
 #include <Windows.h>
+
+#endif
+
 #include <qjsonarray.h>
 #include <qkeysequence.h>
 #include <qlist.h>
@@ -7,7 +11,7 @@
 #include <qvector.h>
 
 #include <QObject>
-#include <qmap>
+#include <qmap.h>
 #include <string>
 
 #include "AttackMethode.hpp"

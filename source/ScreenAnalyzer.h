@@ -1,5 +1,5 @@
 #pragma once
-#include <QThread.h>
+#include <QThread>
 #include <qdatetime.h>
 #include <qdebug.h>
 #include <qdir.h>

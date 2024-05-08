@@ -1,6 +1,6 @@
 #pragma once
-#include <Equipment.h>
-#include <Profile.h>
+#include "Equipment.h"
+#include "Profile.h"
 #include <qsharedpointer.h>
 
 #include "BattleList.hpp"

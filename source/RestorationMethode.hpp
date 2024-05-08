@@ -5,17 +5,18 @@
 #include "Key.h"
 #include "Potion.hpp"
 #include "Spell.h"
+
 namespace CJ {
 class RestorationMethode : JsonClass {
  public:
   enum class Type { POTION, SPELL };
 
-  RestorationMethode::RestorationMethode(int threshold, Key key, QString restorationName)
+  RestorationMethode(int threshold, Key key, QString restorationName)
       : threshold(threshold), key(key), name(restorationName) {}
 
-  RestorationMethode::RestorationMethode() : threshold(0), key(Key()), name(""){};
+  RestorationMethode() : threshold(0), key(Key()), name(""){};
 
-  RestorationMethode::RestorationMethode(QJsonObject jsonObj) {
+  RestorationMethode(QJsonObject jsonObj) {
     QString field = "threshold";
     if (jsonObj.contains(field)) {
       QJsonValue value = jsonObj[field];

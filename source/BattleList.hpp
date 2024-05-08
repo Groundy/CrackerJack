@@ -1,5 +1,5 @@
 #pragma once
-#include <CJ_Image.h>
+#include "CJ_Image.h"
 #include <memory.h>
 #include <qrect.h>
 
@@ -24,7 +24,7 @@ class BattleList {
     return battleListImg.getImg();
   }
   int getEnemisAmout() {
-    if (qrand() % 10 == 0) checkIfBattleListIsOk();
+    //if (qrand() % 10 == 0) checkIfBattleListIsOk();
     QImage inneBattleList = getInnerBattleList();
     if (inneBattleList.isNull()) return -1;
     const int      middleX   = inneBattleList.width() / 2;

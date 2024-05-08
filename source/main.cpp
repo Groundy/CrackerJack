@@ -11,15 +11,9 @@ void setStyle(QApplication& app) {
   app.setWindowIcon(QIcon(":imgs/logo"));
   QApplication::setAttribute(Qt::AA_DisableWindowContextHelpButton);
 }
-void setTranslation(QApplication& app) {
-  QTranslator translator;
-  translator.load(":/translation");
-  app.installTranslator(&translator);
-}
 int main(int argc, char* argv[]) {
   QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
   QApplication app(argc, argv);
-  setTranslation(app);
   setStyle(app);
 
   QSharedPointer<CJ::Profile> profile(new CJ::Profile());

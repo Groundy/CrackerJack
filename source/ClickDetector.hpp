@@ -2,8 +2,9 @@
 #include <qobject.h>
 #include <qthread.h>
 #include <qtimer.h>
+#ifdef _WIN64
 #include <windows.h>
-
+#endif
 #include "GameConnecter.h"
 namespace CJ {
 class ClickDetector : public QThread {
