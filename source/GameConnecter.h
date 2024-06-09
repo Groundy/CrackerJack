@@ -18,7 +18,7 @@ class GameConnecter : public QThread {
  public:
   GameConnecter(QSharedPointer<VariablesClass> var);
   ~GameConnecter();
-  void run(){};
+  void run() {};
 
   void clickLeft(const QPoint pt);
   void clickRight(const QPoint pt);
@@ -29,7 +29,11 @@ class GameConnecter : public QThread {
   void autoLootAroundPlayer();
 
  private:
+#ifdef _WIN64
   void sendCharToGame(const QChar charToSend, const HWND& gameThreadHandler);
+#else
+  void sendCharToGame(const QChar charToSend, const uint& gameThreadHandler);
+#endif
   void clickRightWithShift(const QVector<QPoint>& pts, const uint sleepTimeBetweenClicks);
   void setShiftPressed(const bool pressed);
 

@@ -22,7 +22,7 @@ MainMenu::MainMenu(QSharedPointer<Profile> prof, QWidget* parent) : QDialog(pare
   connectSignals();
 }
 MainMenu::~MainMenu() {
-  QList<QThread*> threads{&screen_saver_, &screen_analyzer_, &vitality_analyzer_, &click_detector_};  //huntAutoThread
+  QList<QThread*> threads{&screen_saver_, &screen_analyzer_, &vitality_analyzer_ /*, &click_detector_*/};  //huntAutoThread
   foreach (QThread* thread, threads) {
     if (thread == nullptr) {
       continue;
@@ -104,6 +104,7 @@ void MainMenu::startAutoHunting() {
 void MainMenu::changeProfileButtonAction() {
   this->accept();
 }
+
 void MainMenu::onGameStateChanged(GameActivityStates state) {
   QString toWrite = tr("Game status: ");
   switch (state) {

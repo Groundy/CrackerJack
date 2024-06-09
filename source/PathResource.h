@@ -107,7 +107,9 @@ class PathResource {
  private:
   static QDir get_local_dir() {
     QDir tmpDir = QDir::temp();
+#ifdef _WiN64
     tmpDir.cdUp();
+#endif
     const QString mainFolderName = "CrackerJack";  //TODO
     if (!tmpDir.exists(mainFolderName)) {
       if (!tmpDir.mkdir(mainFolderName)) {

@@ -11,6 +11,68 @@ GameConnecter::~GameConnecter() {
   setShiftPressed(false);
 }
 
+void GameConnecter::useRestorationMethode(const RestorationMethode& methode, const uint additionalTime) {
+  if (methode.isSpell()) {
+    timers_->setTimeLastSpellUsageHealing();
+    timers_->setTimeLastSpellUsed(methode.getName());
+  } else if (methode.isPotion()) {
+    timers_->setTimeLastItemUsageGeneral();
+    timers_->setTimeLastItemUsed(methode.getName(), additionalTime);
+  }
+
+  sendKeyStrokeToProcess(methode.getKey());
+  logger_.log(methode.getName(), false, true, true);
+}
+
+void GameConnecter::autoLootAroundPlayer() {
+  const QVector<QPoint> potinsToClick             = game_window_->getPointsOfFieldsAroundPlayer();
+  constexpr uint        sleep_time_between_clicks = 120;
+
+  if (auto_loot_setting_ == Profile::RIGHT_MOUSE_BUTTON) {
+    foreach (const QPoint& pt, potinsToClick) {
+      clickRight(pt);
+      msleep(sleep_time_between_clicks);
+    }
+  } else if (auto_loot_setting_ == Profile::SHIFT_RIGHT) {
+    clickRightWithShift(potinsToClick, sleep_time_between_clicks * 0.33);
+    setShiftPressed(false);
+  } else if (auto_loot_setting_ == Profile::LEFT_MOUSE_BUTTON) {
+    foreach (const QPoint& pt, potinsToClick) {
+      clickLeft(pt);
+      msleep(sleep_time_between_clicks);
+    }
+  }
+
+  logger_.log("auto loot.", false, true, true);
+}
+
+#ifdef _WIN64
+void GameConnecter::sendCharToGame(const QChar charToSend, const HWND& gameThreadHandler) {
+  QMutexLocker locker(&sender_mutex_);
+  if (charToSend.isLetter()) {
+    const WPARAM wParam = charToSend.toUpper().unicode();
+    PostMessage(gameThreadHandler, WM_KEYDOWN, wParam, 1);
+  } else if (charToSend.isSpace()) {
+    const WPARAM wParam = 0x20;
+    PostMessage(gameThreadHandler, WM_KEYDOWN, wParam, 1);
+  } else if (charToSend.isDigit()) {
+    uint         value  = charToSend.unicode() - 48;
+    const WPARAM wParam = charToSend.unicode();
+    const LPARAM lParam = ((value + 1) << 16) + 1;
+    PostMessage(gameThreadHandler, WM_KEYDOWN, wParam, lParam);
+  } else if (charToSend.unicode() == 39) {
+    // apostrophe mark
+    const WPARAM wParam = 0xDE;
+    const LPARAM lParam = 0x00280001;
+    PostMessage(gameThreadHandler, WM_KEYDOWN, wParam, lParam);
+  } else if (charToSend.unicode() == 45) {
+    // dash mark
+    const WPARAM wParam = 0xBD;
+    const LPARAM lParam = 0x000C001;
+    PostMessage(gameThreadHandler, WM_KEYDOWN, wParam, lParam);
+  }
+}
+
 void GameConnecter::clickLeft(const QPoint pt) {
   const QPoint to_click          = (playing_on_small_monitor_) ? QPoint(pt.x() / 0.8, pt.y() / 0.8) : pt;
   const HWND   gameThreadHandler = game_process_data_->getHandlerToGameThread();
@@ -71,65 +133,6 @@ void GameConnecter::sendStringToGame(const QString& str) {
   }
 }
 
-void GameConnecter::useRestorationMethode(const RestorationMethode& methode, const uint additionalTime) {
-  if (methode.isSpell()) {
-    timers_->setTimeLastSpellUsageHealing();
-    timers_->setTimeLastSpellUsed(methode.getName());
-  } else if (methode.isPotion()) {
-    timers_->setTimeLastItemUsageGeneral();
-    timers_->setTimeLastItemUsed(methode.getName(), additionalTime);
-  }
-
-  sendKeyStrokeToProcess(methode.getKey());
-  logger_.log(methode.getName(), false, true, true);
-}
-
-void GameConnecter::sendCharToGame(const QChar charToSend, const HWND& gameThreadHandler) {
-  QMutexLocker locker(&sender_mutex_);
-  if (charToSend.isLetter()) {
-    const WPARAM wParam = charToSend.toUpper().unicode();
-    PostMessage(gameThreadHandler, WM_KEYDOWN, wParam, 1);
-  } else if (charToSend.isSpace()) {
-    const WPARAM wParam = 0x20;
-    PostMessage(gameThreadHandler, WM_KEYDOWN, wParam, 1);
-  } else if (charToSend.isDigit()) {
-    uint         value  = charToSend.unicode() - 48;
-    const WPARAM wParam = charToSend.unicode();
-    const LPARAM lParam = ((value + 1) << 16) + 1;
-    PostMessage(gameThreadHandler, WM_KEYDOWN, wParam, lParam);
-  } else if (charToSend.unicode() == 39) {
-    // apostrophe mark
-    const WPARAM wParam = 0xDE;
-    const LPARAM lParam = 0x00280001;
-    PostMessage(gameThreadHandler, WM_KEYDOWN, wParam, lParam);
-  } else if (charToSend.unicode() == 45) {
-    // dash mark
-    const WPARAM wParam = 0xBD;
-    const LPARAM lParam = 0x000C001;
-    PostMessage(gameThreadHandler, WM_KEYDOWN, wParam, lParam);
-  }
-}
-void GameConnecter::autoLootAroundPlayer() {
-  const QVector<QPoint> potinsToClick             = game_window_->getPointsOfFieldsAroundPlayer();
-  constexpr uint        sleep_time_between_clicks = 120;
-
-  if (auto_loot_setting_ == Profile::RIGHT_MOUSE_BUTTON) {
-    foreach (const QPoint& pt, potinsToClick) {
-      clickRight(pt);
-      msleep(sleep_time_between_clicks);
-    }
-  } else if (auto_loot_setting_ == Profile::SHIFT_RIGHT) {
-    clickRightWithShift(potinsToClick, sleep_time_between_clicks * 0.33);
-    setShiftPressed(false);
-  } else if (auto_loot_setting_ == Profile::LEFT_MOUSE_BUTTON) {
-    foreach (const QPoint& pt, potinsToClick) {
-      clickLeft(pt);
-      msleep(sleep_time_between_clicks);
-    }
-  }
-
-  logger_.log("auto loot.", false, true, true);
-}
 void GameConnecter::setShiftPressed(const bool pressed) {
   INPUT ip{};
   ip.type           = INPUT_KEYBOARD;  // Set up a generic keyboard event.
@@ -140,4 +143,35 @@ void GameConnecter::setShiftPressed(const bool pressed) {
   ip.ki.dwFlags     = pressed ? 0 : KEYEVENTF_KEYUP;
   SendInput(1, &ip, sizeof(INPUT));
 };
+#else
+void GameConnecter::sendCharToGame(const QChar charToSend, const uint& gameThreadHandler) {
+  //[TODO] implement
+}
+void GameConnecter::clickLeft(const QPoint pt) {
+  //[TODO] implement
+}
+void GameConnecter::clickRight(const QPoint pt) {
+  //[TODO] implement
+}
+void GameConnecter::clickRightWithShift(const QVector<QPoint>& pts, const uint sleepTimeBetweenClicks) {
+  //[TODO] implement
+}
+bool GameConnecter::sendKeyStrokeToProcess(const Key key, const uint sleepTime) {
+  //[TODO] implement
+  return true;
+}
+
+bool GameConnecter::sendKeyStrokeToProcess(const int virtualKey, const uint sleepTime) {
+  //[TODO] implement
+  return true;
+}
+
+void GameConnecter::sendStringToGame(const QString& str) {
+  //[TODO] implement
+}
+
+void GameConnecter::setShiftPressed(const bool pressed) {
+  //[TODO] implement
+};
+#endif
 }  // namespace CJ

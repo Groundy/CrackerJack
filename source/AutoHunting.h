@@ -1,5 +1,7 @@
+/**
 #include <qqueue.h>
 #include <qrect.h>
+
 #include <QStringList>
 #include <QThread>
 
@@ -70,3 +72,4 @@ class AutoHunting : public QThread {
   void   playSound();
 };
 }  // namespace CJ
+**/

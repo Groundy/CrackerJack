@@ -1,4 +1,5 @@
 #include "GameActivityChecker.h"
+
 #include <QProcess>
 namespace CJ {
 GameActivityChecker::GameActivityChecker(QSharedPointer<VariablesClass> var) {
@@ -22,6 +23,69 @@ void GameActivityChecker::execute() {
   if (gameStateCode != previousGameState_) {
     emit gameStateChanged(gameStateCode);
   }
+}
+
+uint GameActivityChecker::getGamePid() const {
+#ifdef _WIN64
+  const QMap<QString, uint> processes         = getListOfRunningProcess();
+  auto                      iteratorToProcess = processes.find(game_process_name_);
+  if (iteratorToProcess == processes.end()) {
+    qDebug() << "Can't find Game on running processes list!";
+    return 0;
+  }
+  return iteratorToProcess.value();
+#else
+  //[TODO]
+  return 0;
+#endif
+}
+
+#ifdef _WIN64
+HWND GameActivityChecker::getHandlerToGameWindow(const uint PID, const QString& windowName) {
+  LPCWSTR nameOfWindowLPCWSTR = (const wchar_t*)windowName.utf16();
+  HWND    handler             = FindWindow(NULL, nameOfWindowLPCWSTR);
+  if (handler == NULL) {
+    // Logger::logPotenialBug("Can't get handler to window: " + WindowName,
+    // "Utilities", "clickRight");
+    return HWND();
+  }
+  DWORD tmp     = PID;
+  DWORD hThread = GetWindowThreadProcessId(handler, &tmp);
+
+  if (hThread == NULL) {
+    // Logger::logPotenialBug("Can't get thread PID for used handler",
+    // "Utilities", "clickRight");
+    return HWND();
+  }
+
+  return handler;
+}
+
+QMap<QString, uint> GameActivityChecker::getListOfRunningProcess_Windows() const {
+  HANDLE hSnapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
+  if (!hSnapshot) {
+    return QMap<QString, uint>();
+  }
+
+  PROCESSENTRY32 pe32{};
+  pe32.dwSize = sizeof(PROCESSENTRY32);
+  if (!Process32First(hSnapshot, &pe32)) {
+    CloseHandle(hSnapshot);
+    return QMap<QString, uint>();
+  }
+
+  QMap<QString, uint> toRet;
+  do {
+    unsigned int ID   = (unsigned int)pe32.th32ProcessID;
+    WCHAR*       name = pe32.szExeFile;
+    _bstr_t      b(name);
+    const char*  nameCC = b;
+    toRet.insert(QString(nameCC), ID);
+  } while (Process32Next(hSnapshot, &pe32));
+  CloseHandle(hSnapshot);
+  return toRet;
+
+  return QMap<QString, uint>();
 }
 
 QString GameActivityChecker::getGameWindowTitile() const {
@@ -58,16 +122,6 @@ QString GameActivityChecker::getGameWindowTitile() const {
   return QString();
 }
 
-uint GameActivityChecker::getGamePid() const {
-  const QMap<QString, uint> processes         = getListOfRunningProcess();
-  auto                      iteratorToProcess = processes.find(game_process_name_);
-  if (iteratorToProcess == processes.end()) {
-    qDebug() << "Can't find Game on running processes list!";
-    return 0;
-  }
-  return iteratorToProcess.value();
-}
-
 GameActivityStates GameActivityChecker::windowIsAccessible(const uint PID, const QString& windowTitle) {
   if (PID == 0) {
     return GameActivityStates::NO_ACTIVE;
@@ -101,6 +155,7 @@ GameActivityStates GameActivityChecker::getGameState() {
     game_process_data_->setPid(0);
     return GameActivityStates::NO_WINDOW;
   }
+
   GameActivityStates gameWinState = windowIsAccessible(PID, windowTitle);
   if (gameWinState == GameActivityStates::ACTIVE) {
     HWND handlerToGameThread = getHandlerToGameWindow(PID, windowTitle);
@@ -117,53 +172,14 @@ GameActivityStates GameActivityChecker::getGameState() {
   }
   return GameActivityStates(gameWinState);
 }
-QMap<QString, uint> GameActivityChecker::getListOfRunningProcess_Windows() const {
-  #ifdef _WIN64
-  HANDLE hSnapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
-  if (!hSnapshot) {
-    return QMap<QString, uint>();
-  }
-
-  PROCESSENTRY32 pe32{};
-  pe32.dwSize = sizeof(PROCESSENTRY32);
-  if (!Process32First(hSnapshot, &pe32)) {
-    CloseHandle(hSnapshot);
-    return QMap<QString, uint>();
-  }
-
-  QMap<QString, uint> toRet;
-  do {
-    unsigned int ID   = (unsigned int)pe32.th32ProcessID;
-    WCHAR*       name = pe32.szExeFile;
-    _bstr_t      b(name);
-    const char*  nameCC = b;
-    toRet.insert(QString(nameCC), ID);
-  } while (Process32Next(hSnapshot, &pe32));
-  CloseHandle(hSnapshot);
-  return toRet;
-  #endif
-
-
-  return QMap<QString, uint>();
+#else
+uint GameActivityChecker::getHandlerToGameWindow(const uint PID) {
+  //implement
+  return 0;
 }
-
-HWND GameActivityChecker::getHandlerToGameWindow(const uint PID, const QString& windowName) {
-  LPCWSTR nameOfWindowLPCWSTR = (const wchar_t*)windowName.utf16();
-  HWND    handler             = FindWindow(NULL, nameOfWindowLPCWSTR);
-  if (handler == NULL) {
-    // Logger::logPotenialBug("Can't get handler to window: " + WindowName,
-    // "Utilities", "clickRight");
-    return HWND();
-  }
-  DWORD tmp     = PID;
-  DWORD hThread = GetWindowThreadProcessId(handler, &tmp);
-
-  if (hThread == NULL) {
-    // Logger::logPotenialBug("Can't get thread PID for used handler",
-    // "Utilities", "clickRight");
-    return HWND();
-  }
-
-  return handler;
+GameActivityStates GameActivityChecker::getGameState() {
+  //implement
+  return GameActivityStates(0);
 }
+#endif
 }  // namespace CJ

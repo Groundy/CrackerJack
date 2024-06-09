@@ -10,7 +10,7 @@ SelectProfileWindow::SelectProfileWindow(QSharedPointer<Profile> profileToBeChoo
   setFixedSize(this->size());
   setUpGui();
   refreshProfilesOnList();
-  ui->listOfProfs->setItemSelected(NULL, true);
+  ui->listOfProfs->setCurrentItem(nullptr);
   selectListAction();
 }
 SelectProfileWindow::~SelectProfileWindow() {
@@ -46,7 +46,7 @@ void SelectProfileWindow::deleteProfileButtonAction() {
   if (accepted) {
     JsonParser::deleteProfileFile(profileNameToDelete);
     refreshProfilesOnList();
-    ui->listOfProfs->setItemSelected(NULL, true);
+    ui->listOfProfs->setCurrentItem(nullptr);
   }
 }
 void SelectProfileWindow::selectListAction() {

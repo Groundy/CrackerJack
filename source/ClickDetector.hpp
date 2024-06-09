@@ -1,4 +1,5 @@
-#pragma once
+/**
+ * #pragma once
 #include <qobject.h>
 #include <qthread.h>
 #include <qtimer.h>
@@ -43,3 +44,4 @@ class ClickDetector : public QThread {
   }
 };
 }  // namespace CJ
+**/

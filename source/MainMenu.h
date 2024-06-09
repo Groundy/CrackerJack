@@ -1,6 +1,7 @@
 #pragma once
-#include <QDialog>
 #include <qdatetime.h>
+
+#include <QDialog>
 
 #include "AttackMethode.hpp"
 #include "AutoHunting.h"
@@ -8,6 +9,7 @@
 #include "ClickDetector.hpp"
 #include "GameActivityChecker.h"
 #include "Key.h"
+#include "MinimapAnalyzer.h"
 #include "Profile.h"
 #include "RouteCreator.h"
 #include "ScreenAnalyzer.h"
@@ -15,6 +17,7 @@
 #include "SelectProfileWindow.h"
 #include "VariablesClass.hpp"
 #include "VitalityAnalyzer.h"
+
 namespace Ui {
 class MainMenu;
 };
@@ -54,8 +57,8 @@ class MainMenu : public QDialog {
   ScreenSaver         screen_saver_{this, var_, game_connector_};
   ScreenAnalyzer      screen_analyzer_{this, var_};
   VitalityAnalyzer    vitality_analyzer_{this, var_, game_connector_};
-  ClickDetector       click_detector_{this, game_connector_};
-  MinimapAnalyzer     mini_map_analyzer_{this, var_};
+  //ClickDetector       click_detector_{this, game_connector_};
+  MinimapAnalyzer mini_map_analyzer_{this, var_};
   //AutoHunting                             huntAutoThread{};
 
   void connectSignals();

@@ -316,7 +316,8 @@ void VitalityAnalyzer::handleHaste(bool keepHasting, QVector<CharState>& states)
   if (!canHaste) {
     return;
   }
-  gameConnector->sendKeyStrokeToProcess(VK_F12);  //todo
+  Key haste_key = Key(0);                            //tmp //todo
+  gameConnector->sendKeyStrokeToProcess(haste_key);  //todo
   logger.log("Hasted!", false, true, true);
   lastTimeHasted = currentTime;
 }
@@ -333,7 +334,8 @@ void VitalityAnalyzer::handleUpgrade(bool keepUpgraded, QVector<CharState>& stat
   if (!canUpgrade) {
     return;
   }
-  gameConnector->sendKeyStrokeToProcess(VK_F11);  //todo
+  Key upgrade_key = Key(0);  //tmp //todo
+  gameConnector->sendKeyStrokeToProcess(upgrade_key);
   logger.log("Upgraded!", false, true, true);
   lastTimeUpgraded = currentTime;
 }

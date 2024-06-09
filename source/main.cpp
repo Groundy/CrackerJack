@@ -7,9 +7,9 @@
 
 void setStyle(QApplication& app) {
   app.setQuitOnLastWindowClosed(true);
-  app.setStyle("fusion");
-  app.setWindowIcon(QIcon(":imgs/logo"));
-  QApplication::setAttribute(Qt::AA_DisableWindowContextHelpButton);
+  // app.setStyle("fusion");
+  //app.setWindowIcon(QIcon(":imgs/logo"));
+  //QApplication::setAttribute(Qt::AA_DisableWindowContextHelpButton);
 }
 int main(int argc, char* argv[]) {
   QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
@@ -21,9 +21,8 @@ int main(int argc, char* argv[]) {
   if (!(win.exec() == QDialog::Accepted)) {
     exit(0);
   }
-  CJ::MainMenu* mainMenu = new CJ::MainMenu(profile);
-  mainMenu->exec();
-  delete mainMenu;
+  CJ::MainMenu mainMenu = CJ::MainMenu(profile);
+  mainMenu.exec();
   exit(0);
   return app.exec();
 }
